@@ -1,0 +1,15 @@
+'balance_warning' : (float) seil en dessous duquel un mail pour inciter le rechargement est envoyé à chaque achat
+'balance_limit' : (float) solde minimum possible sur un compte
+'organisation' : (string) nom de l'organisation
+'lang' : (string) langue du de l'api (=> langue par defaut lors de l'installation des logiciel)
+'hash_algo' : (string) hash utilisé pour l'encryption des mots de passes
+'salt' : (string) DÉCONSEILLÉ - salt utilisé pour l'encryption des mots de passe, desormais aléatoire
+'url' : (string) adresse URL de l'application
+'installer_external' : (bool) si l'installateur se trouve sur un serveur distant
+'installer_url' (string) adresse (relative a la racine de l'API ou lien vers le serveur distant) de l'installateur .exe ou .msi
+'installer_jar_url' : (string) adresse (relative a la racine de l'API ou lien vers le serveur distant) de l'installateur .jar
+'email_sender' : email utilisé pour l'envoie de mail
+'email_contact' : email de contact de l'organisation
+'email_name' : nom de l'expediteur des mail
+'email_default_subject' : sujet par defaut des mails
+'logout_message' : message envoyé par l'API lors d'une déconnexion

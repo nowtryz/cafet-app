@@ -1,0 +1,257 @@
+<!--CONFIG> 
+{
+	"subject":"Compte Cafet' ESSAIM à recharger"
+}
+<CONFIG-->
+<style>
+.spending td {
+	border: 2px solid #DDD;
+}
+
+.spending tr:nth-child(odd) {
+	background: #FFF;
+}
+
+.spending tr:nth-child(even) {
+	background: #F5F5F5;
+}
+
+.spending td {
+	padding: 5px 10px;
+}
+
+@media only screen and (max-width: 1250px) {
+	#body {
+		background-size: auto 100%;
+	}
+	#main {
+		width: 80%;
+	}
+	#header-margin-top, #header-margin-bottom {
+		height: 0
+	}
+	#header-margin-left, #header-margin-right {
+		width: 10%
+	}
+	#site-name {
+		font-size: 300%;
+	}
+	img#logo {
+		float: left;
+		height: 75px;
+	}
+	.spending-containerr {
+		overflow-x: auto;
+	}
+}
+
+@media only screen and (max-width: 500px) {
+	* {
+		width: auto;
+	}
+	table#main {
+		width: 90%;
+	}
+	#header-margin-top, #header-margin-bottom {
+		height: 30px
+	}
+	#header-margin-left, #header-margin-right {
+		width: 0
+	}
+	#footer, #wrapper {
+		box-shadow: 10px 10px 20px #0A0A0A;
+	}
+	#header-margin-bottom {
+		height: 20px
+	}
+	#wrapper-padding-left, #wrapper-padding-right {
+		width: 5%
+	}
+	#footer-container td {
+		padding: 5%
+	}
+	#footer-padding-top, #footer-margin-bottom {
+		height: 2.5%
+	}
+	#footer {
+		font-size: 70%;
+	}
+	#site-name {
+		font-size: 200%;
+	}
+	#spendind-heading {
+		font-size: 100%;
+	}
+	img#logo {
+		height: 50px;
+	}
+}
+
+@font-face {
+	font-family: vr;
+	src: url("https://cafet.mecatronautes.fr/polices/varsity_regular.ttf");
+	src: url("https://cafet.mecatronautes.fr/polices/varsity_regular.otf");
+}
+</style>
+<table id="body"
+	style="background: #1a1a1a url('https://cafet.mecatronautes.fr/bg.jpg') no-repeat fixed center; background-size: 100%; font-family: 'Days One', arial; width: 100%; height: 100%">
+	<tr>
+		<td style="text-align: center; vertical-align: top">
+			<table id="main" style="display: inline; width: 1000px">
+				<tr>
+					<td>
+						<table id="header-outer"
+							style="text-align: center; background: none; width: 100%">
+							<tr>
+								<td id="header-margin-top" style="height: 30px">&nbsp;</td>
+							</tr>
+							<tr>
+								<td>
+									<table class="header-margin-member"
+										style="text-align: left; background: none; width: 100%">
+										<tr>
+											<td id="header-margin-left" width=0>&nbsp;</td>
+											<td>
+												<table id="header" style="width: 100%">
+													<tr>
+														<td><img id="logo" style="height: 122px"
+															src="https://cafet.mecatronautes.fr/essaim.png" /></td>
+														<td>
+															<h1 id="site-name"
+																style="font-size: 450%; font-weight: normal; font-family: vr, impact; color: white; margin: 0 0 0 20px; display: inline-block; vertical-align: middle;">ESSAIM</h1>
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td id="header-margin-right" width=0>&nbsp;</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td id="header-margin-bottom" style="height: 30px">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table id="wrapper"
+							style="background: rgb(255, 255, 255); background: rgba(255, 255, 255, 0.95); box-shadow: 20px 20px 30px; text-align: justify; height: 30px">
+							<tr>
+								<td id="wrapper-padding-left" width="30px">&nbsp;</td>
+								<td>
+									<table id=wrapper-inner>
+										<tr>
+											<td
+												style="font-size: 20px; word-wrap: break-word; padding: 8px; padding-top: 30px">Bonjour
+												{surname} {name}</td>
+										</tr>
+										<tr>
+											<td
+												style="font-size: 20px; word-wrap: break-word; padding: 8px;">Votre
+												compte cafet' est dans le rouge ! Pensez à le recharger à la
+												cafet' <em style="font-style: italic;">(liquide, Lyf,
+													chèque)</em>, sans quoi vous ne pourez plus payer.
+											</td>
+										</tr>
+										<tr>
+											<td
+												style="font-size: 20px; word-wrap: break-word; padding: 8px;">Votre
+												solde est de* : <span class="balance"
+												style="font-weight: bold; color: red">{balance} €</span>
+											</td>
+										</tr>
+										<tr>
+											<td
+												style="font-size: 20px; word-wrap: break-word; padding: 8px; margin-top: 50px; font-size: 110%; font-weight: bold"
+												id="spendind-heading">Voici un petit récapitulatif de
+												vos dépenses depuis votre dernier rechargement :</td>
+										</tr>
+										<tr>
+											<td>
+												<table class="spending-outer" style="width: 100%">
+													<tr>
+														<td id="spending-margin-left" height="30px">&nbsp;</td>
+														<td class="spending-container" style="text-align: center">
+															<table class="spending"
+																style="border: 2px solid #DDD; border-collapse: collapse; width: 600px; text-align: center; display: inline">
+																<thead>
+																	<tr>
+																		<th
+																			style="background: black; color: white; font-weight: bold; text-transform: uppercase; text-align: center; border: 2px solid #DDD; padding: 5px 10px">Date</th>
+																		<th
+																			style="background: black; color: white; font-weight: bold; text-transform: uppercase; text-align: center; border: 2px solid #DDD; padding: 5px 10px">Montant</th>
+																		<th
+																			style="background: black; color: white; font-weight: bold; text-transform: uppercase; text-align: center; border: 2px solid #DDD; padding: 5px 10px">Solde
+																			après paiement</th>
+																	</tr>
+																</thead>
+																<tfoot>
+																	<tr>
+																		<th
+																			style="background: black; color: white; font-weight: bold; text-transform: uppercase; text-align: center; border: 2px solid #DDD; padding: 5px 10px">Date</th>
+																		<th
+																			style="background: black; color: white; font-weight: bold; text-transform: uppercase; text-align: center; border: 2px solid #DDD; padding: 5px 10px">Montant</th>
+																		<th
+																			style="background: black; color: white; font-weight: bold; text-transform: uppercase; text-align: center; border: 2px solid #DDD; padding: 5px 10px">Solde
+																			après paiement</th>
+																	</tr>
+																</tfoot>
+																<tbody>{expenses}
+																</tbody>
+															</table>
+														</td>
+														<td id="spending-margin-right" height="30px">&nbsp;</td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+										<tr>
+											<td
+												style="font-size: 20px; word-wrap: break-word; padding: 8px; padding-bottom: 30px">Le
+												BDE et toute son équipe vous souhaite une bonne journée.</td>
+										</tr>
+									</table>
+								</td>
+								<td id="wrapper-padding-right" width="30px">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td id="footer-margin-top" style="height: 20px">&nbsp;</td>
+				</tr>
+				<tr>
+					<td>
+						<table id="footer"
+							style="background: rgb(255, 255, 255); background: rgba(255, 255, 255, 0.95); box-shadow: 20px 20px 30px; text-align: justify; width: 100%">
+							<tr>
+								<td id="footer-padding-top" style="height: 10px">&nbsp;</td>
+								<td>
+									<table id="footer-container">
+										<tr>
+											<td style="padding: 0 30px; font-size: 60%">* : Solde du
+												compte lors de l'envoie du Mail.</td>
+										</tr>
+										<tr>
+											<td style="padding: 0 30px; font-size: 60%">Si vous
+												souhaiter supprimez votre compte <a href="#">cliquez ici</a>,
+												notez que votre solde doit être positif et qu'aucun
+												remboursement ne sera effectué.
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td id="footer-padding-bottom" height="10px">&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td id="footer-margin-bottom" style="height: 20px">&nbsp;</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>

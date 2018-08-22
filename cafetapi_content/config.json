@@ -1,0 +1,25 @@
+{
+	"defaults": {
+		"balance_warning": 2,
+		"balance_limit": 0,
+		"organisation": "Essaim",
+		"lang": "fr_FR",
+		"hash_algo": "sha256",
+		"salt": "ISTYmecatronique",
+		"url": "localhost/cafet-api",
+		"installer_external": false,
+		"installer_url": "localhost/get/installer.exe",
+		"installer_jar_url": "localhost/get/installer.jar",
+		"email_sender": "noreply@exemple.com",
+		"email_contact": "contact@exemple.com",
+		"email_name": "Cafet' Essaim",
+		"logout_message": "see you later ;)"
+	},
+	"database": {
+		"driver": "mysql",
+		"host": "localhost:3306",
+		"database": "mecatronesql",
+		"username": "mecatro",
+		"password": ""
+	}
+}

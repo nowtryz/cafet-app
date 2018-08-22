@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Request generator</title>
+<style>
+#selected-command {
+	color: green;
+}
+
+#commands li {
+	cursor: pointer;
+}
+
+#commands li:hover {
+	text-decoration: underline;
+}
+
+.args {
+	color: blue;
+}
+
+.var {
+	color: red;
+}
+
+fieldset {
+	display: inline-block;
+	width: auto;
+	max-width: 500px;
+	vertical-align: top;
+}
+</style>
+</head>
+<body>
+	<form method="post" action="../index.php" target="_blank">
+		<h2>Request: Login</h2>
+		<table>
+			<tr>
+				<td><label for="login_origin">Origin :</label></td>
+				<td><input id="login_origin" name="origin" type="text"
+					value="cafet_app" /></td>
+			</tr>
+			<tr>
+				<td><label for="login_version">Version :</label></td>
+				<td><input id="login_version" name="version" type="text"
+					value="1.0.0-alpha" /></td>
+			</tr>
+			<tr>
+				<td><label for="login_action">Action :</label></td>
+				<td><input id="login_action" name="action" type="text"
+					value="login" /></td>
+			</tr>
+			<tr>
+				<td><label for="login_arguments">Arguments :</label></td>
+				<td><textarea rows="10" cols="50" id="login_arguments"
+						name="arguments">{
+	"email":"damien.djmb@gmail.com",
+	"password":"1"
+}</textarea></td>
+			</tr>
+			<tr>
+				<td colspan="2" style="text-align: center;"><input
+					type="submit" /></td>
+			</tr>
+		</table>
+	</form>
+	<form method="post" action="../index.php" target="_blank">
+		<h2>Request: Fetch/Get</h2>
+		<table>
+			<tr>
+				<td><label for="origin">Origin :</label></td>
+				<td><input id="origin" name="origin" type="text"
+					value="cafet_app" /></td>
+			</tr>
+			<tr>
+				<td><label for="version">Version :</label></td>
+				<td><input id="version" name="version" type="text"
+					value="1.0.0-alpha" /></td>
+			</tr>
+			<tr>
+				<td><label for="session_id">Session_id :</label></td>
+				<td><input id="session_id" name="session_id" type="text" /></td>
+			</tr>
+			<tr>
+				<td><label for="action">Action :</label></td>
+				<td><input id="action" name="action" type="text" /></td>
+			</tr>
+			<tr>
+				<td><label for="arguments">Arguments :</label></td>
+				<td><textarea rows="10" cols="50" id="arguments"
+						name="arguments">{
+	
+}</textarea></td>
+			</tr>
+			<tr>
+				<td colspan="2" style="text-align: center;"><input
+					type="submit" /></td>
+			</tr>
+		</table>
+	</form>
+	<section style="width: 100%;" id="commands">
+		<h2>Commands:</h2>
+		<fieldset>
+			<legend>basics</legend>
+			<ul>
+				<li>login <span class="args">(string <span class="var">"email"</span>,
+						string <span class="var">"password"</span>)
+				</span></li>
+				<li>logout</li>
+				<li>updates <span class="args">(string <span class="var">"app-version"</span>)
+				</span></li>
+				<li>changelog</li>
+			</ul>
+		</fieldset>
+		<fieldset>
+			<legend>updates</legend>
+			<ul>
+				<li>add product <span class="args">(string <span
+						class="var">"name"</span>, int <span class="var">"group_id"</span>)
+				</span></li>
+				<li>add product group <span class="args">(string <span
+						class="var">"name"</span>)
+				</span></li>
+				<li>add formula <span class="args">(string <span
+						class="var">"name"</span>)
+				</span></li>
+				<li>add choice <span class="args">(string <span
+						class="var">"name"</span>, int <span class="var">"formula_id"</span>)
+				</span></li>
+				<li>add product to choice <span class="args">(int <span
+						class="var">"choice_id"</span>, int <span class="var">"product_id"</span>)
+				</span></li>
+				<li>remove product from choice <span class="args">(int <span
+						class="var">"choice_id"</span>, int <span class="var">"product_id"</span>)
+				</span></li>
+				<li>save order <span class="args">(int <span class="var">"client_id"</span>,
+						array <span class="var">"order"</span>)
+				</span></li>
+				<li>save reload <span class="args">(int <span
+						class="var">"client_id"</span>, float <span class="var">"amount"</span>)
+				</span></li>
+				<li>set product group display name <span class="args">(int
+						<span class="var">"group_id"</span>, string <span class="var">"display_name"</span>)
+				</span></li>
+				<li>set product group name <span class="args">(int <span
+						class="var">"group_id"</span>, string <span class="var">"name"</span>)
+				</span></li>
+				<li>set product name <span class="args">(int <span
+						class="var">"product_id"</span>, string <span class="var">"name"</span>)
+				</span></li>
+				<li>set product price <span class="args">(int <span
+						class="var">"product_id"</span>, float <span class="var">"price"</span>)
+				</span></li>
+				<li>set product group <span class="args">(int <span
+						class="var">"product_id"</span>, int <span class="var">"group_id"</span>)
+				</span></li>
+				<li>set product image <span class="args">(int <span
+						class="var">"product_id"</span>, string <span class="var">"image_base64"</span>)
+				</span></li>
+				<li>set product viewable <span class="args">(int <span
+						class="var">"product_id"</span>, bool <span class="var">"flag"</span>)
+				</span></li>
+				<li>set formula name <span class="args">(int <span
+						class="var">"formula_id"</span>, string <span class="var">"name"</span>)
+				</span></li>
+				<li>set formula price <span class="args">(int <span
+						class="var">formula_id"</span>, float <span class="var">"price"</span>)
+				</span></li>
+				<li>set formula fiewable <span class="args">(int <span
+						class="var">"formula_id"</span>, bool <span class="var">"flag"</span>)
+				</span></li>
+				<li>set formula image <span class="args">(int <span
+						class="var">"formula_id"</span>, string <span class="var">"image_base64"</span>)
+				</span></li>
+				<li>delete product <span class="args">(int <span
+						class="var">"product_id"</span>)
+				</span></li>
+				<li>delete product group <span class="args">(int <span
+						class="var">"group_id"</span>)
+				</span></li>
+				<li>delete formula <span class="args">(int <span
+						class="var">"formula_id"</span>)
+				</span></li>
+				<li>delete formula choice <span class="args">(int <span
+						class="var">"choice_id"</span>)
+				</span></li>
+			</ul>
+		</fieldset>
+		<fieldset>
+			<legend>fetches</legend>
+			<ul>
+				<li>get clients</li>
+				<li>get client <span class="args">(int <span class="var">"id"</span>)
+				</span></li>
+				<li>get client reloads <span class="args">(int <span
+						class="var">"id"</span>)
+				</span></li>
+				<li>get client expenses <span class="args">(int <span
+						class="var">"id"</span>)
+				</span></li>
+				<li>get expense details <span class="args">(int <span
+						class="var">"id"</span>)
+				</span></li>
+				<li>get product groups</li>
+				<li>get product group <span class="args">(int <span
+						class="var">"id"</span>)
+				</span></li>
+				<li>get group products <span class="args">(int <span
+						class="var">"id"</span>, bool <span class="var">"show
+							hiddens"</span> = false)
+				</span></li>
+				<li>get formula bought products <span class="args">(int
+						<span class="var">"id"</span>)
+				</span></li>
+				<li>get product <span class="args">(int <span
+						class="var">"id"</span>)
+				</span></li>
+				<li>get formulas <span class="args">(bool <span
+						class="var">"show hiddens"</span> = false)
+				</span></li>
+				<li>get formula <span class="args">(int <span
+						class="var">"id"</span>)
+				</span></li>
+				<li>get formula choices <span class="args">(int <span
+						class="var">"id"</span>)
+				</span></li>
+				<li>search client <span class="args">(string <span
+						class="var">"expression"</span>)
+				</span></li>
+			</ul>
+		</fieldset>
+	</section>
+</body>
+<script charset="utf-8">
+    	var list = document.getElementById('commands').getElementsByTagName('li');
+
+  		for( var i=0, length = list.length; i < length; i++ ){
+			list[i].onclick = function() {
+				var c = document.getElementById('selected-command');
+
+		    	document.getElementById('action').value = this.innerHTML.replace(/ <span.*/, '');
+		    	if(c != null ) c.removeAttribute('id');
+		    	this.id = 'selected-command';
+      		};
+		}
+    </script>
+</html>

@@ -1,0 +1,43 @@
+{
+	"01": {
+		"def": "01 : server exception",
+		"001": "database connection error",
+		"002": "An error occured while fetching data",
+		"003": "Server misconfigured",
+		"500": "Internal server error",
+		"501": "Not implemented functionality",
+		"502": "Bad gateway",
+		"503": "The service is unavailable",
+		"504": "Gateway time-out",
+		"505": "HTTP version not supported"
+	},
+	"02": {
+		"def": "02 : user exception",
+		"001": "Authentification failed",
+		"002": "Permission not granted",
+		"003": "Banned : I was telling myself that I did not want to answer you anymore",
+		"400": "Authentification needed",
+		"403": "Forbidden access",
+		"404": "Resource not found",
+		"405": "Method not allowed",
+		"408": "Request time-out"
+	},
+	"03": {
+		"def": "03 : message exception",
+		"001": "Action not specified",
+		"002": "Version not specified",
+		"003": "Looks like the session ID went for a ride",
+		"004": "Arguments not declared",
+		"005": "Invalid arguments for the given action",
+		"006": "Missing arguments for the given action",
+		"007": "Too many arguments for the given action",
+		"008": "Is this action correct ?",
+		"401": "Synthax error"
+	},
+	"04": {
+		"def": "04 : application exception",
+		"001": "Outdated client",
+		"002": "Back to the future! did you really get a newer client?",
+		"003": "The consumer hasn't enought money on its acount"
+	}
+}

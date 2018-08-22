@@ -1,0 +1,34 @@
+<IfModule mod_rewrite.c>
+	Options +FollowSymlinks
+	RewriteEngine On
+	RewriteOptions MaxRedirects=1
+
+	RewriteRule ^assets/.*$ - [L]
+	RewriteRule ^.*\.php.*$ - [L]
+	RewriteRule ^(.+)/(.+).html$ index.php?module=$1&path=$2 [L]
+	RewriteRule ^(.*).html$ index.php?t=$1 [L]
+	RewriteRule ^(.+)/(.+)$ index.php?module=$1&path=$2 [L]
+	RewriteRule ^(.*)$ index.php?t=$1 [L]
+
+    #ErrorDocument 404 error.php
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 index.php
+</IfModule>
+
+<Files cafetapi_load.php>
+	Deny from all
+</Files>
+
+ErrorDocument 400 /cafet-api/error.php
+ErrorDocument 401 /cafet-api/error.php
+ErrorDocument 403 /cafet-api/error.php
+ErrorDocument 405 /cafet-api/error.php
+ErrorDocument 408 /cafet-api/error.php
+ErrorDocument 500 /cafet-api/error.php
+ErrorDocument 501 /cafet-api/error.php
+ErrorDocument 502 /cafet-api/error.php
+ErrorDocument 503 /cafet-api/error.php
+ErrorDocument 504 /cafet-api/error.php
+ErrorDocument 505 /cafet-api/error.php
