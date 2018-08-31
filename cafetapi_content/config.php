@@ -114,6 +114,7 @@ class Defaults
 
     /**
      * DÉCONSEILLÉ - Salt utilisé pour l'encryption des mots de passe, desormais aléatoire
+     * Utilisé pour conserver la compatibilité avec les anciens comptes,
      *
      * @var string
      * @deprecated
@@ -143,7 +144,7 @@ class Defaults
      * @var string
      * @since API 1.0.0 (2018)
      */
-    const installer_url = 'cafet/get/installer.exe';
+    const installer_url = self::url . 'get/installer.exe';
 
     /**
      * Adresse (relative a la racine de l'API ou lien vers le serveur distant) de l'installateur .jar
@@ -151,7 +152,7 @@ class Defaults
      * @var string
      * @since API 1.0.0 (2018)
      */
-    const installer_jar_url = 'cafet/get/installer.jar';
+    const installer_jar_url = self::url . 'get/installer.jar';
 
     /**
      * Adresse e-mail utilisée pour l'envoie de mails
@@ -159,7 +160,15 @@ class Defaults
      * @var string
      * @since API 1.0.0 (2018)
      */
-    const email_sender = 'noreply@exemple.com';
+    const email_sender = 'cafet@exemple.com';
+    
+    /**
+     * Adresse e-mail utilisée pour le pour le champ reply-to
+     *
+     * @var string
+     * @since API 1.0.0 (2018)
+     */
+    const email_noreply = 'noreply@exemple.com';
 
     /**
      * Adresse e-mail de contact de l'organisation
@@ -170,7 +179,7 @@ class Defaults
     const email_contact = 'contact@exemple.com';
 
     /**
-     * Mom de l'expediteur des mails
+     * Nom de l'expediteur des mails
      *
      * @var string
      * @since API 1.0.0 (2018)
