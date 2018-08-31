@@ -10,7 +10,7 @@
 	RewriteRule ^(.+)/(.+)$ index.php?module=$1&path=$2 [L]
 	RewriteRule ^(.*)$ index.php?t=$1 [L]
 
-    #ErrorDocument 404 error.php
+    ErrorDocument 404 error.php
 </IfModule>
 
 <IfModule !mod_rewrite.c>
