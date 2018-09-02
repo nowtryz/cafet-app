@@ -13,7 +13,7 @@ use InvalidArgumentException;
  */
 class Mail
 {
-    const HEADER = 'MIME-Version: 1.0' . "\r\n" . 'Content-type: text/html; charset=UTF-8' . "\r\n";
+    const HEADER = 'MIME-Version: 1.0' . "\n" . 'Content-type: text/html; charset=UTF-8' . "\n";
 
     private $sender = "";
     private $replyto = "";
@@ -166,19 +166,19 @@ class Mail
 
         if (isset($this->name)) {
             if (isset($this->sender))
-                $header .= 'From: ' . $this->name . ' <' . $this->sender . '>' . "\r\n";
+                $header .= 'From: ' . $this->name . ' <' . $this->sender . '>' . "\n";
             if (isset($this->replyto))
-                $header .= 'Reply-To: ' . $this->name . ' <' . $this->replyto . '>' . "\r\n";
+                $header .= 'Reply-To: ' . $this->name . ' <' . $this->replyto . '>' . "\n";
         } else {
             if (isset($this->sender))
-                $header .= 'From: ' . $this->sender . "\r\n";
+                $header .= 'From: ' . $this->sender . "\n";
             if (isset($this->replyto))
-                $header .= 'Reply-To: ' . $this->replyto . "\r\n";
+                $header .= 'Reply-To: ' . $this->replyto . "\n";
         }
 
         if (isset($this->additionalHeaders) && is_array($this->additionalHeaders))
             foreach ($this->additionalHeaders as $additionalHeader)
-                $header .= $additionalHeader . "\r\n";
+                $header .= $additionalHeader . "\n";
 
         return $header;
     }
