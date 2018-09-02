@@ -5,7 +5,7 @@
 
 	RewriteRule ^assets/.*$ - [L]
 	RewriteRule ^.*\.php.*$ - [L]
-	RewriteRule ^(.+)/(.+).html$ index.php?module=$1&path=$2 [L]
+	RewriteRule ^(.+)/(.+)\.html$ index.php?module=$1&path=$2 [L]
 	RewriteRule ^(.*).html$ index.php?t=$1 [L]
 	RewriteRule ^(.+)/(.+)$ index.php?module=$1&path=$2 [L]
 	RewriteRule ^(.*)$ index.php?t=$1 [L]
