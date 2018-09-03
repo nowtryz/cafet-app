@@ -15,3 +15,4 @@ Both REST API for http connections and PHP librairy. Manage Interactions between
 
 - Work with composer
 - Create docker images
+- Implementation of gettext
