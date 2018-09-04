@@ -567,8 +567,24 @@ class DatabaseConnection
      */
     public final function getUser(string $mail_or_pseudo): ?User
     {
-        $statement = $this->connection->prepare('SELECT ' . 'ID id, ' . 'Pseudo pseudo, ' . 'MDP hash, ' . 'SU super_user, ' . 'admin admin, ' . 'res_cafet cafet_manager, ' . 'adm_cafet cafet_admin, ' . 'Nom name, ' . 'Prenom firstname, ' . 'Email mail, ' . 'Tel phone ' . 'FROM ' . self::USERS . ' ' . 'WHERE Pseudo = :param1 ' . 'OR Email = :param2');
+        $statement = $this->connection->prepare('SELECT '
+            . 'ID id, '
+            . 'Pseudo pseudo, '
+            . 'MDP hash, '
+            . 'SU super_user, '
+            . 'admin admin, '
+            . 'res_cafet cafet_manager, '
+            . 'adm_cafet cafet_admin, '
+            . 'Nom name, '
+            . 'Prenom firstname, '
+            . 'Email mail, '
+            . 'Tel phone '
+            . 'FROM ' . self::USERS . ' '
+            . 'WHERE Pseudo = :param1 '
+            . 'OR Email = :param2');
 
+        $id = 0;
+        $super_user = $admin = $cafet_manager = $cafet_admin = false;
         $statement->bindColumn('id', $id, PDO::PARAM_INT);
         $statement->bindColumn('super_user', $super_user, PDO::PARAM_BOOL);
         $statement->bindColumn('admin', $admin, PDO::PARAM_BOOL);
