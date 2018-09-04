@@ -585,6 +585,7 @@ class DatabaseConnection
 
         $id = 0;
         $super_user = $admin = $cafet_manager = $cafet_admin = false;
+        
         $statement->bindColumn('id', $id, PDO::PARAM_INT);
         $statement->bindColumn('super_user', $super_user, PDO::PARAM_BOOL);
         $statement->bindColumn('admin', $admin, PDO::PARAM_BOOL);
