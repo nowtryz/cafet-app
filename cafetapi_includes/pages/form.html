@@ -103,130 +103,57 @@ fieldset {
 		<fieldset>
 			<legend>basics</legend>
 			<ul>
-				<li>login <span class="args">(string <span class="var">"email"</span>,
-						string <span class="var">"password"</span>)
-				</span></li>
+				<li>login <span class="args">(string <span class="var">"email"</span>, string <span class="var">"password"</span>)</span></li>
 				<li>logout</li>
-				<li>updates <span class="args">(string <span class="var">"app-version"</span>)
-				</span></li>
+				<li>updates <span class="args">(string <span class="var">"app-version"</span>)</span></li>
 				<li>changelog</li>
 			</ul>
 		</fieldset>
 		<fieldset>
 			<legend>updates</legend>
 			<ul>
-				<li>add product <span class="args">(string <span
-						class="var">"name"</span>, int <span class="var">"group_id"</span>)
-				</span></li>
-				<li>add product group <span class="args">(string <span
-						class="var">"name"</span>)
-				</span></li>
-				<li>add formula <span class="args">(string <span
-						class="var">"name"</span>)
-				</span></li>
-				<li>add choice <span class="args">(string <span
-						class="var">"name"</span>, int <span class="var">"formula_id"</span>)
-				</span></li>
-				<li>add product to choice <span class="args">(int <span
-						class="var">"choice_id"</span>, int <span class="var">"product_id"</span>)
-				</span></li>
-				<li>remove product from choice <span class="args">(int <span
-						class="var">"choice_id"</span>, int <span class="var">"product_id"</span>)
-				</span></li>
-				<li>save order <span class="args">(int <span class="var">"client_id"</span>,
-						array <span class="var">"order"</span>)
-				</span></li>
-				<li>save reload <span class="args">(int <span
-						class="var">"client_id"</span>, float <span class="var">"amount"</span>)
-				</span></li>
-				<li>set product group display name <span class="args">(int
-						<span class="var">"group_id"</span>, string <span class="var">"display_name"</span>)
-				</span></li>
-				<li>set product group name <span class="args">(int <span
-						class="var">"group_id"</span>, string <span class="var">"name"</span>)
-				</span></li>
-				<li>set product name <span class="args">(int <span
-						class="var">"product_id"</span>, string <span class="var">"name"</span>)
-				</span></li>
-				<li>set product price <span class="args">(int <span
-						class="var">"product_id"</span>, float <span class="var">"price"</span>)
-				</span></li>
-				<li>set product group <span class="args">(int <span
-						class="var">"product_id"</span>, int <span class="var">"group_id"</span>)
-				</span></li>
-				<li>set product image <span class="args">(int <span
-						class="var">"product_id"</span>, string <span class="var">"image_base64"</span>)
-				</span></li>
-				<li>set product viewable <span class="args">(int <span
-						class="var">"product_id"</span>, bool <span class="var">"flag"</span>)
-				</span></li>
-				<li>set formula name <span class="args">(int <span
-						class="var">"formula_id"</span>, string <span class="var">"name"</span>)
-				</span></li>
-				<li>set formula price <span class="args">(int <span
-						class="var">formula_id"</span>, float <span class="var">"price"</span>)
-				</span></li>
-				<li>set formula fiewable <span class="args">(int <span
-						class="var">"formula_id"</span>, bool <span class="var">"flag"</span>)
-				</span></li>
-				<li>set formula image <span class="args">(int <span
-						class="var">"formula_id"</span>, string <span class="var">"image_base64"</span>)
-				</span></li>
-				<li>delete product <span class="args">(int <span
-						class="var">"product_id"</span>)
-				</span></li>
-				<li>delete product group <span class="args">(int <span
-						class="var">"group_id"</span>)
-				</span></li>
-				<li>delete formula <span class="args">(int <span
-						class="var">"formula_id"</span>)
-				</span></li>
-				<li>delete formula choice <span class="args">(int <span
-						class="var">"choice_id"</span>)
-				</span></li>
+				<li>add product <span class="args">(string <span class="var">"name"</span>, int <span class="var">"group_id"</span>)</span></li>
+				<li>add product group <span class="args">(string <span class="var">"name"</span>)</span></li>
+				<li>add formula <span class="args">(string <span class="var">"name"</span>)</span></li>
+				<li>add choice <span class="args">(string <span class="var">"name"</span>, int <span class="var">"formula_id"</span>)</span></li>
+				<li>add product to choice <span class="args">(int <span class="var">"choice_id"</span>, int <span class="var">"product_id"</span>)</span></li>
+				<li>remove product from choice <span class="args">(int <span class="var">"choice_id"</span>, int <span class="var">"product_id"</span>)</span></li>
+				<li>save order <span class="args">(int <span class="var">"client_id"</span>, array <span class="var">"order"</span>)</span></li>
+				<li>save reload <span class="args">(int <span class="var">"client_id"</span>, float <span class="var">"amount"</span>)</span></li>
+				<li>set product group display name <span class="args">(int <span class="var">"group_id"</span>, string <span class="var">"display_name"</span>)</span></li>
+				<li>set product group name <span class="args">(int <span class="var">"group_id"</span>, string <span class="var">"name"</span>)</span></li>
+				<li>set product name <span class="args">(int <span class="var">"product_id"</span>, string <span class="var">"name"</span>)</span></li>
+				<li>set product price <span class="args">(int <span class="var">"product_id"</span>, float <span class="var">"price"</span>)</span></li>
+				<li>set product group <span class="args">(int <span class="var">"product_id"</span>, int <span class="var">"group_id"</span>)</span></li>
+				<li>set product image <span class="args">(int <span class="var">"product_id"</span>, string <span class="var">"image_base64"</span>)</span></li>
+				<li>set product viewable <span class="args">(int <span class="var">"product_id"</span>, bool <span class="var">"flag"</span>)</span></li>
+				<li>set formula name <span class="args">(int <span class="var">"formula_id"</span>, string <span class="var">"name"</span>)</span></li>
+				<li>set formula price <span class="args">(int <span class="var">formula_id"</span>, float <span class="var">"price"</span>)</span></li>
+				<li>set formula fiewable <span class="args">(int <span class="var">"formula_id"</span>, bool <span class="var">"flag"</span>)</span></li>
+				<li>set formula image <span class="args">(int <span class="var">"formula_id"</span>, string <span class="var">"image_base64"</span>)</span></li>
+				<li>delete product <span class="args">(int <span class="var">"product_id"</span>)</span></li>
+				<li>delete product group <span class="args">(int <span class="var">"group_id"</span>)</span></li>
+				<li>delete formula <span class="args">(int <span class="var">"formula_id"</span>)</span></li>
+				<li>delete formula choice <span class="args">(int <span class="var">"choice_id"</span>)</span></li>
 			</ul>
 		</fieldset>
 		<fieldset>
 			<legend>fetches</legend>
 			<ul>
 				<li>get clients</li>
-				<li>get client <span class="args">(int <span class="var">"id"</span>)
-				</span></li>
-				<li>get client reloads <span class="args">(int <span
-						class="var">"id"</span>)
-				</span></li>
-				<li>get client expenses <span class="args">(int <span
-						class="var">"id"</span>)
-				</span></li>
-				<li>get expense details <span class="args">(int <span
-						class="var">"id"</span>)
-				</span></li>
+				<li>get client <span class="args">(int <span class="var">"id"</span>)</span></li>
+				<li>get client reloads <span class="args">(int <span class="var">"id"</span>)</span></li>
+				<li>get client expenses <span class="args">(int <span class="var">"id"</span>)</span></li>
+				<li>get expense details <span class="args">(int <span class="var">"id"</span>)</span></li>
 				<li>get product groups</li>
-				<li>get product group <span class="args">(int <span
-						class="var">"id"</span>)
-				</span></li>
-				<li>get group products <span class="args">(int <span
-						class="var">"id"</span>, bool <span class="var">"show
-							hiddens"</span> = false)
-				</span></li>
-				<li>get formula bought products <span class="args">(int
-						<span class="var">"id"</span>)
-				</span></li>
-				<li>get product <span class="args">(int <span
-						class="var">"id"</span>)
-				</span></li>
-				<li>get formulas <span class="args">(bool <span
-						class="var">"show hiddens"</span> = false)
-				</span></li>
-				<li>get formula <span class="args">(int <span
-						class="var">"id"</span>)
-				</span></li>
-				<li>get formula choices <span class="args">(int <span
-						class="var">"id"</span>)
-				</span></li>
-				<li>search client <span class="args">(string <span
-						class="var">"expression"</span>)
-				</span></li>
+				<li>get product group <span class="args">(int <span class="var">"id"</span>)</span></li>
+				<li>get group products <span class="args">(int <span class="var">"id"</span>, bool <span class="var">"show hiddens"</span> = false)</span></li>
+				<li>get formula bought products <span class="args">(int<span class="var">"id"</span>)</span></li>
+				<li>get product <span class="args">(int <span class="var">"id"</span>)</span></li>
+				<li>get formulas <span class="args">(bool <span class="var">"show hiddens"</span> = false)</span></li>
+				<li>get formula <span class="args">(int <span class="var">"id"</span>)</span></li>
+				<li>get formula choices <span class="args">(int <span class="var">"id"</span>)</span></li>
+				<li>search client <span class="args">(string <span class="var">"expression"</span>)</span></li>
 			</ul>
 		</fieldset>
 	</section>
