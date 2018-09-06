@@ -16,7 +16,7 @@ class Choice extends JSONParsable
 
     private $choice;
 
-    private $formula_id;
+    private $formula;
 
     /**
      * A choice in a formula
@@ -37,7 +37,7 @@ class Choice extends JSONParsable
         $this->id = $id;
         $this->name = $name;
         $this->choice = $choice;
-        $this->formula_id = $formula_id;
+        $this->formula = $formula_id;
     }
 
     /**
@@ -81,7 +81,7 @@ class Choice extends JSONParsable
      */
     public final function getFormula(): int
     {
-        return $this->formula_id;
+        return $this->formula;
     }
 
     public function __toString(): string

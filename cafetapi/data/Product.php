@@ -11,7 +11,7 @@ use cafetapi\io\DataFetcher;
 class Product extends Payable
 {
 
-    private $group_id;
+    private $group;
 
     /**
      *
@@ -34,7 +34,7 @@ class Product extends Payable
     public function __construct(int $id, string $name, float $price, int $group_id, string $image, bool $viewable, Calendar $edit)
     {
         parent::__construct($id, $name, $image, $price, $viewable, $edit);
-        $this->group_id = $group_id;
+        $this->group = $group_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class Product extends Payable
      */
     public final function getGroup_id(): int
     {
-        return $this->group_id;
+        return $this->group;
     }
 
     /**
@@ -56,7 +56,7 @@ class Product extends Payable
      */
     public final function getGroup(): ProductGroup
     {
-        return (new DataFetcher())->getProductGroup($this->group_id);
+        return (new DataFetcher())->getProductGroup($this->group);
     }
 
     /**
