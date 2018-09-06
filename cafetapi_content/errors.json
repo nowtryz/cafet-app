@@ -13,7 +13,7 @@
 	},
 	"02": {
 		"def": "02 : user exception",
-		"001": "Authentification failed",
+		"001": "Authentication failed",
 		"002": "Permission not granted",
 		"003": "Banned : I was telling myself that I did not want to answer you anymore",
 		"400": "Authentification needed",
@@ -32,7 +32,7 @@
 		"006": "Missing arguments for the given action",
 		"007": "Too many arguments for the given action",
 		"008": "Is this action correct ?",
-		"401": "Synthax error"
+		"401": "Synthax error in the json query"
 	},
 	"04": {
 		"def": "04 : application exception",
