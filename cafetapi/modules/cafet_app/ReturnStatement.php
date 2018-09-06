@@ -36,7 +36,7 @@ class ReturnStatement
 
             $this->array = json_decode($this->json);
         } elseif ($return instanceof JSONParsable) {
-            $this->json = '{' . ReturnStatement::NL . '"status":"' . $status . '",' . ReturnStatement::NL . '"result": ' . $return->__toString() . '",' . ReturnStatement::NL . '"computing": ' . cafet_execution_duration() . ReturnStatement::NL . '}';
+            $this->json = '{' . ReturnStatement::NL . '"status":"' . $status . '",' . ReturnStatement::NL . '"result": ' . $return->__toString() . ',' . ReturnStatement::NL . '"computing": ' . cafet_execution_duration() . ReturnStatement::NL . '}';
 
             $this->array = json_decode($this->json);
         } else
