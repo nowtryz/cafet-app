@@ -624,7 +624,7 @@ class DataFetcher extends DatabaseConnection
 
         $stmt->bindColumn('client_id', $client_id, PDO::PARAM_INT);
         $stmt->execute(array(
-            'id' -> $formula_bought_id
+            'id' => $formula_bought_id
         ));
         $this->check_fetch_errors($stmt);
 
