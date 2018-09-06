@@ -12,15 +12,15 @@ namespace cafetapi\data;
 abstract class ExpenseDetail extends JSONParsable
 {
 
-    private $name;
+    protected $name;
 
-    private $client_id;
+    protected $client_id;
 
-    private $price;
+    protected $price;
 
-    private $quantity;
+    protected $quantity;
 
-    private $date;
+    protected $date;
 
     /**
      *

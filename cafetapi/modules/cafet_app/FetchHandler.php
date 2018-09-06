@@ -7,6 +7,8 @@ use cafetapi\io\DataFetcher;
 use cafetapi\data\ProductGroup;
 use cafetapi\data\Formula;
 use cafetapi\user\Perm;
+use cafetapi\data\ProductBought;
+use cafetapi\data\FormulaBought;
 
 class FetchHandler extends Handler
 {
@@ -103,6 +105,36 @@ class FetchHandler extends Handler
             $return[] = json_decode($detail->__toString());
 
         return $return;
+    }
+    
+    public final function get_product_bought(array $arguments): ?ProductBought
+    {
+        if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
+            cafet_throw_error('02_002');
+            
+        if (! isset($arguments['id']))
+            cafet_throw_error('03-006');
+        if (gettype($arguments['id']) != 'integer')
+            cafet_throw_error('03-005', 'id must be an integer');
+                    
+        $id = $arguments['id'];
+        
+        return $this->connection->getProductBought($id);
+    }
+    
+    public final function get_formula_bought(array $arguments): ?FormulaBought
+    {
+        if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
+            cafet_throw_error('02_002');
+            
+        if (! isset($arguments['id']))
+            cafet_throw_error('03-006');
+        if (gettype($arguments['id']) != 'integer')
+            cafet_throw_error('03-005', 'id must be an integer');
+                
+        $id = $arguments['id'];
+        
+        return $this->connection->getFormulaBought($id);
     }
 
     public final function get_product_groups(array $arguments): array

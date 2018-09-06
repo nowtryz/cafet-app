@@ -16,7 +16,7 @@ class ProductBought extends ExpenseDetail
 
     private $id;
 
-    private $product_id;
+    private $product;
 
     /**
      *
@@ -44,7 +44,7 @@ class ProductBought extends ExpenseDetail
     public function __construct(int $id, int $product_id, string $name, int $client_id, float $price, int $quantity, Calendar $date)
     {
         parent::__construct($name, $client_id, $price, $quantity, $date);
-        $this->product_id = $product_id;
+        $this->product = $product_id;
         $this->id = $id;
     }
 
@@ -56,7 +56,7 @@ class ProductBought extends ExpenseDetail
      */
     public final function getProduct(): int
     {
-        return $this->product_id;
+        return $this->product;
     }
 
     public function __toString(): string
