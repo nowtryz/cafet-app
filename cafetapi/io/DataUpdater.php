@@ -5,11 +5,10 @@ use cafetapi\data\Choice;
 use cafetapi\data\Formula;
 use cafetapi\data\Product;
 use cafetapi\data\ProductGroup;
-use cafetapi\exceptions\PermissionNotGrantedException;
+use cafetapi\exceptions\NotEnoughtMoneyException;
 use cafetapi\exceptions\RequestFailureException;
 use PDO;
 use PDOStatement;
-use cafetapi\exceptions\NotEnoughtMoneyException;
 
 /**
  * Object specialized in data updating from the database for the API
@@ -292,9 +291,10 @@ class DataUpdater extends DatabaseConnection
         $e = (new DataFetcher())->getExpense($expense_id);
         $conf = cafet_get_configurations();
 
-        if ($e->getBalanceAfterTransaction() < $conf['balance_limit']) {
+        if (($delta = $e->getBalanceAfterTransaction() - $conf['balance_limit']) < 0) {
             $this->connection->rollBack();
-            throw new NotEnoughtMoneyException($message, null, null, $backtrace['file'], $backtrace['line']);
+            $backtrace = debug_backtrace()[1];
+            throw new NotEnoughtMoneyException('missing ' . $delta . ' money to perform this action', null, null, $backtrace['file'], $backtrace['line']);
             return false;
         } else {
             $this->connection->commit();
