@@ -342,7 +342,7 @@ class DataUpdater extends DatabaseConnection
     {
         $this->connection->beginTransaction();
 
-        $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS_GROUP . ' SET display_name = :dname WHERE id = :id');
+        $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS_GROUPS . ' SET display_name = :dname WHERE id = :id');
         $stmt->execute(array(
             'dname' => $display_name,
             'id' => $group_id
@@ -365,7 +365,7 @@ class DataUpdater extends DatabaseConnection
     {
         $this->connection->beginTransaction();
 
-        $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS_GROUP . ' SET name = :name WHERE id = :id');
+        $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS_GROUPS . ' SET name = :name WHERE id = :id');
         $stmt->execute(array(
             'name' => $name,
             'id' => $group_id
@@ -434,7 +434,7 @@ class DataUpdater extends DatabaseConnection
     {
         $this->connection->beginTransaction();
 
-        $stmt = $this->connection->prepare('SELECT 1 FROM ' . self::PRODUCTS_GROUP . ' WHERE id = :id LIMIT 1');
+        $stmt = $this->connection->prepare('SELECT 1 FROM ' . self::PRODUCTS_GROUPS . ' WHERE id = :id LIMIT 1');
         $stmt->execute(array(
             'id' => $group_id
         ));
@@ -488,10 +488,11 @@ class DataUpdater extends DatabaseConnection
         $this->connection->beginTransaction();
 
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS . ' SET viewable = :flag WHERE id = :id');
-        $stmt->bindValue('flag', $flag == false, PDO::PARAM_BOOL);
-        $stmt->execute(array(
-            'id' => $product_id
-        ));
+        
+        $stmt->bindValue(':flag', $flag, PDO::PARAM_BOOL);
+        $stmt->bindValue(':id', $product_id, PDO::PARAM_INT);
+        $stmt->execute();
+        
         $this->checkUpdate($stmt, 'unable to update product');
 
         $this->connection->commit();
@@ -557,10 +558,12 @@ class DataUpdater extends DatabaseConnection
         $this->connection->beginTransaction();
 
         $stmt = $this->connection->prepare('UPDATE ' . self::FORMULAS . ' SET viewable = :flag WHERE id = :id');
-        $stmt->bindValue('flag', $flag == false, PDO::PARAM_BOOL);
-        $stmt->execute(array(
-            'id' => $formula_id
-        ));
+        
+        $stmt->bindValue(':flag', $flag, PDO::PARAM_BOOL);
+        $stmt->bindValue(':id', $formula_id, PDO::PARAM_INT);
+        
+        $stmt->execute();
+        
         $this->checkUpdate($stmt, 'unable to update formula');
 
         $this->connection->commit();
@@ -664,7 +667,7 @@ class DataUpdater extends DatabaseConnection
     {
         $this->connection->beginTransaction();
 
-        $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS . ' WHERE id = :id');
+        $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS_CHOICES . ' WHERE id = :id');
         $stmt->execute(array(
             'id' => $id
         ));
