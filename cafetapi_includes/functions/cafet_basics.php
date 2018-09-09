@@ -13,6 +13,7 @@ use cafetapi\io\DataFetcher;
 use cafetapi\io\DatabaseConnection;
 use cafetapi\modules\cafet_app\CafetApp;
 use cafetapi\user\User;
+use cafetapi\user\Perm;
 
 global $basics_functions_loaded;
 
@@ -136,33 +137,64 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
             throw new CafetAPIException($additional_message, null, null, $file, $line);
             die();
         }
+        
+        global $user;
 
         $sub_error = explode('-', $error);
         $errors = cafet_get_errors_info();
 
         if (empty($errors)) {
-            $error = '01-500';
-            $error_type = '01 : server exception';
-            $error_message = 'Internal server error';
+            $info = array(
+                'error_code' => '01-500',
+                'error_type' => '01 : server exception',
+                'error_message' => 'Internal server error',
+            );
         } else {
-            $error_type = $errors[$sub_error[0]]['def'];
-            $error_message = $errors[$sub_error[0]][$sub_error[1]];
+            $info = array(
+                'error_code' => $error,
+                'error_type' => $errors[$sub_error[0]]['def'],
+                'error_message' => $errors[$sub_error[0]][$sub_error[1]],
+            );
         }
 
-        if (isset($additional_message)) {
-            $result = new ReturnStatement("error", array(
-                'error_code' => $error,
-                'error_type' => $error_type,
-                'error_message' => $error_message,
-                'additional_message' => $additional_message
-            ));
-        } else {
-            $result = new ReturnStatement("error", array(
-                'error_code' => $error,
-                'error_type' => $error_type,
-                'error_message' => $error_message
-            ));
+        if (isset($additional_message))
+            $info['additional_message'] = $additional_message;
+        
+        if(isset($user) && $user->hasPermission(Perm::GLOBAL_DEBUG)) {
+            $debug_backtrace = debug_backtrace();
+            $backtrace = '';
+            
+            while( ($trace = array_shift($debug_backtrace)) !== null) {
+                $backtrace .= "\n";
+                
+                if(isset($trace['file'])) {
+                    $backtrace .= 'in ' . $trace['file'];
+                    $backtrace .= ' at line ' . $trace['line'] . ': ';
+                } else {
+                    $backtrace .= 'called by: ';
+                }
+                
+                if(isset($trace['class'])) {
+                    $backtrace .= $trace['class'] . $trace['type'];
+                }
+                
+                $backtrace .= $trace['function'] . '()';
+                
+                if($trace['args']) {
+                    $backtrace .= ' with args ' . str_replace('\\\\', '\\', json_encode($trace['args']));
+                } else {
+                    $backtrace .= ' with no args';
+                }
+            }
+            
+            if($additional_message) {
+                $info['additional_message'] .= "\n" . $backtrace;
+            } else {
+                $info['additional_message'] = $backtrace;
+            }
         }
+
+        $result = new ReturnStatement("error", $info);
 
         $result->print();
 

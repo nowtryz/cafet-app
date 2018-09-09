@@ -235,8 +235,6 @@ class CafetApp
             cafet_throw_error('02-002', $e->getMessage());
         } catch (NotEnoughtMoneyException $e) {
             cafet_throw_error('04-003', $e->getMessage());
-        } catch (Exception $e) {
-            cafet_throw_error('01-500', $e->getMessage());
         }
 
         if ($result === null)
