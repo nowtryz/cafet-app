@@ -934,6 +934,81 @@ class DataFetcher extends DatabaseConnection
 
         return $result;
     }
+    
+    public final function getChoice(int $choice_id): ?Choice
+    {
+        $stmt = $this->connection->prepare('SELECT '
+            . 'formula, '
+            . 'name '
+            . 'FROM ' . self::FORMULAS_CHOICES . ' '
+            . 'WHERE id = :id');
+        
+        $formula_id = 0;
+        $choice_name = '';
+        
+        $stmt->bindColumn('formula', $formula_id, PDO::PARAM_INT);
+        $stmt->bindColumn('name', $choice_name, PDO::PARAM_STR);
+        
+        $stmt->execute(array(
+            'id' => $choice_id
+        ));
+        
+        $this->check_fetch_errors($stmt);
+        
+        $stmt->fetch();
+        
+        $stmt = $this->connection->prepare('SELECT '
+            . 'p.id id, '
+            . 'e.name name, '
+            . 'e.price price, '
+            . 'p.image image, '
+            . 'p.product_group pgroup, '
+            . 'p.viewable viewable, '
+            . 'DATE_FORMAT(e.edit, "%H") hour, '
+            . 'DATE_FORMAT(e.edit, "%i") mins, '
+            . 'DATE_FORMAT(e.edit, "%s") secs, '
+            . 'DATE_FORMAT(e.edit, "%d") day, '
+            . 'DATE_FORMAT(e.edit, "%c") month, '
+            . 'DATE_FORMAT(e.edit, "%Y") year '
+            . 'FROM ' . self::PRODUCTS . ' p '
+            . 'LEFT JOIN ' . self::PRODUCTS_EDITS . ' e '
+            . 'ON p.last_edit = e.id '
+            . 'LEFT JOIN ' . self::FORMULAS_CHOICES_PRODUCTS . ' c '
+            . 'ON c.product = p.id '
+            . 'WHERE c.choice = :id');
+        
+        $id = $group_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $name = $price = $image = '';
+        $viewable = false;
+        
+        $stmt->bindColumn('id', $id, PDO::PARAM_INT);
+        $stmt->bindColumn('name', $name, PDO::PARAM_STR);
+        $stmt->bindColumn('price', $price, PDO::PARAM_STR);
+        $stmt->bindColumn('image', $image, PDO::PARAM_STR);
+        $stmt->bindColumn('pgroup', $group_id, PDO::PARAM_INT);
+        $stmt->bindColumn('viewable', $viewable, PDO::PARAM_BOOL);
+        $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
+        $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
+        $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
+        $stmt->bindColumn('day', $day, PDO::PARAM_INT);
+        $stmt->bindColumn('month', $month, PDO::PARAM_INT);
+        $stmt->bindColumn('year', $year, PDO::PARAM_INT);
+            
+        $stmt->execute(array(
+            'id' => $choice_id
+        ));
+        
+        $this->check_fetch_errors($stmt);
+        
+        $choice = array();
+        
+        while ($stmt->fetch())
+            $choice[] = new Product($id, $name, floatval($price), $group_id, $image, $viewable, new Calendar($year, $month, $day, $hour, $mins, $secs));
+            
+        $stmt->closeCursor();
+        
+        return new Choice($choice_id, $choice_name, $formula_id, $choice);
+    }
 
     public final function searchClient(string $expression): array
     {
