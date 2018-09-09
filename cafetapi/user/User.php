@@ -145,7 +145,7 @@ class User extends JSONParsable implements Permissible, \Serializable
      */
     public function hasPermission(string $permission): bool
     {
-        Perm::checkPermission($permission, $this);
+        return Perm::checkPermission($permission, $this);
     }
 
     /**
