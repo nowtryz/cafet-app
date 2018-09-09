@@ -21,10 +21,7 @@ class ReturnStatement
      */
     public function __construct(string $status, $return)
     {
-        if (! is_array($return) && ! $return instanceof JSONParsable)
-            cafet_throw_error('01-500');
-
-        if (is_array($return)) {
+        if (is_array($return) || is_bool($return)) {
             $this->array = array(
                 'status' => $status,
                 'result' => $return,
@@ -45,8 +42,8 @@ class ReturnStatement
 
     private function throw_internal_server_error()
     {
-        cafet_log('unable to encode return statement');
-        cafet_throw_error('01-500', 'unable to encode return statement');
+        cafet_log('An error occured while parsing the result');
+        cafet_throw_error('01-500', 'An error occured while parsing the result');
     }
 
     public final function print()
