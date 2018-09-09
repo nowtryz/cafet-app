@@ -20,6 +20,8 @@ class Perm
     const GLOBAL_UNTOUCHABLE = 'global_untouchable';
 
     const GLOBAL_CONNECT = 'global_connect';
+    
+    const GLOBAL_DEBUG = 'global_debug';
 
     // SITE
     const SITE = 'site';
