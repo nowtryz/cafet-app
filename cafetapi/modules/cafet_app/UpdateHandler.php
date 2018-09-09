@@ -346,7 +346,7 @@ class UpdateHandler extends Handler
 
         if (! isset($arguments['product_id']) || ! isset($arguments['group_id']))
             cafet_throw_error('03-006');
-        if (gettype($arguments['product_id']) != 'integer' || gettype($arguments['group_id']))
+        if (gettype($arguments['product_id']) != 'integer' || gettype($arguments['group_id']) != 'integer')
             cafet_throw_error('03-005', 'group_id and product_id must be integers');
 
         $product_id = $arguments['product_id'];
@@ -463,7 +463,7 @@ class UpdateHandler extends Handler
      * @return bool if the query have correctly been completed
      * @since API 1.0.0 (2018)
      */
-    public final function set_formula_fiewable(array $arguments): bool
+    public final function set_formula_viewable(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
             cafet_throw_error('02_002');
