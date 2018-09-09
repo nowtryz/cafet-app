@@ -18,6 +18,10 @@ global $basics_functions_loaded;
 
 if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
     $basics_functions_loaded = true;
+    
+    function cafet_is_app_request() {
+        return isset($_POST['origin']) && $_POST['origin'] == 'cafet_app';
+    }
 
     /**
      * Listen post request for app call
@@ -26,7 +30,11 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
      */
     function cafet_listen_app_request()
     {
-        if (isset($_POST['origin']) && $_POST['origin'] == 'cafet_app') {
+        if (cafet_is_app_request()) {
+            error_reporting(-1);
+            set_error_handler('cafet_error_handler');
+            set_exception_handler('cafet_exception_handler');
+            
             try {
                 new CafetApp();
             } catch (Exception $e) {
@@ -124,7 +132,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
      */
     function cafet_throw_error(string $error, string $additional_message = null, string $file = null, int $line = null)
     {
-        if (! isset($_POST['origin']) || $_POST['origin'] != 'cafet_app') {
+        if (!cafet_is_app_request()) {
             throw new CafetAPIException($additional_message, null, null, $file, $line);
             die();
         }
@@ -161,6 +169,10 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         exit();
     }
 
+    /**
+     * Thow the cafet error corresponding to the http error
+     * @param string|int $error
+     */
     function cafet_http_error($error)
     {
         $cafet_errors = cafet_get_errors_info();
@@ -168,6 +180,42 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         foreach ($cafet_errors as $errorgroup => $cafet_error)
             if (in_array($error, $cafet_error))
                 cafet_throw_error($errorgroup . '-' . $error);
+    }
+    
+    function cafet_error_handler($errno, $errmsg, $filename, $linenum, $errcontext)
+    {
+        static $errortype = array (
+            E_ERROR              => 'Error',
+            E_WARNING            => 'Warning',
+            E_PARSE              => 'Parsing Error',
+            E_NOTICE             => 'Notice',
+            E_CORE_ERROR         => 'Core Error',
+            E_CORE_WARNING       => 'Core Warning',
+            E_COMPILE_ERROR      => 'Compile Error',
+            E_COMPILE_WARNING    => 'Compile Warning',
+            E_USER_ERROR         => 'User Error',
+            E_USER_WARNING       => 'User Warning',
+            E_USER_NOTICE        => 'User Notice',
+            E_STRICT             => 'Runtime Notice',
+            E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
+        );
+        
+        $msg  = $errortype[$errno] . ': ';
+        $msg .= $errmsg . ': ';
+        $msg .= 'entry in ' . $filename;
+        $msg .= ' on line ' . $linenum;
+        
+        cafet_throw_error('01-500', $msg);
+    }
+    
+    function cafet_exception_handler(Throwable $e)
+    {
+        $msg  = get_class($e) . ' (' . $e->getCode() . '): ';
+        $msg .= $e->getMessage() . ': ';
+        $msg .= 'entry in ' . $e->getFile();
+        $msg .= ' on line ' . $e->getLine();
+        
+        cafet_throw_error('01-500', $msg);
     }
 
     /**
@@ -345,7 +393,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         }
 
         // Set session name and cookie name
-        session_name("CAFET_" . strtoupper(CONFIGURATIONS['organisation']) . "_ID");
+        session_name("CAFET_" . strtoupper(cafet_get_configurations()['organisation']) . "_ID");
 
         // construe arguments
         if (isset($session_id))
