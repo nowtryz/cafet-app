@@ -158,7 +158,7 @@ class DatabaseConnection
         if (! in_array(self::FORMULAS, $tables)) {
             $sql = 'CREATE TABLE IF NOT EXISTS `' . self::FORMULAS . '` (';
             $sql .= '  `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "formula\'s id",';
-            $sql .= '  `image` longtext NOT NULL COMMENT "formula\'s image",';
+            $sql .= '  `image` longtext COMMENT "formula\'s image",';
             $sql .= '  `viewable` tinyint(1) NOT NULL DEFAULT "1" COMMENT "is the formula viewable",';
             $sql .= '  `last_edit` bigint(20) NOT NULL DEFAULT "0" COMMENT "last formula edit id",';
             $sql .= '  PRIMARY KEY (`id`),';
