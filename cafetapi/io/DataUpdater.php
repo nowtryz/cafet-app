@@ -89,7 +89,7 @@ class DataUpdater extends DatabaseConnection
     {
         $this->connection->beginTransaction();
 
-        $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_GROUP . '(name, display_name) VALUES(:name, :dname)');
+        $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_GROUPS . '(name, display_name) VALUES(:name, :dname)');
         $stmt->execute(array(
             'name' => $name,
             'dname' => $name
