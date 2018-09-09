@@ -6,16 +6,18 @@ use cafetapi\data\Formula;
 use cafetapi\data\FormulaOrdered;
 use cafetapi\data\Product;
 use cafetapi\data\ProductGroup;
+use cafetapi\data\ProductOrdered;
+use cafetapi\io\DataUpdater;
 use cafetapi\user\Perm;
 use cafetapi\user\User;
-use cafetapi\data\ProductOrdered;
 
 class UpdateHandler extends Handler
 {
 
     public function __construct()
     {
-        parent::__construct('cafetapi\io\DataUpdater');
+        parent::__construct();
+        $this->connection = new DataUpdater();
     }
 
     /**
@@ -99,7 +101,7 @@ class UpdateHandler extends Handler
 
         if (! isset($arguments['formula_id']) || ! isset($arguments['name']))
             cafet_throw_error('03-006');
-        if (gettype($entry['formula_id']) != 'integer')
+            if (gettype($arguments['formula_id']) != 'integer')
             cafet_throw_error('03-005', 'formula_id must be an integer');
 
         $formula_id = $arguments['formula_id'];
@@ -123,11 +125,11 @@ class UpdateHandler extends Handler
 
         if (! isset($arguments['choice_id']) || ! isset($arguments['product_id']))
             cafet_throw_error('03-006');
-        if (gettype($entry['choice_id']) != 'integer' || gettype($entry['product_id']) != 'integer')
+            if (gettype($arguments['choice_id']) != 'integer' || gettype($arguments['product_id']) != 'integer')
             cafet_throw_error('03-005', 'ids must be integers');
 
         $choice_id = $arguments['choice_id'];
-        $product_id = $aguments['product_id'];
+        $product_id = $arguments['product_id'];
 
         return $this->connection->addProductToChoice($choice_id, $product_id);
     }
@@ -147,7 +149,7 @@ class UpdateHandler extends Handler
 
         if (! isset($arguments['choice_id']) || ! isset($arguments['product_id']))
             cafet_throw_error('03-006');
-        if (gettype($entry['choice_id']) != 'integer' || gettype($entry['product_id']) != 'integer')
+            if (gettype($arguments['choice_id']) != 'integer' || gettype($arguments['product_id']) != 'integer')
             cafet_throw_error('03-005', 'ids must be integers');
 
         $choice_id = $arguments['choice_id'];
@@ -172,7 +174,7 @@ class UpdateHandler extends Handler
 
         if (! isset($arguments['client_id']) || ! isset($arguments['order']))
             cafet_throw_error('03-006');
-        if (gettype($entry['client_id']) != 'integer')
+            if (gettype($arguments['client_id']) != 'integer')
             cafet_throw_error('03-005', 'client_id must be an integer');
         if (! is_array($arguments['order']))
             cafet_throw_error('03-005', 'what\'s order?');
