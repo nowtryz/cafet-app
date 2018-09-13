@@ -2,14 +2,38 @@
 Both REST API for http connections and PHP librairy. Manage Interactions between client/server-side applications and database
 
 ------
+## Installing development environment
+Clone the git repository
+```
+git@git.nowtryz.net:cafet-app/php-api-server.git
+cd php-api-server
+```
 
-## Requierments
+Run development environment
+```
+docker-compose up --build
+```
 
-- Apache with PDO and mod_rewrite enabled, tested with Apache 2.4.33
-- PHP 7.1 or upper, tested with:
+
+
+## Stand-alone installation requierments
+
+### Apache
+- Tested with Apache 2.4.33
+- Extension mod_rewrite enabled
+
+### PHP 7.1 or upper with PDO, tested with:
+- Tested version:
     - PHP 7.1.16
     - PHP 7.2.4
-- MySQL or PostgreSQL, tested with MySQL 5.7.21
+- Extension:
+    - PDO
+    - PDO_mysql
+
+### MySQL or PostgreSQL
+- tested with MySQL 5.7.21
+
+
 
 ## Future updates
 
