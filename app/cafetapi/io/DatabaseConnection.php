@@ -91,8 +91,11 @@ class DatabaseConnection
         self::$username = $db_infos['username'];
         self::$password = $db_infos['password'];
 
+        $dsn  = self::$driver . ':host=' . self::$host . ';dbname=' . self::$database . ';charset=utf8';
+        $dsn .= isset($db_infos['port']) ? ';port=' . $db_infos['port'] : '';
+
         try {
-            self::$globalConnection = new PDO(self::$driver . ':host=' . self::$host . ';dbname=' . self::$database . ';charset=utf8', self::$username, self::$password);
+            self::$globalConnection = new PDO($dsn, self::$username, self::$password);
             self::$globalConnection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
             self::$globalConnection->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
             self::checkTables();
@@ -100,7 +103,7 @@ class DatabaseConnection
         } catch (PDOException $e) {
             $backtrace = debug_backtrace()[1];
             cafet_log($e->getMessage());
-            cafet_throw_error('01-001', 'unable to connect to the database', $backtrace['file'], $backtrace['line']);
+            cafet_throw_error('01-001', 'unable to connect to the database: ' . $e->getMessage(), $backtrace['file'], $backtrace['line']);
         }
     }
 
@@ -475,8 +478,11 @@ class DatabaseConnection
             if (! (isset($db_infos['driver']) && isset($db_infos['host']) && isset($db_infos['database']) && isset($db_infos['username']) && isset($db_infos['password'])))
                 cafet_throw_error('01-001');
 
+            $dsn  = self::$driver . ':host=' . self::$host . ';dbname=' . self::$database . ';charset=utf8';
+            $dsn .= isset($db_infos['port']) ? ';port=' . $db_infos['port'] : '';
+    
             try {
-                $this->connection = new PDO($db_infos['driver'] . ':dbname=' . $db_infos['database'] . ';host=' . $db_infos['host'] . ';charset=utf8', $db_infos['username'], $db_infos['password']);
+                $this->connection = new PDO($dsn, self::$username, self::$password);
                 $this->connection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
                 $this->connection->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
             } catch (PDOException $e) {

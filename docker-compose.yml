@@ -1,0 +1,64 @@
+version: "3"
+services:
+
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    image: cafet-php-server:dev
+    container_name: cafet-server
+    ports:
+      - "80:80"
+    links:
+      - db
+    depends_on:
+      - db
+    volumes:
+      - php-logs:/var/log
+    networks:
+      - cafet_net
+
+  db:
+    build:
+      context: .
+      dockerfile: docker/mysql/Dockerfile
+    container_name: cafet-server-mysql
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=mecatro
+      - MYSQL_DATABASE=mecatronesql
+      - MYSQL_USER=mecatro
+      - MYSQL_PASSWORD=mecatro
+    ports:
+      - '3306:3306'
+    networks:
+      - cafet_net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: cafet-server-phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_VERBOSE=Cafet MySQL Server
+      - PMA_PORT=3306
+      - PMA_USER=mecatro
+      - PMA_PASSWORD=mecatro
+    restart: always
+    ports:
+     - '81:80'
+    volumes:
+      - pma-sessions:/sessions
+    links:
+      - db
+    depends_on:
+      - db
+    networks:
+      - cafet_net
+
+volumes:
+  php-logs:
+  pma-sessions:
+
+networks:
+  cafet_net:

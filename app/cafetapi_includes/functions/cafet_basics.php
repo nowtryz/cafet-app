@@ -265,6 +265,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
 
                 $db_info['driver'] = Database::driver;
                 $db_info['host'] = Database::host;
+                $db_info['port'] = Database::port;
                 $db_info['database'] = Database::database;
                 $db_info['username'] = Database::username;
                 $db_info['password'] = Database::password;
