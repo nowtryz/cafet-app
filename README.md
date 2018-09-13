@@ -23,9 +23,10 @@ docker-compose up --build
 - Extension mod_rewrite enabled
 
 ### PHP 7.1 or upper with PDO, tested with:
-- Tested version:
+- Tested versions:
     - PHP 7.1.16
     - PHP 7.2.4
+    - PHP 7.2.9
 - Extension:
     - PDO
     - PDO_mysql
