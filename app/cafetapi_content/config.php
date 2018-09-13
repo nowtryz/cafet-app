@@ -33,7 +33,15 @@ class Database
      * @var string
      * @since API 1.0.0 (2018)
      */
-    const host = 'localhost:3306';
+    const host = 'localhost';
+
+    /**
+     * Port du serveur
+     *
+     * @var string
+     * @since API 1.0.0 (2018)
+     */
+    const port = '3306';
 
     /**
      * Nom de la base de données à utiliser

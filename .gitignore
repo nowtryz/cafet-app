@@ -1,5 +1,11 @@
+# Eclypse
 .settings/
 .buildpath
 .project
 .classpath
 bin/
+
+# Docker
+/php-logs/
+/pma-sessions/
+/app/phpinfo.php
