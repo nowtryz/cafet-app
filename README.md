@@ -5,7 +5,7 @@ Both REST API for http connections and PHP librairy. Manage Interactions between
 ## Installing development environment
 Clone the git repository
 ```
-git@git.nowtryz.net:cafet-app/php-api-server.git
+git clone git@git.nowtryz.net:cafet-app/php-api-server.git
 cd php-api-server
 ```
 
