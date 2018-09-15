@@ -3,6 +3,8 @@ Both REST API for http connections and PHP librairy. Manage Interactions between
 
 ------
 ## Installing development environment
+
+### Source code
 Clone the git repository
 ```
 git clone git@git.nowtryz.net:cafet-app/php-api-server.git
@@ -13,6 +15,9 @@ Run development environment
 ```
 docker-compose up --build
 ```
+
+### Loging in app
+Demo user is `Nowtryz <damien.djmb@gmail.com>` with password `admin`. Easy to keep in mind :wink:, let's enjoy!
 
 
 
