@@ -516,7 +516,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
      */
     function cafet_verify_password(string $password, string $hash, string $pseudo = null): bool
     {
-        if($password == '')
+        if($hash == '')
             return false;
 
         $hash_info = explode('.', $hash);
@@ -526,10 +526,10 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
                 return sha1(CONFIGURATIONS['salt'] . $password . $pseudo) === $hash;
         }
 
-        if (count($hash) < 3)
+        if (count($hash_info) < 3)
             throw new InvalidArgumentException('Wrong password hash format');
 
-        return hash($hash[0], $hash[1] . $password) === $hash[2];
+        return hash($hash_info[0], $hash_info[1] . $password) === $hash_info[2];
     }
 
     /**
