@@ -24,11 +24,6 @@ services:
       dockerfile: docker/mysql/Dockerfile
     container_name: cafet-server-mysql
     restart: always
-    environment:
-      - MYSQL_ROOT_PASSWORD=mecatro
-      - MYSQL_DATABASE=mecatronesql
-      - MYSQL_USER=mecatro
-      - MYSQL_PASSWORD=mecatro
     ports:
       - '3306:3306'
     networks:

@@ -43,33 +43,33 @@ class DatabaseConnection
 
     private static $lastQueryErrors = array();
 
-    const CONFIG = 'cafet_' . 'config';
+    const CONFIG = 'cafet_config';
 
-    const RELOADS = 'cafet_' . 'balance_reloads';
+    const RELOADS = 'cafet_balance_reloads';
 
-    const EXPENSES = 'cafet_' . 'expenses';
+    const EXPENSES = 'cafet_expenses';
 
-    const FORMULAS = 'cafet_' . 'formulas';
+    const FORMULAS = 'cafet_formulas';
 
-    const FORMULAS_BOUGHT = 'cafet_' . 'formulas_bought';
+    const FORMULAS_BOUGHT = 'cafet_formulas_bought';
 
-    const FORMULAS_BOUGHT_PRODUCTS = 'cafet_' . 'formulas_bought_products';
+    const FORMULAS_BOUGHT_PRODUCTS = 'cafet_formulas_bought_products';
 
-    const FORMULAS_CHOICES = 'cafet_' . 'formulas_choices';
+    const FORMULAS_CHOICES = 'cafet_formulas_choices';
 
-    const FORMULAS_CHOICES_PRODUCTS = 'cafet_' . 'formulas_choices_products';
+    const FORMULAS_CHOICES_PRODUCTS = 'cafet_formulas_choices_products';
 
-    const FORMULAS_EDITS = 'cafet_' . 'formulas_edits';
+    const FORMULAS_EDITS = 'cafet_formulas_edits';
 
-    const PRODUCTS = 'cafet_' . 'products';
+    const PRODUCTS = 'cafet_products';
 
-    const PRODUCTS_BOUGHT = 'cafet_' . 'products_bought';
+    const PRODUCTS_BOUGHT = 'cafet_products_bought';
 
-    const PRODUCTS_EDITS = 'cafet_' . 'products_edits';
+    const PRODUCTS_EDITS = 'cafet_products_edits';
 
-    const PRODUCTS_GROUPS = 'cafet_' . 'products_groups';
+    const PRODUCTS_GROUPS = 'cafet_products_groups';
 
-    const REPLENISHMENTS = 'cafet_' . 'replenishments';
+    const REPLENISHMENTS = 'cafet_replenishments';
 
     const USERS = 'users';
 

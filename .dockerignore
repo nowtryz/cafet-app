@@ -1,0 +1,9 @@
+# Eclypse
+.settings/
+.buildpath
+.project
+.classpath
+bin/
+
+#Docker
+Dockerfile

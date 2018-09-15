@@ -8,4 +8,3 @@ bin/
 # Docker
 /php-logs/
 /pma-sessions/
-/app/phpinfo.php
