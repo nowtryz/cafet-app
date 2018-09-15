@@ -516,6 +516,9 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
      */
     function cafet_verify_password(string $password, string $hash, string $pseudo = null): bool
     {
+        if($password == '')
+            return false;
+
         $hash_info = explode('.', $hash);
 
         if (count($hash_info) == 1) {
