@@ -5,8 +5,6 @@ SET foreign_key_checks=0;
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_balance_reloads` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "reload\'s id",
   `user_id` bigint(11) NOT NULL COMMENT "user\'s id",
@@ -31,13 +29,13 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 -- --
 -- cafet_config
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT "id",
   `name` varchar(255) NOT NULL COMMENT "configuration key",
@@ -53,8 +51,6 @@ CREATE TABLE IF NOT EXISTS `cafet_config` (
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_expenses` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "transaction\'s id",
   `user_id` bigint(11) NOT NULL COMMENT "user\'s id",
@@ -71,8 +67,6 @@ CREATE TABLE IF NOT EXISTS `cafet_expenses` (
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_formulas` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "formula\'s id",
   `image` longtext COMMENT "formula\'s image",
@@ -93,6 +87,8 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
@@ -100,8 +96,6 @@ $$
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_formulas_bought` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "transaction id",
   `expense_id` bigint(11) NOT NULL COMMENT "expense id",
@@ -131,6 +125,8 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
@@ -138,8 +134,6 @@ $$
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_formulas_bought_products` (
  `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "id",
   `transaction_id` bigint(11) NOT NULL COMMENT "id in formulas bought",
@@ -163,6 +157,8 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
@@ -170,8 +166,6 @@ $$
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_formulas_choices` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "formula choice id",
   `formula` bigint(11) NOT NULL COMMENT "formula id",
@@ -192,6 +186,8 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
@@ -199,8 +195,6 @@ $$
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_formulas_choices_products` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT "id",
   `choice` bigint(20) NOT NULL COMMENT "formula choice id",
@@ -218,8 +212,6 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_choices_products` (
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_formulas_edits` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT "id",
   `formula` bigint(20) NOT NULL COMMENT "formula id",
@@ -262,6 +254,8 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
@@ -269,8 +263,6 @@ $$
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_products` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "product id",
   `product_group` bigint(11) NOT NULL DEFAULT "0" COMMENT "product group",
@@ -289,8 +281,6 @@ CREATE TABLE IF NOT EXISTS `cafet_products` (
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_products_bought` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "transaction id",
   `expense_id` bigint(11) NOT NULL COMMENT "expense id",
@@ -321,6 +311,8 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
@@ -328,8 +320,6 @@ $$
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_products_edits` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT "edit id",
   `product` bigint(20) NOT NULL COMMENT "product id",
@@ -372,6 +362,8 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
@@ -379,8 +371,6 @@ $$
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_products_groups` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "product group id",
   `name` varchar(30) NOT NULL COMMENT "product group name",
@@ -400,6 +390,8 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
@@ -407,8 +399,6 @@ $$
 -- --
 
 -- Table
-DELIMITER ;
-
 CREATE TABLE IF NOT EXISTS `cafet_replenishments` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "replenishment id",
   `product_id` bigint(11) NOT NULL COMMENT "product id",
@@ -431,11 +421,11 @@ BEGIN
 END
 $$
 
+DELIMITER ;
+
 
 
 -- --
 -- End
 -- --
-DELIMITER ;
-
 COMMIT ;
