@@ -119,6 +119,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
     function cafet_log(string $log)
     {
         global $show_log;
+        error_log($log);
         if (isset($show_log) && $show_log)
             echo $log;
         // TODO log support

@@ -379,6 +379,8 @@ class DatabaseConnection
         $array = $stmt->errorInfo();
         $array[] = $stmt->queryString;
         self::$lastQueryErrors[] = $array;
+        print_r($array);
+        cafet_log('SQL error: [' . $array[0] . '] ' . $array[2] . ' (with query:' . $array[3] . ')');
     }
 
     /**
