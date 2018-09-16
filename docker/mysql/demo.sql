@@ -11,7 +11,7 @@ SET time_zone = "+00:00";
 -- User table for demo
 -- --
 INSERT INTO `users` (`id`, `Pseudo`, `MDP`, `Annee`, `SU`, `admin`, `cafet`, `res_cafet`, `adm_cafet`, `Comm`, `Prenom`, `Nom`, `Email`, `Tel`, `actif`, `adherent`, `Credit`, `log`, `online`, `regkey`) VALUES
-(1,  'Nowtryz',     'sha256.8db06fe120f43a26714ec40d798917e2.02927bec4687c5681529df1634f9109194d5f25ba00671a569d584990392dbfd', 2016, 0, 1, 1, 1, 1, 1, 'DJOMBY',           'DAMIEN',      'damien.djmb@gmail.com', '0611223344', 3, 1, 67.5, '2018-01-24 13:50:21', 0, '0'),
+(1,  'Nowtryz',     'sha256.8db06fe120f43a26714ec40d798917e2.02927bec4687c5681529df1634f9109194d5f25ba00671a569d584990392dbfd', 2016, 0, 1, 1, 1, 1, 1, 'Damien', 'Djomby', 'damien.djmb@gmail.com', '0611223344', 3, 1, 67.5, '2018-01-24 13:50:21', 0, '0'),
 (2,  'Agassiz',     '', 2018, 0, 0, 1, 0, 0, 0, 'Louis',            'Agassiz',     'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
 (3,  'Ampère',      '', 2018, 0, 0, 1, 0, 0, 0, 'André-Marie',      'Ampère',      'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
 (4,  'Avogadro',    '', 2018, 0, 0, 1, 0, 0, 0, 'Amedeo',           'Avogadro',    'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
@@ -48,7 +48,7 @@ INSERT INTO `users` (`id`, `Pseudo`, `MDP`, `Annee`, `SU`, `admin`, `cafet`, `re
 (35, 'Pythagoras',  '', 2018, 0, 0, 1, 0, 0, 0, 'Damien',           'Pythagoras',  'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
 (36, 'Riemann',     '', 2018, 0, 0, 1, 0, 0, 0, 'Bernhard',         'Riemann',     'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
 (37, 'Tesla',       '', 2018, 0, 0, 1, 0, 0, 0, 'Nikola',           'Tesla',       'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
-(38, 'Linux',       '', 2018, 0, 0, 1, 0, 0, 0, 'Linus ',           'Torvalds',    'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
+(38, 'Linux',       '', 2018, 0, 0, 1, 0, 0, 0, 'Linus',            'Torvalds',    'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
 (39, 'Turing',      '', 2018, 0, 0, 1, 0, 0, 0, 'Alan',             'Turing',      'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
 (40, 'Volta',       '', 2018, 0, 0, 1, 0, 0, 0, 'Alessandro',       'Volta',       'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0'),
 (41, 'Wright',      '', 2018, 0, 0, 1, 0, 0, 0, 'Orville',          'Wright',      'scientist@no.dom',      '0611223344', 0, 0, 20,   '2018-09-14 16:00:00', 0, '0');
