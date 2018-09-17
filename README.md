@@ -22,7 +22,7 @@ Calls must be made with the following json POST *(or at least with all root obje
 }
 ```
 
-Here is an exemple for the `login` call, **note that it's the only action which dosn't need a `session_id`**:
+Here is an example for the `login` call, **note that it's the only action which dosn't need a `session_id`**:
 ```json
 {
     "origin": "cafet_app",
@@ -31,6 +31,37 @@ Here is an exemple for the `login` call, **note that it's the only action which 
     "arguments": {
         "email": "test@localhost.loc",
         "password": "pass"
+    }
+}
+```
+
+#### Save order
+The `save order` action has a very particular structure because its arguments must follow a specific structure too. So here is an example of a `save order` action:
+```json
+{
+    "origin": "cafet_app",
+    "version": "1.0",
+    "session_id": "some_id",
+    "action": "saveOrder",
+    "arguments": {
+        "client_id": 256,
+        "order": [
+            {
+                "type": "product",
+                "id": 65,
+                "amount": 4
+            },
+            {
+                "type": "formula",
+                "id": 2,
+                "amont": 1,
+                "products": [
+                    2,
+                    16,
+                    69
+                ]
+            }
+        ]
     }
 }
 ```
@@ -44,7 +75,7 @@ Responses are also json object following the structure as shown bellow.
 }
 ```
 
-Here is an exemple for an error result:
+Here is an example for an error result:
 ```json
 {
     "status": "error",
