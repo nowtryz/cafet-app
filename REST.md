@@ -85,13 +85,13 @@ End points follow a simple convention, so these are the methods to reach end poi
 
 | Path                                                                                       | Methods
 |--------------------------------------------------------------------------------------------|--------
-| `/api/v2/cafet/.../%{id}`                                                                  | `GET` / `PUT` / `PATCH`
+| `/api/v2/cafet/.../%{id}`                                                                  | `GET` / `PUT` / `PATCH` / `DELETE`
 | arrays like `/api/v2/cafet/.../list` (and its child) or `/api/v2/cafet/.../%{id}` children | `GET`
 | `/api/v2/cafet/.../new`                                                                    | `POST`
 | `/api/v2/cafet/.../search`                                                                 | `GET`
-| `/api/v2/user/login` and `/api/v2/cafet/user/logout`                                       | `GET`
+| `/api/v2/user/login` and `/api/v2/cafet/user/logout`                                       | `POST`
 | `/api/v2/user/current`                                                                     | `GET` / `PATCH`
-| `/api/v2/server/config`                                                                    | `GET` / `PUT` / `PATCHE`
+| `/api/v2/server/config`                                                                    | `GET` / `PUT` / `PATCH`
 | `/api/v2/server/infos`                                                                     | `GET`
 
 ## Where the hell body parts have gone?
@@ -112,9 +112,9 @@ For reponses:
 | Field        | New usage
 |--------------|----------
 | `"status"`   | On `OK`, the server simply responds with a `HTTP 200` code
-|              | On `Eror`, the server responds with an HTTP error code corresponding to the error occured
+|              | On `Error`, the server responds with an HTTP error code corresponding to the error occured
 | `"computing"`| `Computing` HTTP Header fiel
 | `"result"`   | It's now the HTTP body
 
 ## Errors
-:construction: Work in progress on eror binding.
+:construction: Work in progress on error binding.
