@@ -98,21 +98,21 @@ End points follow a simple convention, so these are the methods to reach end poi
 Every field excepte the "wanted resouce" have been modified to only keep this resource in the body. So usage of body parts changed and it may have changed a little.
 
 For queries (no content difference):
-| Field        | New usage
-|--------------|----------
-|`"origin"`    | Since namespaces have completly changed to cover queries from any origin and the calls have moved to `/api/`, the field is no longer needed
-|`"version"`   | It's now part of the resource URI: `http://%{host}/api/%{version}/...`
-|`"session_id"`| `User-Token` HTTP Header field
-|`"action"`    | As anybody noticed, it IS the URI e.g. `http://%{host}/api/v2/client/47`
-|`"arguments"` | It's now the HTTP Request body, but kept its JSON synthax
+| Field         | New usage
+|---------------|----------
+| `"origin"`    | Since namespaces have completly changed to cover queries from any origin and the calls have moved to `/api/`, the field is no longer needed
+| `"version"`   | It's now part of the resource URI: `http://%{host}/api/%{version}/...`
+| `"session_id"`| `User-Token` HTTP Header field
+| `"action"`    | As anybody noticed, it IS the URI e.g. `http://%{host}/api/v2/client/47`
+| `"arguments"` | It's now the HTTP Request body, but kept its JSON synthax
 
 For reponses:
-| Field       | New usage
-|-------------|----------
-|`"status"`   | On `OK`, the server simply responds with a `HTTP 200` code
-|             | On `Eror`, the server responds with an HTTP error code corresponding to the error occured
-|`"computing"`| `Computing` HTTP Header fiel
-|`"result"`   | It's now the HTTP body
+| Field        | New usage
+|--------------|----------
+| `"status"`   | On `OK`, the server simply responds with a `HTTP 200` code
+|              | On `Eror`, the server responds with an HTTP error code corresponding to the error occured
+| `"computing"`| `Computing` HTTP Header fiel
+| `"result"`   | It's now the HTTP body
 
 ## Errors
 :construction: Work in progress on eror binding.
