@@ -71,7 +71,8 @@ Responses are also json object following the structure as shown bellow.
 ```json
 {
 "status": "ok|error",
-"result": "the_json_object"
+"result": "the_json_object",
+"computing": "the time to compute in milis as a float"
 }
 ```
 
@@ -84,7 +85,8 @@ Here is an example for an error result:
         "error_type": "the error type",
         "error_message": "some message",
         "additional_message": "additional_message"
-    }
+    },
+    "computing": 0.01244
 }
 ```
 
