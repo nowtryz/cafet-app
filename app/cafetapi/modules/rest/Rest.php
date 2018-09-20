@@ -13,9 +13,10 @@ use cafetapi\modules\rest\errors\ClientError;
  */
 class Rest
 {
-    const VERSION = 'version';
-    const PATH = 'path';
-    const ACCEPT_HEADER = 'Accept';
+    const VERSION_FIELD = 'version';
+    const PATH_FIELD = 'path';
+    const RETURN_TYPE_FIELD = 'return_type';
+    const DEFAUL_RETURN_TYPE = 'json';
     //array $path, array $boddy, string $method, array $headers
     private $version;
     private $path;
@@ -29,19 +30,19 @@ class Rest
      */
     public function __construct()
     {
-        if (!isset($_REQUEST[self::VERSION]) || !isset($_REQUEST[self::PATH]) || !isset($_REQUEST['return_type']) || !isset($_SERVER['REQUEST_METHOD'])) {
+        if (!isset($_REQUEST[self::VERSION_FIELD]) || !isset($_REQUEST[self::PATH_FIELD]) || !isset($_REQUEST[self::RETURN_TYPE_FIELD]) || !isset($_SERVER['REQUEST_METHOD'])) {
             $this->printResponse(ServerError::internalServerError());
         }
         
-        if ($_REQUEST[self::VERSION] === '') $this->printResponse(ClientError::badRequest('missing version'));
-        if ($_REQUEST[self::PATH] === '') $this->printResponse(ClientError::badRequest('missing path'));
+        if ($_REQUEST[self::VERSION_FIELD] === '') $this->printResponse(ClientError::badRequest('missing version'));
+        if ($_REQUEST[self::PATH_FIELD] === '') $this->printResponse(ClientError::badRequest('missing path'));
         
         
-        $this->version = $_REQUEST[self::VERSION];
-        $this->path = explode("/", $_REQUEST[self::PATH]);
+        $this->version = $_REQUEST[self::VERSION_FIELD];
+        $this->path = explode("/", $_REQUEST[self::PATH_FIELD]);
         $this->body = json_decode(file_get_contents('php://input'), true);
         $this->method = $_SERVER['REQUEST_METHOD'];
-        $this->contentType = $_REQUEST['return_type'] !== '' ? $_REQUEST['return_type'] : 'json';
+        $this->contentType = $_REQUEST[self::RETURN_TYPE_FIELD] !== '' ? $_REQUEST[self::RETURN_TYPE_FIELD] : self::DEFAUL_RETURN_TYPE;
         $this->pretty = isset($_REQUEST['pretty']);
         
         $this->headers = apache_request_headers();

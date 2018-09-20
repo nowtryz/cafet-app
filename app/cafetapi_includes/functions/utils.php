@@ -89,3 +89,45 @@ function array_to_xml(array $data, SimpleXMLElement &$xml ) {
         }
     }
 }
+
+/**
+ * Compare versions with semantic versioning 2.0.0
+ * @param string $version1 the version that would be superior
+ * @param string $version2 base version
+ * @return mixed true if $version1 > $version2, false if $version1 < $version2 or nul if equal
+ */
+function is_version_superior_to(string $version1, string $version2, bool $compare_pre_versions = true) {
+    $temp_version1 = explode('-', array_shift(explode('+', $version1)));
+    $temp_version2 = explode('-', array_shift(explode('+', $version2)));
+    
+    $release1 = explode('.', $temp_version1[0]);
+    $release2 = explode('.', $temp_version2[0]);
+    
+    $pre_release1 = explode('.', @$temp_version1[1]);
+    $pre_release2 = explode('.', @$temp_version2[1]);
+    
+    unset($temp_version1);
+    unset($temp_version2);
+    
+    if($release1[0] > $release2[0]) return true;
+    if($release1[0] < $release2[0]) return false;
+    
+    if(!isset($release1[1]) || !isset($release2[1])) return null;
+    if($release1[1] > $release2[1]) return true;
+    if($release1[1] < $release2[1]) return false;
+    
+    if(!isset($release1[2]) || !isset($release2[2])) return null;
+    if($release1[2] > $release2[2]) return true;
+    if($release1[2] < $release2[2]) return false;
+    
+    if(!$compare_pre_versions) return null;
+    if(!$pre_release1 || !$pre_release2) return null;
+    
+    $max_comp = min(count($pre_release1), count($pre_release2));
+    for($i = 0; $i < $max_comp; $i++) {
+        if(strcmp($pre_release1, $pre_release2) > 0) return true;
+        if(strcmp($pre_release1, $pre_release2) < 0) return false;
+    }
+    
+    return null;
+}
