@@ -36,8 +36,8 @@ require CAFET_DIR . 'cafetapi_includes' . DIRECTORY_SEPARATOR . 'constants.php';
 /*
  * functions files
  */
-require INCLUDES_DIR . 'functions/utils.php';
-require INCLUDES_DIR . 'functions/cafet_basics.php';
+require FUNCTIONS_DIR . 'utils.php';
+require FUNCTIONS_DIR . 'cafet_basics.php';
 
 /*
  * Configure header check

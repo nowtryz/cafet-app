@@ -3,6 +3,7 @@
 	RewriteEngine On
 	RewriteOptions MaxRedirects=1
 
+	RewriteRule ^[^/]+.ico$ - [L]
 	RewriteRule ^assets/.*$ - [L]
 	RewriteRule ^.*\.php.*$ - [L]
 	RewriteRule ^(.+)/(.+)\.html$ index.php?module=$1&path=$2 [L]
