@@ -387,6 +387,26 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
 
         exit();
     }
+    
+    function cafet_render_formula_image(int $formula_id, bool $dwl = false)
+    {
+        if (headers_sent())
+            return false;
+            
+            $formula = (new DataFetcher())->getFormula($formula_id);
+            
+            if (! $formula)
+                return false;
+                
+                header('content-type: ' . guess_image_mime($formula->getImage()));
+                
+                if ($dwl)
+                    header('Content-Disposition: attachment; filename="' . $formula->getName() . get_base64_image_format($formula->getImage()) . '"');
+                    
+                    echo base64_decode($formula->getImage());
+                    
+                    exit();
+    }
 
     function cafet_send_reload_request(int $client_id)
     {

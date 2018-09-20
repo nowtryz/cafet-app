@@ -5,6 +5,7 @@
 
 	RewriteRule ^assets/.*$ - [L]
 	RewriteRule ^.*\.php.*$ - [L]
+	RewriteRule ^image\/(product|formula)(?:\/([0-9]+))?(?:\/size/([^\/\s]))?$ product-image.php?item=$1&id=$2&size=$3 [L,QSA]
 	RewriteRule ^api\/v([^\s\/]+)\/(.*)$ api.php/$2?version=$1 [L,QSA]
 	RewriteRule ^(.+)/(.+)\.html$ index.php?module=$1&path=$2 [L]
 	RewriteRule ^(.*)\.html$ index.php?t=$1 [L]

@@ -8,13 +8,13 @@ $products = (new cafetapi\io\DataFetcher())->getProducts(true);
 ?>
 <h2>Show product image</h2>
 
-<form action="../product-image.php" method="get" target="_blank">
+<form action="../image/product" method="get" target="_blank">
 	<label for="id">Product's id: </label><input type="number" name="id"
 		id="id" required /> <input type="checkbox" name="dl" id="dl-id" /><label
 		for="dl-id">Download</label> <input type="submit" value="Send" />
 </form>
 
-<form action="../product-image.php" method="get" target="_blank">
+<form action="../image/product" method="get" target="_blank">
 	<label for="id">Product's name: </label>
 
 <?php
