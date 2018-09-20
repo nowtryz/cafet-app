@@ -53,6 +53,14 @@ define('INCLUDES_DIR', CAFET_DIR . 'cafetapi_includes' . DIRECTORY_SEPARATOR);
  * @since API 1.0.0 (2018)
  */
 define('PAGES_DIR', INCLUDES_DIR . 'pages' . DIRECTORY_SEPARATOR);
+/**
+ * The cafet API function libraries directory
+ * <br/><em>cafetapi_includes/pages/</em>
+ *
+ * @var string FUNCTIONS_DIR
+ * @since API 1.0.0 (2018)
+ */
+define('FUNCTIONS_DIR', INCLUDES_DIR . 'functions' . DIRECTORY_SEPARATOR);
 
 /**
  * Whether the application should use URL Rewriting or not

@@ -3,6 +3,7 @@
 	RewriteEngine On
 	RewriteOptions MaxRedirects=1
 
+	RewriteRule ^[^/]+.ico$ - [L]
 	RewriteRule ^assets/.*$ - [L]
 	RewriteRule ^.*\.php.*$ - [L]
 	RewriteRule ^image\/(product|formula)(?:\/([0-9]+))?(?:\/size/([^\/\s]))?$ product-image.php?item=$1&id=$2&size=$3 [L,QSA]

@@ -1,6 +1,6 @@
 {
 	"01": {
-		"def": "01 : server exception",
+		"def": "server exception",
 		"001": "database connection error",
 		"002": "An error occured while fetching data",
 		"003": "Server misconfigured",
@@ -12,7 +12,7 @@
 		"505": "HTTP version not supported"
 	},
 	"02": {
-		"def": "02 : user exception",
+		"def": "user exception",
 		"001": "Authentication failed",
 		"002": "Permission not granted",
 		"003": "Banned : I was telling myself that I did not want to answer you anymore",
@@ -23,7 +23,7 @@
 		"408": "Request time-out"
 	},
 	"03": {
-		"def": "03 : message exception",
+		"def": "message exception",
 		"001": "Action not specified",
 		"002": "Version not specified",
 		"003": "Looks like the session ID went for a ride",
@@ -35,7 +35,7 @@
 		"401": "Synthax error in the json query"
 	},
 	"04": {
-		"def": "04 : application exception",
+		"def": "application exception",
 		"001": "Outdated client",
 		"002": "Back to the future! did you really get a newer client?",
 		"003": "The consumer hasn't enought money on its acount"
