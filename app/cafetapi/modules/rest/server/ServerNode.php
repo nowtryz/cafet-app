@@ -16,7 +16,7 @@ class ServerNode implements RestNode
      *
      * @see \cafetapi\modules\rest\RestNode::handle()
      */
-    protected function handle(array $path, array $body, string $method, array $headers)
+    public function handle(array $path, ?array $body, string $method, array $headers)
     {}
 }
 

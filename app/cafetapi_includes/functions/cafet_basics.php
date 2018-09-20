@@ -139,11 +139,28 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
             die();
         }
         
-        global $user;
+        $info = cafet_grab_error_infos($error, $additional_message);
 
+        $result = new ReturnStatement("error", $info);
+
+        $result->print();
+
+        exit();
+    }
+    
+    
+/**
+ * @param error
+ * @param additional_message
+ */
+
+    function cafet_grab_error_infos($error, $additional_message = null)
+    {
+        global $user;
+        
         $sub_error = explode('-', $error);
         $errors = cafet_get_errors_info();
-
+        
         if (empty($errors)) {
             $info = array(
                 'error_code' => '01-500',
@@ -157,7 +174,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
                 'error_message' => $errors[$sub_error[0]][$sub_error[1]],
             );
         }
-
+        
         if (isset($additional_message))
             $info['additional_message'] = $additional_message;
         
@@ -194,12 +211,8 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
                 $info['additional_message'] = $backtrace;
             }
         }
-
-        $result = new ReturnStatement("error", $info);
-
-        $result->print();
-
-        exit();
+        
+        return $info;
     }
 
     /**
@@ -635,6 +648,9 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
 
         echo '<h2>$_COOKIE</h2>';
         var_dump($_COOKIE);
+        
+        echo '<h2>$_GET</h2>';
+        var_dump($_GET);
 
         echo '<h2>$_REQUEST</h2>';
         var_dump($_REQUEST);
