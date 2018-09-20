@@ -123,6 +123,7 @@ $head
 $body
 </html>
 EOHTML;
+        exit();
     }
 }
 
