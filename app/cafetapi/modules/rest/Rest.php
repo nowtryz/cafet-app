@@ -2,6 +2,7 @@
 namespace cafetapi\modules\rest;
 
 use cafetapi\modules\rest\errors\ServerError;
+use Error;
 use Exception;
 use SimpleXMLElement;
 use cafetapi\modules\rest\errors\ClientError;
@@ -16,8 +17,11 @@ class Rest
     const VERSION_FIELD = 'version';
     const PATH_FIELD = 'path';
     const RETURN_TYPE_FIELD = 'return_type';
+    
+    const API_VERSION = '2.0.0';
     const DEFAUL_RETURN_TYPE = 'json';
-    //array $path, array $boddy, string $method, array $headers
+    const CHARSET = 'UTF-8';
+    
     private $version;
     private $path;
     private $body;
@@ -50,10 +54,16 @@ class Rest
         
         try {
             $this->printResponse(RootNode::handle($this->path, $this->body, $this->method, $this->headers));
-        } catch (Exception $e) {
+        } catch (Error | Exception $e) {
             $this->printResponse(ServerError::internalServerError());
         }
     }
+    
+    private function registerContentType(string $contentType) {
+        header('Content-type: '. $contentType . '; charset=' . self::CHARSET);
+    }
+    
+    
     
     private function printResponse(RestResponse $response) {
         header('HTTP/1.1 ' . $response->getCode() . ' ' . $response->getMessage());
@@ -63,6 +73,10 @@ class Rest
         switch ($this->contentType) {
             case 'xml':
                 $this->printXMLResponse($response);
+                break;
+            case 'yaml':
+            case 'yml':
+                $this->printYAMLResponse($response);
                 break;
             case 'json':
             default:
@@ -75,7 +89,7 @@ class Rest
     
     
     private function printXMLResponse(RestResponse $response) {
-        header('Content-type: application/xml; charset=UTF-8');
+        $this->registerContentType('application/xml');
         
         $xml = new SimpleXMLElement('<data/>');
         array_to_xml($response->getBody(), $xml);
@@ -89,8 +103,15 @@ class Rest
         }
     }
     
+    private function printYAMLResponse(RestResponse $response) {
+        $this->registerContentType('application/yaml');
+        
+        require_once INCLUDES_DIR . 'spyc.php';
+        echo spyc_dump($response->getBody());
+    }
+    
     private function printJSONResponse(RestResponse $response) {
-        header('Content-Type: application/json; charset=UTF-8');
+        $this->registerContentType('application/json');
         
         if($this->pretty) echo json_encode($response->getBody(), JSON_PRETTY_PRINT);
         else              echo json_encode($response->getBody());

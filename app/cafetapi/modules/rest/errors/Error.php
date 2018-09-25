@@ -33,7 +33,7 @@ class Error
      * <br/>Sould be return with a Reason header field.
      * @var string
      */
-    const HTTP_404 = 'Not Found';
+    const HTTP_404 = 'Resource Not Found';
     /**
      * The resource does not support method with whitch the request was made.
      * <br/><strong>MUST</strong> be return with a Allow header field.
