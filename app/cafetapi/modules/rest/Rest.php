@@ -104,7 +104,7 @@ class Rest
     }
     
     private function printYAMLResponse(RestResponse $response) {
-        $this->registerContentType('application/yaml');
+        $this->registerContentType('text/yaml');
         
         require_once INCLUDES_DIR . 'spyc.php';
         echo spyc_dump($response->getBody());
