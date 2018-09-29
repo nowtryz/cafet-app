@@ -7,7 +7,7 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-class Choice extends JSONParsable
+class Choice extends JSONParsable implements Data
 {
 
     private $id;
@@ -88,5 +88,11 @@ class Choice extends JSONParsable
     {
         return $this->parse_JSON(get_object_vars($this));
     }
+    
+    public function getProperties(): array
+    {
+        return get_object_vars($this);
+    }
+
 }
 

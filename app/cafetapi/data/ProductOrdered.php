@@ -8,7 +8,7 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-class ProductOrdered extends Ordered
+class ProductOrdered extends Ordered implements Data
 {
 
     /**
@@ -24,6 +24,11 @@ class ProductOrdered extends Ordered
     public function __construct(int $id, int $amount)
     {
         parent::__construct($id, $amount);
+    }
+    
+    public function getProperties(): array
+    {
+        return get_object_vars($this);
     }
 }
 

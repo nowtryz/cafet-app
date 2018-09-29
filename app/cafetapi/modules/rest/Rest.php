@@ -53,8 +53,9 @@ class Rest
         if(!$this->headers) $this->headers = array();
         
         try {
-            $this->printResponse(RootNode::handle($this->path, $this->body, $this->method, $this->headers));
+            $this->printResponse(RootNode::handle($this));
         } catch (Error | Exception $e) {
+            print $e;
             $this->printResponse(ServerError::internalServerError());
         }
     }
@@ -116,5 +117,84 @@ class Rest
         if($this->pretty) echo json_encode($response->getBody(), JSON_PRETTY_PRINT);
         else              echo json_encode($response->getBody());
     }
+    
+    
+    
+    
+    
+    public final function isClientAbleTo(string $permission) : bool
+    {
+        //TODO permission check
+        return true;
+    }
+    
+    public final function shiftPath() : ?string
+    {
+        return array_shift($this->path);
+    }
+    
+    /**
+     * Returns the $version
+     * @return mixed the $version
+     */
+    public final function getVersion() : string
+    {
+        return $this->version;
+    }
+
+    /**
+     * Returns the $path
+     * @return array the $path
+     */
+    public final function getPath() : array
+    {
+        return $this->path;
+    }
+
+    /**
+     * Returns the $body
+     * @return mixed the $body
+     */
+    public final function getBody() : ?array
+    {
+        return $this->body;
+    }
+
+    /**
+     * Returns the $method
+     * @return string the $method
+     */
+    public final function getMethod() : ?string
+    {
+        return $this->method;
+    }
+
+    /**
+     * Returns the $contentType
+     * @return string the $contentType
+     */
+    public final function getContentType() : ?string
+    {
+        return $this->contentType;
+    }
+
+    /**
+     * Returns the $pretty
+     * @return mixed the $pretty
+     */
+    public final function getPretty() : bool
+    {
+        return $this->pretty;
+    }
+
+    /**
+     * Returns the $headers
+     * @return multitype: the $headers
+     */
+    public final function getHeaders() : array
+    {
+        return $this->headers;
+    }
+
 }
 

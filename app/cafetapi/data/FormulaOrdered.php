@@ -8,7 +8,7 @@ namespace cafetapi\data;
  * @author damien
  * @since API 1.0.0 (2018)
  */
-class FormulaOrdered extends Ordered
+class FormulaOrdered extends Ordered implements Data
 {
 
     private $products;
@@ -41,6 +41,11 @@ class FormulaOrdered extends Ordered
     public function getProducts(): array
     {
         return $this->products;
+    }
+    
+    public function getProperties(): array
+    {
+        return get_object_vars($this);
     }
 }
 

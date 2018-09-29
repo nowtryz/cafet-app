@@ -9,7 +9,7 @@ use cafetapi\io\DataFetcher;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-class ProductGroup extends JSONParsable
+class ProductGroup extends JSONParsable implements Data
 {
 
     private $id;
@@ -94,6 +94,11 @@ class ProductGroup extends JSONParsable
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        return  get_object_vars($this);
     }
 }
 

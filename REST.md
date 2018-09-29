@@ -85,7 +85,8 @@ End points follow a simple convention, so these are the methods to reach end poi
 
 | Path                                                                                       | Methods
 |--------------------------------------------------------------------------------------------|--------
-| `/api/v2/cafet/.../%{id}`                                                                  | `GET` / `PUT` / `PATCH` / `DELETE`
+| `/api/v2/cafet/.../%{id}` exepted `/api/v2/cafet/client/%{id}`                             | `GET` / `PUT` / `PATCH` / `DELETE`
+| `/api/v2/cafet/client/%{id}`                                                               | `GET`
 | arrays like `/api/v2/cafet/.../list` (and its child) or `/api/v2/cafet/.../%{id}` children | `GET`
 | `/api/v2/cafet/.../new`                                                                    | `POST`
 | `/api/v2/cafet/.../search`                                                                 | `GET`

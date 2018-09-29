@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi\modules\rest\user;
 
+use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 
@@ -20,28 +21,29 @@ class UserNode implements RestNode
      *
      * @see \cafetapi\modules\rest\RestNode::handle()
      */
-    public function handle(array $path, ?array $body, string $method, array $headers)
+    public function handle(Rest $request)
     {
-        $dir = array_shift($path);
+        $dir = $request->shiftPath();
+        
         
         switch ($dir) {
-            case self::LOGIN:   return self::login($path, $body, $method, $headers);
-            case self::LOGOUT:  return self::logout($path, $body, $method, $headers);
-            case self::CURRENT: return self::current($path, $body, $method, $headers);
+            case self::LOGIN:   return self::login($request);
+            case self::LOGOUT:  return self::logout($request);
+            case self::CURRENT: return self::current($request);
         }
     }
     
-    private static function login(array $path, array $boddy, $method, array $headers) : RestResponse
+    private static function login(Rest $request) : RestResponse
     {
         
     }
     
-    private static function logout(array $path, array $boddy, $method, array $headers) : RestResponse
+    private static function logout(Rest $request) : RestResponse
     {
         
     }
     
-    private static function current(array $path, array $boddy, $method, array $headers) : RestResponse
+    private static function current(Rest $request) : RestResponse
     {
         
     }

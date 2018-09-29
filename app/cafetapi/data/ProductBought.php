@@ -63,5 +63,13 @@ class ProductBought extends ExpenseDetail
     {
         return $this->parse_JSON(get_object_vars($this));
     }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['date'] = $vars['date']->getProperties();
+        
+        return $vars;
+    }
 }
 

@@ -8,6 +8,6 @@ namespace cafetapi\modules\rest;
  */
 interface RestNode
 {
-    public static function handle(array $path, ?array $body, string $method, array $headers) : RestResponse;
+    public static function handle(Rest $request) : RestResponse;
 }
 

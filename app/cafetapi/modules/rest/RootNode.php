@@ -22,14 +22,14 @@ class RootNode implements RestNode
     public function __construct()
     {}
     
-    public static function handle(array $path, ?array $body, string $method, array $headers): RestResponse
+    public static function handle(Rest $request): RestResponse
     {
-        $dir = array_shift($path);
+        $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::CAFET:  return CafetNode::handle($path, $body, $method, $headers);
-            case self::USER:   return UserNode::handle($path, $body, $method, $headers);
-            case self::SERVER: return ServerNode::handle($path, $body, $method, $headers);
+            case self::CAFET:  return CafetNode::handle($request);
+            case self::USER:   return UserNode::handle($request);
+            case self::SERVER: return ServerNode::handle($request);
             default:           return ClientError::resourceNotFound('Unknown ' . $dir . ' node');
         }
     }

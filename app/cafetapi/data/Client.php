@@ -11,7 +11,7 @@ use cafetapi\io\DataFetcher;
  * @since API 1.0.0 (2018)
  *       
  */
-class Client extends JSONParsable
+class Client extends JSONParsable implements Data
 {
 
     private $id;
@@ -201,6 +201,11 @@ class Client extends JSONParsable
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        return get_object_vars($this);
     }
 }
 

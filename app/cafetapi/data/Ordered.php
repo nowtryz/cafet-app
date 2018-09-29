@@ -7,7 +7,7 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-abstract class Ordered
+abstract class Ordered implements Data
 {
 
     private $id;
@@ -49,6 +49,11 @@ abstract class Ordered
     public function getAmount(): int
     {
         return $this->amount;
+    }
+    
+    public function getProperties(): array
+    {
+        return get_object_vars($this);
     }
 }
 

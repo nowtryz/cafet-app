@@ -47,5 +47,13 @@ class Formula extends Payable
     {
         return $this->parse_JSON(get_object_vars($this));
     }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['edit'] = $vars['edit']->getProperties();
+        
+        return $vars;
+    }
 }
 

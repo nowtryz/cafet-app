@@ -1,15 +1,16 @@
 <?php
-namespace cafetapi\modules\rest\server;
+namespace cafetapi\modules\rest\cafet;
 
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
+use cafetapi\modules\rest\RestResponse;
 
 /**
  *
  * @author damie
  *        
  */
-class ServerNode implements RestNode
+class OrderNode implements RestNode
 {
 
     /**
@@ -17,7 +18,7 @@ class ServerNode implements RestNode
      *
      * @see \cafetapi\modules\rest\RestNode::handle()
      */
-    public function handle(Rest $request)
+    public static function handle(Rest $request) : RestResponse
     {}
 }
 

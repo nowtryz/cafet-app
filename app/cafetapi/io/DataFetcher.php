@@ -210,7 +210,7 @@ class DataFetcher extends DatabaseConnection
             . 'e.id id, '
             . 'e.user_balance balance, '
             . '(SELECT SUM(edit.price * f.quantity) '
-            . 'FROM ' . self::FORMULAS_BOUGHT . 'f  '
+            . 'FROM ' . self::FORMULAS_BOUGHT . ' f  '
             . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' edit '
             . 'ON f.edit_id = edit.id '
             . 'WHERE f.expense_id = e.id '

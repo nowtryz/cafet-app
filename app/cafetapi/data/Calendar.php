@@ -7,7 +7,7 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-final class Calendar extends JSONParsable
+final class Calendar extends JSONParsable implements Data
 {
 
     private $year;
@@ -210,6 +210,11 @@ final class Calendar extends JSONParsable
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        return get_object_vars($this);
     }
 }
 

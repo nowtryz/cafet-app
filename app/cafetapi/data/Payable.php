@@ -7,7 +7,7 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-abstract class Payable extends JSONParsable
+abstract class Payable extends JSONParsable implements Data
 {
 
     protected $id;

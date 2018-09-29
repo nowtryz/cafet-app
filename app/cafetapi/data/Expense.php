@@ -14,7 +14,7 @@ use cafetapi\io\DataFetcher;
  * @see Client::getExpenses()
  * @since API 1.0.0 (2018)
  */
-class Expense extends JSONParsable
+class Expense extends JSONParsable implements Data
 {
 
     private $id;
@@ -124,6 +124,14 @@ class Expense extends JSONParsable
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['date'] = $vars['date']->getProperties();
+        
+        return $vars;
     }
 }
 
