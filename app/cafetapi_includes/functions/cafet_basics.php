@@ -433,7 +433,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         $expenses = '';
 
         foreach ($c->getLastExpenses() as $expense) {
-            $expenses .= '<tr><td>' . 'Le ' . $expense->getDate()->getFormatedDate() . ' Ã  ' . $expense->getDate()->getFormatedTime() . '</td><td>' . number_format($expense->getTotal(), 2, ',', ' ') . ' â‚¬' . '</td><td>' . number_format($expense->getBalanceAfterTransaction(), 2, ',', ' ') . ' â‚¬' . '</td></tr>';
+        $expenses .= '<tr><td>' . 'Le ' . $expense->getDate()->getFormatedDate() . ' à ' . $expense->getDate()->getFormatedTime() . '</td><td>' . number_format($expense->getTotal(), 2, ',', ' ') . ' €' . '</td><td>' . number_format($expense->getBalanceAfterTransaction(), 2, ',', ' ') . ' €' . '</td></tr>';
         }
 
         $mail->setVar('expenses', $expenses);
