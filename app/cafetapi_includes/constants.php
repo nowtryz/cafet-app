@@ -6,12 +6,19 @@ if (! defined('CAFET_DIR'))
     define('CAFET_DIR', realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR));
 
 /**
- * API version number
+ * Server version number as semantic versioning
  *
  * @var unknown
  * @since API 1.0.0 (2018)
  */
-define('API_VERSION', '1.0.0-alpha');
+define('SERVER_VERSION', 'O.1.0');
+/**
+ * API version number for api calls
+ *
+ * @var unknown
+ * @since API 1.0.0 (2018)
+ */
+define('API_VERSION', '1.0.0-beta');
 /**
  * The cafet API classes directory
  * <br/><em>'cafetapi/'</em>
