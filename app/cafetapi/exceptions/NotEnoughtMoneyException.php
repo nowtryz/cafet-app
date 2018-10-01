@@ -23,7 +23,7 @@ class NotEnoughtMoneyException extends CafetAPIException
      */
     public function __construct($message = null, $code = null, $previous = null, string $file = null, int $line = 0)
     {
-        parent::__construct($message = null, $code = null, $previous = null, $file = null, $line = 0);
+        parent::__construct($message, $code, $previous, $file, $line);
     }
 }
 

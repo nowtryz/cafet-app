@@ -54,7 +54,7 @@ The `save order` action has a very particular structure because its arguments mu
             {
                 "type": "formula",
                 "id": 2,
-                "amont": 1,
+                "amount": 1,
                 "products": [
                     2,
                     16,
