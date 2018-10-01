@@ -259,6 +259,91 @@ class DataFetcher extends DatabaseConnection
 
         return $result;
     }
+    
+    public final function getReload(int $reload_id): ?Reload
+    {
+        $stmt = $this->connection->prepare('SELECT '
+            . 'id id, '
+            . 'user_id client_id, '
+            . 'user_balance balance, '
+            . 'amount amount, '
+            . 'details details, '
+            . 'DATE_FORMAT(date, "%H") hour, '
+            . 'DATE_FORMAT(date, "%i") mins, '
+            . 'DATE_FORMAT(date, "%s") secs, '
+            . 'DATE_FORMAT(date, "%d") day, '
+            . 'DATE_FORMAT(date, "%c") month, '
+            . 'DATE_FORMAT(date, "%Y") year '
+            . 'FROM ' . self::RELOADS . ' '
+            . 'WHERE id = :id '
+            . 'ORDER BY date DESC');
+        
+        $id = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $balance = $amount = $details = '';
+        
+        $stmt->bindColumn('id', $id, PDO::PARAM_INT);
+        $stmt->bindColumn('client_id', $client_id, PDO::PARAM_INT);
+        $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
+        $stmt->bindColumn('amount', $amount, PDO::PARAM_STR);
+        $stmt->bindColumn('details', $details, PDO::PARAM_STR);
+        $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
+        $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
+        $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
+        $stmt->bindColumn('day', $day, PDO::PARAM_INT);
+        $stmt->bindColumn('month', $month, PDO::PARAM_INT);
+        $stmt->bindColumn('year', $year, PDO::PARAM_INT);
+        
+        $stmt->execute(array(
+            'id' => $reload_id
+        ));
+        $this->check_fetch_errors($stmt);
+        
+        if ($stmt->fetch()) return new Reload($id, $client_id, $details, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($amount), floatval($balance));
+        else return null;
+    }
+    
+    public final function getReloads(): array
+    {
+        $stmt = $this->connection->prepare('SELECT '
+            . 'id id, '
+            . 'user_id client_id, '
+            . 'user_balance balance, '
+            . 'amount amount, '
+            . 'details details, '
+            . 'DATE_FORMAT(date, "%H") hour, '
+            . 'DATE_FORMAT(date, "%i") mins, '
+            . 'DATE_FORMAT(date, "%s") secs, '
+            . 'DATE_FORMAT(date, "%d") day, '
+            . 'DATE_FORMAT(date, "%c") month, '
+            . 'DATE_FORMAT(date, "%Y") year '
+            . 'FROM ' . self::RELOADS . ' '
+            . 'ORDER BY date DESC');
+        
+        $id = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $balance = $amount = $details = '';
+        
+        $stmt->bindColumn('id', $id, PDO::PARAM_INT);
+        $stmt->bindColumn('client_id', $client_id, PDO::PARAM_INT);
+        $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
+        $stmt->bindColumn('amount', $amount, PDO::PARAM_STR);
+        $stmt->bindColumn('details', $details, PDO::PARAM_STR);
+        $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
+        $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
+        $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
+        $stmt->bindColumn('day', $day, PDO::PARAM_INT);
+        $stmt->bindColumn('month', $month, PDO::PARAM_INT);
+        $stmt->bindColumn('year', $year, PDO::PARAM_INT);
+        
+        $stmt->execute();
+        $this->check_fetch_errors($stmt);
+        
+        $result = array();
+        
+        while ($stmt->fetch())
+            $result[] = new Reload($id, $client_id, $details, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($amount), floatval($balance));
+            
+            return $result;
+    }
 
     public final function getExpense(int $expense_id): Expense
     {

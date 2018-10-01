@@ -17,7 +17,7 @@ class RestResponse
 
     /**
      */
-    public function __construct(int $code, string $message, array $body, array $hearders = array(), array $removeHeader = array())
+    public function __construct(int $code, string $message, ?array $body, array $hearders = array(), array $removeHeader = array())
     {
         $this->body = $body;
         $this->code = $code;
@@ -29,7 +29,7 @@ class RestResponse
      * Returns the $body
      * @return array the $body
      */
-    public final function getBody() : array
+    public final function getBody() : ?array
     {
         return $this->body;
     }
