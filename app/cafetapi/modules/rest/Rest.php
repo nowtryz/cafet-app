@@ -71,7 +71,7 @@ class Rest
         foreach ($response->getRemoveHeader() as $header) header_remove($header);
         foreach($response->getHeaders() as $name => $content) header("$name: $content");
         
-        if ($response->getBody()) switch ($this->contentType) {
+        if ($response->getBody() !== null) switch ($this->contentType) {
             case 'xml':
                 $this->printXMLResponse($response);
                 break;

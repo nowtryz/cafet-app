@@ -41,16 +41,6 @@ class ReloadNode implements RestNode
         }
     }
     
-    private static function reload(Rest $request, int $id) : RestResponse
-    {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::Forbidden();
-        
-        $reload = (new DataFetcher())->getReload($id);
-        if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
-        else return ClientError::resourceNotFound('Unknown reload with id ' . $id);
-    }
-    
     private static function list(Rest $request) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
@@ -79,6 +69,16 @@ class ReloadNode implements RestNode
         $reload = (new DataUpdater())->saveReload($client_id, $amount, 'by a registered capable user');
         if($reload) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
+    }
+    
+    private static function reload(Rest $request, int $id) : RestResponse
+    {
+        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::Forbidden();
+        
+        $reload = (new DataFetcher())->getReload($id);
+        if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
+        else return ClientError::resourceNotFound('Unknown reload with id ' . $id);
     }
 }
 
