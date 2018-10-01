@@ -345,31 +345,31 @@ class DataFetcher extends DatabaseConnection
             return $result;
     }
 
-    public final function getExpense(int $expense_id): Expense
+    public final function getExpense(int $expense_id): ?Expense
     {
         $stmt = $this->connection->prepare('SELECT '
             . 'e.id id, '
             . 'e.user_balance balance, '
             . 'e.user_id client_id, '
             . '(SELECT SUM(edit.price * f.quantity) '
-            . 'FROM ' . self::FORMULAS_BOUGHT . ' f '
-            . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' edit '
-            . 'ON f.edit_id = edit.id '
-            . 'WHERE f.expense_id = e.id '
-            . 'GROUP BY f.expense_id) ftotal, '
+                . 'FROM ' . self::FORMULAS_BOUGHT . ' f '
+                . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' edit '
+                . 'ON f.edit_id = edit.id '
+                . 'WHERE f.expense_id = e.id '
+                . 'GROUP BY f.expense_id) ftotal, '
             . '(SELECT SUM(edit.price * p.quantity) '
-            . 'FROM ' . self::PRODUCTS_BOUGHT . ' p '
-            . 'LEFT JOIN ' . self::PRODUCTS_EDITS . ' edit '
-            . 'ON p.edit_id = edit.id '
-            . 'WHERE p.expense_id = e.id '
-            . 'GROUP BY p.expense_id) ptotal, '
+                . 'FROM ' . self::PRODUCTS_BOUGHT . ' p '
+                . 'LEFT JOIN ' . self::PRODUCTS_EDITS . ' edit '
+                . 'ON p.edit_id = edit.id '
+                . 'WHERE p.expense_id = e.id '
+                . 'GROUP BY p.expense_id) ptotal, '
             . 'DATE_FORMAT(e.date, "%H") hour, '
             . 'DATE_FORMAT(e.date, "%i") mins, '
             . 'DATE_FORMAT(e.date, "%s") secs, '
             . 'DATE_FORMAT(e.date, "%d") day, '
             . 'DATE_FORMAT(e.date, "%c") month, '
             . 'DATE_FORMAT(e.date, "%Y") year '
-            . 'FROM ' . self::EXPENSES . ' '
+            . 'FROM ' . self::EXPENSES . ' e '
             . 'WHERE e.id = :id');
         
         $id = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
@@ -397,6 +397,58 @@ class DataFetcher extends DatabaseConnection
 
         else
             return null;
+    }
+    
+    public final function getExpenses(): array
+    {
+        $stmt = $this->connection->prepare('SELECT '
+            . 'e.id id, '
+            . 'e.user_balance balance, '
+            . 'e.user_id client_id, '
+            . '(SELECT SUM(edit.price * f.quantity) '
+            . 'FROM ' . self::FORMULAS_BOUGHT . ' f '
+            . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' edit '
+            . 'ON f.edit_id = edit.id '
+            . 'WHERE f.expense_id = e.id '
+            . 'GROUP BY f.expense_id) ftotal, '
+            . '(SELECT SUM(edit.price * p.quantity) '
+            . 'FROM ' . self::PRODUCTS_BOUGHT . ' p '
+            . 'LEFT JOIN ' . self::PRODUCTS_EDITS . ' edit '
+            . 'ON p.edit_id = edit.id '
+            . 'WHERE p.expense_id = e.id '
+            . 'GROUP BY p.expense_id) ptotal, '
+            . 'DATE_FORMAT(e.date, "%H") hour, '
+            . 'DATE_FORMAT(e.date, "%i") mins, '
+            . 'DATE_FORMAT(e.date, "%s") secs, '
+            . 'DATE_FORMAT(e.date, "%d") day, '
+            . 'DATE_FORMAT(e.date, "%c") month, '
+            . 'DATE_FORMAT(e.date, "%Y") year '
+            . 'FROM ' . self::EXPENSES . ' e');
+        
+        $id = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $balance = $ftotal = $ptotal = '';
+        
+        $stmt->bindColumn('id', $id, PDO::PARAM_INT);
+        $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
+        $stmt->bindColumn('client_id', $client_id, PDO::PARAM_INT);
+        $stmt->bindColumn('ftotal', $ftotal, PDO::PARAM_STR);
+        $stmt->bindColumn('ptotal', $ptotal, PDO::PARAM_STR);
+        $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
+        $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
+        $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
+        $stmt->bindColumn('day', $day, PDO::PARAM_INT);
+        $stmt->bindColumn('month', $month, PDO::PARAM_INT);
+        $stmt->bindColumn('year', $year, PDO::PARAM_INT);
+        
+        $stmt->execute();
+        $this->check_fetch_errors($stmt);
+        
+        $expenses = array();
+        
+        while ($stmt->fetch())
+            $expenses[] = new Expense($id, $client_id, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($ftotal) + floatval($ptotal), floatval($balance));
+            
+        return $expenses;
     }
 
     public final function getExpenseDetails(int $expense_id): array

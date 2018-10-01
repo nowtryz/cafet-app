@@ -9,6 +9,9 @@ use cafetapi\exceptions\NotEnoughtMoneyException;
 use cafetapi\exceptions\RequestFailureException;
 use PDO;
 use PDOStatement;
+use cafetapi\data\Ordered;
+use cafetapi\data\ProductOrdered;
+use cafetapi\data\FormulaOrdered;
 
 /**
  * Object specialized in data updating from the database for the API
@@ -205,7 +208,7 @@ class DataUpdater extends DatabaseConnection
      * Save a purchase in the database
      *
      * @param int $client_id
-     * @param array $order
+     * @param array $order array of Ordered
      * @return bool if the query have correctly been completed
      * @since API 1.0.0 (2018)
      */
@@ -214,7 +217,7 @@ class DataUpdater extends DatabaseConnection
         $this->connection->beginTransaction();
 
         // Save expense
-        $stmt = $this->connection->prepare('INSERT INTO ' . self::EXPENSES . ' (user_id,) VALUES (:id)');
+        $stmt = $this->connection->prepare('INSERT INTO ' . self::EXPENSES . ' (user_id) VALUES (:id)');
         $stmt->execute(array(
             'id' => $client_id
         ));
@@ -223,61 +226,56 @@ class DataUpdater extends DatabaseConnection
 
         // Save expense details
         foreach ($order as $entry) {
-            if (! isset($entry['type']) || ! isset($entry['id']) || ! isset($entry['amount']))
-                cafet_throw_error('03-006');
-            if (gettype($entry['id']) != 'integer')
-                cafet_throw_error('03-005', 'ids must be integers');
-            if (gettype($entry['amount']) != 'integer')
-                cafet_throw_error('03-005', 'amounts must be integers');
-
-            if ($entry['type'] == 'product') {
+            if ($entry instanceof ProductOrdered) {
                 $stmt = $this->connection->prepare('SELECT 1 FROM ' . self::PRODUCTS . ' WHERE id = :id LIMIT 1');
                 $stmt->execute(array(
-                    'id' => $entry['id']
+                    'id' => $entry->getId()
                 ));
                 if (! $stmt->fetch())
-                    cafet_throw_error('03-005', 'product with id ' . $entry['id'] . ' doesn\'t exist');
+                    cafet_throw_error('03-005', 'product with id ' . $entry->getId() . ' doesn\'t exist');
                 $stmt->closeCursor();
 
-                $stmt = $this->connection->prepare('INSERT ' . 'INTO ' . self::PRODUCTS_BOUGHT . '(expense_id, product_id, edit_id, user_id, quantity) ' . 'VALUES (:expense,:product,(SELECT last_edit FROM ' . self::PRODUCTS . ' WHERE id = :product),:client,:quantity)');
+                $stmt = $this->connection->prepare('INSERT '
+                    . 'INTO ' . self::PRODUCTS_BOUGHT . '(expense_id, product_id, user_id, quantity) '
+                    . 'VALUES (:expense, :product, :client, :quantity)');
                 $stmt->execute(array(
                     'expense' => $expense_id,
-                    'product' => $entry['id'],
+                    'product' => $entry->getId(),
                     'client' => $client_id,
-                    'quantity' => $entry['amount']
+                    'quantity' => $entry->getAmount()
                 ));
                 $this->checkUpdate($stmt, 'unable to save expense details');
-            } elseif ($entry['type'] == 'formula') {
+            } elseif ($entry instanceof FormulaOrdered) {
 
                 $stmt = $this->connection->prepare('SELECT 1 FROM ' . self::FORMULAS . ' WHERE id = :id LIMIT 1');
                 $stmt->execute(array(
-                    'id' => $entry['id']
+                    'id' => $entry->getId()
                 ));
-                if ($stmt->fetch())
-                    cafet_throw_error('03-005', 'formula with id ' . $entry['id'] . ' doesn\'t exist');
+                if (! $stmt->fetch())
+                    cafet_throw_error('03-005', 'formula with id ' . $entry->getId() . ' doesn\'t exist');
                 $stmt->closeCursor();
 
-                if (! isset($entry['products']) || ! is_array($entry['products']))
-                    cafet_throw_error('03-005', 'products are missing for a formula');
-
-                $stmt = $this->connection->prepare('INSERT ' . 'INTO ' . self::FORMULAS_BOUGHT . '(expense_id, formula_id, edit_id, user_id, quantity) ' . 'VALUES (:expense,:formula,(SELECT last_edit FROM ' . self::FORMULAS . ' WHERE id = :formula),:client,:quantity)');
+                $stmt = $this->connection->prepare('INSERT '
+                    . 'INTO ' . self::FORMULAS_BOUGHT . '(expense_id, formula_id, user_id, quantity) '
+                    . 'VALUES (:expense,:formula,:client,:quantity)');
                 $stmt->execute(array(
                     'expense' => $expense_id,
-                    'formula' => $entry['id'],
+                    'formula' => $entry->getId(),
                     'client' => $client_id,
-                    'quantity' => $entry['amount']
+                    'quantity' => $entry->getAmount()
                 ));
                 $this->checkUpdate($stmt, 'unable to save expense details');
 
                 $i = 0;
-                $size = count($entry['products']);
+                $size = count($entry->getProducts());
                 $fb_id = $this->connection->lastInsertId();
                 $parameters = array(
                     'id' => $fb_id
                 );
-                $sql = 'INSERT INTO ' . self::FORMULAS_BOUGHT_PRODUCTS . '(transaction_id,product_id,product_edit) VALUES ';
-                foreach ($entry['products'] as $product) {
-                    $sql .= "(:id,:product$i,(SELECT last_edit FROM " . self::PRODUCTS . " WHERE id = :product$i))";
+                
+                $sql = 'INSERT INTO ' . self::FORMULAS_BOUGHT_PRODUCTS . '(transaction_id,product_id) VALUES ';
+                foreach ($entry->getProducts() as $product) {
+                    $sql .= "(:id,:product$i)";
                     $sql .= $i < $size - 1 ? ',' : '';
                     $parameters['product' . $i] = $product;
                     $i ++;

@@ -66,7 +66,7 @@ class CafetApp
         elseif ($this->action == 'login')
             $this->login();
         elseif (isset($_POST['session_id']) && $_POST['session_id'])
-            cafet_throw_error('02-400');
+            cafet_throw_error('02-401');
         else
             cafet_throw_error('03-003');
 

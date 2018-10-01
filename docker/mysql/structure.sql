@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `cafet_balance_reloads` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction\'s date",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `cafet_expenses` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction\'s date",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 
 
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas` (
   `last_edit` bigint(20) NOT NULL DEFAULT "0" COMMENT "last formula edit id",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`last_edit`) REFERENCES `cafet_formulas_edits`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -106,10 +106,9 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_bought` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction date",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`expense_id`) REFERENCES `cafet_expenses`(`id`),
-  FOREIGN KEY (`formula_id`) REFERENCES `cafet_formulas`(`id`),
   FOREIGN KEY (`edit_id`) REFERENCES `cafet_formulas_edits`(`id`),
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -138,18 +137,25 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_bought_products` (
  `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "id",
   `transaction_id` bigint(11) NOT NULL COMMENT "id in formulas bought",
   `product_id` bigint(11) NOT NULL COMMENT "product id",
-  `product_edit` BIGINT(20) NOT NULL COMMENT "the product edit",
+  `product_edit` BIGINT(20) NULL COMMENT "the product edit",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction date",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`transaction_id`) REFERENCES `cafet_formulas_bought`(`id`),
-  FOREIGN KEY (`product_id`) REFERENCES `cafet_products`(`id`),
   FOREIGN KEY (`product_edit`) REFERENCES `cafet_products_edits`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
 
 CREATE TRIGGER `cafet_new_formula_bought_product` 
+BEFORE INSERT ON `cafet_formulas_bought_products` 
+FOR EACH ROW 
+BEGIN 
+	SET NEW.product_edit = (SELECT last_edit FROM `cafet_products` WHERE id = NEW.product_id);
+END
+$$
+
+CREATE TRIGGER `cafet_save_formula_bought_product` 
 AFTER INSERT ON `cafet_formulas_bought_products` 
 FOR EACH ROW 
 BEGIN 
@@ -173,7 +179,7 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_choices` (
   `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "edit time",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`formula`) REFERENCES `cafet_formulas`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -196,14 +202,14 @@ DELIMITER ;
 
 -- Table
 CREATE TABLE IF NOT EXISTS `cafet_formulas_choices_products` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT "id",
-  `choice` bigint(20) NOT NULL COMMENT "formula choice id",
-  `product` bigint(20) NOT NULL COMMENT "product id",
+  `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "id",
+  `choice` bigint(11) NOT NULL COMMENT "formula choice id",
+  `product` bigint(11) NOT NULL COMMENT "product id",
   `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "edit time",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`choice`) REFERENCES `cafet_formulas_choices`(`id`),
   FOREIGN KEY (`product`) REFERENCES `cafet_products`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 
 
@@ -218,9 +224,8 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_edits` (
   `name` varchar(255) NULL DEFAULT NULL COMMENT "new formula name",
   `price` float(10,2) NULL DEFAULT NULL  COMMENT "new formula price",
   `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "edition",
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`formula`) REFERENCES `cafet_formulas`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -271,8 +276,9 @@ CREATE TABLE IF NOT EXISTS `cafet_products` (
   `viewable` tinyint(1) NOT NULL DEFAULT "1" COMMENT "does the product have to be shown",
   `last_edit` bigint(20) NOT NULL DEFAULT "0" COMMENT "last product edit id",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`last_edit`) REFERENCES `cafet_products_edits`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+  FOREIGN KEY (`last_edit`) REFERENCES `cafet_products_edits`(`id`),
+  FOREIGN KEY (`product_group`) REFERENCES `cafet_products_groups`(`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 
 
@@ -291,10 +297,9 @@ CREATE TABLE IF NOT EXISTS `cafet_products_bought` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction date",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`expense_id`) REFERENCES `cafet_expenses`(`id`),
-  FOREIGN KEY (`product_id`) REFERENCES `cafet_products`(`id`),
   FOREIGN KEY (`edit_id`) REFERENCES `cafet_products_edits`(`id`),
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -326,9 +331,8 @@ CREATE TABLE IF NOT EXISTS `cafet_products_edits` (
   `name` varchar(255) NULL DEFAULT NULL COMMENT "new product name",
   `price` float(10,2) NULL DEFAULT NULL COMMENT "new product price",
   `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "edition",
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`product`) REFERENCES `cafet_products`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -377,7 +381,7 @@ CREATE TABLE IF NOT EXISTS `cafet_products_groups` (
   `display_name` varchar(255) NOT NULL COMMENT "product group display name",
   `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "edit time",
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -406,7 +410,7 @@ CREATE TABLE IF NOT EXISTS `cafet_replenishments` (
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "replenishment date",
   PRIMARY KEY (`id`),
   FOREIGN KEY (`product_id`) REFERENCES `cafet_products`(`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
+) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
 DELIMITER $$
@@ -428,4 +432,5 @@ DELIMITER ;
 -- --
 -- End
 -- --
+SET foreign_key_checks=1;
 COMMIT ;

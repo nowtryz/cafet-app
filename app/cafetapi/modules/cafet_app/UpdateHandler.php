@@ -172,12 +172,10 @@ class UpdateHandler extends Handler
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_ORDER, $this->user))
             cafet_throw_error('02_002');
 
-        if (! isset($arguments['client_id']) || ! isset($arguments['order']))
-            cafet_throw_error('03-006');
-            if (gettype($arguments['client_id']) != 'integer')
-            cafet_throw_error('03-005', 'client_id must be an integer');
-        if (! is_array($arguments['order']))
-            cafet_throw_error('03-005', 'what\'s order?');
+        if (! isset($arguments['client_id']))              cafet_throw_error('03-006', 'missing client_id');
+        if (! isset($arguments['order']))                  cafet_throw_error('03-006', 'missing order');
+        if (gettype($arguments['client_id']) != 'integer') cafet_throw_error('03-005', 'client_id must be an integer');
+        if (! is_array($arguments['order']))               cafet_throw_error('03-005', 'what\'s order?');
 
         $client_id = $arguments['client_id'];
         $order = array();
@@ -193,9 +191,12 @@ class UpdateHandler extends Handler
             if ($entry['type'] == 'product') {
                 $order[] = new ProductOrdered($entry['id'], $entry['amount']);
             } elseif ($entry['type'] == 'formula') {
-                if (! isset($entry['products']))
-                    cafet_throw_error('03-006', 'missing products for a formula');
-                $order[] = new FormulaOrdered($entry['id'], $entry['amount'], $entry['products']);
+                if (! isset($entry['products'])) cafet_throw_error('03-006', 'missing products for a formula');
+                if (is_associative_array($entry['products'])) cafet_throw_error('03-005', 'products for a formula must not be an associative array');
+                
+                $products = array();
+                foreach ($entry['products'] as $p) $products[] = intval($p, 0);
+                $order[] = new FormulaOrdered($entry['id'], $entry['amount'], $products);
             } else
                 cafet_throw_error('03-005', $entry['type'] . ' isn\'t a valid type');
         }
