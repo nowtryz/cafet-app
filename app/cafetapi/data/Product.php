@@ -80,6 +80,6 @@ class Product extends Payable
         $vars = get_object_vars($this);
         $vars['edit'] = $vars['edit']->getProperties();
         
-        return $vars;
+        return array_merge(array('type' => get_simple_classname($this)), $vars);
     }
 }

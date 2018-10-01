@@ -129,7 +129,7 @@ class Reload extends JSONParsable implements Data
         $vars = get_object_vars($this);
         $vars['date'] = $vars['date']->getProperties();
         
-        return $vars;
+        return array_merge(array('type' => get_simple_classname($this)), $vars);
     }
 }
 

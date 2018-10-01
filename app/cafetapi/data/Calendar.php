@@ -214,7 +214,7 @@ final class Calendar extends JSONParsable implements Data
     
     public function getProperties(): array
     {
-        return get_object_vars($this);
+        return array_merge(array('type' => get_simple_classname($this)), get_object_vars($this));
     }
 }
 

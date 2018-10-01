@@ -131,3 +131,13 @@ function is_version_superior_to(string $version1, string $version2, bool $compar
     
     return null;
 }
+
+/**
+ * Return classname of the object without the namespace
+ * @param object $object
+ * @return string the simple name of the object class
+ */
+function get_simple_classname(object $object) : string
+{
+    return substr(get_class($object), strrpos(get_class($object), '\\') + 1);
+}

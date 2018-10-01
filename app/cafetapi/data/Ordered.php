@@ -50,10 +50,5 @@ abstract class Ordered implements Data
     {
         return $this->amount;
     }
-    
-    public function getProperties(): array
-    {
-        return get_object_vars($this);
-    }
 }
 
