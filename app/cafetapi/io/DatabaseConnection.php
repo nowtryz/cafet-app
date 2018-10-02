@@ -30,47 +30,27 @@ class DatabaseConnection
      * @since API 1.0.0 (2018)
      */
     protected $connection;
-
     private static $driver;
-
     private static $host;
-
     private static $database;
-
     private static $username;
-
     private static $password;
-
     private static $lastQueryErrors = array();
 
     const CONFIG = 'cafet_config';
-
     const RELOADS = 'cafet_balance_reloads';
-
     const EXPENSES = 'cafet_expenses';
-
     const FORMULAS = 'cafet_formulas';
-
     const FORMULAS_BOUGHT = 'cafet_formulas_bought';
-
     const FORMULAS_BOUGHT_PRODUCTS = 'cafet_formulas_bought_products';
-
     const FORMULAS_CHOICES = 'cafet_formulas_choices';
-
     const FORMULAS_CHOICES_PRODUCTS = 'cafet_formulas_choices_products';
-
     const FORMULAS_EDITS = 'cafet_formulas_edits';
-
     const PRODUCTS = 'cafet_products';
-
     const PRODUCTS_BOUGHT = 'cafet_products_bought';
-
     const PRODUCTS_EDITS = 'cafet_products_edits';
-
     const PRODUCTS_GROUPS = 'cafet_products_groups';
-
     const REPLENISHMENTS = 'cafet_replenishments';
-
     const USERS = 'users';
 
     /**
@@ -156,6 +136,8 @@ class DatabaseConnection
         $PRODUCTS_GROUPS = self::PRODUCTS_GROUPS;
         $REPLENISHMENTS = self::REPLENISHMENTS;
         $USERS = self::USERS;
+        $CHARSET='utf8mb4';
+        $COLLATE='utf8mb4_unicode_ci';
 
         if (! in_array(self::RELOADS, $tables)) {
             self::query(
@@ -169,7 +151,7 @@ CREATE TABLE IF NOT EXISTS `$RELOADS` (
     `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction\'s date",
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `$USERS`(`id`)
-    ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+    ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -183,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `$CONFIG` (
     `value` text NOT NULL COMMENT "configuration value",
     `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "last edition",
     PRIMARY KEY (`id`)
-  ) ENGINE=MyISAM DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=MyISAM DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -198,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `$EXPENSES` (
     `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction\'s date",
     PRIMARY KEY (`id`),
     FOREIGN KEY (`user_id`) REFERENCES `$USERS`(`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -213,7 +195,7 @@ CREATE TABLE IF NOT EXISTS `$FORMULAS` (
     `last_edit` bigint(20) NOT NULL DEFAULT "0" COMMENT "last formula edit id",
     PRIMARY KEY (`id`),
     FOREIGN KEY (`last_edit`) REFERENCES `$FORMULAS_EDITS`(`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -233,7 +215,7 @@ CREATE TABLE IF NOT EXISTS `$FORMULAS_BOUGHT` (
     FOREIGN KEY (`expense_id`) REFERENCES `$EXPENSES`(`id`),
     FOREIGN KEY (`edit_id`) REFERENCES `$FORMULAS_EDITS`(`id`),
     FOREIGN KEY (`user_id`) REFERENCES `$USERS`(`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -250,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `$FORMULAS_BOUGHT_PRODUCTS` (
      PRIMARY KEY (`id`),
      FOREIGN KEY (`transaction_id`) REFERENCES `$FORMULAS_BOUGHT`(`id`),
      FOREIGN KEY (`product_edit`) REFERENCES `cafet_products_edits`(`id`)
-   ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+   ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -265,7 +247,7 @@ CREATE TABLE IF NOT EXISTS `$FORMULAS_CHOICES` (
     `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "edit time",
     PRIMARY KEY (`id`),
     FOREIGN KEY (`formula`) REFERENCES `$FORMULAS`(`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -281,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `$FORMULAS_CHOICES_PRODUCTS` (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`choice`) REFERENCES `$FORMULAS_CHOICES`(`id`),
     FOREIGN KEY (`product`) REFERENCES `cafet_products`(`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -296,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `$FORMULAS_EDITS` (
     `price` float(10,2) NULL DEFAULT NULL  COMMENT "new formula price",
     `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "edition",
     PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -314,7 +296,7 @@ CREATE TABLE IF NOT EXISTS `$PRODUCTS` (
     PRIMARY KEY (`id`),
     FOREIGN KEY (`last_edit`) REFERENCES `$PRODUCTS_EDITS`(`id`),
     FOREIGN KEY (`product_group`) REFERENCES `$PRODUCTS_GROUPS`(`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -334,7 +316,7 @@ CREATE TABLE IF NOT EXISTS `$PRODUCTS_BOUGHT` (
     FOREIGN KEY (`expense_id`) REFERENCES `$EXPENSES`(`id`),
     FOREIGN KEY (`edit_id`) REFERENCES `$PRODUCTS_EDITS`(`id`),
     FOREIGN KEY (`user_id`) REFERENCES `$USERS`(`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -349,7 +331,7 @@ CREATE TABLE IF NOT EXISTS `$PRODUCTS_EDITS` (
     `price` float(10,2) NULL DEFAULT NULL COMMENT "new product price",
     `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "edition",
     PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -363,7 +345,7 @@ CREATE TABLE IF NOT EXISTS `$PRODUCTS_GROUPS` (
     `display_name` varchar(255) NOT NULL COMMENT "product group display name",
     `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "edit time",
     PRIMARY KEY (`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
@@ -378,7 +360,7 @@ CREATE TABLE IF NOT EXISTS `$REPLENISHMENTS` (
     `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "replenishment date",
     PRIMARY KEY (`id`),
     FOREIGN KEY (`product_id`) REFERENCES `$PRODUCTS`(`id`)
-  ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`
+  ) ENGINE=InnoDB DEFAULT CHARSET=`$CHARSET` COLLATE `$COLLATE`
 EOSQL
             );
         }
