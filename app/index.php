@@ -58,8 +58,14 @@ function echo_page() {
             } elseif ($_GET['path'] == 'form') {
                 require PAGES_DIR . 'form.html';
                 exit();
-            } else (new ErrorPageBuilder(404))->print();
-        } else (new ErrorPageBuilder(404))->print();
+            } else {
+                cafet_http_error(404);
+                (new ErrorPageBuilder(404))->print();
+            }
+        } else {
+            cafet_http_error(404);
+            (new ErrorPageBuilder(404))->print();
+        }
     } else {
         // work on $_SERVER['REQUEST_URI']
     }
