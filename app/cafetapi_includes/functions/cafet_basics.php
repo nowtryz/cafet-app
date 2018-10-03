@@ -118,11 +118,10 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
      */
     function cafet_log(string $log)
     {
-        global $show_log;
-        error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $log . "\n", 3, CAFET_DIR . 'debug.log');
-        if (isset($show_log) && $show_log)
-            echo $log;
-        // TODO log support
+        $logs = array();
+        $tmp = explode("\r\n", $log);
+        foreach ($tmp as $tmp2) $logs = array_merge($logs, explode("\n", $tmp2));
+        foreach ($logs as $line) error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $line . PHP_EOL, 3, CAFET_DIR . 'debug.log');
     }
 
     /**
