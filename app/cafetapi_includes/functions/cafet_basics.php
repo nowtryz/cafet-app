@@ -210,7 +210,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
             }
         }
 
-        return $infos;
+        return $info;
     }
 
     /**
