@@ -30,6 +30,10 @@
 	Deny from all
 </Files>
 
+<Files debug.log>
+	Deny from all
+</Files>
+
 ErrorDocument 400 /error.php
 ErrorDocument 401 /error.php
 ErrorDocument 403 /error.php

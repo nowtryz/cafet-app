@@ -119,7 +119,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
     function cafet_log(string $log)
     {
         global $show_log;
-        error_log($log);
+        error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $log . "\n", 3, CAFET_DIR . 'debug.log');
         if (isset($show_log) && $show_log)
             echo $log;
         // TODO log support
@@ -132,16 +132,14 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
      *            the error code
      * @since API 1.0.0 (2018)
      */
-    function cafet_throw_error(string $error, string $additional_message = null, string $file = null, int $line = null)
+    function cafet_throw_error(string $error, string $additional_message = null, string $file = null, int $line = 0)
     {
         if (!cafet_is_app_request()) {
             throw new CafetAPIException($additional_message, null, null, $file, $line);
             die();
         }
-        
-        $info = cafet_grab_error_infos($error, $additional_message);
 
-        $result = new ReturnStatement("error", $info);
+        $result = new ReturnStatement("error", cafet_grab_error_infos($error, $additional_message));
 
         $result->print();
 
@@ -149,10 +147,10 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
     }
     
     
-/**
- * @param error
- * @param additional_message
- */
+    /**
+     * @param error
+     * @param additional_message
+     */
 
     function cafet_grab_error_infos($error, $additional_message = null)
     {
@@ -221,11 +219,16 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
      */
     function cafet_http_error($error)
     {
+        // Avoid logging for random 403 and 404 errors
+        if(in_array($error, array('403', '404')) && !isset($_SERVER['HTTP_REFERER'])) return;
+
         $cafet_errors = cafet_get_errors_info();
 
-        foreach ($cafet_errors as $errorgroup => $cafet_error)
-            if (in_array($error, $cafet_error))
-                cafet_throw_error($errorgroup . '-' . $error);
+        foreach ($cafet_errors as $errorgroup => $cafet_error) if (in_array($error, array_keys($cafet_error))) {
+            cafet_log($error . ' Error: ' . $cafet_error[$error] . ': for "' . $_SERVER['REQUEST_URI'] . '"');
+        }
+
+        cafet_log('From: ' . $_SERVER['HTTP_REFERER']);
     }
     
     function cafet_error_handler($errno, $errmsg, $filename, $linenum, $errcontext)
@@ -433,7 +436,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         $expenses = '';
 
         foreach ($c->getLastExpenses() as $expense) {
-        $expenses .= '<tr><td>' . 'Le ' . $expense->getDate()->getFormatedDate() . ' à ' . $expense->getDate()->getFormatedTime() . '</td><td>' . number_format($expense->getTotal(), 2, ',', ' ') . ' €' . '</td><td>' . number_format($expense->getBalanceAfterTransaction(), 2, ',', ' ') . ' €' . '</td></tr>';
+        $expenses .= '<tr><td>' . 'Le ' . $expense->getDate()->getFormatedDate() . ' ï¿½ ' . $expense->getDate()->getFormatedTime() . '</td><td>' . number_format($expense->getTotal(), 2, ',', ' ') . ' ï¿½' . '</td><td>' . number_format($expense->getBalanceAfterTransaction(), 2, ',', ' ') . ' ï¿½' . '</td></tr>';
         }
 
         $mail->setVar('expenses', $expenses);

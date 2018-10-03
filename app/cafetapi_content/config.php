@@ -65,7 +65,7 @@ class Database
      * @var string
      * @since API 1.0.0 (2018)
      */
-    const password = '';
+    const password = 'zef';
 }
 
 /**
