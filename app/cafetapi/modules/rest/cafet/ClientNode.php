@@ -64,7 +64,7 @@ class ClientNode implements RestNode
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::Forbidden();
         
         $clients = array();
-        foreach ((new DataFetcher())->getClients() as $client) $clients[] = $client->getProperties();
+        foreach (DataFetcher::getInstance()->getClients() as $client) $clients[] = $client->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $clients);
     }
     
@@ -74,7 +74,7 @@ class ClientNode implements RestNode
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::Forbidden();
         
         $clients = array();
-        foreach ((new DataFetcher())->searchClient(urldecode($request->shiftPath())) as $client) $clients[] = $client->getProperties();
+        foreach (DataFetcher::getInstance()->searchClient(urldecode($request->shiftPath())) as $client) $clients[] = $client->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $clients);
         
         
@@ -85,7 +85,7 @@ class ClientNode implements RestNode
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::Forbidden();
         
-        $client = (new DataFetcher())->getClient($id);
+        $client = DataFetcher::getInstance()->getClient($id);
         if($client) return new RestResponse('200', HttpCodes::HTTP_200, $client->getProperties());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }
@@ -96,9 +96,9 @@ class ClientNode implements RestNode
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::Forbidden();
         
         $reloads = array();
-        foreach ((new DataFetcher())->getClientReloads($id) as $reload) $reloads[] = $reload->getProperties();
-        if($reloads || (new DataFetcher())->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $reloads);
-        elseif ((new DataFetcher())->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        foreach (DataFetcher::getInstance()->getClientReloads($id) as $reload) $reloads[] = $reload->getProperties();
+        if($reloads || DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $reloads);
+        elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }
     
@@ -108,9 +108,9 @@ class ClientNode implements RestNode
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
         
         $expenses = array();
-        foreach ((new DataFetcher())->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
-        if($expenses || (new DataFetcher())->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
-        elseif ((new DataFetcher())->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        foreach (DataFetcher::getInstance()->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
+        if($expenses || DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
+        elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }
     
@@ -120,9 +120,9 @@ class ClientNode implements RestNode
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
         
         $expenses = array();
-        foreach ((new DataFetcher())->getClientLastExpenses($id) as $expense) $expenses[] = $expense->getProperties();
-        if($expenses || (new DataFetcher())->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
-        elseif ((new DataFetcher())->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        foreach (DataFetcher::getInstance()->getClientLastExpenses($id) as $expense) $expenses[] = $expense->getProperties();
+        if($expenses || DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
+        elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }
 }

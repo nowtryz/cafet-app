@@ -56,7 +56,7 @@ class ExpenseNode implements RestNode
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
         
         $expenses = array();
-        foreach ((new DataFetcher())->getExpenses() as $expense) $expenses[] = $expense->getProperties();
+        foreach (DataFetcher::getInstance()->getExpenses() as $expense) $expenses[] = $expense->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
     }
     
@@ -65,7 +65,7 @@ class ExpenseNode implements RestNode
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
         
-        $reload = (new DataFetcher())->getReload($id);
+        $reload = DataFetcher::getInstance()->getReload($id);
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
         else return ClientError::resourceNotFound('Unknown reload with id ' . $id);
     }
@@ -76,9 +76,9 @@ class ExpenseNode implements RestNode
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
         
         $expenses = array();
-        foreach ((new DataFetcher())->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
-        if($expenses || (new DataFetcher())->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
-        elseif ((new DataFetcher())->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        foreach (DataFetcher::getInstance()->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
+        if($expenses || DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
+        elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }
 }
