@@ -40,14 +40,14 @@ class ClientNode implements RestNode
             
             case null: return ClientError::Forbidden();
             default:
-                if(intval($dir)) {
-                    if(!count($request->getPath())) return self::client($request, intval($dir));
+                if(intval($dir, 0)) {
+                    if(!count($request->getPath())) return self::client($request, intval($dir, 0));
                     else {
                         $subdir = $request->shiftPath();
                         switch ($subdir) {
-                            case self::RELOADS:       return self::clientReloads($request, intval($dir));
-                            case self::EXPENSES:      return self::clientExpenses($request, intval($dir));
-                            case self::LAST_EXPENSES: return self::clientLastExpenses($request, intval($dir));
+                            case self::RELOADS:       return self::clientReloads($request, intval($dir, 0));
+                            case self::EXPENSES:      return self::clientExpenses($request, intval($dir, 0));
+                            case self::LAST_EXPENSES: return self::clientLastExpenses($request, intval($dir, 0));
                             
                             default: return ClientError::resourceNotFound('Unknown ' . $subdir . ' node for a client');
                         }
@@ -121,7 +121,8 @@ class ClientNode implements RestNode
         
         $expenses = array();
         foreach (DataFetcher::getInstance()->getClientLastExpenses($id) as $expense) $expenses[] = $expense->getProperties();
-        if($expenses || DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
+        
+        if($expenses) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
         elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }

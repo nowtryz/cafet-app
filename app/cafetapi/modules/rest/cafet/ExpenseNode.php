@@ -34,12 +34,12 @@ class ExpenseNode implements RestNode
             
             case null: return ClientError::Forbidden();
             default:
-                if(intval($dir)) {
-                    if(!count($request->getPath())) return self::expense($request, intval($dir));
+                if(intval($dir, 0)) {
+                    if(!count($request->getPath())) return self::expense($request, intval($dir, 0));
                     else {
                         $subdir = $request->shiftPath();
                         switch ($subdir) {
-                            case self::DETAILS:       return self::expenseDetails($request, intval($dir));
+                            case self::DETAILS:       return self::expenseDetails($request, intval($dir, 0));
                             
                             default: return ClientError::resourceNotFound('Unknown ' . $subdir . ' node for an expense');
                         }
@@ -65,9 +65,9 @@ class ExpenseNode implements RestNode
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
         
-        $reload = DataFetcher::getInstance()->getReload($id);
+        $reload = DataFetcher::getInstance()->getExpense($id);
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
-        else return ClientError::resourceNotFound('Unknown reload with id ' . $id);
+        else return ClientError::resourceNotFound('Unknown expense with id ' . $id);
     }
     
     private static function expenseDetails(Rest $request, int $id) : RestResponse
@@ -75,11 +75,12 @@ class ExpenseNode implements RestNode
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
         
-        $expenses = array();
-        foreach (DataFetcher::getInstance()->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
-        if($expenses || DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
-        elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
-        else return ClientError::resourceNotFound('Unknown client with id ' . $id);
+        $details = array();
+        foreach (DataFetcher::getInstance()->getExpenseDetails($id) as $detail) $details[] = $detail->getProperties();
+        
+        if($details) return new RestResponse('200', HttpCodes::HTTP_200, $details);
+        elseif (DataFetcher::getInstance()->getExpense($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        else return ClientError::resourceNotFound('Unknown expense with id ' . $id);
     }
 }
 

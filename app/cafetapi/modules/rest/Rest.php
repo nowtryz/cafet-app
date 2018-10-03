@@ -55,7 +55,7 @@ class Rest
         try {
             $this->printResponse(RootNode::handle($this));
         } catch (Error | Exception $e) {
-            print $e;
+            cafet_log($e);
             $this->printResponse(ServerError::internalServerError());
         }
     }
