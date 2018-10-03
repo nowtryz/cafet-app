@@ -73,4 +73,4 @@ define('CONFIGURATIONS', cafet_get_configurations());
 /*
  * initialise database conection
  */
-$DB = new DatabaseConnection(DB_INFO);
+$DB = DatabaseConnection::getDatabaseConnectionInstance();

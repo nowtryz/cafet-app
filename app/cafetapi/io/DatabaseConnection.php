@@ -14,6 +14,7 @@ use PDOStatement;
  */
 class DatabaseConnection
 {
+    private static $instance = null;
 
     /**
      * Common connection for all objects
@@ -625,6 +626,16 @@ EOSQL
         if (! isset(self::$globalConnection))
             self::init(DB_INFO);
     }
+    
+    /**
+     * Get singleton object
+     * @return DatabaseConnection the singleton of this class
+     */
+    public static function getDatabaseConnectionInstance() : DatabaseConnection
+    {
+        if(self::$instance === null) self::$instance = new DatabaseConnection();
+        return self::$instance;
+    }
 
     /**
      * Constructor for DatabaseConnection
@@ -635,7 +646,7 @@ EOSQL
      *            if this object must create a new connection with given configuration
      * @since API 1.0.0 (2018)
      */
-    public function __construct(array $db_infos = DB_INFO, bool $force_new_connection = false)
+    protected function __construct(array $db_infos = DB_INFO, bool $force_new_connection = false)
     {
         if (! $force_new_connection) {
             if (! isset(self::$globalConnection))

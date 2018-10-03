@@ -358,7 +358,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         if (! defined("DEFAULT_CONFIGURATIONS"))
             cafet_load_conf_file();
         if (! isset($DB))
-            $DB = new DatabaseConnection(DB_INFO);
+            $DB = DatabaseConnection::getDatabaseConnectionInstance();
 
         foreach (DEFAULT_CONFIGURATIONS as $key => $value)
             $conf[$key] = $value;
@@ -373,7 +373,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         if (headers_sent())
             return false;
 
-        $product = (new DataFetcher())->getProduct($product_id);
+        $product = DataFetcher::getInstance()->getProduct($product_id);
 
         if (! $product)
             return false;
@@ -390,7 +390,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
 
     function cafet_send_reload_request(int $client_id)
     {
-        $f = new DataFetcher();
+        $f = DataFetcher::getInstance();
         $c = $f->getClient($client_id);
         $mail = new Mail('reload_request', $c->getEmail());
         $mail->setVar('surname', $c->getSurname());
