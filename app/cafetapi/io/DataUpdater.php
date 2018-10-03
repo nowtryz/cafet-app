@@ -58,6 +58,7 @@ class DataUpdater extends DatabaseConnection
     public final function addProduct(string $name, int $group_id): Product
     {
         $this->connection->beginTransaction();
+        $this->connection->exec('SET foreign_key_checks=0');
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS . '(product_group) VALUES (:group)');
         $stmt->execute(array(
@@ -76,7 +77,8 @@ class DataUpdater extends DatabaseConnection
 
         $this->checkUpdate($stmt, 'unable to add the product (edit insertion)');
         $stmt->closeCursor();
-
+        
+        $this->connection->exec('SET foreign_key_checks=1');
         $this->connection->commit();
         return (new DataFetcher())->getProduct($product_id);
     }
@@ -115,6 +117,7 @@ class DataUpdater extends DatabaseConnection
     public final function addFormula(string $name): Formula
     {
         $this->connection->beginTransaction();
+        $this->connection->exec('SET foreign_key_checks=0');
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS . '(id) VALUES (NULL)');
         $stmt->execute();
@@ -129,7 +132,8 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to add the formula');
         $stmt->closeCursor();
-
+        
+        $this->connection->exec('SET foreign_key_checks=1');
         $this->connection->commit();
         return (new DataFetcher())->getFormula($formula_id);
     }
