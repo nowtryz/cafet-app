@@ -8,3 +8,6 @@ bin/
 # Docker
 /php-logs/
 /pma-sessions/
+
+# Logs
+debug.log

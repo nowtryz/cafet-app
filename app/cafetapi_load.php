@@ -29,6 +29,20 @@ define('START_TIME', microtime(true));
  * @since API 1.0.0 (2018)
  */
 define('CAFET_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR);
+
+/**
+ *  Reports all errors
+ */
+error_reporting(E_ALL);
+/**
+ *  Do not display errors for the end-users for security issue purposes
+ */
+// ini_set('display_errors','Off'); // lets show them for the moment
+/**
+ *  Set the logging file
+ */
+ini_set('error_log', CAFET_DIR . 'debug.log');
+
 /*
  * constants file
  */
@@ -50,11 +64,6 @@ if (function_exists('cafet_headers_check')) {
  * Register cafet class loader
  */
 spl_autoload_register('cafet_class_autoload');
-
-/*
- * initialisation: include all classes and load default configurations
- */
-// cafet_load_class_folder( CLASS_DIR ); //classes now autoloaded
 
 /*
  * Load configuration file
