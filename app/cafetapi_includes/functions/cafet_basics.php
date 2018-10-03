@@ -12,8 +12,8 @@ use cafetapi\exceptions\CafetAPIException;
 use cafetapi\io\DataFetcher;
 use cafetapi\io\DatabaseConnection;
 use cafetapi\modules\cafet_app\CafetApp;
-use cafetapi\user\Perm;
 use cafetapi\user\User;
+use cafetapi\user\Perm;
 
 global $basics_functions_loaded;
 
@@ -118,11 +118,10 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
      */
     function cafet_log(string $log)
     {
-        global $show_log;
-        error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $log . "\n", 3, CAFET_DIR . 'debug.log');
-        if (isset($show_log) && $show_log)
-            echo $log;
-        // TODO log support
+        $logs = array();
+        $tmp = explode("\r\n", $log);
+        foreach ($tmp as $tmp2) $logs = array_merge($logs, explode("\n", $tmp2));
+        foreach ($logs as $line) error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $line . PHP_EOL, 3, CAFET_DIR . 'debug.log');
     }
 
     /**
@@ -147,18 +146,18 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
     }
     
     
-    /**
-     * @param error
-     * @param additional_message
-     */
+/**
+ * @param error
+ * @param additional_message
+ */
 
     function cafet_grab_error_infos($error, $additional_message = null)
     {
         global $user;
-        
+
         $sub_error = explode('-', $error);
         $errors = cafet_get_errors_info();
-        
+
         if (empty($errors)) {
             $info = array(
                 'error_code' => '01-500',
@@ -172,7 +171,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
                 'error_message' => $errors[$sub_error[0]][$sub_error[1]],
             );
         }
-        
+
         if (isset($additional_message))
             $info['additional_message'] = $additional_message;
         
@@ -209,7 +208,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
                 $info['additional_message'] = $backtrace;
             }
         }
-        
+
         return $info;
     }
 
@@ -403,26 +402,6 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
 
         exit();
     }
-    
-    function cafet_render_formula_image(int $formula_id, bool $dwl = false)
-    {
-        if (headers_sent())
-            return false;
-            
-            $formula = (new DataFetcher())->getFormula($formula_id);
-            
-            if (! $formula)
-                return false;
-                
-                header('content-type: ' . guess_image_mime($formula->getImage()));
-                
-                if ($dwl)
-                    header('Content-Disposition: attachment; filename="' . $formula->getName() . get_base64_image_format($formula->getImage()) . '"');
-                    
-                    echo base64_decode($formula->getImage());
-                    
-                    exit();
-    }
 
     function cafet_send_reload_request(int $client_id)
     {
@@ -436,7 +415,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         $expenses = '';
 
         foreach ($c->getLastExpenses() as $expense) {
-        $expenses .= '<tr><td>' . 'Le ' . $expense->getDate()->getFormatedDate() . ' � ' . $expense->getDate()->getFormatedTime() . '</td><td>' . number_format($expense->getTotal(), 2, ',', ' ') . ' �' . '</td><td>' . number_format($expense->getBalanceAfterTransaction(), 2, ',', ' ') . ' �' . '</td></tr>';
+            $expenses .= '<tr><td>' . 'Le ' . $expense->getDate()->getFormatedDate() . ' à ' . $expense->getDate()->getFormatedTime() . '</td><td>' . number_format($expense->getTotal(), 2, ',', ' ') . ' €' . '</td><td>' . number_format($expense->getBalanceAfterTransaction(), 2, ',', ' ') . ' €' . '</td></tr>';
         }
 
         $mail->setVar('expenses', $expenses);

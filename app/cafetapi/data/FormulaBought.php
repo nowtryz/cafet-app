@@ -16,7 +16,7 @@ class FormulaBought extends ExpenseDetail
 
     private $id;
 
-    private $formula_id;
+    private $formula;
 
     /**
      * Model of Formula that have been bought.
@@ -73,14 +73,6 @@ class FormulaBought extends ExpenseDetail
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
-    }
-    
-    public function getProperties(): array
-    {
-        $vars = get_object_vars($this);
-        $vars['date'] = $vars['date']->getProperties();
-        
-        return array_merge(array('type' => get_simple_classname($this)), $vars);
     }
 }
 
