@@ -21,6 +21,17 @@ use cafetapi\data\Choice;
  */
 class DataFetcher extends DatabaseConnection
 {
+    private static $instance;
+    
+    /**
+     * Get singleton object
+     * @return DataFetcher the singleton of this class
+     */
+    public static function getInstance() : DataFetcher
+    {
+        if(self::$instance === null) self::$instance = new DataFetcher();
+        return self::$instance;
+    }
 
     private final function check_fetch_errors(PDOStatement $stmt)
     {

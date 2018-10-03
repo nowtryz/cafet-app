@@ -41,7 +41,7 @@ class UpdateHandler extends Handler
         $name = $arguments['name'];
         $group_id = $arguments['group_id'];
 
-        return $this->connection->addProduct($name, $group_id);
+        return DataUpdater::getInstance()->addProduct($name, $group_id);
     }
 
     /**
@@ -62,7 +62,7 @@ class UpdateHandler extends Handler
 
         $name = $arguments['name'];
 
-        return $this->connection->addProductGroup($name);
+        return DataUpdater::getInstance()->addProductGroup($name);
     }
 
     /**
@@ -83,7 +83,7 @@ class UpdateHandler extends Handler
 
         $name = $arguments['name'];
 
-        return $this->connection->addFormula($name);
+        return DataUpdater::getInstance()->addFormula($name);
     }
 
     /**
@@ -107,7 +107,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $name = $arguments['name'];
 
-        return $this->connection->addChoice($name, $formula_id);
+        return DataUpdater::getInstance()->addChoice($name, $formula_id);
     }
 
     /**
@@ -131,7 +131,7 @@ class UpdateHandler extends Handler
         $choice_id = $arguments['choice_id'];
         $product_id = $arguments['product_id'];
 
-        return $this->connection->addProductToChoice($choice_id, $product_id);
+        return DataUpdater::getInstance()->addProductToChoice($choice_id, $product_id);
     }
 
     /**
@@ -155,7 +155,7 @@ class UpdateHandler extends Handler
         $choice_id = $arguments['choice_id'];
         $product_id = $arguments['product_id'];
 
-        return $this->connection->removeProductFromChoice($choice_id, $product_id);
+        return DataUpdater::getInstance()->removeProductFromChoice($choice_id, $product_id);
         return true;
     }
 
@@ -201,7 +201,7 @@ class UpdateHandler extends Handler
                 cafet_throw_error('03-005', $entry['type'] . ' isn\'t a valid type');
         }
 
-        return $this->connection->saveOrder($client_id, $order);
+        return DataUpdater::getInstance()->saveOrder($client_id, $order);
     }
 
     /**
@@ -231,7 +231,7 @@ class UpdateHandler extends Handler
         if ($amount < 0 && ! $user->hasPermission(Perm::CAFET_ADMIN_NEGATIVERELOAD))
             cafet_throw_error('02-002', 'not allowed to perform negative reloads');
 
-        return $this->connection->saveReload($client_id, $amount, $comment);
+        return DataUpdater::getInstance()->saveReload($client_id, $amount, $comment);
     }
 
     /**
@@ -255,7 +255,7 @@ class UpdateHandler extends Handler
         $group_id = $arguments['group_id'];
         $display_name = $arguments['display_name'];
 
-        return $this->connection->setProductGroupDisplayName($group_id, $display_name);
+        return DataUpdater::getInstance()->setProductGroupDisplayName($group_id, $display_name);
     }
 
     /**
@@ -279,7 +279,7 @@ class UpdateHandler extends Handler
         $group_id = $arguments['group_id'];
         $name = $arguments['name'];
 
-        return $this->connection->setProductGroupName($group_id, $name);
+        return DataUpdater::getInstance()->setProductGroupName($group_id, $name);
     }
 
     /**
@@ -303,7 +303,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $name = $arguments['name'];
 
-        return $this->connection->setProductName($product_id, $name);
+        return DataUpdater::getInstance()->setProductName($product_id, $name);
     }
 
     /**
@@ -329,7 +329,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $price = $arguments['price'];
 
-        return $this->connection->setProductPrice($product_id, $price);
+        return DataUpdater::getInstance()->setProductPrice($product_id, $price);
     }
 
     /**
@@ -353,7 +353,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $group_id = $arguments['group_id'];
 
-        return $this->connection->setProductGroup($product_id, $group_id);
+        return DataUpdater::getInstance()->setProductGroup($product_id, $group_id);
     }
 
     /**
@@ -377,7 +377,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $image = $arguments['image_base64'];
 
-        return $this->connection->setProductImage($product_id, $image);
+        return DataUpdater::getInstance()->setProductImage($product_id, $image);
     }
 
     /**
@@ -403,7 +403,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $flag = $arguments['flag'];
 
-        return $this->connection->setProductViewable($product_id, $flag);
+        return DataUpdater::getInstance()->setProductViewable($product_id, $flag);
     }
 
     /**
@@ -427,7 +427,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $name = $arguments['name'];
 
-        return $this->connection->setFormulaName($formula_id, $name);
+        return DataUpdater::getInstance()->setFormulaName($formula_id, $name);
     }
 
     /**
@@ -453,7 +453,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $price = $arguments['price'];
 
-        return $this->connection->setFormulaPrice($formula_id, $price);
+        return DataUpdater::getInstance()->setFormulaPrice($formula_id, $price);
     }
 
     /**
@@ -479,7 +479,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $flag = $arguments['flag'];
 
-        return $this->connection->setFormulaViewable($formula_id, $flag);
+        return DataUpdater::getInstance()->setFormulaViewable($formula_id, $flag);
     }
 
     /**
@@ -503,7 +503,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $image = $arguments['image_base64'];
 
-        return $this->connection->setFormulaImage($formula_id, $image);
+        return DataUpdater::getInstance()->setFormulaImage($formula_id, $image);
     }
 
     /**
@@ -524,7 +524,7 @@ class UpdateHandler extends Handler
 
         $id = $arguments['product_id'];
 
-        return $this->connection->deleteProduct($id);
+        return DataUpdater::getInstance()->deleteProduct($id);
     }
 
     /**
@@ -545,7 +545,7 @@ class UpdateHandler extends Handler
 
         $id = $arguments['group_id'];
 
-        return $this->connection->deleteProductGroup($id);
+        return DataUpdater::getInstance()->deleteProductGroup($id);
     }
 
     /**
@@ -566,7 +566,7 @@ class UpdateHandler extends Handler
 
         $id = $arguments['formula_id'];
 
-        return $this->connection->deleteFormula($id);
+        return DataUpdater::getInstance()->deleteFormula($id);
     }
 
     /**
@@ -587,7 +587,7 @@ class UpdateHandler extends Handler
 
         $id = $arguments['choice_id'];
 
-        return $this->connection->deleteFormulaChoice($id);
+        return DataUpdater::getInstance()->deleteFormulaChoice($id);
     }
 }
 

@@ -3,15 +3,14 @@ namespace cafetapi\io;
 
 use cafetapi\data\Choice;
 use cafetapi\data\Formula;
+use cafetapi\data\FormulaOrdered;
 use cafetapi\data\Product;
 use cafetapi\data\ProductGroup;
+use cafetapi\data\ProductOrdered;
 use cafetapi\exceptions\NotEnoughtMoneyException;
 use cafetapi\exceptions\RequestFailureException;
 use PDO;
 use PDOStatement;
-use cafetapi\data\Ordered;
-use cafetapi\data\ProductOrdered;
-use cafetapi\data\FormulaOrdered;
 
 /**
  * Object specialized in data updating from the database for the API
@@ -21,6 +20,17 @@ use cafetapi\data\FormulaOrdered;
  */
 class DataUpdater extends DatabaseConnection
 {
+    private static $instance;
+    
+    /**
+     * Get singleton object
+     * @return DataUpdater the singleton of this class
+     */
+    public static function getInstance() : DataUpdater
+    {
+        if(self::$instance === null) self::$instance = new DataUpdater();
+        return self::$instance;
+    }
 
     /**
      * Check if data have been updated
