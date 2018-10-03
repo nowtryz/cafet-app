@@ -16,7 +16,7 @@ class FormulaBought extends ExpenseDetail
 
     private $id;
 
-    private $formula_id;
+    private $formula;
 
     /**
      * Model of Formula that have been bought.
