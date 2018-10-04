@@ -32,7 +32,13 @@ class ClientError
     public static function methodNotAllowed(string $method, array $allowedMethods) : RestResponse
     {
         $headers = array('Allow' => implode(', ', $allowedMethods));
-        return new RestResponse(405, HttpCodes::HTTP_405, cafet_grab_error_infos('02-405', 'Method ' . $method . ' is not allowed for the chosen resource'), $headers);
+        return new RestResponse(405, HttpCodes::HTTP_405, cafet_grab_error_infos('02-405', 'Method ' . $method . ' is not allowed for the chosen resource, must be ' . implode('/', $allowedMethods)), $headers);
+    }
+    
+    public static function conflict(string $reason = '') : RestResponse
+    {
+        $headers = array('Reason' => $reason);
+        return new RestResponse(409, HttpCodes::HTTP_409, cafet_grab_error_infos('02-409', $reason), $headers);
     }
 }
 

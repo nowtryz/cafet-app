@@ -30,6 +30,7 @@ v2
  |   |   └─ %{id} : Expense
  |   |
  |   ├─ product_bought
+ |   |   ├─ list : ProductBought[]
  |   |   └─ %{id} : ProductBought
  |   |
  |   ├─ formula_bought

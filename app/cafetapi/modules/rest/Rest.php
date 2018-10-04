@@ -64,7 +64,9 @@ class Rest
         header('Content-type: '. $contentType . '; charset=' . self::CHARSET);
     }
     
-    
+    /*******************
+     ** Rest printers **
+     *******************/
     
     private function printResponse(RestResponse $response) {
         header('HTTP/1.1 ' . $response->getCode() . ' ' . $response->getMessage());
@@ -120,7 +122,23 @@ class Rest
     
     
     
+    /***************
+     ** Computers **
+     ***************/
     
+    /**
+     * Set wich permission to check, print a 403 error if one of the given permissions is not granted  to the client
+     * @param array $permission
+     */
+    public final function needPermissions(array $permissions)
+    {
+        return;
+    }
+    
+    public final function allowMethods(array $methods)
+    {
+        if(!in_array($this->method, $methods)) $this->printResponse(ClientError::methodNotAllowed($this->method, $methods));
+    }
     
     public final function isClientAbleTo(string $permission) : bool
     {
@@ -132,6 +150,10 @@ class Rest
     {
         return array_shift($this->path);
     }
+    
+    /*************
+     ** Getters **
+     *************/
     
     /**
      * Returns the $version

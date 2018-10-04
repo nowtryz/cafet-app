@@ -60,7 +60,7 @@ class ReloadNode implements RestNode
         if(!$request->getBody())                         return ClientError::badRequest('Empty body');
         if(!isset($request->getBody()['client_id']))     return ClientError::badRequest('Missing `client_id` field');
         if(!isset($request->getBody()['amount']))        return ClientError::badRequest('Missing `amount` field');
-        if(!is_scalar($request->getBody()['client_id'])) return ClientError::badRequest('Expected `client_id` field to be an integer');
+        if(!intval($request->getBody()['client_id'], 0)) return ClientError::badRequest('Expected `client_id` field to be an integer');
         if(!is_scalar($request->getBody()['amount']))    return ClientError::badRequest('Expected `amount` field to be a float');
         
         $client_id = intval($request->getBody()['client_id'], 0);

@@ -21,6 +21,7 @@ use PDOStatement;
 class DataUpdater extends DatabaseConnection
 {
     private static $instance;
+    private $inTransaction;
     
     /**
      * Get singleton object
@@ -30,6 +31,34 @@ class DataUpdater extends DatabaseConnection
     {
         if(self::$instance === null) self::$instance = new DataUpdater();
         return self::$instance;
+    }
+    
+    public final function createTransaction()
+    {
+        if (!$this->connection->inTransaction()) $this->connection->beginTransaction();
+        $this->inTransaction = true;
+    }
+    
+    public final function cancelTransaction()
+    {
+        if ($this->connection->inTransaction()) $this->connection->rollBack();
+        if ($this->inTransaction) $this->inTransaction = false;
+    }
+    
+    public final function confirmTransaction()
+    {
+        $this->connection->commit();
+        $this->inTransaction = false;
+    }
+    
+    private final function beginTransaction()
+    {
+        if (!$this->inTransaction) $this->connection->beginTransaction();
+    }
+    
+    private final function commit()
+    {
+        if (!$this->inTransaction) $this->connection->commit();
     }
 
     /**
@@ -51,7 +80,7 @@ class DataUpdater extends DatabaseConnection
         $backtrace = debug_backtrace()[1];
 
         if ($stmt->rowCount() == 0) {
-            $this->connection->rollBack();
+            $this->cancelTransaction();
 
             throw new RequestFailureException($message . $sql_error, null, null, $backtrace['file'], $backtrace['line']);
         }
@@ -67,7 +96,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function addProduct(string $name, int $group_id): Product
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
         $this->connection->exec('SET foreign_key_checks=0');
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS . '(product_group) VALUES (:group)');
@@ -89,7 +118,7 @@ class DataUpdater extends DatabaseConnection
         $stmt->closeCursor();
         
         $this->connection->exec('SET foreign_key_checks=1');
-        $this->connection->commit();
+        $this->commit();
         return (new DataFetcher())->getProduct($product_id);
     }
 
@@ -102,7 +131,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function addProductGroup(string $name): ProductGroup
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_GROUPS . '(name, display_name) VALUES(:name, :dname)');
         $stmt->execute(array(
@@ -112,7 +141,7 @@ class DataUpdater extends DatabaseConnection
         $this->checkUpdate($stmt, 'unable to add the product group');
 
         $id = $this->connection->lastInsertId();
-        $this->connection->commit();
+        $this->commit();
         return (new DataFetcher())->getProductGroup($id);
     }
 
@@ -126,7 +155,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function addFormula(string $name): Formula
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
         $this->connection->exec('SET foreign_key_checks=0');
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS . '(id) VALUES (NULL)');
@@ -144,7 +173,7 @@ class DataUpdater extends DatabaseConnection
         $stmt->closeCursor();
         
         $this->connection->exec('SET foreign_key_checks=1');
-        $this->connection->commit();
+        $this->commit();
         return (new DataFetcher())->getFormula($formula_id);
     }
 
@@ -158,7 +187,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function addChoice(string $name, int $formula_id): Choice
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_CHOICES . '(formula, name) VALUES (:formula, :name)');
         $stmt->execute(array(
@@ -168,7 +197,7 @@ class DataUpdater extends DatabaseConnection
         $this->checkUpdate($stmt, 'unable to add the choice');
 
         $id = $this->connection->lastInsertId();
-        $this->connection->commit();
+        $this->commit();
         return (new DataFetcher())->getChoice($id);
     }
 
@@ -182,7 +211,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function addProductToChoice(int $choice_id, int $product_id): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_CHOICES_PRODUCTS . '(choice, product) VALUES (:choice, :product)');
         $stmt->execute(array(
@@ -191,7 +220,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to register product');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -205,7 +234,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function removeProductFromChoice(int $choice_id, int $product_id): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS_CHOICES_PRODUCTS . ' WHERE choice = :choice AND product = :product');
         $stmt->execute(array(
@@ -214,7 +243,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to unregister product');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -228,7 +257,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function saveOrder(int $client_id, array $order): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         // Save expense
         $stmt = $this->connection->prepare('INSERT INTO ' . self::EXPENSES . ' (user_id) VALUES (:id)');
@@ -309,7 +338,7 @@ class DataUpdater extends DatabaseConnection
             throw new NotEnoughtMoneyException('missing ' . $delta . ' money to perform this action', null, null, $backtrace['file'], $backtrace['line']);
             return false;
         } else {
-            $this->connection->commit();
+            $this->commit();
             if ($e->getBalanceAfterTransaction() < $conf['balance_warning'])
                 cafet_send_reload_request($client_id);
         }
@@ -328,7 +357,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function saveReload(int $client_id, float $amount, string $comment): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::RELOADS . '(user_id, amount, details) VALUES (:client,:amount,:details)');
         $stmt->execute(array(
@@ -338,7 +367,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to save balance reload');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -352,7 +381,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setProductGroupDisplayName(int $group_id, string $display_name): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS_GROUPS . ' SET display_name = :dname WHERE id = :id');
         $stmt->execute(array(
@@ -361,7 +390,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to change product group display name');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -375,7 +404,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setProductGroupName(int $group_id, string $name): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS_GROUPS . ' SET name = :name WHERE id = :id');
         $stmt->execute(array(
@@ -384,7 +413,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to change product group name');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -398,7 +427,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setProductName(int $product_id, string $name): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_EDITS . '(product, name) VALUES (:id, :name)');
         $stmt->execute(array(
@@ -407,7 +436,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to update product information');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -421,7 +450,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setProductPrice(int $product_id, float $price): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_EDITS . '(product, price) VALUES (:id, :price)');
         $stmt->execute(array(
@@ -430,7 +459,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to update product information');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -444,7 +473,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setProductGroup(int $product_id, int $group_id): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('SELECT 1 FROM ' . self::PRODUCTS_GROUPS . ' WHERE id = :id LIMIT 1');
         $stmt->execute(array(
@@ -460,7 +489,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to update the product');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -474,7 +503,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setProductImage(int $product_id, string $image_base64): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS . ' SET image = :image WHERE id = :id');
         $stmt->execute(array(
@@ -483,7 +512,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to update product');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -497,7 +526,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setProductViewable(int $product_id, bool $flag): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS . ' SET viewable = :flag WHERE id = :id');
         
@@ -507,7 +536,7 @@ class DataUpdater extends DatabaseConnection
         
         $this->checkUpdate($stmt, 'unable to update product');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -521,7 +550,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setFormulaName(int $formula_id, string $name): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_EDITS . '(formula,name) VALUES (:id, :name)');
         $stmt->execute(array(
@@ -530,7 +559,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to update formula');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -544,7 +573,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setFormulaPrice(int $formula_id, float $price): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_EDITS . '(formula,price) VALUES (:id, :price)');
         $stmt->execute(array(
@@ -553,7 +582,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to update formula');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -567,7 +596,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setFormulaViewable(int $formula_id, bool $flag): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('UPDATE ' . self::FORMULAS . ' SET viewable = :flag WHERE id = :id');
         
@@ -578,7 +607,7 @@ class DataUpdater extends DatabaseConnection
         
         $this->checkUpdate($stmt, 'unable to update formula');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -592,7 +621,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function setFormulaImage(int $formula_id, string $image_base64): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('UPDATE ' . self::FORMULAS . ' SET image = :image WHERE id = :id');
         $stmt->execute(array(
@@ -601,7 +630,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to update formula');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -614,7 +643,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function deleteProduct(int $id): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('DELETE FROM ' . self::PRODUCTS . ' WHERE id = :id');
         $stmt->execute(array(
@@ -622,7 +651,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to delete the product');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -635,7 +664,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function deleteProductGroup(int $id): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('DELETE FROM ' . self::PRODUCTS_GROUPS . ' WHERE id = :id');
         $stmt->execute(array(
@@ -643,7 +672,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to delete the product group');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -656,7 +685,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function deleteFormula(int $id): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS . ' WHERE id = :id');
         $stmt->execute(array(
@@ -664,7 +693,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to delete the formula');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 
@@ -677,7 +706,7 @@ class DataUpdater extends DatabaseConnection
      */
     public final function deleteFormulaChoice(int $id): bool
     {
-        $this->connection->beginTransaction();
+        $this->beginTransaction();
 
         $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS_CHOICES . ' WHERE id = :id');
         $stmt->execute(array(
@@ -685,7 +714,7 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to delete the choice');
 
-        $this->connection->commit();
+        $this->commit();
         return true;
     }
 }

@@ -21,7 +21,8 @@
 		"403": "Forbidden access",
 		"404": "Resource not found",
 		"405": "Method not allowed",
-		"408": "Request time-out"
+		"408": "Request time-out",
+		"409": "Conflict"
 	},
 	"03": {
 		"def": "message exception",

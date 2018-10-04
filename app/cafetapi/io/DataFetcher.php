@@ -656,6 +656,54 @@ class DataFetcher extends DatabaseConnection
         return null;
     }
     
+    public final function getFormulasBought(): array
+    {
+        $stmt = $this->connection->prepare('SELECT '
+            . 'b.id id, '
+            . 'e.name name, '
+            . 'e.price price, '
+            . 'b.formula_id fid, '
+            . 'b.quantity quantity, '
+            . 'b.user_id client_id, '
+            . 'DATE_FORMAT(b.date, "%H") hour, '
+            . 'DATE_FORMAT(b.date, "%i") mins, '
+            . 'DATE_FORMAT(b.date, "%s") secs, '
+            . 'DATE_FORMAT(b.date, "%d") day, '
+            . 'DATE_FORMAT(b.date, "%c") month, '
+            . 'DATE_FORMAT(b.date, "%Y") year '
+            . 'FROM ' . self::FORMULAS_BOUGHT . ' b '
+            . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' e '
+            . 'ON b.edit_id = e.id ');
+        
+        $id = $fid = $quantity = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $name = $price = '';
+        
+        $stmt->bindColumn('id', $id, PDO::PARAM_INT);
+        $stmt->bindColumn('name', $name, PDO::PARAM_STR);
+        $stmt->bindColumn('price', $price, PDO::PARAM_STR);
+        $stmt->bindColumn('fid', $fid, PDO::PARAM_INT);
+        $stmt->bindColumn('quantity', $quantity, PDO::PARAM_INT);
+        $stmt->bindColumn('client_id', $client_id, PDO::PARAM_INT);
+        $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
+        $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
+        $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
+        $stmt->bindColumn('day', $day, PDO::PARAM_INT);
+        $stmt->bindColumn('month', $month, PDO::PARAM_INT);
+        $stmt->bindColumn('year', $year, PDO::PARAM_INT);
+        
+        $stmt->execute();
+        $this->check_fetch_errors($stmt);
+        
+        $result = array();
+        
+        while ($stmt->fetch()) {
+            $date = new Calendar($year, $month, $day, $hour, $mins, $secs);
+            $result[] = new FormulaBought($id, $fid, $name, $client_id, floatval($price), $quantity, $date);
+        }
+        
+        return $result;
+    }
+    
     public final function getFormulaBought(int $id): ?FormulaBought
     {
         $stmt = $this->connection->prepare('SELECT '

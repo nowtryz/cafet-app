@@ -44,7 +44,7 @@ class FormulaBought extends ExpenseDetail
     public function __construct(int $id, int $formula_id, string $name, int $client_id, float $price, int $quantity, Calendar $date)
     {
         parent::__construct($name, $client_id, $price, $quantity, $date);
-        $this->formula_id = $formula_id;
+        $this->formula = $formula_id;
         $this->id = $id;
     }
 
@@ -73,6 +73,14 @@ class FormulaBought extends ExpenseDetail
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['date'] = $vars['date']->getProperties();
+        
+        return array_merge(array('type' => get_simple_classname($this)), $vars);
     }
 }
 
