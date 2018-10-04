@@ -121,7 +121,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
         $logs = array();
         $tmp = explode("\r\n", $log);
         foreach ($tmp as $tmp2) $logs = array_merge($logs, explode("\n", $tmp2));
-        foreach ($logs as $line) error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $line . PHP_EOL, 3, CAFET_DIR . 'debug.log');
+        foreach ($logs as $line) error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $line . PHP_EOL, 3, CAFET_DIR . 'error.log');
     }
 
     /**
