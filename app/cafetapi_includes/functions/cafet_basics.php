@@ -209,7 +209,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
             }
         }
 
-        return $infos;
+        return $info;
     }
 
     /**
@@ -511,7 +511,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
     function cafet_generate_hashed_pwd(string $password, string $pseudo = null): string
     {
         $salt = bin2hex(random_bytes(16));
-        $algo = CONFIGURATIONS['hash_algo'];
+        $algo = cafet_get_configurations()['hash_algo'];
 
         return $algo . '.' . $salt . '.' . hash($algo, $salt . $password);
     }
@@ -538,7 +538,7 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
 
         if (count($hash_info) == 1) {
             if (isset($pseudo))
-                return sha1(CONFIGURATIONS['salt'] . $password . $pseudo) === $hash;
+                return sha1(cafet_get_configurations()['salt'] . $password . $pseudo) === $hash;
         }
 
         if (count($hash_info) < 3)
@@ -630,6 +630,9 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
 
         echo '<h2>$_COOKIE</h2>';
         var_dump($_COOKIE);
+        
+        echo '<h2>$_GET</h2>';
+        var_dump($_GET);
 
         echo '<h2>$_REQUEST</h2>';
         var_dump($_REQUEST);
