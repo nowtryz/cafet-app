@@ -1,4 +1,4 @@
-# Cafet Manager - PHP API Server : v1.0.0-beta
+# Cafet Manager - PHP API Server : Beta 0.1.0
 Both REST API for http connections and PHP librairy. Manage Interactions between client/server-side applications and database
 
 ## Usage
