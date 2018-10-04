@@ -41,7 +41,7 @@ error_reporting(E_ALL);
 /**
  *  Set the logging file
  */
-ini_set('error_log', CAFET_DIR . 'debug.log');
+ini_set('error_log', CAFET_DIR . 'error.log');
 
 /*
  * constants file
