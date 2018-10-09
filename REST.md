@@ -82,26 +82,29 @@ v2
      └─ infos : key/value
 ```
 
-End points follow a simple convention, so these are the methods to reach end points:
+End points follow a simple convention, so these are the methods  and request argulments to reach end points:
 
-| Path                                                                                       | Methods
-|--------------------------------------------------------------------------------------------|--------
-| `/api/v2/cafet/group/%{id}`                                                                | `GET` / `PUT` / `PATCH` / `DELETE`
-| `/api/v2/cafet/product/%{id}`                                                              | `GET` / `PUT` / `PATCH` / `DELETE`
-| `/api/v2/cafet/formula/%{id}`                                                              | `GET` / `PUT` / `PATCH` / `DELETE`
-| `/api/v2/cafet/choice/%{id}`                                                               | `GET` / `PUT` / `PATCH` / `DELETE`
-| `/api/v2/cafet/client/%{id}`                                                               | `GET`
-| `/api/v2/cafet/expense/%{id}`                                                              | `GET`
-| `/api/v2/cafet/product_bought/%{id}`                                                       | `GET`
-| `/api/v2/cafet/formula_bought/%{id}`                                                       | `GET`
-| `/api/v2/cafet/reload}/%{id}`                                                              | `GET`
-| arrays like `/api/v2/cafet/.../list` (and its child) or `/api/v2/cafet/.../%{id}` children | `GET`
-| `/api/v2/cafet/.../new`                                                                    | `POST`
-| `/api/v2/cafet/.../search`                                                                 | `GET`
-| `/api/v2/user/login` and `/api/v2/cafet/user/logout`                                       | `POST`
-| `/api/v2/user/current`                                                                     | `GET` / `PATCH`
-| `/api/v2/server/config`                                                                    | `GET` / `PUT` / `PATCH`
-| `/api/v2/server/infos`                                                                     | `GET`
+| Path                                                                                       | Methods                            | Request arguments |
+|--------------------------------------------------------------------------------------------|------------------------------------|-------------------|
+| `/api/v2/cafet/group/%{id}`                                                                | `GET` / `PUT` / `PATCH` / `DELETE` |
+| `/api/v2/cafet/product/%{id}`                                                              | `GET` / `PUT` / `PATCH` / `DELETE` |
+| `/api/v2/cafet/formula/%{id}`                                                              | `GET` / `PUT` / `PATCH` / `DELETE` | `noimage`
+| `/api/v2/cafet/choice/%{id}`                                                               | `GET` / `PUT` / `PATCH` / `DELETE` | `noimage`
+| `/api/v2/cafet/client/%{id}`                                                               | `GET`                              |
+| `/api/v2/cafet/expense/%{id}`                                                              | `GET`                              |
+| `/api/v2/cafet/product_bought/%{id}`                                                       | `GET`                              |
+| `/api/v2/cafet/formula_bought/%{id}`                                                       | `GET`                              |
+| `/api/v2/cafet/reload/%{id}`                                                               | `GET`                              |
+| `/api/v2/cafet/product/list`                                                               | `GET`                              | `noimage` / `hidden`
+| arrays like `/api/v2/cafet/.../list` (and its child) or `/api/v2/cafet/.../%{id}` children | `GET`                              |
+| `/api/v2/cafet/.../new`                                                                    | `POST`                             |
+| `/api/v2/cafet/.../search`                                                                 | `GET`                              |
+| `/api/v2/user/login` and `/api/v2/cafet/user/logout`                                       | `POST`                             |
+| `/api/v2/user/current`                                                                     | `GET` / `PATCH`                    |
+| `/api/v2/server/config`                                                                    | `GET` / `PUT` / `PATCH`            |
+| `/api/v2/server/infos`                                                                     | `GET`                              |
+
+Any end point can use the request argument `pretty` to format the output in a human readable way.
 
 ## Where the hell body parts have gone?
 Every field excepte the "wanted resouce" have been modified to only keep this resource in the body. So usage of body parts changed and it may have changed a little.

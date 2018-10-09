@@ -74,15 +74,15 @@ class DataUpdater extends DatabaseConnection
     private final function checkUpdate(PDOStatement $stmt, string $message, bool $autorisation_error = false)
     {
         if ($stmt->errorCode() != '00000')
+        {
             parent::registerErrorOccurence($stmt);
-
-        $sql_error = $stmt->errorCode() != '00000' ? ': ' . $stmt->errorInfo()[2] : '';
-        $backtrace = debug_backtrace()[1];
-
-        if ($stmt->rowCount() == 0) {
+            
+            $sql_error = $stmt->errorInfo()[2];
+            $backtrace = debug_backtrace()[1];
+            
             $this->cancelTransaction();
-
-            throw new RequestFailureException($message . $sql_error, null, null, $backtrace['file'], $backtrace['line']);
+            
+            throw new RequestFailureException($message . ' ' . $sql_error, null, null, $backtrace['file'], $backtrace['line']);
         }
     }
 
@@ -462,6 +462,30 @@ class DataUpdater extends DatabaseConnection
         $this->commit();
         return true;
     }
+    
+    /**
+     * Change the name and the price for the specified product
+     *
+     * @param int $product_id
+     * @param float $price
+     * @return bool if the query have correctly been completed
+     * @since API 1.0.0 (2018)
+     */
+    public final function setProductInformation(int $product_id, string $name, float $price): bool
+    {
+        $this->beginTransaction();
+        
+        $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_EDITS . '(product, name, price) VALUES (:id, :name, :price)');
+        $stmt->execute(array(
+            'id' => $product_id,
+            'name' => $name,
+            'price' => $price
+        ));
+        $this->checkUpdate($stmt, 'unable to update product information');
+        
+        $this->commit();
+        return true;
+    }
 
     /**
      * Change the group for the specified product
@@ -487,7 +511,7 @@ class DataUpdater extends DatabaseConnection
             'group' => $group_id,
             'id' => $product_id
         ));
-        $this->checkUpdate($stmt, 'unable to update the product');
+        $this->checkUpdate($stmt, 'unable to update the product group');
 
         $this->commit();
         return true;
@@ -510,7 +534,7 @@ class DataUpdater extends DatabaseConnection
             'image' => $image_base64,
             'id' => $product_id
         ));
-        $this->checkUpdate($stmt, 'unable to update product');
+        $this->checkUpdate($stmt, 'unable to update product image');
 
         $this->commit();
         return true;
@@ -534,7 +558,7 @@ class DataUpdater extends DatabaseConnection
         $stmt->bindValue(':id', $product_id, PDO::PARAM_INT);
         $stmt->execute();
         
-        $this->checkUpdate($stmt, 'unable to update product');
+        $this->checkUpdate($stmt, 'unable to update product visibility');
 
         $this->commit();
         return true;

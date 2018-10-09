@@ -168,10 +168,10 @@ class GroupNode implements RestNode
             foreach ($request->getBody() as $field => $value) switch ($field)
             {
                 case 'name':
-                    $updater->setProductGroupName($id, $value);
+                    $updater->setProductGroupName($id, strval($value));
                     break;
                 case 'displayName':
-                    $updater->setProductGroupDisplayName($id, $value);
+                    $updater->setProductGroupDisplayName($id, strval($value));
                     break;
             }
             
