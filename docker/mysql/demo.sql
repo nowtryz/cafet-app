@@ -1,5 +1,6 @@
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
+SET foreign_key_checks=0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -122,4 +123,5 @@ ALTER TABLE `cafet_products_edits` AUTO_INCREMENT=20;
 -- --
 -- End
 --
+SET foreign_key_checks=1;
 COMMIT;
