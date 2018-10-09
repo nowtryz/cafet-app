@@ -32,7 +32,7 @@ class ExpenseNode implements RestNode
         switch ($dir) {
             case self::LIST:   return self::list($request);
             
-            case null: return ClientError::Forbidden();
+            case null: return ClientError::forbidden();
             default:
                 if(intval($dir, 0)) {
                     if(!count($request->getPath())) return self::expense($request, intval($dir, 0));
@@ -53,7 +53,7 @@ class ExpenseNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $expenses = array();
         foreach (DataFetcher::getInstance()->getExpenses() as $expense) $expenses[] = $expense->getProperties();
@@ -63,7 +63,7 @@ class ExpenseNode implements RestNode
     private static function expense(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $reload = DataFetcher::getInstance()->getExpense($id);
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
@@ -73,7 +73,7 @@ class ExpenseNode implements RestNode
     private static function expenseDetails(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $details = array();
         foreach (DataFetcher::getInstance()->getExpenseDetails($id) as $detail) $details[] = $detail->getProperties();

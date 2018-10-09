@@ -18,7 +18,7 @@ class ClientError
         return new RestResponse(400, HttpCodes::HTTP_400, cafet_grab_error_infos('02-400', $reason), $headers);
     }
     
-    public static function Forbidden() : RestResponse
+    public static function forbidden() : RestResponse
     {
         return new RestResponse(403, HttpCodes::HTTP_403, cafet_grab_error_infos('02-403'));
     }
@@ -39,6 +39,11 @@ class ClientError
     {
         $headers = array('Reason' => $reason);
         return new RestResponse(409, HttpCodes::HTTP_409, cafet_grab_error_infos('02-409', $reason), $headers);
+    }
+    
+    public static function imATeapot() : RestResponse
+    {
+        return new RestResponse(418, HttpCodes::HTTP_418, cafet_grab_error_infos('01-501'));
     }
 }
 

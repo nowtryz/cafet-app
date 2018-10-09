@@ -32,7 +32,7 @@ class FormulaBoughtNode implements RestNode
         switch ($dir) {
             case self::LIST: return self::list($request);
             
-            case null: return ClientError::Forbidden();
+            case null: return ClientError::forbidden();
             default:
                 if (intval($dir, 0)) {
                     if (!count($request->getPath())) return self::formulaBought($request, intval($dir, 0));
@@ -50,7 +50,7 @@ class FormulaBoughtNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $formulasBought = array();
         foreach (DataFetcher::getInstance()->getFormulasBought() as $formulaBought) $formulasBought[] = $formulaBought->getProperties();
@@ -60,7 +60,7 @@ class FormulaBoughtNode implements RestNode
     private static function formulaBought(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $formulaBought = DataFetcher::getInstance()->getFormulaBought($id);
         if($formulaBought) return new RestResponse('200', HttpCodes::HTTP_200, $formulaBought->getProperties());
@@ -70,7 +70,7 @@ class FormulaBoughtNode implements RestNode
     private static function products(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $products = array();
         foreach (DataFetcher::getInstance()->getFormulaBoughtProducts($id) as $product) $products[] = $product->getProperties();

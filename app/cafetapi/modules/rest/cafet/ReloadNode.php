@@ -34,7 +34,7 @@ class ReloadNode implements RestNode
             case self::LIST: return self::list($request);
             case self::NEW:  return self::new($request);
             
-            case null: return ClientError::Forbidden();
+            case null: return ClientError::forbidden();
             default:
                 if(intval($dir)) return self::reload($request, intval($dir));
                 else return ClientError::resourceNotFound('Unknown cafet/reload/' . $dir . ' node');
@@ -44,7 +44,7 @@ class ReloadNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::forbidden();
         
         $reloads = array();
         foreach (DataFetcher::getInstance()->getReloads() as $reload) $reloads[] = $reload->getProperties();
@@ -54,7 +54,7 @@ class ReloadNode implements RestNode
     private static function new(Rest $request) : RestResponse
     {
         if($request->getMethod() !== 'POST') return ClientError::methodNotAllowed($request->getMethod(), array('POST'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_RELOAD)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_RELOAD)) return ClientError::forbidden();
         
         //body checks
         if(!$request->getBody())                         return ClientError::badRequest('Empty body');
@@ -64,7 +64,7 @@ class ReloadNode implements RestNode
         if(!is_scalar($request->getBody()['amount']))    return ClientError::badRequest('Expected `amount` field to be a float');
         
         $client_id = intval($request->getBody()['client_id'], 0);
-        $amount = floatval($request->getBody()['amount']);
+        $amount = intval($request->getBody()['amount']);
         
         $reload = DataUpdater::getInstance()->saveReload($client_id, $amount, 'by a registered capable user');
         if($reload) return new RestResponse('204', HttpCodes::HTTP_204, null);
@@ -74,7 +74,7 @@ class ReloadNode implements RestNode
     private static function reload(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::forbidden();
         
         $reload = DataFetcher::getInstance()->getReload($id);
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());

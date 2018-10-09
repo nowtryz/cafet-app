@@ -30,7 +30,7 @@ class ProductBoughtNode implements RestNode
         switch ($dir) {
             case self::LIST:   return self::list($request);
             
-            case null: return ClientError::Forbidden();
+            case null: return ClientError::forbidden();
             default:
                 if(intval($dir, 0)) return self::productBought($request, intval($dir, 0));
                 else return ClientError::resourceNotFound('Unknown cafet/product_bought/' . $dir . ' node');
@@ -40,7 +40,7 @@ class ProductBoughtNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $productsBought = array();
         foreach (DataFetcher::getInstance()->getProductsBought() as $productBought) $productsBought[] = $productBought->getProperties();
@@ -50,7 +50,7 @@ class ProductBoughtNode implements RestNode
     private static function productBought(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $productBought = DataFetcher::getInstance()->getProductBought($id);
         if($productBought) return new RestResponse('200', HttpCodes::HTTP_200, $productBought->getProperties());

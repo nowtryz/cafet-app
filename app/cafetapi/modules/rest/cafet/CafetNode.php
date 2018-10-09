@@ -46,7 +46,7 @@ class CafetNode implements RestNode
             case self::CHOICE:         return ChoiceNode::handle($request);
             case self::ORDER:          return OrderNode::handle($request);
             
-            case null: return ClientError::Forbidden();
+            case null: return ClientError::forbidden();
             default:   return ClientError::resourceNotFound('Unknown cafet/' . $dir . ' node');
         }
     }

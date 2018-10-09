@@ -38,7 +38,7 @@ class ClientNode implements RestNode
             case self::LIST:   return self::list($request);
             case self::SEARCH: return self::search($request);
             
-            case null: return ClientError::Forbidden();
+            case null: return ClientError::forbidden();
             default:
                 if(intval($dir, 0)) {
                     if(!count($request->getPath())) return self::client($request, intval($dir, 0));
@@ -61,7 +61,7 @@ class ClientNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
         
         $clients = array();
         foreach (DataFetcher::getInstance()->getClients() as $client) $clients[] = $client->getProperties();
@@ -71,7 +71,7 @@ class ClientNode implements RestNode
     private static function search(Rest $request) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
         
         $clients = array();
         foreach (DataFetcher::getInstance()->searchClient(urldecode($request->shiftPath())) as $client) $clients[] = $client->getProperties();
@@ -83,7 +83,7 @@ class ClientNode implements RestNode
     private static function client(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
         
         $client = DataFetcher::getInstance()->getClient($id);
         if($client) return new RestResponse('200', HttpCodes::HTTP_200, $client->getProperties());
@@ -93,7 +93,7 @@ class ClientNode implements RestNode
     private static function clientReloads(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::forbidden();
         
         $reloads = array();
         foreach (DataFetcher::getInstance()->getClientReloads($id) as $reload) $reloads[] = $reload->getProperties();
@@ -105,7 +105,7 @@ class ClientNode implements RestNode
     private static function clientExpenses(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $expenses = array();
         foreach (DataFetcher::getInstance()->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
@@ -117,7 +117,7 @@ class ClientNode implements RestNode
     private static function clientLastExpenses(Rest $request, int $id) : RestResponse
     {
         if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::Forbidden();
+        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $expenses = array();
         foreach (DataFetcher::getInstance()->getClientLastExpenses($id) as $expense) $expenses[] = $expense->getProperties();
