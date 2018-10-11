@@ -17,12 +17,14 @@ $products = cafetapi\io\DataFetcher::getInstance()->getProducts(true);
 <form action="../image/product" method="get" target="_blank">
 	<label for="id">Product's name: </label>
 
-<?php
-echo '  <select name="id" id="id" required/>' . "\n\n";
-foreach ($products as $p)
-    echo '        <option value="' . $p->getId() . '">' . $p->getName() . '</option>' . "\n";
-echo "\n" . '		<option value=0 selected> -- SELECT --</option>' . "\n\n" . '	</select>';
-?>
+	<select name="id" id="id" required>
+	
+<?php foreach ($products as $p) { ?>
+    <option value="<?=$p->getId()?>"><?=$p->getName()?></option>
+<?php } ?>
+	<option value=0 selected> -- SELECT --</option>
+
+	</select>
 
 	<input type="checkbox" name="dl" id="dl-name" /><label for="dl-name">Download</label>
 	<input type="submit" value="Send" />
@@ -36,7 +38,7 @@ echo "\n" . '		<option value=0 selected> -- SELECT --</option>' . "\n\n" . '	</s
 <form action="" method="get">
 	<label for="session">Session: </label><input type="text" name="session"
 		id="session"
-		value="<?php echo isset($_GET['session']) && $_GET['session'] ? $_GET['session'] : '' ?>"
+		value="<?=isset($_GET['session']) && $_GET['session'] ? $_GET['session'] : ''?>"
 		required /> <input type="submit" value="Send" />
 </form>
 
