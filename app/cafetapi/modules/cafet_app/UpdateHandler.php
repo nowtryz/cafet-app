@@ -17,7 +17,6 @@ class UpdateHandler extends Handler
     public function __construct()
     {
         parent::__construct();
-        $this->connection = new DataUpdater();
     }
 
     /**
