@@ -77,7 +77,7 @@ class ProductGroup extends JSONParsable
      */
     public final function getProducts(): array
     {
-        return (new DataFetcher())->getGroupProducts($this->id);
+        return DataFetcher::getInstance()->getGroupProducts($this->id);
     }
 
     /**
@@ -88,7 +88,7 @@ class ProductGroup extends JSONParsable
      */
     public final function getAllProducts(): array
     {
-        return (new DataFetcher())->getGroupProducts($this->id, true);
+        return DataFetcher::getInstance()->getGroupProducts($this->id, true);
     }
 
     public function __toString(): string

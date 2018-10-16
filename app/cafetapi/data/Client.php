@@ -162,7 +162,7 @@ class Client extends JSONParsable
      */
     public final function getExpenses(): array
     {
-        return (new DataFetcher())->getClientExpenses($this->id);
+        return DataFetcher::getInstance()->getClientExpenses($this->id);
     }
 
     /**
@@ -173,7 +173,7 @@ class Client extends JSONParsable
      */
     public final function getLastExpenses(): array
     {
-        return (new DataFetcher())->getClientLastExpenses($this->id);
+        return DataFetcher::getInstance()->getClientLastExpenses($this->id);
     }
 
     /**
@@ -184,7 +184,7 @@ class Client extends JSONParsable
      */
     public final function getReloads(): array
     {
-        return (new DataFetcher())->getClientReloads($this - id);
+        return DataFetcher::getInstance()->getClientReloads($this->id);
     }
 
     /**
