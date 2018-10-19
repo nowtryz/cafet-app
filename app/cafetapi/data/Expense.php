@@ -118,7 +118,7 @@ class Expense extends JSONParsable implements Data
      */
     public final function getDetails(): array
     {
-        return (new DataFetcher())->getExpenseDetails($this->id);
+        return DataFetcher::getInstance()->getExpenseDetails($this->id);
     }
 
     public function __toString(): string

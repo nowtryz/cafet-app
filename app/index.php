@@ -75,5 +75,7 @@ function echo_index() {
     echo 'nothing to show now<br/><a href="' . URL_LOCATION . '/debug/infos.html">DEBUG</a><br/><a href="' . URL_LOCATION . '/debug/form.html">Request generator</a>';
 }
 
-if(isset($_GET['module'])) echo_page();
-else                       echo_index();
+if(cafet_get_configurations()['debug']) {
+    if(isset($_GET['module'])) echo_page();
+    else                       echo_index();
+} else (new ErrorPageBuilder(403))->print();

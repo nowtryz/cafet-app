@@ -79,6 +79,14 @@ class Database
  */
 class Defaults
 {
+    
+    /**
+     * Si le serveur serveur doit se comporter en mode debug
+     *
+     * @var boolean
+     * @since API 1.0.0 (2018)
+     */
+    const debug = true;
 
     /**
      * Seuil en dessous duquel un mail pour inciter le rechargement est envoyé à chaque achat

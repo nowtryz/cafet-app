@@ -40,7 +40,7 @@ class Formula extends Payable
      */
     public final function getChoices(): array
     {
-        return (new DataFetcher())->getFormulaChoices($this->id);
+        return DataFetcher::getInstance()->getFormulaChoices($this->id);
     }
 
     public function __toString(): string

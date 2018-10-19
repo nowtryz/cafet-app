@@ -58,7 +58,7 @@ class Product extends Payable
      */
     public final function getGroup(): ProductGroup
     {
-        return (new DataFetcher())->getProductGroup($this->group);
+        return DataFetcher::getInstance()->getProductGroup($this->group);
     }
 
     /**
