@@ -817,6 +817,7 @@ class DataFetcher extends DatabaseConnection
             . 'e.price price, '
             . 'p.image image, '
             . 'p.viewable viewable, '
+            . 'p.stock stock, '
             . 'DATE_FORMAT(e.edit, "%H") hour, '
             . 'DATE_FORMAT(e.edit, "%i") mins, '
             . 'DATE_FORMAT(e.edit, "%s") secs, '
@@ -829,7 +830,7 @@ class DataFetcher extends DatabaseConnection
             . 'WHERE p.product_group = :group'
             . (! $show_hiddens ? ' AND p.viewable = 1' : ''));
         
-        $id  = $hour = $mins = $secs = $day = $month = $year = 0;
+        $id = $stock = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = $image = '';
         $viewable = false;
 
@@ -838,6 +839,7 @@ class DataFetcher extends DatabaseConnection
         $stmt->bindColumn('price', $price, PDO::PARAM_STR);
         $stmt->bindColumn('image', $image, PDO::PARAM_STR);
         $stmt->bindColumn('viewable', $viewable, PDO::PARAM_BOOL);
+        $stmt->bindColumn('stock', $stock, PDO::PARAM_INT);
         $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
         $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
         $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
@@ -853,7 +855,7 @@ class DataFetcher extends DatabaseConnection
         $result = array();
 
         while ($stmt->fetch())
-            $result[] = new Product($id, $name, $price, $group_id, $image, $viewable, new Calendar($year, $month, $day, $hour, $mins, $secs));
+            $result[] = new Product($id, $name, $price, $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
 
         return $result;
     }
@@ -922,6 +924,7 @@ class DataFetcher extends DatabaseConnection
             . "\n" . 'e.name name, '
             . "\n" . 'e.price price, '
             . "\n" . 'p.image image, '
+            . "\n" . 'p.stock stock, '
             . "\n" . 'p.product_group pgroup, '
             . "\n" . 'p.viewable viewable, '
             . "\n" . 'DATE_FORMAT(e.edit, "%H") hour, '
@@ -971,6 +974,7 @@ class DataFetcher extends DatabaseConnection
             . 'e.name name, '
             . 'e.price price, '
             . 'p.image image, '
+            . 'p.stock stock, '
             . 'p.product_group group_id, '
             . 'p.viewable viewable, '
             . 'DATE_FORMAT(e.edit, "%H") hour, '

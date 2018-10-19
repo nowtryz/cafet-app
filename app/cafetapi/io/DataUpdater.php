@@ -119,7 +119,7 @@ class DataUpdater extends DatabaseConnection
         
         $this->connection->exec('SET foreign_key_checks=1');
         $this->commit();
-        return (new DataFetcher())->getProduct($product_id);
+        return DataFetcher::getInstance()->getProduct($product_id);
     }
 
     /**
@@ -142,7 +142,7 @@ class DataUpdater extends DatabaseConnection
 
         $id = $this->connection->lastInsertId();
         $this->commit();
-        return (new DataFetcher())->getProductGroup($id);
+        return DataFetcher::getInstance()->getProductGroup($id);
     }
 
     /**
@@ -174,7 +174,7 @@ class DataUpdater extends DatabaseConnection
         
         $this->connection->exec('SET foreign_key_checks=1');
         $this->commit();
-        return (new DataFetcher())->getFormula($formula_id);
+        return DataFetcher::getInstance()->getFormula($formula_id);
     }
 
     /**
@@ -198,7 +198,7 @@ class DataUpdater extends DatabaseConnection
 
         $id = $this->connection->lastInsertId();
         $this->commit();
-        return (new DataFetcher())->getChoice($id);
+        return DataFetcher::getInstance()->getChoice($id);
     }
 
     /**
@@ -329,7 +329,7 @@ class DataUpdater extends DatabaseConnection
             }
         }
 
-        $e = (new DataFetcher())->getExpense($expense_id);
+        $e = DataFetcher::getInstance()->getExpense($expense_id);
         $conf = cafet_get_configurations();
 
         if (($delta = $e->getBalanceAfterTransaction() - $conf['balance_limit']) < 0) {

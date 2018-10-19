@@ -137,6 +137,8 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
             throw new CafetAPIException($additional_message, null, null, $file, $line);
             die();
         }
+        
+        cafet_log($error);
 
         $result = new ReturnStatement("error", cafet_grab_error_infos($error, $additional_message));
 
