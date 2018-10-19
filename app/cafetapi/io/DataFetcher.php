@@ -1110,6 +1110,22 @@ class DataFetcher extends DatabaseConnection
         else
             return NULL;
     }
+    
+    public final function getFormulaChoicesIDs(int $formula_id): array
+    {
+        $stmt = $this->connection->prepare('SELECT '
+            . 'id '
+            . 'FROM ' . self::FORMULAS_CHOICES . ' '
+            . 'WHERE formula = :id');
+        
+        $stmt->execute(array('id' => $formula_id));
+        $this->check_fetch_errors($stmt);
+        $datas = $stmt->fetchAll();
+        
+        $choices = array();
+        foreach ($datas as $data) $choices[] = $data['id'];
+        return $choices;
+    }
 
     public final function getFormulaChoices(int $formula_id): array
     {
@@ -1133,6 +1149,7 @@ class DataFetcher extends DatabaseConnection
             . 'p.image image, '
             . 'p.product_group pgroup, '
             . 'p.viewable viewable, '
+            . 'p.stock stock, '
             . 'DATE_FORMAT(e.edit, "%H") hour, '
             . 'DATE_FORMAT(e.edit, "%i") mins, '
             . 'DATE_FORMAT(e.edit, "%s") secs, '
@@ -1146,7 +1163,7 @@ class DataFetcher extends DatabaseConnection
             . 'ON c.product = p.id '
             . 'WHERE c.choice = :id');
         
-        $id = $group_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $id = $stock = $group_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = $image = '';
         $viewable = false;
         
@@ -1156,6 +1173,7 @@ class DataFetcher extends DatabaseConnection
         $stmt->bindColumn('image', $image, PDO::PARAM_STR);
         $stmt->bindColumn('pgroup', $group_id, PDO::PARAM_INT);
         $stmt->bindColumn('viewable', $viewable, PDO::PARAM_BOOL);
+        $stmt->bindColumn('stock', $stock, PDO::PARAM_INT);
         $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
         $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
         $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
@@ -1176,7 +1194,7 @@ class DataFetcher extends DatabaseConnection
             $choice = array();
 
             while ($stmt->fetch())
-                $choice[] = new Product($id, $name, floatval($price), $group_id, $image, $viewable, new Calendar($year, $month, $day, $hour, $mins, $secs));
+                $choice[] = new Product($id, $name, floatval($price), $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
 
             $stmt->closeCursor();
 
@@ -1215,6 +1233,7 @@ class DataFetcher extends DatabaseConnection
             . 'p.image image, '
             . 'p.product_group pgroup, '
             . 'p.viewable viewable, '
+            . 'p.stock stock, '
             . 'DATE_FORMAT(e.edit, "%H") hour, '
             . 'DATE_FORMAT(e.edit, "%i") mins, '
             . 'DATE_FORMAT(e.edit, "%s") secs, '
@@ -1228,7 +1247,7 @@ class DataFetcher extends DatabaseConnection
             . 'ON c.product = p.id '
             . 'WHERE c.choice = :id');
         
-        $id = $group_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $id = $stock = $group_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = $image = '';
         $viewable = false;
         
@@ -1238,6 +1257,7 @@ class DataFetcher extends DatabaseConnection
         $stmt->bindColumn('image', $image, PDO::PARAM_STR);
         $stmt->bindColumn('pgroup', $group_id, PDO::PARAM_INT);
         $stmt->bindColumn('viewable', $viewable, PDO::PARAM_BOOL);
+        $stmt->bindColumn('stock', $stock, PDO::PARAM_INT);
         $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
         $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
         $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
@@ -1254,7 +1274,7 @@ class DataFetcher extends DatabaseConnection
         $choice = array();
         
         while ($stmt->fetch())
-            $choice[] = new Product($id, $name, floatval($price), $group_id, $image, $viewable, new Calendar($year, $month, $day, $hour, $mins, $secs));
+            $choice[] = new Product($id, $name, floatval($price), $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
             
         $stmt->closeCursor();
         

@@ -91,7 +91,10 @@ class Choice extends JSONParsable implements Data
     
     public function getProperties(): array
     {
-        return array_merge(array('type' => get_simple_classname($this)), get_object_vars($this));
+        $vars = get_object_vars($this);
+        foreach ($vars['choice'] as &$product) $product = $product->getProperties();
+        
+        return array_merge(array('type' => get_simple_classname($this)), $vars);
     }
 
 }

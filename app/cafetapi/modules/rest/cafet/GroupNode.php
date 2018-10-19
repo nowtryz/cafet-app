@@ -99,7 +99,12 @@ class GroupNode implements RestNode
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_PRODUCTS)) return ClientError::forbidden();
         
         $products = array();
-        foreach (DataFetcher::getInstance()->getGroupProducts($id, isset($_REQUEST['hidden'])) as $product) $products[] = $product->getProperties();
+        foreach (DataFetcher::getInstance()->getGroupProducts($id, isset($_REQUEST['hidden'])) as $product)
+        {
+            $properties = $product->getProperties();
+            if (isset($_REQUEST['noimage'])) unset($properties['image']);
+            $products[] = $properties;
+        }
         if($products) return new RestResponse('200', HttpCodes::HTTP_200, $products);
         elseif (DataFetcher::getInstance()->getProductGroup($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown group with id ' . $id);

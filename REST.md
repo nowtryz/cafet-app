@@ -56,17 +56,15 @@ v2
  |   |
  |   ├─ formula
  |   |   ├─ %{id}
- |   |   |   └─ choices : Choice[]
+ |   |   |   ├─ choices : Choice[]
+ |   |   |   └─ choice
+ |   |   |       ├─ %{id} : Choice
+ |   |   |       └─ add : Choice
  |   |   ├─ %{id} : Formula
  |   |   ├─ list
  |   |   |   ├─ sellable : Formula[]
  |   |   |   └─ all : Formula[]
  |   |   └─ new : Formula
- |   |
- |   ├─ choice
- |   |   ├─ %{id} : Choice
- |   |   ├─ list : Choice[]
- |   |   └─ new : Choice
  |   |
  |   └─ order : bool
  |
@@ -87,21 +85,25 @@ End points follow a simple convention, so these are the methods  and request arg
 | Path                                                                                       | Methods                            | Request arguments |
 |--------------------------------------------------------------------------------------------|------------------------------------|-------------------|
 | `/api/v2/cafet/group/%{id}`                                                                | `GET` / `PUT` / `PATCH` / `DELETE` |
+| `/api/v2/cafet/group/%{id}/products`                                                       | `GET`                              | `noimage` / `hidden`
 | `/api/v2/cafet/product/%{id}`                                                              | `GET` / `PUT` / `PATCH` / `DELETE` |
 | `/api/v2/cafet/formula/%{id}`                                                              | `GET` / `PUT` / `PATCH` / `DELETE` | `noimage`
-| `/api/v2/cafet/choice/%{id}`                                                               | `GET` / `PUT` / `PATCH` / `DELETE` | `noimage`
+| `/api/v2/cafet/formula/%{id}/choices`                                                      | `GET`                              | `noimage`
+| `/api/v2/cafet/formula/%{id}/choice/%{id}`                                                 | `GET` / `PUT` / `PATCH` / `DELETE` | `noimage`
 | `/api/v2/cafet/client/%{id}`                                                               | `GET`                              |
 | `/api/v2/cafet/expense/%{id}`                                                              | `GET`                              |
 | `/api/v2/cafet/product_bought/%{id}`                                                       | `GET`                              |
 | `/api/v2/cafet/formula_bought/%{id}`                                                       | `GET`                              |
 | `/api/v2/cafet/reload/%{id}`                                                               | `GET`                              |
 | `/api/v2/cafet/product/list`                                                               | `GET`                              | `noimage` / `hidden`
+| `/api/v2/cafet/formula/list`                                                               | `GET`                              | `noimage` / `hidden`
 | arrays like `/api/v2/cafet/.../list` (and its child) or `/api/v2/cafet/.../%{id}` children | `GET`                              |
-| `/api/v2/cafet/.../new`                                                                    | `POST`                             |
+| `/api/v2/cafet/.../new` and `/api/v2/cafet/formula/%{id}/choice/add`                       | `POST`                             |
 | `/api/v2/cafet/.../search`                                                                 | `GET`                              |
 | `/api/v2/user/login` and `/api/v2/cafet/user/logout`                                       | `POST`                             |
 | `/api/v2/user/current`                                                                     | `GET` / `PATCH`                    |
 | `/api/v2/server/config`                                                                    | `GET` / `PUT` / `PATCH`            |
+| `/api/v2/server/state`                                                                     | `GET`                              |
 | `/api/v2/server/infos`                                                                     | `GET`                              |
 
 Any end point can use the request argument `pretty` to format the output in a human readable way.
@@ -125,8 +127,35 @@ For reponses:
 |--------------|----------
 | `"status"`   | On `OK`, the server simply responds with a `HTTP 200` code
 |              | On `Error`, the server responds with an HTTP error code corresponding to the error occured
-| `"computing"`| `Computing` HTTP Header fiel
-| `"result"`   | It's now the HTTP body
+| `"computing"`| No more used
+| `"result"`   | Now the HTTP body
 
-## Errors
-:construction: Work in progress on error binding.
+## :warning: Errors
+
+Errors are throwed with HTTP error codes as the following
+
+### 2xx Success
+
+| HTTP Code | Message      | Description
+|-----------|:------------:|------------
+| `200`     | `OK`         | The request has succeeded.
+| `201`     | `Created`    | The request has been fulfilled and resulted in a new resource being created.
+| `204`     | `No Content` | The request has been fulfilled but there is no need to return an entity-body.
+    
+    
+### 4xx Client Error
+
+| HTTP Code | Message              | Description
+|-----------|:--------------------:|------------
+| `400`     | `Bad Request`        | The request cannot be prossed due to synthax error or failed semantic validation.
+| `401`     | `Unauthorized`       | Missing or invalid User-token when needed. <strong>MUST</strong> be return with a WWW-Authenticate header field.
+| `403`     | `Forbidden`          | The resource is unavailable for the current logged user.
+| `404`     | `Resource Not Found` | The ressource cannot be found due to wrong id or malformed URI. Sould be return with a Reason header field.
+| `405`     | `Method Not Allowed` | The resource does not support method with whitch the request was made. <strong>MUST</strong> be return with a Allow header field.
+| `409`     | `Conflict`           | Existing conflict, there isa  mismatch with the resource id, its type or with linked resources. Sould be return with a Reason header field.
+| `418`     | `I'm a teapot`       | The functionality is not implemented.
+    
+### 5xx Server Error
+| HTTP Code | Message                 | Description
+|-----------|:-----------------------:|------------
+| `500`     | `Internal Server Error` | An unexpected error occured while trying to fullfil the request.

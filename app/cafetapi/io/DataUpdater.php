@@ -246,6 +246,25 @@ class DataUpdater extends DatabaseConnection
         $this->commit();
         return true;
     }
+    
+    /**
+     * Unregister all products for the specified choice
+     *
+     * @param int $choice_id
+     * @return bool if the query have correctly been completed
+     * @since API 1.0.0 (2018)
+     */
+    public final function removeAllProductsFromChoice(int $choice_id): bool
+    {
+        $this->beginTransaction();
+        
+        $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS_CHOICES_PRODUCTS . ' WHERE choice = :choice');
+        $stmt->execute(array('choice' => $choice_id));
+        $this->checkUpdate($stmt, 'unable to unregister product');
+        
+        $this->commit();
+        return true;
+    }
 
     /**
      * Save a purchase in the database
@@ -654,6 +673,27 @@ class DataUpdater extends DatabaseConnection
         ));
         $this->checkUpdate($stmt, 'unable to update formula');
 
+        $this->commit();
+        return true;
+    }
+    
+    /**
+     * Sets the name of the choice with the given id
+     * @param int $choice_id
+     * @param string $name
+     * @return bool
+     */
+    public final function setFormulaChoiceName(int $choice_id, string $name) : bool
+    {
+        $this->beginTransaction();
+        
+        $stmt = $this->connection->prepare('UPDATE ' . self::FORMULAS_CHOICES . ' SET name = :name WHERE id = :id');
+        $stmt->execute(array(
+            'name' => $name,
+            'id' => $choice_id
+        ));
+        $this->checkUpdate($stmt, 'unable to update formula choice');
+        
         $this->commit();
         return true;
     }
