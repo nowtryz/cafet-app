@@ -12,6 +12,7 @@ class Product extends Payable
 {
 
     private $group;
+    private $stock;
 
     /**
      *
@@ -31,10 +32,11 @@ class Product extends Payable
      *            the date of the last edition
      * @since API 1.0.0 (2018)
      */
-    public function __construct(int $id, string $name, float $price, int $group_id, string $image, bool $viewable, Calendar $edit)
+    public function __construct(int $id, string $name, float $price, int $group_id, string $image, bool $viewable, int $stock, Calendar $edit)
     {
         parent::__construct($id, $name, $image, $price, $viewable, $edit);
         $this->group = $group_id;
+        $this->stock = $stock;
     }
 
     /**

@@ -935,7 +935,7 @@ class DataFetcher extends DatabaseConnection
             . "\n" . 'ON p.last_edit = e.id'
             . (! $show_hiddens ? "\n" . ' WHERE p.viewable = 1' : ''));
         
-        $id = $group_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $id = $group_id = $stock = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = $image = '';
         $viewable = false;
 
@@ -945,6 +945,7 @@ class DataFetcher extends DatabaseConnection
         $stmt->bindColumn('image', $image, PDO::PARAM_STR);
         $stmt->bindColumn('pgroup', $group_id, PDO::PARAM_INT);
         $stmt->bindColumn('viewable', $viewable, PDO::PARAM_BOOL);
+        $stmt->bindColumn('stock', $stock, PDO::PARAM_INT);
         $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
         $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
         $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
@@ -958,7 +959,7 @@ class DataFetcher extends DatabaseConnection
         $result = array();
 
         while ($stmt->fetch())
-            $result[] = new Product($id, $name, $price, $group_id, $image, $viewable, new Calendar($year, $month, $day, $hour, $mins, $secs));
+            $result[] = new Product($id, $name, $price, $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
 
         return $result;
     }
@@ -983,7 +984,7 @@ class DataFetcher extends DatabaseConnection
             . 'ON p.last_edit = e.id '
             . 'WHERE p.id = :id');
         
-        $group_id = $hour = $mins = $secs = $day = $month = $year = 0;
+        $group_id = $stock = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = $image = '';
         $viewable = false;
         
@@ -993,6 +994,7 @@ class DataFetcher extends DatabaseConnection
         $stmt->bindColumn('image', $image, PDO::PARAM_STR);
         $stmt->bindColumn('group_id', $group_id, PDO::PARAM_INT);
         $stmt->bindColumn('viewable', $viewable, PDO::PARAM_BOOL);
+        $stmt->bindColumn('stock', $stock, PDO::PARAM_INT);
         $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
         $stmt->bindColumn('mins', $mins, PDO::PARAM_INT);
         $stmt->bindColumn('secs', $secs, PDO::PARAM_INT);
@@ -1006,7 +1008,7 @@ class DataFetcher extends DatabaseConnection
         $this->check_fetch_errors($stmt);
 
         if ($stmt->fetch())
-            return new Product($id, $name, $price, $group_id, $image, $viewable, new Calendar($year, $month, $day, $hour, $mins, $secs));
+            return new Product($id, $name, $price, $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
 
         else
             return NULL;
