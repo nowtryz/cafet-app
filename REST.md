@@ -1,5 +1,5 @@
 # REST API
-As the v2 of the server, the rest protocol will be implemented. As `web resources` URIs and other API stufs can quickly become tricky, here are some explenations of the internal API functionment.
+As the v0.2 of the server, the rest protocol will be implemented. As `web resources` URIs and other API stufs can quickly become tricky, here are some explenations of the internal API functionment.
 
 ## Structure
 If we consider end points pathes of `web resources` as a directory index, then the following would be this index.
@@ -147,15 +147,15 @@ Errors are throwed with HTTP error codes as the following
 
 | HTTP Code | Message              | Description
 |-----------|:--------------------:|------------
-| `400`     | `Bad Request`        | The request cannot be prossed due to synthax error or failed semantic validation.
-| `401`     | `Unauthorized`       | Missing or invalid User-token when needed. <strong>MUST</strong> be return with a WWW-Authenticate header field.
+| `400`     | `Bad Request`        | The request cannot be processed due to syntax error or failed semantic validation.
+| `401`     | `Unauthorized`       | Missing or invalid User-token when needed. **MUST** be return with a `WWW-Authenticate` header field.
 | `403`     | `Forbidden`          | The resource is unavailable for the current logged user.
-| `404`     | `Resource Not Found` | The ressource cannot be found due to wrong id or malformed URI. Sould be return with a Reason header field.
-| `405`     | `Method Not Allowed` | The resource does not support method with whitch the request was made. <strong>MUST</strong> be return with a Allow header field.
-| `409`     | `Conflict`           | Existing conflict, there isa  mismatch with the resource id, its type or with linked resources. Sould be return with a Reason header field.
+| `404`     | `Resource Not Found` | The ressource cannot be found due to wrong id or malformed URI. *Should* be return with a `Reason` header field.
+| `405`     | `Method Not Allowed` | The resource does not support method with which the request was made. **MUST** be return with a `Allow` header field.
+| `409`     | `Conflict`           | Existing conflict, there is a  mismatch with the resource id, its type or with linked resources. *Should* be return with a `Reason` header field.
 | `418`     | `I'm a teapot`       | The functionality is not implemented.
     
 ### 5xx Server Error
 | HTTP Code | Message                 | Description
 |-----------|:-----------------------:|------------
-| `500`     | `Internal Server Error` | An unexpected error occured while trying to fullfil the request.
+| `500`     | `Internal Server Error` | An unexpected error occurred while trying to fulfill the request.
