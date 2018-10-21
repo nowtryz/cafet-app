@@ -1,5 +1,5 @@
 # REST API
-As the v0.2 of the server, the rest protocol will be implemented. As `web resources` URIs and other API stufs can quickly become tricky, here are some explenations of the internal API functionment.
+As the v0.2 of the server, the rest protocol will be implemented. As `web resources`, URIs and other API stufs can quickly become tricky, here are some explenations of the internal API functionment.
 
 ## Structure
 If we consider end points pathes of `web resources` as a directory index, then the following would be this index.
