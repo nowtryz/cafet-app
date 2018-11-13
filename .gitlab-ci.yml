@@ -4,6 +4,13 @@ stages:
   - compress
   - deploy
 
+# Cache policy
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    # Actual build
+    - .build/
+
 # Linux docker container runner
 .linux-docker-runner-template: &linux-docker-runner
   tags:
