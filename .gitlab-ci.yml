@@ -16,7 +16,7 @@ compress:
   stage: compress
   script:
     # Compose archive folder
-    - mkdir . build
+    - mkdir .build
     - chmod -R 755 .build/
     - cp -r app/* .build/
     - cp README.md .build/
