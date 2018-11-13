@@ -15,10 +15,9 @@ compress:
   <<: *linux-docker-runner
   stage: compress
   script:
-    # Make files readable
-    - chmod -R 755 app/
     # Compose archive folder
     - mkdir build
+    - chmod -R 755 .build/
     - cp -r app/* .build/
     - cp README.md .build/
     # Compress folder
