@@ -14,10 +14,8 @@ use cafetapi\user\Perm;
  * @author damie
  *        
  */
-class ExpenseNode implements RestNode
+class ExpensesNode implements RestNode
 {
-    const LIST = 'list';
-    
     const DETAILS = 'details';
 
     /**
@@ -30,9 +28,8 @@ class ExpenseNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::LIST:   return self::list($request);
+            case null: return self::list($request);
             
-            case null: return ClientError::forbidden();
             default:
                 if(intval($dir, 0)) {
                     if(!count($request->getPath())) return self::expense($request, intval($dir, 0));

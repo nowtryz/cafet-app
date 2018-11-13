@@ -14,10 +14,8 @@ use cafetapi\user\Perm;
  * @author damie
  *        
  */
-class FormulaBoughtNode implements RestNode
+class FormulasBoughtNode implements RestNode
 {
-    const LIST = 'list';
-    
     const PRODUCTS = 'products';
 
     /**
@@ -30,9 +28,8 @@ class FormulaBoughtNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::LIST: return self::list($request);
+            case null: return self::list($request);
             
-            case null: return ClientError::forbidden();
             default:
                 if (intval($dir, 0)) {
                     if (!count($request->getPath())) return self::formulaBought($request, intval($dir, 0));

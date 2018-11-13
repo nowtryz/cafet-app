@@ -16,9 +16,8 @@ use cafetapi\user\Perm;
  * @author damie
  *        
  */
-class ProductNode implements RestNode
+class ProductsNode implements RestNode
 {
-    const LIST = 'list';
     const NEW = 'new';
     
     const REPLENISHMENTS = 'replenishments ';
@@ -33,10 +32,9 @@ class ProductNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::LIST: return self::list($request);
             case self::NEW: return self::new($request);
+            case null: return self::list($request);
             
-            case null: return ClientError::forbidden();
             default:
                 if (intval($dir, 0)) {
                     if (!count($request->getPath())) return self::product($request, intval($dir, 0));

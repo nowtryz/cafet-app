@@ -13,15 +13,15 @@ use cafetapi\modules\rest\RestResponse;
  */
 class CafetNode implements RestNode
 {
-    const CLIENT = 'client';
-    const RELOAD = 'reload';
-    const EXPENSE = 'expense';
-    const PRODUCT_BOUGHT = 'product_bought';
-    const FORMULA_BOUGHT = 'formula_bought';
-    const GROUP = 'group';
-    const PRODUCT = 'product';
-    const FORMULA = 'formula';
-    const CHOICE = 'choice';
+    const CLIENTS = 'clients';
+    const RELOADS = 'reloads';
+    const EXPENSES = 'expenses';
+    const PRODUCTS_BOUGHT = 'products_bought';
+    const FORMULAS_BOUGHT = 'formulas_bought';
+    const GROUPS = 'groups';
+    const PRODUCTS = 'products';
+    const FORMULAS = 'formulas';
+    const CHOICES = 'choices';
     const ORDER = 'order';
     
 
@@ -35,15 +35,15 @@ class CafetNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::CLIENT:         return ClientNode::handle($request);
-            case self::RELOAD:         return ReloadNode::handle($request);
-            case self::EXPENSE:        return ExpenseNode::handle($request);
-            case self::PRODUCT_BOUGHT: return ProductBoughtNode::handle($request);
-            case self::FORMULA_BOUGHT: return FormulaBoughtNode::handle($request);
-            case self::GROUP:          return GroupNode::handle($request);
-            case self::PRODUCT:        return ProductNode::handle($request);
-            case self::FORMULA:        return FormulaNode::handle($request);
-            case self::CHOICE:         return ChoiceNode::handle($request);
+            case self::CLIENTS:         return ClientsNode::handle($request);
+            case self::RELOADS:         return ReloadsNode::handle($request);
+            case self::EXPENSES:        return ExpensesNode::handle($request);
+            case self::PRODUCTS_BOUGHT: return ProductsBoughtNode::handle($request);
+            case self::FORMULAS_BOUGHT: return FormulasBoughtNode::handle($request);
+            case self::GROUPS:          return GroupsNode::handle($request);
+            case self::PRODUCTS:        return ProductsNode::handle($request);
+            case self::FORMULAS:        return FormulasNode::handle($request);
+            case self::CHOICES:         return ChoicesNode::handle($request);
             case self::ORDER:          return OrderNode::handle($request);
             
             case null: return ClientError::forbidden();

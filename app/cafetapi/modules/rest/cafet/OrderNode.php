@@ -19,6 +19,8 @@ class OrderNode implements RestNode
      * @see \cafetapi\modules\rest\RestNode::handle()
      */
     public static function handle(Rest $request) : RestResponse
-    {}
+    {
+        
+    }
 }
 

@@ -18,9 +18,8 @@ use cafetapi\data\Choice;
  * @author damie
  *        
  */
-class FormulaNode implements RestNode
+class FormulasNode implements RestNode
 {
-    const LIST = 'list';
     const NEW = 'new';
     
     const CHOICES = 'choices';
@@ -36,10 +35,9 @@ class FormulaNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::LIST: return self::list($request);
             case self::NEW: return self::new($request);
+            case null: return self::list($request);
             
-            case null: return ClientError::forbidden();
             default:
                 if (intval($dir, 0)) {
                     if (!count($request->getPath())) return self::formula($request, intval($dir, 0));
@@ -47,8 +45,7 @@ class FormulaNode implements RestNode
                         $subdir = $request->shiftPath();
                         switch ($subdir)
                         {
-                            case self::CHOICES: return self::formulaChoices($request, intval($dir, 0));
-                            case self::CHOICE:  return self::choice($request, intval($dir, 0));
+                            case self::CHOICES:  return self::choices($request, intval($dir, 0));
                             default: return ClientError::resourceNotFound('Unknown ' . $subdir . ' node for a formula');
                         }
                         
@@ -112,26 +109,6 @@ class FormulaNode implements RestNode
         
         if ($formula) return new RestResponse('201', HttpCodes::HTTP_201, $formula->getProperties());
         else return ServerError::internalServerError();
-    }
-    
-    private static function formulaChoices(Rest $request, int $id) : RestResponse
-    {
-        if ($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if (!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_FORMULAS)) return ClientError::forbidden();
-        
-        $choices = array();
-        
-        foreach (DataFetcher::getInstance()->getFormulaChoices($id) as $choice) {
-            if (isset($_REQUEST['noimage'])) {
-                $vars = $choice->getProperties();
-                foreach ($vars['choice'] as &$product) unset($product['image']);
-                $choices[] = $vars;
-            } else $choices[] = $choice->getProperties();
-        }
-        
-        if($choices || DataFetcher::getInstance()->getFormula($id)) return new RestResponse('200', HttpCodes::HTTP_200, $choices);
-        elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
-        else return ClientError::resourceNotFound('Unknown formula with id ' . $id);
     }
     
     
@@ -280,7 +257,7 @@ class FormulaNode implements RestNode
     
     const ADD = 'add';
     
-    private static function choice(Rest $request, int $formula_id) : RestResponse
+    private static function choices(Rest $request, int $formula_id) : RestResponse
     {
         if (!DataFetcher::getInstance()->getFormula($formula_id)) return ClientError::resourceNotFound('Unknown formula with id ' . $formula_id);
         $dir = $request->shiftPath();
@@ -298,7 +275,28 @@ class FormulaNode implements RestNode
             }
         }
         elseif ($dir == self::ADD) return self::addChoice($request, $formula_id);
+        elseif (!$dir) return self::listChoices($request, $formula_id);
         else return ClientError::resourceNotFound('Unknown cafet/formula/' . $formula_id . '/choice/' . $dir . ' node');
+    }
+    
+    private static function listChoices(Rest $request, int $id) : RestResponse
+    {
+        if ($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
+        if (!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_FORMULAS)) return ClientError::forbidden();
+        
+        $choices = array();
+        
+        foreach (DataFetcher::getInstance()->getFormulaChoices($id) as $choice) {
+            if (isset($_REQUEST['noimage'])) {
+                $vars = $choice->getProperties();
+                foreach ($vars['choice'] as &$product) unset($product['image']);
+                $choices[] = $vars;
+            } else $choices[] = $choice->getProperties();
+        }
+        
+        if($choices || DataFetcher::getInstance()->getFormula($id)) return new RestResponse('200', HttpCodes::HTTP_200, $choices);
+        elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        else return ClientError::resourceNotFound('Unknown formula with id ' . $id);
     }
     
     private static function addChoice(Rest $request, int $formula_id) : RestResponse

@@ -10,7 +10,7 @@ use cafetapi\modules\rest\RestResponse;
  * @author damie
  *        
  */
-class ChoiceNode implements RestNode
+class ChoicesNode implements RestNode
 {
 
     /**

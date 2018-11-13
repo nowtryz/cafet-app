@@ -16,9 +16,8 @@ use cafetapi\io\DataUpdater;
  * @author damie
  *        
  */
-class ReloadNode implements RestNode
+class ReloadsNode implements RestNode
 {
-    const LIST = 'list';
     const NEW = 'new';
 
     /**
@@ -31,10 +30,9 @@ class ReloadNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::LIST: return self::list($request);
             case self::NEW:  return self::new($request);
             
-            case null: return ClientError::forbidden();
+            case null: return self::list($request);
             default:
                 if(intval($dir)) return self::reload($request, intval($dir));
                 else return ClientError::resourceNotFound('Unknown cafet/reload/' . $dir . ' node');

@@ -14,9 +14,8 @@ use cafetapi\io\DataFetcher;
  * @author damie
  *        
  */
-class ClientNode implements RestNode
+class ClientsNode implements RestNode
 {
-    const LIST = 'list';
     const SEARCH = 'search';
     
     const RELOADS = 'reloads';
@@ -35,10 +34,9 @@ class ClientNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::LIST:   return self::list($request);
             case self::SEARCH: return self::search($request);
             
-            case null: return ClientError::forbidden();
+            case null: return self::list($request);
             default:
                 if(intval($dir, 0)) {
                     if(!count($request->getPath())) return self::client($request, intval($dir, 0));

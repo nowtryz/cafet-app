@@ -135,7 +135,7 @@ class CafetApp
         cafet_destroy_session();
 
         $result = array(
-            'logout_message' => CONFIGURATIONS['logout_message']
+            'logout_message' => cafet_get_configurations()['logout_message']
         );
 
         $return = new ReturnStatement('ok', $result);
@@ -179,8 +179,9 @@ class CafetApp
 
     private function sendUpdateInfos(bool $diferent_numbers = false)
     {
-        $jar_url = (((bool) CONFIGURATIONS['installer_external']) ? CONFIGURATIONS['url'] : '') . CONFIGURATIONS['installer_jar_url'];
-        $win_url = (((bool) CONFIGURATIONS['installer_external']) ? CONFIGURATIONS['url'] : '') . CONFIGURATIONS['installer_url'];
+        $configuration = cafet_get_configurations();
+        $jar_url = (((bool) $configuration['installer_external']) ? $configuration['url'] : '') . $configuration['installer_jar_url'];
+        $win_url = (((bool) $configuration['installer_external']) ? $configuration['url'] : '') . $configuration['installer_url'];
 
         if ($diferent_numbers) {
             $result = array(

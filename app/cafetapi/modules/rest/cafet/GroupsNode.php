@@ -17,9 +17,8 @@ use cafetapi\user\Perm;
  * @author damie
  *        
  */
-class GroupNode implements RestNode
+class GroupsNode implements RestNode
 {
-    const LIST = 'list';
     const NEW = 'new';
     
     const PRODUCTS = 'products';
@@ -34,10 +33,9 @@ class GroupNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::LIST: return self::list($request);
             case self::NEW: return self::new($request);
+            case null: return self::list($request);
             
-            case null: return ClientError::forbidden();
             default:
                 if (intval($dir, 0)) {
                     if (!count($request->getPath())) return self::group($request, intval($dir, 0));

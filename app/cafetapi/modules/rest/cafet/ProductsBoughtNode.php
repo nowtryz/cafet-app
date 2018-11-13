@@ -14,10 +14,8 @@ use cafetapi\user\Perm;
  * @author damie
  *        
  */
-class ProductBoughtNode implements RestNode
+class ProductsBoughtNode implements RestNode
 {
-    const LIST = 'list';
-
     /**
      * (non-PHPdoc)
      *
@@ -28,9 +26,8 @@ class ProductBoughtNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::LIST:   return self::list($request);
+            case null: return self::list($request);
             
-            case null: return ClientError::forbidden();
             default:
                 if(intval($dir, 0)) return self::productBought($request, intval($dir, 0));
                 else return ClientError::resourceNotFound('Unknown cafet/product_bought/' . $dir . ' node');
