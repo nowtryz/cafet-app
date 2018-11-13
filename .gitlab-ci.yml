@@ -9,7 +9,7 @@ cache:
   key: "$CI_COMMIT_REF_SLUG"
   paths:
     # Actual build
-    - .build/
+    - ./*.tar.gz
 
 # Linux docker container runner
 .linux-docker-runner-template: &linux-docker-runner
