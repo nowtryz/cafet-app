@@ -16,7 +16,7 @@ compress:
   stage: compress
   script:
     # Make files readable
-    - sudo chmod -R 755 app/
+    - chmod -R 755 app/
     # Compose archive folder
     - mkdir build
     - cp -r app/* .build/
