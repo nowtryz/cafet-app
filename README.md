@@ -1,4 +1,5 @@
 # Cafet Manager - PHP API Server : Beta 0.1.1
+[![pipeline status](https://git.nowtryz.net/cafet-app/php-api-server/badges/add/rest-support/pipeline.svg)](https://git.nowtryz.net/cafet-app/php-api-server/commits/add/rest-support)
 Both REST API for http connections and PHP librairy. Manage Interactions between client/server-side applications and database
 
 ## Usage
