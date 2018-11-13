@@ -15,12 +15,16 @@ compress:
   <<: *linux-docker-runner
   stage: compress
   script:
+    # Make files readable
+    - sudo chmod -R 755 app/
     # Compose archive folder
     - mkdir build
-    - cp app/* .build/
+    - cp -r app/* .build/
     - cp README.md .build/
     # Compress folder
     - tar -czvf CafetApp-server-${$CI_COMMIT_REF_SLUG}.tar.gz .build/
+    # Remove archive folder
+    - rm -rd .build
 
 
 # Artifact publish templates
