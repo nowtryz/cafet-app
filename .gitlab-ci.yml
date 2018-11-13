@@ -16,12 +16,12 @@ compress:
   stage: compress
   script:
     # Compose archive folder
-    - mkdir .build
+    - mkdir . build
     - chmod -R 755 .build/
     - cp -r app/* .build/
     - cp README.md .build/
     # Compress folder
-    - tar -czvf CafetApp-server-${$CI_COMMIT_REF_SLUG}.tar.gz .build/
+    - tar -czvf CafetApp-server-${CI_COMMIT_REF_SLUG}.tar.gz .build/
     # Remove archive folder
     - rm -rd .build
 
