@@ -23,7 +23,7 @@ compress:
     # Compress folder
     - tar -czvf CafetApp-server-${CI_COMMIT_REF_SLUG}.tar.gz .build/
     # Remove archive folder
-    - rm -rd .build
+    - rm -r .build
 
 
 # Artifact publish templates
