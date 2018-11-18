@@ -1,13 +1,18 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
+use cafetapi\data\FormulaOrdered;
+use cafetapi\data\ProductOrdered;
+use cafetapi\exceptions\NotEnoughtMoneyException;
+use cafetapi\io\DataFetcher;
+use cafetapi\io\DataUpdater;
 use cafetapi\modules\rest\HttpCodes;
-use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\Rest;
+use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\user\Perm;
-use cafetapi\io\DataFetcher;
+use cafetapi\exceptions\CafetAPIException;
 
 /**
  *
@@ -21,6 +26,7 @@ class ClientsNode implements RestNode
     const RELOADS = 'reloads';
     const EXPENSES = 'expenses';
     const LAST_EXPENSES = 'last_expenses';
+    const ORDER = 'order';
     
     
 
@@ -46,6 +52,7 @@ class ClientsNode implements RestNode
                             case self::RELOADS:       return self::clientReloads($request, intval($dir, 0));
                             case self::EXPENSES:      return self::clientExpenses($request, intval($dir, 0));
                             case self::LAST_EXPENSES: return self::clientLastExpenses($request, intval($dir, 0));
+                            case self::ORDER:         return self::clientOrder($request, intval($dir, 0));
                             
                             default: return ClientError::resourceNotFound('Unknown ' . $subdir . ' node for a client');
                         }
@@ -58,7 +65,7 @@ class ClientsNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
+        $request->allowMethods(array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
         
         $clients = array();
@@ -68,7 +75,7 @@ class ClientsNode implements RestNode
     
     private static function search(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
+        $request->allowMethods(array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
         
         $clients = array();
@@ -80,7 +87,7 @@ class ClientsNode implements RestNode
     
     private static function client(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
+        $request->allowMethods(array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
         
         $client = DataFetcher::getInstance()->getClient($id);
@@ -90,7 +97,7 @@ class ClientsNode implements RestNode
     
     private static function clientReloads(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
+        $request->allowMethods(array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::forbidden();
         
         $reloads = array();
@@ -102,7 +109,7 @@ class ClientsNode implements RestNode
     
     private static function clientExpenses(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
+        $request->allowMethods(array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $expenses = array();
@@ -114,7 +121,7 @@ class ClientsNode implements RestNode
     
     private static function clientLastExpenses(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
+        $request->allowMethods(array('GET'));
         if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
         
         $expenses = array();
@@ -123,6 +130,61 @@ class ClientsNode implements RestNode
         if($expenses) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
         elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
+    }
+
+    private static function clientOrder(Rest $request, int $client_id) : RestResponse
+    {
+        $request->allowMethods(array('POST'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_ORDER));
+
+        //body checks
+        if (!$request->getBody()) return ClientError::badRequest('Empty body');
+
+        $order = array();
+
+        foreach ($request->getBody() as $entry) {
+            if (! isset($entry['type'])) return ClientError::badRequest('Missing `type` field');
+            if (! isset($entry['id'])) return ClientError::badRequest('Missing `id` field');
+            if (! isset($entry['amount'])) return ClientError::badRequest('Missing `amount` field');
+            
+            $id = intval($entry['id'], 0);
+            $amount = intval($entry['amount']);
+
+            if (!$id)     return ClientError::badRequest('Expected `id` field to be an integer');
+            if (!$amount) return ClientError::badRequest('Expected `amount` field to be an integer');
+
+            if ($entry['type'] == 'product') $order[] = new ProductOrdered($id, $amount);
+            elseif ($entry['type'] == 'formula')
+            {
+                if (! isset($entry['products']))              return ClientError::badRequest('Missing `products` field for a formula');
+                if (! is_array($entry['products']))           return ClientError::badRequest('`products` field for a formula must be an array');
+                if (is_associative_array($entry['products'])) return ClientError::badRequest('`products` field for a formula must not be an object');
+
+                $products = array();
+                
+                foreach ($entry['products'] as $p) $products[] = intval($p, 0);
+                
+                $order[] = new FormulaOrdered($id, $amount, $products);
+            }
+            else ClientError::badRequest($entry['type'] . ' isn\'t a valid type');
+        }
+        
+        try {
+            // TODO retrun the id of the expense
+            DataUpdater::getInstance()->saveOrder($client_id, $order);
+        } catch (NotEnoughtMoneyException $e) {
+            return ClientError::conflict($e->getMessage());
+        } catch (CafetAPIException $e) {
+            if ($e->getCode() == 3005)
+            {
+                $matches = array();
+                preg_match('/\D*(product|formula)\D+(\d+).*/', $e->getMessage(), $matches);
+                return ClientError::conflict($e->getMessage(), array('On' => 'type: ' . @$matches[1] . '; id: ' . @$matches[2]));
+            }
+            else throw $e;
+        }
+
+        return new RestResponse(201, HttpCodes::HTTP_201, null);
     }
 }
 

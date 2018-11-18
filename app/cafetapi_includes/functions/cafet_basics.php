@@ -134,7 +134,9 @@ if (! isset($basics_functions_loaded) || ! $basics_functions_loaded) {
     function cafet_throw_error(string $error, string $additional_message = null, string $file = null, int $line = 0)
     {
         if (!cafet_is_app_request()) {
-            throw new CafetAPIException($additional_message, null, null, $file, $line);
+            $_error = explode('-', $error);
+            $code = intval($_error[0]) * 1000 + intval($_error[1]);
+            throw new CafetAPIException($additional_message, $code, null, $file, $line);
             die();
         }
         

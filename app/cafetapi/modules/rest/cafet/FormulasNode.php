@@ -10,8 +10,6 @@ use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
-use cafetapi\data\Formula;
-use cafetapi\data\Choice;
 
 /**
  *
@@ -295,7 +293,7 @@ class FormulasNode implements RestNode
         }
         
         if($choices || DataFetcher::getInstance()->getFormula($id)) return new RestResponse('200', HttpCodes::HTTP_200, $choices);
-        elseif (DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        elseif (DataFetcher::getInstance()->getFormula($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown formula with id ' . $id);
     }
     
