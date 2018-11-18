@@ -5,5 +5,8 @@
 .classpath
 bin/
 
-#Docker
+# Docker
 Dockerfile
+
+# Logs
+*.log
