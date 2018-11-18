@@ -57,8 +57,8 @@ class FormulasNode implements RestNode
 
     private static function list(Rest $request) : RestResponse
     {
-        if ($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if (!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_FORMULAS)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
         
         $formulas = array();
         foreach (DataFetcher::getInstance()->getFormulas(isset($_REQUEST['hidden'])) as $formula){
@@ -71,8 +71,8 @@ class FormulasNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'POST') return ClientError::methodNotAllowed($request->getMethod(), array('POST'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_MANAGE_FORMULAS)) return ClientError::forbidden();
+        $request->allowMethods(array('POST'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
         //body checks
         if (!$request->getBody())                      return ClientError::badRequest('Empty body');
@@ -257,6 +257,8 @@ class FormulasNode implements RestNode
     
     private static function choices(Rest $request, int $formula_id) : RestResponse
     {
+        $request->allowMethods(array('GET','PUT','PATCH','DELETE'));
+        
         if (!DataFetcher::getInstance()->getFormula($formula_id)) return ClientError::resourceNotFound('Unknown formula with id ' . $formula_id);
         $dir = $request->shiftPath();
         
@@ -279,8 +281,8 @@ class FormulasNode implements RestNode
     
     private static function listChoices(Rest $request, int $id) : RestResponse
     {
-        if ($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if (!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_FORMULAS)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
         
         $choices = array();
         
@@ -299,8 +301,8 @@ class FormulasNode implements RestNode
     
     private static function addChoice(Rest $request, int $formula_id) : RestResponse
     {
-        if($request->getMethod() !== 'POST') return ClientError::methodNotAllowed($request->getMethod(), array('POST'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_MANAGE_FORMULAS)) return ClientError::forbidden();
+        $request->allowMethods(array('POST'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
         //body checks
         if (!$request->getBody())                return ClientError::badRequest('Empty body');

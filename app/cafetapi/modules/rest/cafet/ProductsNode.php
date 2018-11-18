@@ -51,8 +51,8 @@ class ProductsNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        if ($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if (!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_PRODUCTS)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
         $products = array();
         foreach (DataFetcher::getInstance()->getProducts(isset($_REQUEST['hidden'])) as $product){
@@ -65,8 +65,8 @@ class ProductsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'POST') return ClientError::methodNotAllowed($request->getMethod(), array('POST'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_MANAGE_PRODUCTS)) return ClientError::forbidden();
+        $request->allowMethods(array('POST'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
         
         //body checks
         if (!$request->getBody())                      return ClientError::badRequest('Empty body');
@@ -123,8 +123,8 @@ class ProductsNode implements RestNode
     
     private static function productReplenishments(Rest $request, int $id) : RestResponse
     {
-        if ($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if (!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_PRODUCTS)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
         return ClientError::imATeapot();
     }

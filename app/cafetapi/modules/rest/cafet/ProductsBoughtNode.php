@@ -36,8 +36,8 @@ class ProductsBoughtNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $productsBought = array();
         foreach (DataFetcher::getInstance()->getProductsBought() as $productBought) $productsBought[] = $productBought->getProperties();
@@ -46,8 +46,8 @@ class ProductsBoughtNode implements RestNode
     
     private static function productBought(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $productBought = DataFetcher::getInstance()->getProductBought($id);
         if($productBought) return new RestResponse('200', HttpCodes::HTTP_200, $productBought->getProperties());

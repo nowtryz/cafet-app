@@ -132,6 +132,7 @@ class Rest
      */
     public final function needPermissions(array $permissions)
     {
+        //TODO permission check
         return;
     }
     

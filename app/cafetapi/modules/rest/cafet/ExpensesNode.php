@@ -49,8 +49,8 @@ class ExpensesNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $expenses = array();
         foreach (DataFetcher::getInstance()->getExpenses() as $expense) $expenses[] = $expense->getProperties();
@@ -59,8 +59,8 @@ class ExpensesNode implements RestNode
     
     private static function expense(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $reload = DataFetcher::getInstance()->getExpense($id);
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
@@ -69,8 +69,8 @@ class ExpensesNode implements RestNode
     
     private static function expenseDetails(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $details = array();
         foreach (DataFetcher::getInstance()->getExpenseDetails($id) as $detail) $details[] = $detail->getProperties();

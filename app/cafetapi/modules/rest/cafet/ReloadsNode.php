@@ -41,8 +41,8 @@ class ReloadsNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::forbidden();
+        $request->allowMethods( array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_RELOADS));
         
         $reloads = array();
         foreach (DataFetcher::getInstance()->getReloads() as $reload) $reloads[] = $reload->getProperties();
@@ -51,8 +51,8 @@ class ReloadsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'POST') return ClientError::methodNotAllowed($request->getMethod(), array('POST'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_RELOAD)) return ClientError::forbidden();
+        $request->allowMethods( array('POST'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_RELOAD));
         
         //body checks
         if(!$request->getBody())                         return ClientError::badRequest('Empty body');
@@ -71,8 +71,8 @@ class ReloadsNode implements RestNode
     
     private static function reload(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::forbidden();
+        $request->allowMethods( array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_RELOADS));
         
         $reload = DataFetcher::getInstance()->getReload($id);
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());

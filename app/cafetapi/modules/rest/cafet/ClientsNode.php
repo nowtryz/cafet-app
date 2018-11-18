@@ -66,7 +66,7 @@ class ClientsNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_CLIENTS));
         
         $clients = array();
         foreach (DataFetcher::getInstance()->getClients() as $client) $clients[] = $client->getProperties();
@@ -76,7 +76,7 @@ class ClientsNode implements RestNode
     private static function search(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_CLIENTS));
         
         $clients = array();
         foreach (DataFetcher::getInstance()->searchClient(urldecode($request->shiftPath())) as $client) $clients[] = $client->getProperties();
@@ -88,7 +88,7 @@ class ClientsNode implements RestNode
     private static function client(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_CLIENTS)) return ClientError::forbidden();
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_CLIENTS));
         
         $client = DataFetcher::getInstance()->getClient($id);
         if($client) return new RestResponse('200', HttpCodes::HTTP_200, $client->getProperties());
@@ -98,7 +98,7 @@ class ClientsNode implements RestNode
     private static function clientReloads(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_RELOADS)) return ClientError::forbidden();
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_RELOADS));
         
         $reloads = array();
         foreach (DataFetcher::getInstance()->getClientReloads($id) as $reload) $reloads[] = $reload->getProperties();
@@ -110,7 +110,7 @@ class ClientsNode implements RestNode
     private static function clientExpenses(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $expenses = array();
         foreach (DataFetcher::getInstance()->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
@@ -122,7 +122,7 @@ class ClientsNode implements RestNode
     private static function clientLastExpenses(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_EXPENSES)) return ClientError::forbidden();
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $expenses = array();
         foreach (DataFetcher::getInstance()->getClientLastExpenses($id) as $expense) $expenses[] = $expense->getProperties();

@@ -52,8 +52,8 @@ class GroupsNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_PRODUCTS)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
         $groups = array();
         foreach (DataFetcher::getInstance()->getProductGroups() as $group) $groups[] = $group->getProperties();
@@ -62,8 +62,8 @@ class GroupsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        if($request->getMethod() !== 'POST') return ClientError::methodNotAllowed($request->getMethod(), array('POST'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_MANAGE_PRODUCTS)) return ClientError::forbidden();
+        $request->allowMethods(array('POST'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
         
         //body checks
         if(!$request->getBody())                return ClientError::badRequest('Empty body');
@@ -93,8 +93,8 @@ class GroupsNode implements RestNode
     
     private static function groupProducts(Rest $request, int $id) : RestResponse
     {
-        if($request->getMethod() !== 'GET') return ClientError::methodNotAllowed($request->getMethod(), array('GET'));
-        if(!$request->isClientAbleTo(Perm::CAFET_ADMIN_GET_PRODUCTS)) return ClientError::forbidden();
+        $request->allowMethods(array('GET'));
+        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
         $products = array();
         foreach (DataFetcher::getInstance()->getGroupProducts($id, isset($_REQUEST['hidden'])) as $product)
