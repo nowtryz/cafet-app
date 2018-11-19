@@ -11,6 +11,7 @@ use cafetapi\config\Database;
 use cafetapi\io\DataFetcher;
 use cafetapi\io\DatabaseConnection;
 use cafetapi\modules\cafet_app\CafetApp;
+use cafetapi\user\Group;
 
 if (! defined('basics_functions_loaded') ) {
     define('basics_functions_loaded', true);
@@ -219,24 +220,53 @@ if (! defined('basics_functions_loaded') ) {
 
         return $conf;
     }
+    
+    /**
+     * Gives the specified configuration
+     * @param string $key the configuration name wanted
+     * @return mixed the value of the configuration if defined or false
+     */
+    function cafet_get_configuration(string $key)
+    {
+        static $conf = array();
+        
+        if (empty($conf)) $conf = cafet_get_configurations();
+            
+        return @$conf[$key];
+    }
+    
+    function cafet_get_guest_group() : Group
+    {
+        return new Group('Guest', Group::GUEST);
+    }
 
     function cafet_render_product_image(int $product_id, bool $dwl = false)
     {
-        if (headers_sent())
-            return false;
+        if (headers_sent()) return false;
 
         $product = DataFetcher::getInstance()->getProduct($product_id);
 
-        if (! $product)
-            return false;
+        if (! $product) return false;
 
         header('content-type: ' . guess_image_mime($product->getImage()));
 
-        if ($dwl)
-            header('Content-Disposition: attachment; filename="' . $product->getName() . get_base64_image_format($product->getImage()) . '"');
-
+        if ($dwl) header('Content-Disposition: attachment; filename="' . $product->getName() . get_base64_image_format($product->getImage()) . '"');
         echo base64_decode($product->getImage());
+        exit();
+    }
+    
+    function cafet_render_formula_image(int $formula_id, bool $dwl = false)
+    {
+        if (headers_sent()) return false;
+        
+        $formula = DataFetcher::getInstance()->getFormula($formula_id);
 
+        if (! $formula) return false;
+
+        header('content-type: ' . guess_image_mime($formula->getImage()));
+
+        if ($dwl) header('Content-Disposition: attachment; filename="' . $formula->getName() . get_base64_image_format($formula->getImage()) . '"');
+        echo base64_decode($formula->getImage());
         exit();
     }
 

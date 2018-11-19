@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi\user;
 
+use cafetapi\data\Data;
 use cafetapi\data\JSONParsable;
 
 /**
@@ -8,8 +9,13 @@ use cafetapi\data\JSONParsable;
  * @author Damien
  *        
  */
-class Group extends JSONParsable implements Permissible, \Serializable
+class Group extends JSONParsable implements Permissible, Data, \Serializable
 {
+    const GUEST = array(
+        Perm::GLOBAL_CONNECT => true,
+        Perm::CAFET_ADMIN_GET_PRODUCTS => true,
+        Perm::CAFET_ADMIN_GET_FORMULAS => true
+    );
 
     const SUPER_USER = array(
         Perm::ALL => true
@@ -31,11 +37,13 @@ class Group extends JSONParsable implements Permissible, \Serializable
         Perm::CAFET_ADMIN_RELOAD => true,
         Perm::CAFET_ADMIN_STATS => true,
         Perm::CAFET_ADMIN_GET => true,
-        Perm::CAFET_PURCHASE => true
+        Perm::CAFET_PURCHASE => true,
+        Perm::CAFET_GET_CLIENTS_ME => true
     );
 
     const CONSUMER = array(
-        Perm::CAFET_PURCHASE => true
+        Perm::CAFET_PURCHASE => true,
+        Perm::CAFET_GET_CLIENTS_ME => true
     );
 
     private $name;
@@ -94,6 +102,11 @@ class Group extends JSONParsable implements Permissible, \Serializable
         }
 
         return $this;
+    }
+    
+    public function getProperties(): array
+    {
+        return array_merge(array('type' => get_simple_classname($this)), get_object_vars($this));
     }
 }
 

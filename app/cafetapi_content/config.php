@@ -69,9 +69,7 @@ class Database
 }
 
 /**
- * Configurations par défaut de l'API.
- * Ces configurations sont choisies lors
- * de l'installation, pour les modifier, veuillez passer par l'interface web.
+ * Configurations du serveur et de l'API.
  *
  * @author Damien
  *        
@@ -209,6 +207,14 @@ class Defaults
      * @since API 1.0.0 (2018)
      */
     // const email_default_subject = '';
+    
+    /**
+     * Nom des cookies de session
+     * 
+     * @var string
+     * @since API 1.0.0 (2018)
+     */
+    const session_name = '_cafetapp_' . self::organisation . '_session';
 
     /**
      * Message envoyé par l'API lors d'une déconnexion

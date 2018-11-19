@@ -107,7 +107,7 @@ class CafetApp
         } else if (! Perm::checkPermission(PERM::GLOBAL_CONNECT, $this->user) || ! Perm::checkPermission(PERM::CAFET_ADMIN_PANELACCESS, $this->user)) {
             cafet_throw_error("02-002");
         } else
-            $_SESSION['user'] = serialize($this->user);
+            cafet_set_logged_user($this->user);
 
         $this->returnLogedSession();
     }

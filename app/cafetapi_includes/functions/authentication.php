@@ -30,27 +30,26 @@ if (!defined('authentication_functions_loaded')) {
         }
         
         // Set session name and cookie name
-        session_name("CAFET_" . strtoupper(cafet_get_configurations()['organisation']) . "_ID");
+        session_name(cafet_get_configurations()['session_name']);
         
         // construe arguments
-        if (isset($session_id))
-            session_id($session_id);
-            if ($no_cookie)
-                ini_set('session.use_cookies', '0');
-                
-                // Start session
-                session_start();
-                
-                // Check last activity and regenerate the session if timeout was reached
-                if (isset($_SESSION['last_activity']) && $_SESSION['last_activity'] < time() - ini_get('session.gc_maxlifetime')) {
-                    session_unset();
-                }
-                
-                // Save activity timestamp
-                $_SESSION['last_activity'] = time();
-                
-                // Return the session id
-                return session_id();
+        if (isset($session_id)) session_id($session_id);
+        
+        if ($no_cookie) ini_set('session.use_cookies', '0');
+        
+        // Start session
+        session_start();
+        
+        // Check last activity and regenerate the session if timeout was reached
+        if (isset($_SESSION['last_activity']) && $_SESSION['last_activity'] < time() - ini_get('session.gc_maxlifetime')) {
+            session_unset();
+        }
+        
+        // Save activity timestamp
+        $_SESSION['last_activity'] = time();
+        
+        // Return the session id
+        return session_id();
     }
     
     /**
@@ -124,9 +123,8 @@ if (!defined('authentication_functions_loaded')) {
             
             $hash_info = explode('.', $hash);
             
-            if (count($hash_info) == 1) {
-                if (isset($pseudo))
-                    return sha1(cafet_get_configurations()['salt'] . $password . $pseudo) === $hash;
+            if (count($hash_info) == 1 && isset($pseudo)) {
+                return sha1(cafet_get_configurations()['salt'] . $password . $pseudo) === $hash;
             }
             
             if (count($hash_info) < 3)
@@ -151,23 +149,33 @@ if (!defined('authentication_functions_loaded')) {
         
         $user = $DB->getUser($pseudo_or_name);
         
-        if (! $user)
-            return NULL;
+        if (! $user) return NULL;
             
-            if (cafet_verify_password($password, $user->getHash(), $user->getPseudo()))
-                return $user;
-                else
-                    return NULL;
+        if (cafet_verify_password($password, $user->getHash(), $user->getPseudo())) return $user;
+        else return NULL;
     }
     
+    /**
+     * Register a user for the sarted session
+     * @param User $user the user to set
+     */
+    function cafet_set_logged_user(User $user)
+    {
+        $_SESSION['user'] = serialize($user);
+    }
+    
+    /**
+     * Returns the logged user for the started session
+     * @return User|NULL the logged user
+     */
     function cafet_get_logged_user(): ?User
     {
+        if (!isset($_SESSION['user'])) return null;
+        
         $user = (object) unserialize($_SESSION['user']);
         
-        if ($user instanceof User)
-            return $user;
-            else
-                return null;
+        if ($user instanceof User) return $user;
+        else return null;
     }
 
 }

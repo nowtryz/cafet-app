@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi\user;
 
+use cafetapi\data\Data;
 use cafetapi\data\JSONParsable;
 
 /**
@@ -8,7 +9,7 @@ use cafetapi\data\JSONParsable;
  * @author Damien
  *        
  */
-class User extends JSONParsable implements Permissible, \Serializable
+class User extends JSONParsable implements Permissible, Data, \Serializable
 {
 
     private $id;
@@ -194,6 +195,14 @@ class User extends JSONParsable implements Permissible, \Serializable
             unset($vars['password']);
 
         return $this->parse_JSON($vars);
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['group']=$this->group->getProperties();
+        unset($vars['password']);
+        return array_merge(array('type' => get_simple_classname($this)), $vars);
     }
 }
 

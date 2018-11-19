@@ -78,12 +78,18 @@ function get_base64_image_format(string $base64): string
  */
 function array_to_xml(array $data, SimpleXMLElement &$xml ) {
     foreach( $data as $key => $value ) {
-        if( is_numeric($key) ){
-            $key = 'item'.$key; //dealing with <0/>..<n/> issues
+        if ( is_numeric($key) ){
+            if(isset($value['type'])) $key = strtolower($value['type']);
+            else $key = 'item'.$key; //dealing with <0/>..<n/> issues
+        } elseif ($key == '*'){
+            $key = 'all';
         }
-        if( is_array($value) ) {
+        
+        if ( is_array($value) ) {
             $subnode = $xml->addChild($key);
             array_to_xml($value, $subnode);
+        } elseif (is_bool($value)) {
+            $xml->addChild("$key",var_export($value, true));
         } else {
             $xml->addChild("$key",htmlspecialchars("$value"));
         }

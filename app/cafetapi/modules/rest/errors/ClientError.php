@@ -18,6 +18,19 @@ class ClientError
         return new RestResponse(400, HttpCodes::HTTP_400, cafet_grab_error_infos('02-400', $reason), $headers);
     }
     
+    public static function unauthorized(array $additional_headers = array()) : RestResponse
+    {
+        $type = 'Basic';
+        $realm = 'Restricted area';
+        
+        $headers = array_merge($additional_headers, array(
+            'WWW-Authenticate' => $type . ' realm="' . $realm . '"',
+            'Cache-Control' => 'no-cache'
+        ));
+        
+        return new RestResponse(401, HttpCodes::HTTP_401, cafet_grab_error_infos('02-401'), $headers);
+    }
+    
     public static function forbidden(array $additional_headers = array()) : RestResponse
     {
         return new RestResponse(403, HttpCodes::HTTP_403, cafet_grab_error_infos('02-403'), $additional_headers);

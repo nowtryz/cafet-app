@@ -32,6 +32,8 @@ class Perm
 
     // CAFET
     const CAFET = 'cafet';
+    
+    const CAFET_GET_CLIENTS_ME = 'cafet_get_clients_me';
 
     const CAFET_PURCHASE = 'cafet_pruchase';
 

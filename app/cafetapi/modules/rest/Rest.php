@@ -6,6 +6,7 @@ use Error;
 use Exception;
 use SimpleXMLElement;
 use cafetapi\modules\rest\errors\ClientError;
+use cafetapi\user\User;
 
 /**
  *
@@ -22,6 +23,8 @@ class Rest
     const DEFAUL_RETURN_TYPE = 'json';
     const CHARSET = 'UTF-8';
     
+    private $root_url;
+    
     private $version;
     private $path;
     private $body;
@@ -29,10 +32,13 @@ class Rest
     private $contentType;
     private $pretty;
     private $headers;
+    
+    private $session;
+    private $user;
 
     /**
      */
-    public function __construct()
+    public function __construct($root_url)
     {
         if (!isset($_REQUEST[self::VERSION_FIELD]) || !isset($_REQUEST[self::PATH_FIELD]) || !isset($_REQUEST[self::RETURN_TYPE_FIELD]) || !isset($_SERVER['REQUEST_METHOD'])) {
             $this->printResponse(ServerError::internalServerError());
@@ -41,6 +47,8 @@ class Rest
         if ($_REQUEST[self::VERSION_FIELD] === '') $this->printResponse(ClientError::badRequest('missing version'));
         if ($_REQUEST[self::PATH_FIELD] === '') $this->printResponse(ClientError::badRequest('missing path'));
         
+        
+        $this->root_url = $root_url;
         
         $this->version = $_REQUEST[self::VERSION_FIELD];
         $this->path = explode("/", $_REQUEST[self::PATH_FIELD]);
@@ -51,6 +59,15 @@ class Rest
         
         $this->headers = apache_request_headers();
         if(!$this->headers) $this->headers = array();
+        
+        if (isset($_COOKIE[cafet_get_configuration('session_name')])) {
+            $this->session = cafet_init_session();
+        } elseif (isset($this->headers['Session'])) {
+            $this->session = $this->headers['Session'];
+            cafet_init_session(true, $this->session);
+        }
+        
+        $this->user = cafet_get_logged_user();
         
         try {
             $this->printResponse(RootNode::handle($this));
@@ -132,8 +149,19 @@ class Rest
      */
     public final function needPermissions(array $permissions)
     {
-        //TODO permission check
-        return;
+        if ($this->user) {
+            foreach ($permissions as $permission) if (!$this->user->hasPermission($permission)) {
+                $this->printResponse(ClientError::forbidden());
+            }
+        } else foreach ($permissions as $permission) if (!cafet_get_guest_group()->hasPermission($permission)) {
+            $api_root = $this->root_url . '/api/v' . $this->version;
+            $after = urlencode($api_root . '/' . $_REQUEST[self::PATH_FIELD]) . '.' . $this->contentType;
+            
+            $this->printResponse(ClientError::forbidden(array(
+                'Location' => $api_root . '/user/login?after=' . $after,
+                'Cache-Control' => 'no-cache'
+            )));
+        }
     }
     
     public final function allowMethods(array $methods)
@@ -151,10 +179,19 @@ class Rest
     {
         return array_shift($this->path);
     }
-    
+
     /*************
      ** Getters **
      *************/
+    
+    /**
+     * Returns the $root_url
+     * @return mixed the $root_url
+     */
+    public final function getRoot_url()
+    {
+        return $this->root_url;
+    }
     
     /**
      * Returns the $version
@@ -218,6 +255,24 @@ class Rest
     {
         return $this->headers;
     }
+    /**
+     * Returns the $session
+     * @return string the $session
+     */
+    public final function getSession() : ?string
+    {
+        return $this->session;
+    }
+
+    /**
+     * Returns the $user
+     * @return ?User the $user
+     */
+    public final function getUser() : ?User
+    {
+        return $this->user;
+    }
+
 
 }
 
