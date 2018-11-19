@@ -90,6 +90,8 @@ class Rest
         foreach ($response->getRemoveHeader() as $header) header_remove($header);
         foreach($response->getHeaders() as $name => $content) header("$name: $content");
         
+        header('Runtime: ' . cafet_execution_duration());
+        
         if ($response->getBody() !== null) switch ($this->contentType) {
             case 'xml':
                 $this->printXMLResponse($response);
