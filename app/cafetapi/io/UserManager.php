@@ -41,7 +41,7 @@ class UserManager extends Updater
             . 'WHERE username = :param1 '
             . 'OR email = :param2');
         
-        $id = $group = $signin_count = 0;
+        $id = $_group = $signin_count = 0;
         $username = $mail = $hash = $firstname = $name = $phone = '';
         $_last_signin = $_registration = '2018-01-01 00:00:00';
         
@@ -52,7 +52,7 @@ class UserManager extends Updater
         $statement->bindColumn('firstname', $firstname, PDO::PARAM_STR);
         $statement->bindColumn('name', $name, PDO::PARAM_STR);
         $statement->bindColumn('phone', $phone, PDO::PARAM_STR);
-        $statement->bindColumn('group', $group, PDO::PARAM_INT);
+        $statement->bindColumn('group', $_group, PDO::PARAM_INT);
         $statement->bindColumn('last_signin', $_last_signin, PDO::PARAM_STR);
         $statement->bindColumn('registration', $_registration, PDO::PARAM_STR);
         $statement->bindColumn('signin_count', $signin_count, PDO::PARAM_INT);
@@ -70,7 +70,12 @@ class UserManager extends Updater
         
         $last_signin = get_calendar_from_datetime($_last_signin);
         $registration = get_calendar_from_datetime($_registration);
-        $group = new Group('group', array());// TODO group
+        
+        if (isset(Group::GROUPS[$_group])){
+            $group = new Group($_group, Group::GROUPS[$_group]);
+        } else {
+            $group = new Group(0, Group::GUEST);
+        }
 
         $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group);
         $statement->closeCursor();
