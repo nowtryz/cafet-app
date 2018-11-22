@@ -10,66 +10,66 @@ class Perm
 {
 
     // ALL (*)
-    const ALL = '*';
+    const ALL = 'a';
 
     // GLOBAL
-    const GLOBAL = 'global';
+    const GLOBAL = 'b';
 
-    const GLOBAL_HIDDEN = 'global_hidden';
+    const GLOBAL_HIDDEN = 'b_a';
 
-    const GLOBAL_UNTOUCHABLE = 'global_untouchable';
+    const GLOBAL_UNTOUCHABLE = 'b_b';
 
-    const GLOBAL_CONNECT = 'global_connect';
+    const GLOBAL_CONNECT = 'b_c';
     
-    const GLOBAL_DEBUG = 'global_debug';
+    const GLOBAL_DEBUG = 'b_d';
 
     // SITE
-    const SITE = 'site';
+    const SITE = 'c';
 
-    const SITE_POST = 'site_post';
+    const SITE_POST = 'c_a';
 
-    const SITE_MANAGE = 'site_manage';
+    const SITE_MANAGE = 'c_b';
 
     // CAFET
-    const CAFET = 'cafet';
+    const CAFET = 'd';
     
-    const CAFET_GET_CLIENTS_ME = 'cafet_get_clients_me';
+    const CAFET_GET_CLIENTS_ME = 'd_a_a_a';
 
-    const CAFET_PURCHASE = 'cafet_pruchase';
+    const CAFET_PURCHASE = 'd_b';
 
-    const CAFET_ADMIN = 'cafet_admin';
+    const CAFET_ADMIN = 'd_c';
 
-    const CAFET_ADMIN_PANELACCESS = 'cafet_admin_panelaccess';
+    const CAFET_ADMIN_PANELACCESS = 'd_c_a';
 
-    const CAFET_ADMIN_ORDER = 'cafet_admin_order';
+    const CAFET_ADMIN_ORDER = 'd_c_b';
 
-    const CAFET_ADMIN_RELOAD = 'cafet_admin_reload';
+    const CAFET_ADMIN_RELOAD = 'd_c_c';
 
-    const CAFET_ADMIN_NEGATIVERELOAD = 'cafet_admin_negativereload';
+    const CAFET_ADMIN_NEGATIVERELOAD = 'd_c_d';
 
-    const CAFET_ADMIN_STATS = 'cafet_admin_stats';
+    const CAFET_ADMIN_STATS = 'd_c_e';
 
-    const CAFET_ADMIN_GET = 'cafet_admin_get';
+    const CAFET_ADMIN_GET = 'd_c_f';
 
-    const CAFET_ADMIN_GET_CLIENTS = 'cafet_admin_get_clients';
+    const CAFET_ADMIN_GET_CLIENTS = 'd_c_f_a';
 
-    const CAFET_ADMIN_GET_RELOADS = 'cafet_admin_get_reloads';
+    const CAFET_ADMIN_GET_RELOADS = 'd_c_f_b';
 
-    const CAFET_ADMIN_GET_EXPENSES = 'cafet_admin_get_expenses';
+    const CAFET_ADMIN_GET_EXPENSES = 'd_c_f_c';
 
-    const CAFET_ADMIN_GET_PRODUCTS = 'cafet_admin_get_products';
+    const CAFET_ADMIN_GET_PRODUCTS = 'd_c_f_d';
 
-    const CAFET_ADMIN_GET_FORMULAS = 'cafet_admin_get_formulas';
+    const CAFET_ADMIN_GET_FORMULAS = 'd_c_f_e';
 
-    const CAFET_ADMIN_MANAGE = 'cafet_admin_manage';
+    const CAFET_ADMIN_MANAGE = 'd_c_g';
 
-    const CAFET_ADMIN_MANAGE_PRODUCTS = 'cafet_admin_manage_products';
+    const CAFET_ADMIN_MANAGE_PRODUCTS = 'd_c_g_a';
 
-    const CAFET_ADMIN_MANAGE_FORMULAS = 'cafet_admin_manage_formulas';
+    const CAFET_ADMIN_MANAGE_FORMULAS = 'd_c_g_b';
 
-    const CAFET_ADMIN_MANAGE_SETTINGS = 'cafet_admin_manage_settings';
+    const CAFET_ADMIN_MANAGE_SETTINGS = 'd_c_g_c';
 
-    const CAFET_ADMIN_MANAGE_STOCKS = 'cafet_admin_manage_stocks';
+    const CAFET_ADMIN_MANAGE_STOCKS = 'd_c_g_d';
 
     public static function checkPermission(string $permission, Permissible $permissible): bool
     {

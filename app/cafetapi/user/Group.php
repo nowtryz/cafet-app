@@ -45,6 +45,15 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
         Perm::CAFET_PURCHASE => true,
         Perm::CAFET_GET_CLIENTS_ME => true
     );
+    
+    const GROUPS = array(
+        0 => self::GUEST,
+        1 => self::CONSUMER,
+        2 => self::CAFET_MANAGER,
+        3 => self::CAFET_ADMIN,
+        4 => self::ADMIN,
+        5 => self::SUPER_USER
+    );
 
     private $name;
 
@@ -103,22 +112,6 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
         
         return $this;
     }
-
-//     public function serialize()
-//     {
-//         return $this->__toString();
-//     }
-
-//     public function unserialize($serialized)
-//     {
-//         $array = json_decode($serialized);
-
-//         foreach ($array as $name => $value) {
-//             $this->$name = $value;
-//         }
-
-//         return $this;
-//     }
     
     public function getProperties(): array
     {
