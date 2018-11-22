@@ -14,22 +14,18 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
 {
 
     private $id;
-
     private $pseudo;
-
     private $firstname;
-
     private $name;
-
     private $password;
-
     private $email;
-
     private $phone;
-
     private $permissions;
-
     private $group;
+    
+    private $signin_count;
+    private $last_signin;
+    private $registration;
 
     /**
      */
@@ -44,6 +40,10 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
         $this->email = $email;
         $this->phone = $phone;
         $this->group = $group;
+        
+        $this->signin_count = $signin_count;
+        $this->last_signin = $last_signin;
+        $this->registration = $registration;
 
         $this->permissions = $group->getPermissions();
 
@@ -173,15 +173,12 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
 
     public function serialize()
     {
-        return $this->__toString();
+        return serialize(get_object_vars($this));
     }
 
     public function unserialize($serialized)
     {
-        $array = json_decode($serialized, true);
-
-        $this->group = new Group($array['group']['name'], $array['group']['permissions']);
-        unset($array['group']);
+        $array = unserialize($serialized);
 
         foreach ($array as $name => $value) {
             $this->$name = $value;
@@ -203,6 +200,8 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
     {
         $vars = get_object_vars($this);
         $vars['group']=$this->group->getProperties();
+        $vars['last_signin']=$this->last_signin->getProperties();
+        $vars['registration']=$this->registration->getProperties();
         unset($vars['password']);
         return array_merge(array('type' => get_simple_classname($this)), $vars);
     }

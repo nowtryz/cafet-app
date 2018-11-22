@@ -1,13 +1,13 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
-use cafetapi\io\DataFetcher;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\user\Perm;
+use cafetapi\io\ExpenseManager;
 
 /**
  *
@@ -40,7 +40,7 @@ class ProductsBoughtNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $productsBought = array();
-        foreach (DataFetcher::getInstance()->getProductsBought() as $productBought) $productsBought[] = $productBought->getProperties();
+        foreach (ExpenseManager::getInstance()->getProductsBought() as $productBought) $productsBought[] = $productBought->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $productsBought);
     }
     
@@ -49,7 +49,7 @@ class ProductsBoughtNode implements RestNode
         $request->allowMethods(array('GET'));
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
-        $productBought = DataFetcher::getInstance()->getProductBought($id);
+        $productBought = ExpenseManager::getInstance()->getProductBought($id);
         if($productBought) return new RestResponse('200', HttpCodes::HTTP_200, $productBought->getProperties());
         else return ClientError::resourceNotFound('Unknown product bought with id ' . $id);
     }

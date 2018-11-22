@@ -1,15 +1,14 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ReloadManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
-use cafetapi\user\Perm;
 use cafetapi\modules\rest\errors\ServerError;
-use cafetapi\io\DataUpdater;
+use cafetapi\user\Perm;
 
 /**
  *
@@ -45,7 +44,7 @@ class ReloadsNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_RELOADS));
         
         $reloads = array();
-        foreach (DataFetcher::getInstance()->getReloads() as $reload) $reloads[] = $reload->getProperties();
+        foreach (ReloadManager::getInstance()->getReloads() as $reload) $reloads[] = $reload->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $reloads);
     }
     
@@ -64,7 +63,7 @@ class ReloadsNode implements RestNode
         $client_id = intval($request->getBody()['client_id'], 0);
         $amount = intval($request->getBody()['amount']);
         
-        $reload = DataUpdater::getInstance()->saveReload($client_id, $amount, 'by a registered capable user');
+        $reload = ReloadManager::getInstance()->saveReload($client_id, $amount, 'by a registered capable user');
         if($reload) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
     }
@@ -74,7 +73,7 @@ class ReloadsNode implements RestNode
         $request->allowMethods( array('GET'));
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_RELOADS));
         
-        $reload = DataFetcher::getInstance()->getReload($id);
+        $reload = ReloadManager::getInstance()->getReload($id);
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
         else return ClientError::resourceNotFound('Unknown reload with id ' . $id);
     }

@@ -1,7 +1,7 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ExpenseManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
@@ -50,7 +50,7 @@ class FormulasBoughtNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $formulasBought = array();
-        foreach (DataFetcher::getInstance()->getFormulasBought() as $formulaBought) $formulasBought[] = $formulaBought->getProperties();
+        foreach (ExpenseManager::getInstance()->getFormulasBought() as $formulaBought) $formulasBought[] = $formulaBought->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $formulasBought);
     }
     
@@ -59,7 +59,7 @@ class FormulasBoughtNode implements RestNode
         $request->allowMethods(array('GET'));
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
-        $formulaBought = DataFetcher::getInstance()->getFormulaBought($id);
+        $formulaBought = ExpenseManager::getInstance()->getFormulaBought($id);
         if($formulaBought) return new RestResponse('200', HttpCodes::HTTP_200, $formulaBought->getProperties());
         else return ClientError::resourceNotFound('Unknown formula bought with id ' . $id);
     }
@@ -70,9 +70,9 @@ class FormulasBoughtNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $products = array();
-        foreach (DataFetcher::getInstance()->getFormulaBoughtProducts($id) as $product) $products[] = $product->getProperties();
-        if($products || DataFetcher::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $products);
-        elseif (DataFetcher::getInstance()->getFormulaBought($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        foreach (ExpenseManager::getInstance()->getFormulaBoughtProducts($id) as $product) $products[] = $product->getProperties();
+        if($products || ExpenseManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $products);
+        elseif (ExpenseManager::getInstance()->getFormulaBought($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown formula bought with id ' . $id);
     }
 }

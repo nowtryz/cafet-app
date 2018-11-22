@@ -549,6 +549,12 @@ EOSQL
         cafet_throw_error('02-500', 'SQL error: [' . $array[0] . '] ' . $array[2] . ' (with query:' . $array[3] . ')');
         cafet_log('SQL error: [' . $array[0] . '] ' . $array[2] . ' (with query:' . $array[3] . ')');
     }
+    
+    protected final function check_fetch_errors(PDOStatement $stmt)
+    {
+        if ($stmt->errorCode() != '00000')
+            parent::registerErrorOccurence($stmt);
+    }
 
     /**
      * Execute a query directly on the database.
@@ -791,18 +797,13 @@ EOSQL
             return null;
 
         // support for old website
-        if ($super_user)
-            $group = new Group('super user', Group::SUPER_USER);
-        elseif ($admin)
-            $group = new Group('administrator', Group::ADMIN);
-        elseif ($cafet_admin)
-            $group = new Group('cafet admin', Group::CAFET_ADMIN);
-        elseif ($cafet_manager)
-            $group = new Group('cafet manager', Group::CAFET_MANAGER);
-        else
-            $group = new Group('consumer', Group::CONSUMER);
+        if ($super_user) $group = new Group('super user', Group::SUPER_USER);
+        elseif ($admin) $group = new Group('administrator', Group::ADMIN);
+        elseif ($cafet_admin) $group = new Group('cafet admin', Group::CAFET_ADMIN);
+        elseif ($cafet_manager) $group = new Group('cafet manager', Group::CAFET_MANAGER);
+        else $group = new Group('consumer', Group::CONSUMER);
 
-            $user = new User($id, $result['pseudo'], $result['firstname'], $result['name'], $result['hash'], $result['mail'], $result['phone'], new Calendar(2018, 1, 1, 0, 0, 0), new Calendar(2018, 1, 1, 0, 0, 0), 0, $group);
+        $user = new User($id, $result['pseudo'], $result['firstname'], $result['name'], $result['hash'], $result['mail'], $result['phone'], new Calendar(2018, 1, 1, 0, 0, 0), new Calendar(2018, 1, 1, 0, 0, 1), 0, $group);
         $statement->closeCursor();
 
         return $user;

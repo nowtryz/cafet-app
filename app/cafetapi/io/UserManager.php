@@ -1,7 +1,6 @@
 <?php
 namespace cafetapi\io;
 
-use cafetapi\data\Product;
 use cafetapi\user\Group;
 use cafetapi\user\User;
 use PDO;
@@ -13,6 +12,17 @@ use PDO;
  */
 class UserManager extends Updater
 {
+    private static $instance;
+    
+    /**
+     * Get singleton object
+     * @return UserManager the singleton of this class
+     */
+    public static function getInstance() : UserManager
+    {
+        if(self::$instance === null) self::$instance = new UserManager();
+        return self::$instance;
+    }
     public final function getUser(string $mail_or_pseudo): ?User
     {
         $statement = $this->connection->prepare('SELECT '
@@ -58,8 +68,8 @@ class UserManager extends Updater
 
         if (! $result) return null;
         
-        $last_signin = get_clalendar_from_datetime($_last_signin);
-        $registration = get_clalendar_from_datetime($_registration);
+        $last_signin = get_calendar_from_datetime($_last_signin);
+        $registration = get_calendar_from_datetime($_registration);
         $group = new Group('group', array());// TODO group
 
         $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group);
@@ -89,7 +99,7 @@ class UserManager extends Updater
         
         $stmt->closeCursor();
         $this->commit();
-        return DataFetcher::getInstance()->getProduct($product_id);
+        return null;
     }
 }
 

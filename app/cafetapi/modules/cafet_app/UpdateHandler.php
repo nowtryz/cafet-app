@@ -7,9 +7,12 @@ use cafetapi\data\FormulaOrdered;
 use cafetapi\data\Product;
 use cafetapi\data\ProductGroup;
 use cafetapi\data\ProductOrdered;
-use cafetapi\io\DataUpdater;
 use cafetapi\user\Perm;
 use cafetapi\user\User;
+use cafetapi\io\ProductManager;
+use cafetapi\io\FormulaManager;
+use cafetapi\io\ExpenseManager;
+use cafetapi\io\ReloadManager;
 
 class UpdateHandler extends Handler
 {
@@ -40,7 +43,7 @@ class UpdateHandler extends Handler
         $name = $arguments['name'];
         $group_id = $arguments['group_id'];
 
-        return DataUpdater::getInstance()->addProduct($name, $group_id);
+        return ProductManager::getInstance()->addProduct($name, $group_id);
     }
 
     /**
@@ -61,7 +64,7 @@ class UpdateHandler extends Handler
 
         $name = $arguments['name'];
 
-        return DataUpdater::getInstance()->addProductGroup($name);
+        return ProductManager::getInstance()->addProductGroup($name);
     }
 
     /**
@@ -82,7 +85,7 @@ class UpdateHandler extends Handler
 
         $name = $arguments['name'];
 
-        return DataUpdater::getInstance()->addFormula($name);
+        return FormulaManager::getInstance()->addFormula($name);
     }
 
     /**
@@ -106,7 +109,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $name = $arguments['name'];
 
-        return DataUpdater::getInstance()->addChoice($name, $formula_id);
+        return FormulaManager::getInstance()->addChoice($name, $formula_id);
     }
 
     /**
@@ -130,7 +133,7 @@ class UpdateHandler extends Handler
         $choice_id = $arguments['choice_id'];
         $product_id = $arguments['product_id'];
 
-        return DataUpdater::getInstance()->addProductToChoice($choice_id, $product_id);
+        return FormulaManager::getInstance()->addProductToChoice($choice_id, $product_id);
     }
 
     /**
@@ -154,7 +157,7 @@ class UpdateHandler extends Handler
         $choice_id = $arguments['choice_id'];
         $product_id = $arguments['product_id'];
 
-        return DataUpdater::getInstance()->removeProductFromChoice($choice_id, $product_id);
+        return FormulaManager::getInstance()->removeProductFromChoice($choice_id, $product_id);
         return true;
     }
 
@@ -200,7 +203,7 @@ class UpdateHandler extends Handler
                 cafet_throw_error('03-005', $entry['type'] . ' isn\'t a valid type');
         }
 
-        return DataUpdater::getInstance()->saveOrder($client_id, $order);
+        return ExpenseManager::getInstance()->saveOrder($client_id, $order);
     }
 
     /**
@@ -230,7 +233,7 @@ class UpdateHandler extends Handler
         if ($amount < 0 && ! $user->hasPermission(Perm::CAFET_ADMIN_NEGATIVERELOAD))
             cafet_throw_error('02-002', 'not allowed to perform negative reloads');
 
-        return DataUpdater::getInstance()->saveReload($client_id, $amount, $comment);
+        return ReloadManager::getInstance()->saveReload($client_id, $amount, $comment);
     }
 
     /**
@@ -254,7 +257,7 @@ class UpdateHandler extends Handler
         $group_id = $arguments['group_id'];
         $display_name = $arguments['display_name'];
 
-        return DataUpdater::getInstance()->setProductGroupDisplayName($group_id, $display_name);
+        return ProductManager::getInstance()->setProductGroupDisplayName($group_id, $display_name);
     }
 
     /**
@@ -278,7 +281,7 @@ class UpdateHandler extends Handler
         $group_id = $arguments['group_id'];
         $name = $arguments['name'];
 
-        return DataUpdater::getInstance()->setProductGroupName($group_id, $name);
+        return ProductManager::getInstance()->setProductGroupName($group_id, $name);
     }
 
     /**
@@ -302,7 +305,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $name = $arguments['name'];
 
-        return DataUpdater::getInstance()->setProductName($product_id, $name);
+        return ProductManager::getInstance()->setProductName($product_id, $name);
     }
 
     /**
@@ -328,7 +331,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $price = $arguments['price'];
 
-        return DataUpdater::getInstance()->setProductPrice($product_id, $price);
+        return ProductManager::getInstance()->setProductPrice($product_id, $price);
     }
 
     /**
@@ -352,7 +355,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $group_id = $arguments['group_id'];
 
-        return DataUpdater::getInstance()->setProductGroup($product_id, $group_id);
+        return ProductManager::getInstance()->setProductGroup($product_id, $group_id);
     }
 
     /**
@@ -376,7 +379,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $image = $arguments['image_base64'];
 
-        return DataUpdater::getInstance()->setProductImage($product_id, $image);
+        return ProductManager::getInstance()->setProductImage($product_id, $image);
     }
 
     /**
@@ -402,7 +405,7 @@ class UpdateHandler extends Handler
         $product_id = $arguments['product_id'];
         $flag = $arguments['flag'];
 
-        return DataUpdater::getInstance()->setProductViewable($product_id, $flag);
+        return ProductManager::getInstance()->setProductViewable($product_id, $flag);
     }
 
     /**
@@ -426,7 +429,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $name = $arguments['name'];
 
-        return DataUpdater::getInstance()->setFormulaName($formula_id, $name);
+        return FormulaManager::getInstance()->setFormulaName($formula_id, $name);
     }
 
     /**
@@ -452,7 +455,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $price = $arguments['price'];
 
-        return DataUpdater::getInstance()->setFormulaPrice($formula_id, $price);
+        return FormulaManager::getInstance()->setFormulaPrice($formula_id, $price);
     }
 
     /**
@@ -478,7 +481,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $flag = $arguments['flag'];
 
-        return DataUpdater::getInstance()->setFormulaViewable($formula_id, $flag);
+        return FormulaManager::getInstance()->setFormulaViewable($formula_id, $flag);
     }
 
     /**
@@ -502,7 +505,7 @@ class UpdateHandler extends Handler
         $formula_id = $arguments['formula_id'];
         $image = $arguments['image_base64'];
 
-        return DataUpdater::getInstance()->setFormulaImage($formula_id, $image);
+        return FormulaManager::getInstance()->setFormulaImage($formula_id, $image);
     }
 
     /**
@@ -523,7 +526,7 @@ class UpdateHandler extends Handler
 
         $id = $arguments['product_id'];
 
-        return DataUpdater::getInstance()->deleteProduct($id);
+        return ProductManager::getInstance()->deleteProduct($id);
     }
 
     /**
@@ -544,7 +547,7 @@ class UpdateHandler extends Handler
 
         $id = $arguments['group_id'];
 
-        return DataUpdater::getInstance()->deleteProductGroup($id);
+        return ProductManager::getInstance()->deleteProductGroup($id);
     }
 
     /**
@@ -565,7 +568,7 @@ class UpdateHandler extends Handler
 
         $id = $arguments['formula_id'];
 
-        return DataUpdater::getInstance()->deleteFormula($id);
+        return FormulaManager::getInstance()->deleteFormula($id);
     }
 
     /**
@@ -586,7 +589,7 @@ class UpdateHandler extends Handler
 
         $id = $arguments['choice_id'];
 
-        return DataUpdater::getInstance()->deleteFormulaChoice($id);
+        return FormulaManager::getInstance()->deleteFormulaChoice($id);
     }
 }
 

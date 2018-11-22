@@ -1,7 +1,6 @@
 <?php
 namespace cafetapi\modules\rest\user;
 
-use cafetapi\io\DataUpdater;
 use cafetapi\io\DatabaseConnection;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
@@ -9,6 +8,7 @@ use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
+use cafetapi\io\UserManager;
 
 /**
  *
@@ -106,12 +106,13 @@ class UserNode implements RestNode
     private static function current(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET', 'PUT', 'PATCH'));
-        if (!$request->getUser()) return ClientError::unauthorized();
+        $request->needLogin();
         
         switch ($request->getMethod())
         {
             case 'GET' : return new RestResponse(200, HttpCodes::HTTP_200, $request->getUser()->getProperties());
-        } 
+            default: return ClientError::imATeapot();
+        }
     }
     
     private static function patchCurrent(Rest $request) : RestResponse
@@ -120,7 +121,7 @@ class UserNode implements RestNode
             return ClientError::resourceNotFound('Unknown user with pseudo ' . $request->getUser()->getPseudo());
         }
         
-        $updater = DataUpdater::getInstance();
+        $updater = UserManager::getInstance();
         $updater->createTransaction();
         
         $conflict = array();

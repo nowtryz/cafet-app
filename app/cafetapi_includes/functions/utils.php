@@ -159,7 +159,7 @@ function get_simple_classname(object $object) : string
  * @param string $datetime the output of the database
  * @return Calendar the calendar representing the datetime
  */
-function get_clalendar_from_datetime(string $datetime) : Calendar
+function get_calendar_from_datetime(string $datetime) : Calendar
 {
     $_datetime = new DateTime($datetime);
     

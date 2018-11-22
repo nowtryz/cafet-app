@@ -68,7 +68,7 @@ class Rest
         }
         
         $this->user = cafet_get_logged_user();
-        
+
         try {
             $this->printResponse(RootNode::handle($this));
         } catch (Error | Exception $e) {
@@ -156,12 +156,20 @@ class Rest
                 $this->printResponse(ClientError::forbidden());
             }
         } else foreach ($permissions as $permission) if (!cafet_get_guest_group()->hasPermission($permission)) {
+            $this->needLogin();
+        }
+    }
+    
+    public final function needLogin()
+    {
+        if (!$this->user)
+        {
             $api_root = $this->root_url . '/api/v' . $this->version;
             $after = urlencode($_SERVER['REQUEST_URI']);
             
             $this->printResponse(ClientError::forbidden(array(
-                'Location' => $api_root . '/user/login?after=' . $after,
-                'Cache-Control' => 'no-cache'
+            'Location' => $api_root . '/user/login?after=' . $after,
+            'Cache-Control' => 'no-cache'
             )));
         }
     }

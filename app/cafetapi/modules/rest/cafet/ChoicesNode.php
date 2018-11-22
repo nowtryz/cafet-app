@@ -1,8 +1,6 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
-use cafetapi\io\DataFetcher;
-use cafetapi\io\DataUpdater;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
@@ -10,6 +8,8 @@ use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
+use cafetapi\io\FormulaManager;
+use cafetapi\io\ProductManager;
 
 /**
  *
@@ -53,7 +53,7 @@ class ChoicesNode implements RestNode
         
         $choices = array();
         
-        foreach (DataFetcher::getInstance()->getChoices() as $choice) {
+        foreach (FormulaManager::getInstance()->getChoices() as $choice) {
             if (isset($_REQUEST['noimage'])) {
                 $vars = $choice->getProperties();
                 foreach ($vars['choice'] as &$product) unset($product['image']);
@@ -68,7 +68,7 @@ class ChoicesNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
         
-        $choice = DataFetcher::getInstance()->getChoice($choice_id);
+        $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
         if (isset($_REQUEST['noimage'])) {
             $properties = $choice->getProperties();
@@ -81,7 +81,7 @@ class ChoicesNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
-        $choice = DataFetcher::getInstance()->getChoice($choice_id);
+        $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
         //body checks
         if (!$request->getBody())                     return ClientError::badRequest('Empty body');
@@ -98,7 +98,7 @@ class ChoicesNode implements RestNode
         $name = strval($request->getBody()['name']);
         $choice = $request->getBody()['choice'];
         
-        $updater = DataUpdater::getInstance();
+        $updater = FormulaManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -107,7 +107,7 @@ class ChoicesNode implements RestNode
             
             foreach ($choice as $product)
             {
-                if (!DataFetcher::getInstance()->getProduct(intval($product, 0)))
+                if (!ProductManager::getInstance()->getProduct(intval($product, 0)))
                 {
                     $updater->cancelTransaction();
                     return ClientError::conflict('product ' . intval($product, 0) . ' does not exist');
@@ -123,7 +123,7 @@ class ChoicesNode implements RestNode
             return ServerError::internalServerError();
         }
         
-        $choice = DataFetcher::getInstance()->getChoice($choice_id);
+        $choice = $updater->getChoice($choice_id);
         
         
         
@@ -139,7 +139,7 @@ class ChoicesNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
-        $updater = DataUpdater::getInstance();
+        $updater = FormulaManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -154,7 +154,7 @@ class ChoicesNode implements RestNode
                     
                     foreach ($value as $product)
                     {
-                        if (!DataFetcher::getInstance()->getProduct(intval($product, 0)))
+                        if (!ProductManager::getInstance()->getProduct(intval($product, 0)))
                         {
                             $updater->cancelTransaction();
                             return ClientError::conflict('product ' . intval($product, 0) . ' does not exist');
@@ -192,7 +192,7 @@ class ChoicesNode implements RestNode
     private static function deleteChoice(Rest $request, int $choice_id) : RestResponse
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
-        if (DataUpdater::getInstance()->deleteFormulaChoice($choice_id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
+        if (FormulaManager::getInstance()->deleteFormulaChoice($choice_id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
     }
 }

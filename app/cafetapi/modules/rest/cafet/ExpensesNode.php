@@ -1,7 +1,7 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ExpenseManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
@@ -53,7 +53,7 @@ class ExpensesNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $expenses = array();
-        foreach (DataFetcher::getInstance()->getExpenses() as $expense) $expenses[] = $expense->getProperties();
+        foreach (ExpenseManager::getInstance()->getExpenses() as $expense) $expenses[] = $expense->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
     }
     
@@ -62,7 +62,7 @@ class ExpensesNode implements RestNode
         $request->allowMethods(array('GET'));
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
-        $reload = DataFetcher::getInstance()->getExpense($id);
+        $reload = ExpenseManager::getInstance()->getExpense($id);
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
         else return ClientError::resourceNotFound('Unknown expense with id ' . $id);
     }
@@ -73,10 +73,10 @@ class ExpensesNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
         $details = array();
-        foreach (DataFetcher::getInstance()->getExpenseDetails($id) as $detail) $details[] = $detail->getProperties();
+        foreach (ExpenseManager::getInstance()->getExpenseDetails($id) as $detail) $details[] = $detail->getProperties();
         
         if($details) return new RestResponse('200', HttpCodes::HTTP_200, $details);
-        elseif (DataFetcher::getInstance()->getExpense($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        elseif (ExpenseManager::getInstance()->getExpense($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown expense with id ' . $id);
     }
 }

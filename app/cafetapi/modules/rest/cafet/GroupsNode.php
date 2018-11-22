@@ -1,8 +1,6 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
-use cafetapi\io\DataFetcher;
-use cafetapi\io\DataUpdater;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
@@ -11,6 +9,7 @@ use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use function cafetapi\modules\rest\errors\ClientError\resourceNotFound;
 use cafetapi\user\Perm;
+use cafetapi\io\ProductManager;
 
 /**
  *
@@ -56,7 +55,7 @@ class GroupsNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
         $groups = array();
-        foreach (DataFetcher::getInstance()->getProductGroups() as $group) $groups[] = $group->getProperties();
+        foreach (ProductManager::getInstance()->getProductGroups() as $group) $groups[] = $group->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $groups);
     }
     
@@ -73,7 +72,7 @@ class GroupsNode implements RestNode
         $name = $request->getBody()['name'];
 //         $displayName = $request->getBody()['displayName'];
         
-        $group = DataUpdater::getInstance()->addProductGroup($name);
+        $group = ProductManager::getInstance()->addProductGroup($name);
         if($group) return new RestResponse('201', HttpCodes::HTTP_201, $group->getProperties());
         else return ServerError::internalServerError();
     }
@@ -97,14 +96,14 @@ class GroupsNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
         $products = array();
-        foreach (DataFetcher::getInstance()->getGroupProducts($id, isset($_REQUEST['hidden'])) as $product)
+        foreach (ProductManager::getInstance()->getGroupProducts($id, isset($_REQUEST['hidden'])) as $product)
         {
             $properties = $product->getProperties();
             if (isset($_REQUEST['noimage'])) unset($properties['image']);
             $products[] = $properties;
         }
         if($products) return new RestResponse('200', HttpCodes::HTTP_200, $products);
-        elseif (DataFetcher::getInstance()->getProductGroup($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        elseif (ProductManager::getInstance()->getProductGroup($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown group with id ' . $id);
     }
     
@@ -113,7 +112,7 @@ class GroupsNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
-        $group = DataFetcher::getInstance()->getProductGroup($id);
+        $group = ProductManager::getInstance()->getProductGroup($id);
         if($group) return new RestResponse('200', HttpCodes::HTTP_200, $group->getProperties());
         else return ClientError::resourceNotFound('Unknown group with id ' . $id);
     }
@@ -122,7 +121,7 @@ class GroupsNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
         
-        $group = DataFetcher::getInstance()->getProductGroup($id);
+        $group = ProductManager::getInstance()->getProductGroup($id);
         if (!$group) return ClientError::resourceNotFound('Unknown group with id ' . $id);
         
         //body checks
@@ -139,7 +138,7 @@ class GroupsNode implements RestNode
         $name = $request->getBody()['name'];
         $displayName = $request->getBody()['displayName'];
         
-        $updater = DataUpdater::getInstance();
+        $updater = ProductManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -153,7 +152,7 @@ class GroupsNode implements RestNode
             return ServerError::internalServerError();
         }
         
-        $group = DataFetcher::getInstance()->getProductGroup($id);
+        $group = $updater->getProductGroup($id);
         
         return new RestResponse('200', HttpCodes::HTTP_200, $group->getProperties());
     }
@@ -162,9 +161,9 @@ class GroupsNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
         
-        if (!DataFetcher::getInstance()->getProductGroup($id)) return ClientError::resourceNotFound('Unknown group with id ' . $id);
+        if (!ProductManager::getInstance()->getProductGroup($id)) return ClientError::resourceNotFound('Unknown group with id ' . $id);
         
-        $updater = DataUpdater::getInstance();
+        $updater = ProductManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -192,9 +191,9 @@ class GroupsNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
         
-        if (!DataFetcher::getInstance()->getProductGroup($id)) return ClientError::resourceNotFound('Unknown group with id ' . $id);
+        if (!ProductManager::getInstance()->getProductGroup($id)) return ClientError::resourceNotFound('Unknown group with id ' . $id);
         
-        if (DataUpdater::getInstance()->deleteProductGroup($id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
+        if (ProductManager::getInstance()->deleteProductGroup($id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
     }
 }

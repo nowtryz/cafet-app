@@ -87,22 +87,38 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
     {
         return $this->parse_JSON(get_object_vars($this));
     }
-
+    
     public function serialize()
     {
-        return $this->__toString();
+        return serialize(get_object_vars($this));
     }
-
+    
     public function unserialize($serialized)
     {
-        $array = json_decode($serialized);
-
+        $array = unserialize($serialized);
+        
         foreach ($array as $name => $value) {
             $this->$name = $value;
         }
-
+        
         return $this;
     }
+
+//     public function serialize()
+//     {
+//         return $this->__toString();
+//     }
+
+//     public function unserialize($serialized)
+//     {
+//         $array = json_decode($serialized);
+
+//         foreach ($array as $name => $value) {
+//             $this->$name = $value;
+//         }
+
+//         return $this;
+//     }
     
     public function getProperties(): array
     {

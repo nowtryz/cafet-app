@@ -3,12 +3,16 @@ namespace cafetapi\modules\cafet_app;
 
 use cafetapi\data\Client;
 use cafetapi\data\Product;
-use cafetapi\io\DataFetcher;
 use cafetapi\data\ProductGroup;
 use cafetapi\data\Formula;
 use cafetapi\user\Perm;
 use cafetapi\data\ProductBought;
 use cafetapi\data\FormulaBought;
+use cafetapi\io\ClientManager;
+use cafetapi\io\ExpenseManager;
+use cafetapi\io\ReloadManager;
+use cafetapi\io\ProductManager;
+use cafetapi\io\FormulaManager;
 
 class FetchHandler extends Handler
 {
@@ -25,7 +29,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getClients() as $client)
+        foreach (ClientManager::getInstance()->getClients() as $client)
             $return[] = json_decode($client->__toString());
 
         return $return;
@@ -43,7 +47,7 @@ class FetchHandler extends Handler
 
         $id = $arguments['id'];
 
-        return DataFetcher::getInstance()->getClient($id);
+        return ClientManager::getInstance()->getClient($id);
     }
 
     public final function get_client_reloads(array $arguments): array
@@ -60,7 +64,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getClientReloads($id) as $reload)
+        foreach (ReloadManager::getInstance()->getClientReloads($id) as $reload)
             $return[] = json_decode($reload->__toString());
 
         return $return;
@@ -80,7 +84,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getClientExpenses($id) as $expense)
+        foreach (ExpenseManager::getInstance()->getClientExpenses($id) as $expense)
             $return[] = json_decode($expense->__toString());
 
         return $return;
@@ -100,7 +104,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getExpenseDetails($id) as $detail)
+        foreach (ExpenseManager::getInstance()->getExpenseDetails($id) as $detail)
             $return[] = json_decode($detail->__toString());
 
         return $return;
@@ -118,7 +122,7 @@ class FetchHandler extends Handler
                     
         $id = $arguments['id'];
         
-        return DataFetcher::getInstance()->getProductBought($id);
+        return ExpenseManager::getInstance()->getProductBought($id);
     }
     
     public final function get_formula_bought(array $arguments): ?FormulaBought
@@ -133,7 +137,7 @@ class FetchHandler extends Handler
                 
         $id = $arguments['id'];
         
-        return DataFetcher::getInstance()->getFormulaBought($id);
+        return ExpenseManager::getInstance()->getFormulaBought($id);
     }
 
     public final function get_product_groups(array $arguments): array
@@ -143,7 +147,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getProductGroups() as $group)
+        foreach (ProductManager::getInstance()->getProductGroups() as $group)
             $return[] = json_decode($group->__toString());
 
         return $return;
@@ -161,7 +165,7 @@ class FetchHandler extends Handler
 
         $id = $arguments['id'];
 
-        return DataFetcher::getInstance()->getProductGroup($id);
+        return ProductManager::getInstance()->getProductGroup($id);
     }
 
     public final function get_group_products(array $arguments): array
@@ -181,7 +185,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getGroupProducts($id, $show_hiddens) as $product)
+        foreach (ProductManager::getInstance()->getGroupProducts($id, $show_hiddens) as $product)
             $return[] = json_decode($product->__toString());
 
         return $return;
@@ -201,7 +205,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getFormulaBoughtProducts($id) as $product)
+        foreach (ExpenseManager::getInstance()->getFormulaBoughtProducts($id) as $product)
             $return[] = json_decode($product->__toString());
 
         return $return;
@@ -219,7 +223,7 @@ class FetchHandler extends Handler
 
         $id = $arguments['id'];
 
-        return DataFetcher::getInstance()->getProduct($id);
+        return ProductManager::getInstance()->getProduct($id);
     }
 
     public final function get_formulas(array $arguments): array
@@ -234,7 +238,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getFormulas($show_hiddens) as $formula)
+        foreach (FormulaManager::getInstance()->getFormulas($show_hiddens) as $formula)
             $return[] = json_decode($formula->__toString());
 
         return $return;
@@ -252,7 +256,7 @@ class FetchHandler extends Handler
 
         $id = $arguments['id'];
 
-        return DataFetcher::getInstance()->getFormula($id);
+        return FormulaManager::getInstance()->getFormula($id);
     }
 
     public final function get_formula_choices(array $arguments): array
@@ -269,7 +273,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->getFormulaChoices($id) as $choice)
+        foreach (FormulaManager::getInstance()->getFormulaChoices($id) as $choice)
             $return[] = json_decode($choice->__toString());
 
         return $return;
@@ -289,7 +293,7 @@ class FetchHandler extends Handler
 
         $return = array();
 
-        foreach (DataFetcher::getInstance()->searchClient($expression) as $client)
+        foreach (ClientManager::getInstance()->searchClient($expression) as $client)
             $return[] = json_decode($client->__toString());
 
         return $return;

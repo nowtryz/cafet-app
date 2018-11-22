@@ -1,8 +1,6 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
-use cafetapi\io\DataFetcher;
-use cafetapi\io\DataUpdater;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
@@ -10,6 +8,7 @@ use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
+use cafetapi\io\ProductManager;
 
 /**
  *
@@ -55,7 +54,7 @@ class ProductsNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
         $products = array();
-        foreach (DataFetcher::getInstance()->getProducts(isset($_REQUEST['hidden'])) as $product){
+        foreach (ProductManager::getInstance()->getProducts(isset($_REQUEST['hidden'])) as $product){
             $properties = $product->getProperties();
             if (isset($_REQUEST['noimage'])) unset($properties['image']);
             $products[] = $properties;
@@ -83,9 +82,9 @@ class ProductsNode implements RestNode
         $price = floatval($request->getBody()['price']);
         $visibility = boolval($request->getBody()['viewable']);
         
-        if (!DataFetcher::getInstance()->getProductGroup($group)) ClientError::conflict('group ' . $group . ' does not exist');
+        if (!ProductManager::getInstance()->getProductGroup($group)) ClientError::conflict('group ' . $group . ' does not exist');
         
-        $updater = DataUpdater::getInstance();
+        $updater = ProductManager::getInstance();
         $updater->createTransaction();
         $product = null;
         
@@ -95,7 +94,7 @@ class ProductsNode implements RestNode
             $updater->setProductPrice($p->getId(), $price);
             $updater->setProductViewable($p->getId(), $visibility);
             
-            $product = DataFetcher::getInstance()->getProduct($p->getId());
+            $product = $updater->getProduct($p->getId());
             
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
@@ -134,7 +133,7 @@ class ProductsNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
         
-        $product = DataFetcher::getInstance()->getProduct($id);
+        $product = ProductManager::getInstance()->getProduct($id);
         
         if (!$product) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
@@ -147,7 +146,7 @@ class ProductsNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
         
-        $product = DataFetcher::getInstance()->getProduct($id);
+        $product = ProductManager::getInstance()->getProduct($id);
         if (!$product) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
         //body checks
@@ -171,9 +170,9 @@ class ProductsNode implements RestNode
         $price = floatval($request->getBody()['price']);
         $visibility = boolval($request->getBody()['viewable']);
         
-        if (!DataFetcher::getInstance()->getProductGroup($group)) ClientError::conflict('group ' . $group . ' does not exist');
+        if (!ProductManager::getInstance()->getProductGroup($group)) ClientError::conflict('group ' . $group . ' does not exist');
         
-        $updater = DataUpdater::getInstance();
+        $updater = ProductManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -188,7 +187,7 @@ class ProductsNode implements RestNode
             return ServerError::internalServerError();
         }
         
-        $product = DataFetcher::getInstance()->getProduct($id);
+        $product = $updater->getProduct($id);
         
         return new RestResponse('200', HttpCodes::HTTP_200, $product->getProperties());
     }
@@ -197,9 +196,9 @@ class ProductsNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
         
-        if (!DataFetcher::getInstance()->getProduct($id)) return ClientError::resourceNotFound('Unknown product with id ' . $id);
+        if (!ProductManager::getInstance()->getProduct($id)) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
-        $updater = DataUpdater::getInstance();
+        $updater = ProductManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -264,9 +263,9 @@ class ProductsNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
         
-        if (!DataFetcher::getInstance()->getProduct($id)) return ClientError::resourceNotFound('Unknown product with id ' . $id);
+        if (!ProductManager::getInstance()->getProduct($id)) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
-        if (DataUpdater::getInstance()->deleteProduct($id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
+        if (ProductManager::getInstance()->deleteProduct($id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
     }
 }

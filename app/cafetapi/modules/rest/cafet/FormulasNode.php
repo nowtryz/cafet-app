@@ -1,8 +1,6 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
-use cafetapi\io\DataFetcher;
-use cafetapi\io\DataUpdater;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
@@ -10,6 +8,7 @@ use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
+use cafetapi\io\FormulaManager;
 
 /**
  *
@@ -61,7 +60,7 @@ class FormulasNode implements RestNode
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
         
         $formulas = array();
-        foreach (DataFetcher::getInstance()->getFormulas(isset($_REQUEST['hidden'])) as $formula){
+        foreach (FormulaManager::getInstance()->getFormulas(isset($_REQUEST['hidden'])) as $formula){
             $properties = $formula->getProperties();
             if (isset($_REQUEST['noimage'])) unset($properties['image']);
             $formulas[] = $properties;
@@ -86,7 +85,7 @@ class FormulasNode implements RestNode
         $price = floatval($request->getBody()['price']);
         $visibility = boolval($request->getBody()['viewable']);
         
-        $updater = DataUpdater::getInstance();
+        $updater = FormulaManager::getInstance();
         $updater->createTransaction();
         $formula = null;
         
@@ -96,7 +95,7 @@ class FormulasNode implements RestNode
             $updater->setFormulaPrice($f->getId(), $price);
             $updater->setFormulaViewable($f->getId(), $visibility);
             
-            $formula = DataFetcher::getInstance()->getFormula($f->getId());
+            $formula = FormulaManager::getInstance()->getFormula($f->getId());
             
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
@@ -129,7 +128,7 @@ class FormulasNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
         
-        $formula = DataFetcher::getInstance()->getFormula($id);
+        $formula = FormulaManager::getInstance()->getFormula($id);
         
         if (!$formula) return ClientError::resourceNotFound('Unknown formula with id ' . $id);
         
@@ -142,7 +141,7 @@ class FormulasNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
-        $formula = DataFetcher::getInstance()->getFormula($id);
+        $formula = FormulaManager::getInstance()->getFormula($id);
         if (!$formula) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
         //body checks
@@ -163,7 +162,7 @@ class FormulasNode implements RestNode
         $price = floatval($request->getBody()['price']);
         $visibility = boolval($request->getBody()['viewable']);
         
-        $updater = DataUpdater::getInstance();
+        $updater = FormulaManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -178,7 +177,7 @@ class FormulasNode implements RestNode
             return ServerError::internalServerError();
         }
         
-        $formula = DataFetcher::getInstance()->getFormula($id);
+        $formula = $updater->getFormula($id);
         
         return new RestResponse('200', HttpCodes::HTTP_200, $formula->getProperties());
     }
@@ -187,9 +186,9 @@ class FormulasNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
-        if (!DataFetcher::getInstance()->getFormula($id)) return ClientError::resourceNotFound('Unknown formula with id ' . $id);
+        if (!FormulaManager::getInstance()->getFormula($id)) return ClientError::resourceNotFound('Unknown formula with id ' . $id);
         
-        $updater = DataUpdater::getInstance();
+        $updater = FormulaManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -244,9 +243,9 @@ class FormulasNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
-        if (!DataFetcher::getInstance()->getFormula($id)) return ClientError::resourceNotFound('Unknown formula with id ' . $id);
+        if (!FormulaManager::getInstance()->getFormula($id)) return ClientError::resourceNotFound('Unknown formula with id ' . $id);
         
-        if (DataUpdater::getInstance()->deleteFormula($id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
+        if (FormulaManager::getInstance()->deleteFormula($id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
     }
     
@@ -259,12 +258,12 @@ class FormulasNode implements RestNode
     {
         $request->allowMethods(array('GET','PUT','PATCH','DELETE'));
         
-        if (!DataFetcher::getInstance()->getFormula($formula_id)) return ClientError::resourceNotFound('Unknown formula with id ' . $formula_id);
+        if (!FormulaManager::getInstance()->getFormula($formula_id)) return ClientError::resourceNotFound('Unknown formula with id ' . $formula_id);
         $dir = $request->shiftPath();
         
         if (intval($dir, 0)) {
             $choice_id = intval($dir, 0);
-            if(!in_array($choice_id, DataFetcher::getInstance()->getFormulaChoicesIDs($formula_id))) return ClientError::resourceNotFound('Unknown choice with id ' . $choice_id . ' for the formula ' . $formula_id);
+            if(!in_array($choice_id, FormulaManager::getInstance()->getFormulaChoicesIDs($formula_id))) return ClientError::resourceNotFound('Unknown choice with id ' . $choice_id . ' for the formula ' . $formula_id);
             
             switch ($request->getMethod())
             {
@@ -286,7 +285,7 @@ class FormulasNode implements RestNode
         
         $choices = array();
         
-        foreach (DataFetcher::getInstance()->getFormulaChoices($id) as $choice) {
+        foreach (FormulaManager::getInstance()->getFormulaChoices($id) as $choice) {
             if (isset($_REQUEST['noimage'])) {
                 $vars = $choice->getProperties();
                 foreach ($vars['choice'] as &$product) unset($product['image']);
@@ -294,8 +293,8 @@ class FormulasNode implements RestNode
             } else $choices[] = $choice->getProperties();
         }
         
-        if($choices || DataFetcher::getInstance()->getFormula($id)) return new RestResponse('200', HttpCodes::HTTP_200, $choices);
-        elseif (DataFetcher::getInstance()->getFormula($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        if($choices || FormulaManager::getInstance()->getFormula($id)) return new RestResponse('200', HttpCodes::HTTP_200, $choices);
+        elseif (FormulaManager::getInstance()->getFormula($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown formula with id ' . $id);
     }
     
@@ -310,7 +309,7 @@ class FormulasNode implements RestNode
         
         $name = strval($request->getBody()['name']);
         
-        $updater = DataUpdater::getInstance();
+        $updater = FormulaManager::getInstance();
         $updater->createTransaction();
         $choice = null;
         
@@ -332,7 +331,7 @@ class FormulasNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
         
-        $choice = DataFetcher::getInstance()->getChoice($choice_id);
+        $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
         if (isset($_REQUEST['noimage'])) {
             $properties = $choice->getProperties();
@@ -345,7 +344,7 @@ class FormulasNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
-        $choice = DataFetcher::getInstance()->getChoice($choice_id);
+        $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
         //body checks
         if (!$request->getBody())                     return ClientError::badRequest('Empty body');
@@ -362,7 +361,7 @@ class FormulasNode implements RestNode
         $name = strval($request->getBody()['name']);
         $choice = $request->getBody()['choice'];
         
-        $updater = DataUpdater::getInstance();
+        $updater = FormulaManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -371,7 +370,7 @@ class FormulasNode implements RestNode
             
             foreach ($choice as $product)
             {
-                if (!DataFetcher::getInstance()->getProduct(intval($product, 0)))
+                if (!FormulaManager::getInstance()->getProduct(intval($product, 0)))
                 {
                     $updater->cancelTransaction();
                     return ClientError::conflict('product ' . intval($product, 0) . ' does not exist');
@@ -387,7 +386,7 @@ class FormulasNode implements RestNode
             return ServerError::internalServerError();
         }
         
-        $choice = DataFetcher::getInstance()->getChoice($choice_id);
+        $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
         
         
@@ -403,7 +402,7 @@ class FormulasNode implements RestNode
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
         
-        $updater = DataUpdater::getInstance();
+        $updater = FormulaManager::getInstance();
         $updater->createTransaction();
         
         try {
@@ -418,7 +417,7 @@ class FormulasNode implements RestNode
                     
                     foreach ($value as $product)
                     {
-                        if (!DataFetcher::getInstance()->getProduct(intval($product, 0)))
+                        if (!FormulaManager::getInstance()->getProduct(intval($product, 0)))
                         {
                             $updater->cancelTransaction();
                             return ClientError::conflict('product ' . intval($product, 0) . ' does not exist');
@@ -456,7 +455,7 @@ class FormulasNode implements RestNode
     private static function deleteChoice(Rest $request, int $formula_id, int $choice_id) : RestResponse
     {
         $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
-        if (DataUpdater::getInstance()->deleteFormulaChoice($choice_id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
+        if (FormulaManager::getInstance()->deleteFormulaChoice($choice_id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
     }
 }

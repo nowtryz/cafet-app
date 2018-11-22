@@ -2,12 +2,11 @@
 namespace cafetapi\modules\cafet_app;
 
 use cafetapi\ReturnStatement;
+use cafetapi\exceptions\NotEnoughtMoneyException;
+use cafetapi\exceptions\PermissionNotGrantedException;
 use cafetapi\exceptions\RequestFailureException;
 use cafetapi\io\DatabaseConnection;
 use cafetapi\user\Perm;
-use cafetapi\exceptions\PermissionNotGrantedException;
-use Exception;
-use cafetapi\exceptions\NotEnoughtMoneyException;
 
 /**
  *
