@@ -61,19 +61,24 @@ class UserNode implements RestNode
             return ClientError::unauthorized();
         }
         
-        
-        $headers = array(
-            'Session' => $session
-        );
-        
-        if (isset($_REQUEST['after'])) $headers['Location'] = urldecode($_REQUEST['after']);
-        
-        return new RestResponse(200, HttpCodes::HTTP_200, array(
+        $result = array(
             'message' => 'Logged as ' . $user->getPseudo(),
             'session' => $session,
             'user' => $user->getProperties(),
             'expiration' => intval(ini_get('session.gc_maxlifetime'))
-        ), $headers);
+        );
+        
+        $header = array(
+            'Session' => $session
+        );
+        
+        
+        if (isset($_REQUEST['after'])) return new RestResponse(302, HttpCodes::HTTP_302, $result, array_merge($header, array(
+            'Location' => urldecode($_REQUEST['after'])
+        )));
+        else return new RestResponse(200, HttpCodes::HTTP_200, $result, $header);
+        
+        
     }
     
     private static function logout(Rest $request) : RestResponse

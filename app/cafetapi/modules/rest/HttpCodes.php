@@ -30,6 +30,18 @@ class HttpCodes
     
     
     /*
+     * 3xx Redirection
+     */
+    
+    /**
+     * The requested resource resides temporarily under a different URI. Used after authentification
+     * to redirect tu user agent to the requested ressource. Should not be cache.
+     * @var string
+     */
+    const HTTP_302 = 'Found';
+    
+    
+    /*
      * 4xx Client Error
      */
     
