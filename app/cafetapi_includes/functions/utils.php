@@ -1,5 +1,7 @@
 <?php
 
+use cafetapi\data\Calendar;
+
 /**
  * Function file for classic functions
  * @package essaim_cafet
@@ -41,8 +43,7 @@ function is_associative_array(array $array): bool
 /**
  * Guess the image format of a base64 encoded image
  *
- * @param string $base64
- *            the image encoded
+ * @param string $base64 the encoded image
  * @return string the mime
  * @since API 1.0.0 (2018)
  */
@@ -58,6 +59,11 @@ function guess_image_mime(string $base64): string
         return 'application/*';
 }
 
+/**
+ * Guess the image format of a base64 encoded image
+ * @param string $base64 the encoded image
+ * @return string the extension of the image
+ */
 function get_base64_image_format(string $base64): string
 {
     if (substr($base64, 0, 1) == '/')
@@ -146,4 +152,23 @@ function is_version_superior_to(string $version1, string $version2, bool $compar
 function get_simple_classname(object $object) : string
 {
     return substr(get_class($object), strrpos(get_class($object), '\\') + 1);
+}
+
+/**
+ * Get a Calendar object from an SQL DateTime format
+ * @param string $datetime the output of the database
+ * @return Calendar the calendar representing the datetime
+ */
+function get_clalendar_from_datetime(string $datetime) : Calendar
+{
+    $_datetime = new DateTime($datetime);
+    
+    $year = intval($_datetime->format('Y'));
+    $month = intval($_datetime->format('m'));
+    $day = intval($_datetime->format('d'));
+    $hour = intval($_datetime->format('H'));
+    $mins = intval($_datetime->format('i'));
+    $secs =intval($_datetime->format('s'));
+    
+    return new Calendar($year, $month, $day, $hour, $mins, $secs);
 }

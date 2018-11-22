@@ -8,9 +8,7 @@ use cafetapi\data\Product;
 use cafetapi\data\ProductGroup;
 use cafetapi\data\ProductOrdered;
 use cafetapi\exceptions\NotEnoughtMoneyException;
-use cafetapi\exceptions\RequestFailureException;
 use PDO;
-use PDOStatement;
 
 /**
  * Object specialized in data updating from the database for the API
@@ -18,10 +16,9 @@ use PDOStatement;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-class DataUpdater extends DatabaseConnection
+class DataUpdater extends Updater
 {
     private static $instance;
-    private $inTransaction;
     
     /**
      * Get singleton object
@@ -31,59 +28,6 @@ class DataUpdater extends DatabaseConnection
     {
         if(self::$instance === null) self::$instance = new DataUpdater();
         return self::$instance;
-    }
-    
-    public final function createTransaction()
-    {
-        if (!$this->connection->inTransaction()) $this->connection->beginTransaction();
-        $this->inTransaction = true;
-    }
-    
-    public final function cancelTransaction()
-    {
-        if ($this->connection->inTransaction()) $this->connection->rollBack();
-        if ($this->inTransaction) $this->inTransaction = false;
-    }
-    
-    public final function confirmTransaction()
-    {
-        $this->connection->commit();
-        $this->inTransaction = false;
-    }
-    
-    private final function beginTransaction()
-    {
-        if (!$this->inTransaction) $this->connection->beginTransaction();
-    }
-    
-    private final function commit()
-    {
-        if (!$this->inTransaction) $this->connection->commit();
-    }
-
-    /**
-     * Check if data have been updated
-     *
-     * @param PDOStatement $stmt
-     *            the statement used for the update
-     * @param string $message
-     *            the message to throw if no data have been updated
-     * @throws RequestFailureException if no data have been updated
-     * @since API 1.0.0 (2018)
-     */
-    private final function checkUpdate(PDOStatement $stmt, string $message, bool $autorisation_error = false)
-    {
-        if ($stmt->errorCode() != '00000')
-        {
-            parent::registerErrorOccurence($stmt);
-            
-            $sql_error = $stmt->errorInfo()[2];
-            $backtrace = debug_backtrace()[1];
-            
-            $this->cancelTransaction();
-            
-            throw new RequestFailureException($message . ' ' . $sql_error, null, null, $backtrace['file'], $backtrace['line']);
-        }
     }
 
     /**

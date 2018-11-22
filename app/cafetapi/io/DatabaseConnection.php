@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi\io;
 
+use cafetapi\data\Calendar;
 use cafetapi\user\Group;
 use cafetapi\user\User;
 use PDO;
@@ -801,7 +802,7 @@ EOSQL
         else
             $group = new Group('consumer', Group::CONSUMER);
 
-        $user = new User($id, $result['pseudo'], $result['firstname'], $result['name'], $result['hash'], $result['mail'], $result['phone'], $group);
+            $user = new User($id, $result['pseudo'], $result['firstname'], $result['name'], $result['hash'], $result['mail'], $result['phone'], new Calendar(2018, 1, 1, 0, 0, 0), new Calendar(2018, 1, 1, 0, 0, 0), 0, $group);
         $statement->closeCursor();
 
         return $user;

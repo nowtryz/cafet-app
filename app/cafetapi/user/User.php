@@ -3,6 +3,7 @@ namespace cafetapi\user;
 
 use cafetapi\data\Data;
 use cafetapi\data\JSONParsable;
+use cafetapi\data\Calendar;
 
 /**
  *
@@ -32,7 +33,8 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
 
     /**
      */
-    public function __construct(int $id, string $pseudo, string $firstname, string $name, string $password, string $email, $phone, Group $group, array $additional_permissions = null)
+    public function __construct(int $id, string $pseudo, string $firstname, string $name, string $password, string $email, $phone, 
+        Calendar $last_signin, Calendar $registration, int $signin_count, Group $group, array $additional_permissions = null)
     {
         $this->id = $id;
         $this->pseudo = $pseudo;

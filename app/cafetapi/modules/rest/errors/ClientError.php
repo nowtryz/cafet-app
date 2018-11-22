@@ -18,8 +18,10 @@ class ClientError
         return new RestResponse(400, HttpCodes::HTTP_400, cafet_grab_error_infos('02-400', $reason), $headers);
     }
     
-    public static function unauthorized(array $additional_headers = array()) : RestResponse
+    public static function unauthorized(array $additional_headers = array(), $reason = null) : RestResponse
     {
+        if ($reason) $additional_headers['Reason'] = $reason;
+        
         $type = 'Basic';
         $realm = 'Restricted area';
         
@@ -28,7 +30,7 @@ class ClientError
             'Cache-Control' => 'no-cache'
         ));
         
-        return new RestResponse(401, HttpCodes::HTTP_401, cafet_grab_error_infos('02-401'), $headers);
+        return new RestResponse(401, HttpCodes::HTTP_401, cafet_grab_error_infos('02-401', $reason), $headers);
     }
     
     public static function forbidden(array $additional_headers = array()) : RestResponse
@@ -36,7 +38,7 @@ class ClientError
         return new RestResponse(403, HttpCodes::HTTP_403, cafet_grab_error_infos('02-403'), $additional_headers);
     }
 
-    public static function resourceNotFound(string $reason = '', array $additional_headers = array()) : RestResponse
+    public static function resourceNotFound(string $reason = null, array $additional_headers = array()) : RestResponse
     {
         $headers = array_merge($additional_headers, array('Reason' => $reason));
         return new RestResponse(404, HttpCodes::HTTP_404, cafet_grab_error_infos('02-404', $reason), $headers);
@@ -48,7 +50,7 @@ class ClientError
         return new RestResponse(405, HttpCodes::HTTP_405, cafet_grab_error_infos('02-405', 'Method ' . $method . ' is not allowed for the chosen resource, must be ' . implode('/', $allowedMethods)), $headers);
     }
     
-    public static function conflict(string $reason = '', array $additional_headers = array()) : RestResponse
+    public static function conflict(string $reason = null, array $additional_headers = array()) : RestResponse
     {
         $headers = array_merge($additional_headers, array('Reason' => $reason));
         return new RestResponse(409, HttpCodes::HTTP_409, cafet_grab_error_infos('02-409', $reason), $headers);

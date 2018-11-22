@@ -1,11 +1,14 @@
 <?php
 namespace cafetapi\modules\rest\user;
 
+use cafetapi\io\DataUpdater;
+use cafetapi\io\DatabaseConnection;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
+use cafetapi\modules\rest\errors\ServerError;
 
 /**
  *
@@ -45,7 +48,7 @@ class UserNode implements RestNode
             $user = cafet_check_login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
         
             if(!$user) {
-                return ClientError::badRequest('Authorization failed');
+                return ClientError::unauthorized(array(), 'Authorization failed');
             }
             
             $session = cafet_init_session();
@@ -102,12 +105,58 @@ class UserNode implements RestNode
     
     private static function current(Rest $request) : RestResponse
     {
-        if ($request->getUser()) {
-            return new RestResponse(200, HttpCodes::HTTP_200, $request->getUser()->getProperties());
-        } else {
-            return ClientError::unauthorized();
+        $request->allowMethods(array('GET', 'PUT', 'PATCH'));
+        if (!$request->getUser()) return ClientError::unauthorized();
+        
+        switch ($request->getMethod())
+        {
+            case 'GET' : return new RestResponse(200, HttpCodes::HTTP_200, $request->getUser()->getProperties());
+        } 
+    }
+    
+    private static function patchCurrent(Rest $request) : RestResponse
+    {
+        if (!DatabaseConnection::getDatabaseConnectionInstance()->getUser($request->getUser()->getPseudo())) {
+            return ClientError::resourceNotFound('Unknown user with pseudo ' . $request->getUser()->getPseudo());
         }
+        
+        $updater = DataUpdater::getInstance();
+        $updater->createTransaction();
+        
+        $conflict = array();
+        
+        try {
+            foreach ($request->getBody() as $field => $value) switch ($field)
+            {
+                case 'pseudo':
+                    
+                    break;
+                    
+                case 'firstname':
+                    
+                    break;
+                    
+                case 'name':
+                    
+                    break;
+                    
+                case 'email':
+                    
+                    break;
+                    
+                case 'phone':
+                    
+                    break;
+            }
             
+            $updater->confirmTransaction();
+        } catch (\Error | \Exception $e) {
+            $updater->cancelTransaction();
+            cafet_log($e->__toString());
+            return ServerError::internalServerError();
+        }
+        
+        return new RestResponse('204', HttpCodes::HTTP_204, null);
     }
 }
 
