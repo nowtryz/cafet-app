@@ -1,12 +1,12 @@
 <?php
 namespace cafetapi\modules\rest;
 
+use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
+use cafetapi\user\User;
 use Error;
 use Exception;
 use SimpleXMLElement;
-use cafetapi\modules\rest\errors\ClientError;
-use cafetapi\user\User;
 
 /**
  *
@@ -157,7 +157,7 @@ class Rest
             }
         } else foreach ($permissions as $permission) if (!cafet_get_guest_group()->hasPermission($permission)) {
             $api_root = $this->root_url . '/api/v' . $this->version;
-            $after = urlencode($api_root . '/' . $_REQUEST[self::PATH_FIELD]) . '.' . $this->contentType;
+            $after = urlencode($_SERVER['REQUEST_URI']);
             
             $this->printResponse(ClientError::forbidden(array(
                 'Location' => $api_root . '/user/login?after=' . $after,
