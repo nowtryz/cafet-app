@@ -84,7 +84,7 @@ class Defaults
      * @var boolean
      * @since API 1.0.0 (2018)
      */
-    const debug = true;
+    const debug = false;
 
     /**
      * Seuil en dessous duquel un mail pour inciter le rechargement est envoyé à chaque achat
