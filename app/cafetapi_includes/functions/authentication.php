@@ -7,6 +7,7 @@
  */
 
 use cafetapi\user\User;
+use cafetapi\io\UserManager;
 
 if (!defined('authentication_functions_loaded')) {
     define('authentication_functions_loaded', true);
@@ -118,19 +119,19 @@ if (!defined('authentication_functions_loaded')) {
      */
     function cafet_verify_password(string $password, string $hash, string $pseudo = null): bool
     {
-        if($hash == '')
-            return false;
+        if($hash == '') return false;
             
-            $hash_info = explode('.', $hash);
+        $hash_info = explode('.', $hash);
+        
+        if (count($hash_info) == 1 && isset($pseudo)) {
+            return sha1(cafet_get_configurations()['salt'] . $password . $pseudo) === $hash;
+        }
+        
+        if (count($hash_info) < 3) {
+            throw new InvalidArgumentException('Wrong password hash format');
+        }
             
-            if (count($hash_info) == 1 && isset($pseudo)) {
-                return sha1(cafet_get_configurations()['salt'] . $password . $pseudo) === $hash;
-            }
-            
-            if (count($hash_info) < 3)
-                throw new InvalidArgumentException('Wrong password hash format');
-                
-                return hash($hash_info[0], $hash_info[1] . $password) === $hash_info[2];
+        return hash($hash_info[0], $hash_info[1] . $password) === $hash_info[2];
     }
     
     /**
@@ -145,13 +146,14 @@ if (!defined('authentication_functions_loaded')) {
      */
     function cafet_check_login(string $pseudo_or_name, $password): ?User
     {
-        global $DB;
-        
-        $user = $DB->getUser($pseudo_or_name);
+        $user = UserManager::getInstance()->getUser($pseudo_or_name);
         
         if (! $user) return NULL;
             
-        if (cafet_verify_password($password, $user->getHash(), $user->getPseudo())) return $user;
+        if (cafet_verify_password($password, $user->getHash(), $user->getPseudo())) {
+            UserManager::getInstance()->registerLogin($user->getId());
+            return $user;
+        }
         else return NULL;
     }
     

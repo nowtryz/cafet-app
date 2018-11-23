@@ -21,7 +21,7 @@ class ExpenseManager extends Updater
     
     /**
      * Get singleton object
-     * @return DataFetcher the singleton of this class
+     * @return ExpenseManager the singleton of this class
      */
     public static function getInstance() : ExpenseManager
     {

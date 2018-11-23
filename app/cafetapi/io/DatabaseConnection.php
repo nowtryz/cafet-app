@@ -53,7 +53,8 @@ class DatabaseConnection
     const PRODUCTS_EDITS = 'cafet_products_edits';
     const PRODUCTS_GROUPS = 'cafet_products_groups';
     const REPLENISHMENTS = 'cafet_replenishments';
-    const USERS = 'users';
+    const CLIENTS = 'cafet_customers';
+    const USERS = 'cafet_users';
 
     /**
      * Initialise connection for this class and all its children
@@ -391,8 +392,8 @@ EOSQL
                 . 'FOR EACH ROW '
                 . 'BEGIN '
                     . 'SET @user = NEW.user_id;' . "\n"
-                    . 'UPDATE `' . self::USERS . '` SET credit = credit + NEW.amount WHERE id = @user;' . "\n"
-                    . 'SET NEW.user_balance = (SELECT credit FROM `users` WHERE id = @user); '
+                    . 'UPDATE `' . self::USERS . '` SET balance = balance + NEW.amount WHERE id = @user;' . "\n"
+                    . 'SET NEW.user_balance = (SELECT balance FROM `users` WHERE id = @user); '
                 . 'END');
         }
 
@@ -412,8 +413,8 @@ EOSQL
                 . 'BEGIN '
                     . 'SET NEW.edit_id = (SELECT last_edit FROM `cafet_formulas` WHERE id = NEW.formula_id);' . "\n"
                     . 'SET @price = (SELECT price FROM `cafet_formulas_edits` WHERE id = NEW.edit_id);' . "\n"
-                    . 'UPDATE `' . self::USERS . '` SET credit = credit-@price*NEW.quantity WHERE id = NEW.user_id;' . "\n"
-                    . 'UPDATE `' . self::EXPENSES . '` SET user_balance = (SELECT credit FROM `users` WHERE id = NEW.user_id) WHERE id = NEW.expense_id; '
+                    . 'UPDATE `' . self::USERS . '` SET balance = balance-@price*NEW.quantity WHERE id = NEW.user_id;' . "\n"
+                    . 'UPDATE `' . self::EXPENSES . '` SET user_balance = (SELECT balance FROM `users` WHERE id = NEW.user_id) WHERE id = NEW.expense_id; '
                 . 'END');
         }
         
@@ -487,8 +488,8 @@ EOSQL
                     . 'SET NEW.edit_id = (SELECT last_edit FROM `cafet_products` WHERE id = NEW.product_id);' . "\n"
                     . 'SET @price = (SELECT price FROM `cafet_products_edits` WHERE id = NEW.edit_id);' . "\n"
                     . 'UPDATE `' . self::PRODUCTS . '` SET stock = stock - NEW.quantity WHERE id = NEW.product_id;' . "\n"
-                    . 'UPDATE `' . self::USERS . '` SET credit = credit-@price*NEW.quantity WHERE ID = NEW.user_id;' . "\n"
-                    . 'UPDATE `' . self::EXPENSES . '` SET user_balance = (SELECT credit FROM `users` WHERE id = NEW.user_id) WHERE id = NEW.expense_id; '
+                    . 'UPDATE `' . self::USERS . '` SET balance = balance-@price*NEW.quantity WHERE ID = NEW.user_id;' . "\n"
+                    . 'UPDATE `' . self::EXPENSES . '` SET user_balance = (SELECT balance FROM `users` WHERE id = NEW.user_id) WHERE id = NEW.expense_id; '
                 . 'END');
         }
 
@@ -553,7 +554,7 @@ EOSQL
     protected final function check_fetch_errors(PDOStatement $stmt)
     {
         if ($stmt->errorCode() != '00000')
-            parent::registerErrorOccurence($stmt);
+            self::registerErrorOccurence($stmt);
     }
 
     /**
@@ -756,7 +757,7 @@ EOSQL
      * @return NULL|User A User object that represents the user
      * @since API 1.0.0 (2018)
      */
-    public final function getUser(string $mail_or_pseudo): ?User
+    public function getUser(string $mail_or_pseudo): ?User
     {
         $statement = $this->connection->prepare('SELECT '
             . 'ID id, '

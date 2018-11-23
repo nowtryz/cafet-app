@@ -43,7 +43,12 @@ class UserNode implements RestNode
     
     private static function login(Rest $request) : RestResponse
     {
-        if (!empty($_SERVER['PHP_AUTH_USER']))
+        if ($request->getSession() && $request->getUser())
+        {
+            $session = $request->getSession();
+            $user = $request->getUser();
+        }
+        elseif (!empty($_SERVER['PHP_AUTH_USER']))
         {
             $user = cafet_check_login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
         
@@ -53,11 +58,6 @@ class UserNode implements RestNode
             
             $session = cafet_init_session();
             cafet_set_logged_user($user);
-        }
-        elseif ($request->getSession() && $request->getUser())
-        {
-            $session = $request->getSession();
-            $user = $request->getUser();
         }
         else
         {

@@ -18,7 +18,7 @@ class FormulaManager extends Updater
     
     /**
      * Get singleton object
-     * @return DataUpdater the singleton of this class
+     * @return FormulaManager the singleton of this class
      */
     public static function getInstance() : FormulaManager
     {

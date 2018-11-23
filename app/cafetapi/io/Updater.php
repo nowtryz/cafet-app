@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi\io;
 
+use cafetapi\exceptions\DuplicateEntryException;
 use cafetapi\exceptions\RequestFailureException;
 use PDOStatement;
 
@@ -31,12 +32,12 @@ abstract class Updater extends DatabaseConnection
         $this->inTransaction = false;
     }
     
-    private final function beginTransaction()
+    protected final function beginTransaction()
     {
         if (!$this->inTransaction) $this->connection->beginTransaction();
     }
     
-    private final function commit()
+    protected final function commit()
     {
         if (!$this->inTransaction) $this->connection->commit();
     }
@@ -51,14 +52,20 @@ abstract class Updater extends DatabaseConnection
      * @throws RequestFailureException if no data have been updated
      * @since API 1.0.0 (2018)
      */
-    private final function checkUpdate(PDOStatement $stmt, string $message, bool $autorisation_error = false)
+    protected final function checkUpdate(PDOStatement $stmt, string $message, bool $autorisation_error = false)
     {
         if ($stmt->errorCode() != '00000')
         {
+            $backtrace = debug_backtrace()[1];
+            
+            if ($stmt->errorInfo()[0] == 23000 && $stmt->errorInfo()[1] == 1062)
+            {
+                throw new DuplicateEntryException($message, null, null, $backtrace['file'], $backtrace['line']);
+            }
+            
             parent::registerErrorOccurence($stmt);
             
             $sql_error = $stmt->errorInfo()[2];
-            $backtrace = debug_backtrace()[1];
             
             $this->cancelTransaction();
             

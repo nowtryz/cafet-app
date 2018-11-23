@@ -16,7 +16,7 @@ class ReloadManager extends Updater
     
     /**
      * Get singleton object
-     * @return DataFetcher the singleton of this class
+     * @return ReloadManager the singleton of this class
      */
     public static function getInstance() : ReloadManager
     {

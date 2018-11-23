@@ -17,7 +17,7 @@ class ProductManager extends Updater
     
     /**
      * Get singleton object
-     * @return DataUpdater the singleton of this class
+     * @return ProductManager the singleton of this class
      */
     public static function getInstance() : ProductManager
     {

@@ -11,11 +11,16 @@ use PDO;
  */
 class ClientManager extends Updater
 {
+    const FIELD_ID = 'id';
+    const FIELD_USER_ID = 'user_id';
+    const FIELD_MEMBER = 'member';
+    const FIELD_BALANCE = 'balance';
+
     private static $instance;
     
     /**
      * Get singleton object
-     * @return DataUpdater the singleton of this class
+     * @return ClientManager the singleton of this class
      */
     public static function getInstance() : ClientManager
     {
@@ -26,17 +31,18 @@ class ClientManager extends Updater
     public final function getClients(): array
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'ID id, '
-            . 'Email email, '
-            . 'Pseudo alias, '
-            . 'Nom fname, '
-            . 'Prenom sname, '
-            . 'adherent member, '
-            . 'Credit balance, '
-            . 'Annee regyear '
-            . 'FROM ' . self::USERS . ' u '
-            . 'WHERE u.SU = 0 '
-            . 'ORDER BY u.Prenom');
+            . 'u.'. UserManager::FIELD_ID . ' id, '
+            . 'u.'. UserManager::FIELD_EMAIL . ' email, '
+            . 'u.'. UserManager::FIELD_USERNAME . ' alias, '
+            . 'u.'. UserManager::FIELD_FAMILYNAME . ' fname, '
+            . 'u.'. UserManager::FIELD_FIRSTNAME . ' sname, '
+            . 'c.'. self::FIELD_MEMBER . ' member, '
+            . 'c.'. self::FIELD_BALANCE . ' balance, '
+            . 'DATE_FORMAT(u.'. UserManager::FIELD_REGISTRATION . ', "%Y") regyear '
+            . 'FROM ' . parent::CLIENTS . ' c '
+            . 'INNER JOIN ' . parent::USERS . ' u '
+            . 'ON c.' . self::FIELD_USER_ID . ' = u.' . UserManager::FIELD_ID . ' '
+            . 'ORDER BY u.' . UserManager::FIELD_FIRSTNAME);
         
         $member = false;
         $id = $registrationYear = 0;
@@ -64,16 +70,18 @@ class ClientManager extends Updater
     public final function getClient(int $id): ?Client
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'ID id, '
-            . 'Email email, '
-            . 'Pseudo alias, '
-            . 'Nom fname, '
-            . 'Prenom sname, '
-            . 'adherent member, '
-            . 'Credit balance, '
-            . 'Annee regyear '
-            . 'FROM ' . self::USERS . ' '
-            . 'WHERE id = :id ');
+            . 'u.'. UserManager::FIELD_ID . ' id, '
+            . 'u.'. UserManager::FIELD_EMAIL . ' email, '
+            . 'u.'. UserManager::FIELD_USERNAME . ' alias, '
+            . 'u.'. UserManager::FIELD_FAMILYNAME . ' fname, '
+            . 'u.'. UserManager::FIELD_FIRSTNAME . ' sname, '
+            . 'c.'. self::FIELD_MEMBER . ' member, '
+            . 'c.'. self::FIELD_BALANCE . ' balance, '
+            . 'DATE_FORMAT(u.'. UserManager::FIELD_REGISTRATION . ', "%Y") regyear '
+            . 'FROM ' . parent::CLIENTS . ' c '
+            . 'INNER JOIN ' . parent::USERS . ' u '
+            . 'ON c.' . self::FIELD_USER_ID . ' = u.' . UserManager::FIELD_ID . ' '
+            . 'WHERE u.' . UserManager::FIELD_ID . ' = :id ');
         
         $member = false;
         $registrationYear = 0;
@@ -101,20 +109,21 @@ class ClientManager extends Updater
     public final function searchClient(string $expression): array
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'ID id, '
-            . 'Email email, '
-            . 'Pseudo alias, '
-            . 'Nom fname, '
-            . 'Prenom sname, '
-            . 'adherent member, '
-            . 'Credit balance, '
-            . 'Annee regyear '
-            . 'FROM ' . self::USERS . ' u '
-            . 'WHERE u.SU = 0 '
-            . 'AND (u.Pseudo LIKE :expression '
-            . 'OR u.Nom LIKE :expression '
-            . 'OR u.Prenom LIKE :expression) '
-            . 'ORDER BY u.Prenom');
+            . 'u.'. UserManager::FIELD_ID . ' id, '
+            . 'u.'. UserManager::FIELD_EMAIL . ' email, '
+            . 'u.'. UserManager::FIELD_USERNAME . ' alias, '
+            . 'u.'. UserManager::FIELD_FAMILYNAME . ' fname, '
+            . 'u.'. UserManager::FIELD_FIRSTNAME . ' sname, '
+            . 'c.'. self::FIELD_MEMBER . ' member, '
+            . 'c.'. self::FIELD_BALANCE . ' balance, '
+            . 'DATE_FORMAT(u.'. UserManager::FIELD_REGISTRATION . ', "%Y") regyear '
+            . 'FROM ' . parent::CLIENTS . ' c '
+            . 'INNER JOIN ' . parent::USERS . ' u '
+            . 'ON c.' . self::FIELD_USER_ID . ' = u.' . UserManager::FIELD_ID . ' '
+            . 'WHERE (u.' . UserManager::FIELD_USERNAME . ' LIKE :expression '
+            . 'OR u.' . UserManager::FIELD_FAMILYNAME . ' LIKE :expression '
+            . 'OR u.' . UserManager::FIELD_FIRSTNAME . ' LIKE :expression) '
+            . 'ORDER BY u.' . UserManager::FIELD_FIRSTNAME);
         
         $id = $registrationYear = 0;
         $email = $alias = $familyNane = $surname = $balance = '';
