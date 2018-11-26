@@ -45,7 +45,7 @@ if (!defined('logging_functions_loaded')) {
             die();
         }
         
-        cafet_log($error);
+        cafet_log($error . ($additional_message ? ': '. $additional_message : ''));
         
         $result = new ReturnStatement("error", cafet_grab_error_infos($error, $additional_message));
         
