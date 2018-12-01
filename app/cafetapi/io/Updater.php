@@ -3,6 +3,7 @@ namespace cafetapi\io;
 
 use cafetapi\exceptions\DuplicateEntryException;
 use cafetapi\exceptions\RequestFailureException;
+use PDO;
 use PDOStatement;
 
 /**
@@ -12,6 +13,9 @@ use PDOStatement;
  */
 abstract class Updater extends DatabaseConnection
 {
+    const TABLE_NAME = '';
+    const FIELD_ID = 'id';
+    
     private $inTransaction;
     
     public final function createTransaction()
@@ -32,11 +36,17 @@ abstract class Updater extends DatabaseConnection
         $this->inTransaction = false;
     }
     
+    /**
+     * @deprecated
+     */
     protected final function beginTransaction()
     {
         if (!$this->inTransaction) $this->connection->beginTransaction();
     }
     
+    /**
+     * @deprecated
+     */
     protected final function commit()
     {
         if (!$this->inTransaction) $this->connection->commit();
@@ -71,6 +81,20 @@ abstract class Updater extends DatabaseConnection
             
             throw new RequestFailureException($message . ' ' . $sql_error, null, null, $backtrace['file'], $backtrace['line']);
         }
+    }
+    
+    protected final function update($field, $id, $value, int $value_type = PDO::PARAM_STR)
+    {
+        if (!$this->inTransaction) $this->connection->beginTransaction();
+        
+        $statement = $this->connection->prepare('UPDATE ' . static::TABLE_NAME . ' SET ' . $field . ' = :value WHERE ' . static::FIELD_ID . ' = :id');
+        $statement->bindValue(':id', $id);
+        $statement->bindValue(':value', $value, $value_type);
+        $statement->execute();
+        $this->checkUpdate($statement, 'unable to update field ' . $field . ' in ' . static::TABLE_NAME);
+        
+        if (!$this->inTransaction) $this->connection->commit();
+        return true;
     }
 }
 

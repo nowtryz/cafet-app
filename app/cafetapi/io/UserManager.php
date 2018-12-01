@@ -26,6 +26,8 @@ class UserManager extends Updater
     const FIELD_PASSWORD = 'password';
     const FIELD_PERMISSIONS = 'permissions';
     
+    const TABLE_NAME = self::USERS;
+    
     private static $instance;
     
     /**
@@ -80,7 +82,7 @@ class UserManager extends Updater
             'param2' => $mail_or_pseudo
         ));
         
-        if ($statement->errorCode() != '00000') self::registerErrorOccurence($statement);
+        $this->check_fetch_errors($statement);
 
         $result = $statement->fetch();
 
@@ -142,7 +144,7 @@ class UserManager extends Updater
             'id' => $user_id
         ));
         
-        if ($statement->errorCode() != '00000') self::registerErrorOccurence($statement);
+        $this->check_fetch_errors($statement);
         
         $result = $statement->fetch();
         
@@ -162,6 +164,25 @@ class UserManager extends Updater
         $statement->closeCursor();
         
         return $user;
+    }
+    
+    public final function getPermissions(int $user_id) : array
+    {
+        $_permissions = 'a:0:{}';
+        
+        $statement = $this->connection->prepare('SELECT '
+            . self::FIELD_PERMISSIONS . ' permissions '
+            . 'FROM ' . self::USERS . ' '
+            . 'WHERE ' . self::FIELD_ID . ' = :id');
+        $statement->bindColumn('permissions', $_permissions, PDO::PARAM_STR);
+        $statement->execute(array('id' => $user_id));
+        
+        $this->check_fetch_errors($statement);
+        $result = $statement->fetch();
+        $statement->closeCursor();
+        
+        if (! $result) return array();
+        else return @unserialize($_permissions) ?: array();
     }
     
     /**
@@ -222,32 +243,62 @@ class UserManager extends Updater
     
     public final function setPseudo(int $user_id, string $new_pseudo) : bool
     {
-        
-    }
-    
-    public final function setFirstname(int $user_id, string $new_firstname) : bool
-    {
-        
-    }
-    
-    public final function setName(int $user_id, string $new_name) : bool
-    {
-        
+        return $this->update(self::FIELD_USERNAME, $user_id, $new_pseudo);
     }
     
     public final function setEmail(int $user_id, string $new_email) : bool
     {
-        
+        return $this->update(self::FIELD_EMAIL, $user_id, $new_email);
     }
     
-    public final function setPhone(int $user_id, string $new_pseudo) : bool
+    public final function setFirstname(int $user_id, string $new_firstname) : bool
     {
-        
+        return $this->update(self::FIELD_FIRSTNAME, $user_id, $new_firstname);
+    }
+    
+    public final function setName(int $user_id, string $new_name) : bool
+    {
+        return $this->update(self::FIELD_FAMILYNAME, $user_id, $new_name);
+    }
+    
+    public final function setPhone(int $user_id, string $new_phone) : bool
+    {
+        return $this->update(self::FIELD_PHONE, $user_id, $new_phone);
     }
     
     public final function setGroup(int $user_id, int $group_id) : bool
     {
+        return $this->update(self::FIELD_GROUP_ID, $user_id, $group_id, PDO::PARAM_INT);
+    }
+    
+    public final function setPassword(int $user_id , string $new_password) : bool
+    {
+        return $this->update(self::FIELD_PASSWORD, $user_id, cafet_generate_hashed_pwd($new_password));
+    }
+    
+    public final function setPermission(int $user_id, string $permission, bool $value) : bool
+    {
+        $permissions = $this->getPermissions($user_id);
+        $permissions[$permission] = $value;
+        $_permissions = serialize($permissions);
         
+        return $this->update(self::FIELD_PERMISSIONS, $user_id, $_permissions);
+    }
+    
+    public final function unsetPermission(int $user_id, string $permission) : bool
+    {
+        $permissions = $this->getPermissions($user_id);
+        
+        unset($permissions[$permission]);
+        
+        $_permissions = serialize($permissions);
+        
+        return $this->update(self::FIELD_PERMISSIONS, $user_id, $_permissions);
+    }
+    
+    public final function clearPermissions(int $user_id) : bool
+    {
+        return $this->update(self::FIELD_PERMISSIONS, $user_id, 'a:0:{}');
     }
 }
 

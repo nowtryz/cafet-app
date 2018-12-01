@@ -553,8 +553,7 @@ EOSQL
     
     protected final function check_fetch_errors(PDOStatement $stmt)
     {
-        if ($stmt->errorCode() != '00000')
-            self::registerErrorOccurence($stmt);
+        if ($stmt->errorCode() != '00000') self::registerErrorOccurence($stmt);
     }
 
     /**

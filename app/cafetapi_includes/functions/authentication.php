@@ -96,7 +96,7 @@ if (!defined('authentication_functions_loaded')) {
      * @return string the hash version of the password
      * @since API 1.0.0 (2018)
      */
-    function cafet_generate_hashed_pwd(string $password, string $pseudo = null): string
+    function cafet_generate_hashed_pwd(string $password): string
     {
         $salt = bin2hex(random_bytes(16));
         $algo = cafet_get_configurations()['hash_algo'];
