@@ -50,10 +50,15 @@ class ClientError
         return new RestResponse(405, HttpCodes::HTTP_405, cafet_grab_error_infos('02-405', 'Method ' . $method . ' is not allowed for the chosen resource, must be ' . implode('/', $allowedMethods)), $headers);
     }
     
-    public static function conflict(string $reason = null, array $additional_headers = array()) : RestResponse
+    public static function conflict(string $reason = null, array $conflicts = array(), array $additional_headers = array()) : RestResponse
     {
         $headers = array_merge($additional_headers, array('Reason' => $reason));
-        return new RestResponse(409, HttpCodes::HTTP_409, cafet_grab_error_infos('02-409', $reason), $headers);
+        $result = $conflicts ? array(
+            'conflict' => $conflicts
+        ) : array();
+        $result = array_merge($result, cafet_grab_error_infos('02-409', $reason));
+        
+        return new RestResponse(409, HttpCodes::HTTP_409, $result, $headers);
     }
     
     public static function imATeapot() : RestResponse

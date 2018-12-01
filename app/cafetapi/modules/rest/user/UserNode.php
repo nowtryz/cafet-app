@@ -2,13 +2,13 @@
 namespace cafetapi\modules\rest\user;
 
 use cafetapi\io\DatabaseConnection;
+use cafetapi\io\UserManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
-use cafetapi\io\UserManager;
 
 /**
  *
@@ -125,29 +125,47 @@ class UserNode implements RestNode
         $updater->createTransaction();
         
         $conflict = array();
+        $user = $request->getUser();
         
         try {
             foreach ($request->getBody() as $field => $value) switch ($field)
             {
                 case 'pseudo':
-                    
-                    break;
-                    
-                case 'firstname':
-                    
-                    break;
-                    
-                case 'name':
-                    
+                    if($value == $user->getPseudo()) break;
+                    elseif($updater->getUser($value)) $conflict[$field] = 'duplicated';
+                    else $updater->setPseudo($user->getId(), strval($value));
                     break;
                     
                 case 'email':
+                    if($value == $user->getEmail()) break;
+                    elseif($updater->getUser($value)) $conflict[$field] = 'duplicated';
+                    else $updater->setEmail($user->getId(), strval($value));
+                    break;
                     
+                case 'firstname':
+                    if($value == $user->getFirstname()) break;
+                    $updater->setFirstname($user->getId(), strval($value));
+                    break;
+                    
+                case 'name':
+                    if($value == $user->getName()) break;
+                    $updater->setName($user->getId(), strval($value));
                     break;
                     
                 case 'phone':
-                    
+                    if($value == $user->getPhone()) break;
+                    $updater->setPhone($user->getId(), strval($value));
                     break;
+                    
+                case 'password':
+                    $updater->setPassword($user->getId(), strval($value));
+                    break;
+            }
+            
+            if($conflict)
+            {
+                $updater->cancelTransaction();
+                return ClientError::conflict();
             }
             
             $updater->confirmTransaction();
