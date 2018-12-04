@@ -248,6 +248,10 @@ class UserManager extends Updater
     
     public final function setEmail(int $user_id, string $new_email) : bool
     {
+        if (!filter_var($new_email, FILTER_VALIDATE_EMAIL))
+        {
+            throw new EmailFormatException('"' . $new_email . '" is not valid!');
+        }
         return $this->update(self::FIELD_EMAIL, $user_id, $new_email);
     }
     

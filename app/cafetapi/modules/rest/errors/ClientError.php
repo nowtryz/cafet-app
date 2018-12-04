@@ -54,7 +54,7 @@ class ClientError
     {
         $headers = array_merge($additional_headers, array('Reason' => $reason));
         $result = $conflicts ? array(
-            'conflict' => $conflicts
+            'conflicts' => $conflicts
         ) : array();
         $result = array_merge($result, cafet_grab_error_infos('02-409', $reason));
         

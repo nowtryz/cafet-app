@@ -110,21 +110,22 @@ class UserNode implements RestNode
         
         switch ($request->getMethod())
         {
-            case 'GET' : return new RestResponse(200, HttpCodes::HTTP_200, $request->getUser()->getProperties());
+            case 'GET' :  return new RestResponse(200, HttpCodes::HTTP_200, $request->getUser()->getProperties());
+            case 'PATCH': return self::patchCurrent($request);
             default: return ClientError::imATeapot();
         }
     }
     
     private static function patchCurrent(Rest $request) : RestResponse
     {
-        if (!DatabaseConnection::getDatabaseConnectionInstance()->getUser($request->getUser()->getPseudo())) {
+        if (!UserManager::getInstance()->getUser($request->getUser()->getPseudo())) {
             return ClientError::resourceNotFound('Unknown user with pseudo ' . $request->getUser()->getPseudo());
         }
         
         $updater = UserManager::getInstance();
         $updater->createTransaction();
         
-        $conflict = array();
+        $conflicts = array();
         $user = $request->getUser();
         
         try {
@@ -132,16 +133,17 @@ class UserNode implements RestNode
             {
                 case 'pseudo':
                     if($value == $user->getPseudo()) break;
-                    elseif($updater->getUser($value)) $conflict[$field] = 'duplicated';
+                    elseif($updater->getUser($value)) $conflicts[$field] = 'duplicated';
                     else $updater->setPseudo($user->getId(), strval($value));
                     break;
                     
                 case 'email':
                     if($value == $user->getEmail()) break;
-                    elseif($updater->getUser($value)) $conflict[$field] = 'duplicated';
+                    elseif (!filter_var($value, FILTER_VALIDATE_EMAIL)) $conflicts[$field] = 'not valid';
+                    elseif($updater->getUser($value)) $conflicts[$field] = 'duplicated';
                     else $updater->setEmail($user->getId(), strval($value));
                     break;
-                    
+                        
                 case 'firstname':
                     if($value == $user->getFirstname()) break;
                     $updater->setFirstname($user->getId(), strval($value));
@@ -162,10 +164,10 @@ class UserNode implements RestNode
                     break;
             }
             
-            if($conflict)
+            if($conflicts)
             {
                 $updater->cancelTransaction();
-                return ClientError::conflict();
+                return ClientError::conflict(null, $conflicts);
             }
             
             $updater->confirmTransaction();
