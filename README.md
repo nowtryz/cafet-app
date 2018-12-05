@@ -129,7 +129,7 @@ Demo user is `Nowtryz <damien.djmb@gmail.com>` with password `admin`. Easy to ke
     - PDO
     - PDO_mysql
 
-### MySQL or PostgreSQL
+### MySQL 5.6 or upper
 - tested with MySQL 5.7.21
 
 
