@@ -30,5 +30,6 @@ class Defaults
     const email_contact = 'contact@exemple.com';
     const email_name = 'Cafet\' Essaim';
     // const email_default_subject = '';
+    const session_name = '_cafetapp_' . self::organisation . '_session';
     const logout_message = 'see you later ;)';
 }

@@ -11,5 +11,6 @@ COPY app/ /var/www/html/
 COPY docker/php/config.php /var/www/html/cafetapi_content/
 
 RUN mkdir -p /var/tmp && mkdir -p /var/log
+RUN rm -rfd /var/lib/apt/lists/*
 
 VOLUME ["/var/log"]
