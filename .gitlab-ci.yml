@@ -34,7 +34,7 @@ compress:
     - cd .build
     - tar -czvf ${TAR_NAME} ./*
     - cd ..
-    - cp .build/${TAR_NAME} ./
+    - cp .build/${TAR_NAME} .
     # Remove archive folder
     - rm -r .build
 
