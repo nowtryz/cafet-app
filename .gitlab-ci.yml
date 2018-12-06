@@ -47,7 +47,7 @@ compress:
     - compress
 
 # Artifact publish
-publish:
+non tag application:
   <<: *publish
   except:
     - tags
@@ -55,7 +55,7 @@ publish:
     <<: *publish-artifact
     expire_in: 1 day
 
-tag publish:
+application:
   <<: *publish
   only:
     - tags
@@ -75,7 +75,7 @@ tag publish:
     - cp docker/mysql/demo.sql .
 
 # Artifact publish
-publish:
+non tag database structure:
   <<: *db-struct
   except:
     - tags
@@ -83,7 +83,7 @@ publish:
     <<: *db-struct-artifact
     expire_in: 1 day
 
-tag publish:
+database structure:
   <<: *db-struct
   only:
     - tags
