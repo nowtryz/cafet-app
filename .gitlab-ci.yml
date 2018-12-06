@@ -60,3 +60,31 @@ tag publish:
   only:
     - tags
   artifacts: *publish-artifact
+
+
+# db structure templates
+.db-struct-artifact-template: &db-struct-artifact
+    name: database structure
+    paths:
+      - ./*.sql
+.db-struct-template: &db-struct
+  <<: *linux-docker-runner
+  stage: deploy
+  script:
+    - cp docker/mysql/structure.sql .
+    - cp docker/mysql/demo.sql .
+
+# Artifact publish
+publish:
+  <<: *db-struct
+  except:
+    - tags
+  artifacts:
+    <<: *db-struct-artifact
+    expire_in: 1 day
+
+tag publish:
+  <<: *db-struct
+  only:
+    - tags
+  artifacts: *db-struct-artifact
