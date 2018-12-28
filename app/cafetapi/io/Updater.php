@@ -83,7 +83,7 @@ abstract class Updater extends DatabaseConnection
         }
     }
     
-    protected final function update($field, $id, $value, int $value_type = PDO::PARAM_STR)
+    protected final function updateValue($field, $id, $value, int $value_type = PDO::PARAM_STR)
     {
         if (!$this->inTransaction) $this->connection->beginTransaction();
         
@@ -92,6 +92,30 @@ abstract class Updater extends DatabaseConnection
         $statement->bindValue(':value', $value, $value_type);
         $statement->execute();
         $this->checkUpdate($statement, 'unable to update field ' . $field . ' in ' . static::TABLE_NAME);
+        
+        if (!$this->inTransaction) $this->connection->commit();
+        return true;
+    }
+    
+    protected final function updateValues($id, array $key_values_pairs, int $value_type = PDO::PARAM_STR)
+    {
+        if (!$this->inTransaction) $this->connection->beginTransaction();
+        reset($key_values_pairs);
+        
+        $sql  = 'UPDATE ' . static::TABLE_NAME . ' SET ';
+        
+        foreach ($key_values_pairs as $key => $value) {
+            $sql .= $key . ' = :' . $key;
+            if (next($key_values_pairs) !== false) $sql .= ', ';
+        }
+        
+        $sql .= ' WHERE ' . static::FIELD_ID . ' = :id';
+        
+        $statement = $this->connection->prepare($sql);
+        $statement->bindValue(':id', $id);
+        foreach ($key_values_pairs as $key => $value) $statement->bindValue(':' . $key, $value, $value_type);
+        $statement->execute();
+        $this->checkUpdate($statement, 'unable to update fields in ' . static::TABLE_NAME);
         
         if (!$this->inTransaction) $this->connection->commit();
         return true;

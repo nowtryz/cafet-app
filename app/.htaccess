@@ -30,7 +30,7 @@
 	Deny from all
 </Files>
 
-<Files debug.log>
+<Files *.log>
 	Deny from all
 </Files>
 

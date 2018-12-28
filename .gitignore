@@ -11,3 +11,6 @@ bin/
 
 # Logs
 *.log
+
+# tests
+app/test.php

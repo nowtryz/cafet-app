@@ -544,7 +544,6 @@ EOSQL
         $array = $stmt->errorInfo();
         $array[] = $stmt->queryString;
         self::$lastQueryErrors[] = $array;
-        cafet_throw_error('01-500', 'SQL error: [' . $array[0] . '] ' . $array[2] . ' (with query:' . $array[3] . ')');
         cafet_log('SQL error: [' . $array[0] . '] ' . $array[2] . ' (with query:' . $array[3] . ')');
     }
     

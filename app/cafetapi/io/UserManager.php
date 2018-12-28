@@ -243,7 +243,7 @@ class UserManager extends Updater
     
     public final function setPseudo(int $user_id, string $new_pseudo) : bool
     {
-        return $this->update(self::FIELD_USERNAME, $user_id, $new_pseudo);
+        return $this->updateValue(self::FIELD_USERNAME, $user_id, $new_pseudo);
     }
     
     public final function setEmail(int $user_id, string $new_email) : bool
@@ -252,32 +252,32 @@ class UserManager extends Updater
         {
             throw new EmailFormatException('"' . $new_email . '" is not valid!');
         }
-        return $this->update(self::FIELD_EMAIL, $user_id, $new_email);
+        return $this->updateValue(self::FIELD_EMAIL, $user_id, $new_email);
     }
     
     public final function setFirstname(int $user_id, string $new_firstname) : bool
     {
-        return $this->update(self::FIELD_FIRSTNAME, $user_id, $new_firstname);
+        return $this->updateValue(self::FIELD_FIRSTNAME, $user_id, $new_firstname);
     }
     
     public final function setName(int $user_id, string $new_name) : bool
     {
-        return $this->update(self::FIELD_FAMILYNAME, $user_id, $new_name);
+        return $this->updateValue(self::FIELD_FAMILYNAME, $user_id, $new_name);
     }
     
     public final function setPhone(int $user_id, string $new_phone) : bool
     {
-        return $this->update(self::FIELD_PHONE, $user_id, $new_phone);
+        return $this->updateValue(self::FIELD_PHONE, $user_id, $new_phone);
     }
     
     public final function setGroup(int $user_id, int $group_id) : bool
     {
-        return $this->update(self::FIELD_GROUP_ID, $user_id, $group_id, PDO::PARAM_INT);
+        return $this->updateValue(self::FIELD_GROUP_ID, $user_id, $group_id, PDO::PARAM_INT);
     }
     
     public final function setPassword(int $user_id , string $new_password) : bool
     {
-        return $this->update(self::FIELD_PASSWORD, $user_id, cafet_generate_hashed_pwd($new_password));
+        return $this->updateValue(self::FIELD_PASSWORD, $user_id, cafet_generate_hashed_pwd($new_password));
     }
     
     public final function setPermission(int $user_id, string $permission, bool $value) : bool
@@ -286,7 +286,7 @@ class UserManager extends Updater
         $permissions[$permission] = $value;
         $_permissions = serialize($permissions);
         
-        return $this->update(self::FIELD_PERMISSIONS, $user_id, $_permissions);
+        return $this->updateValue(self::FIELD_PERMISSIONS, $user_id, $_permissions);
     }
     
     public final function unsetPermission(int $user_id, string $permission) : bool
@@ -297,12 +297,12 @@ class UserManager extends Updater
         
         $_permissions = serialize($permissions);
         
-        return $this->update(self::FIELD_PERMISSIONS, $user_id, $_permissions);
+        return $this->updateValue(self::FIELD_PERMISSIONS, $user_id, $_permissions);
     }
     
     public final function clearPermissions(int $user_id) : bool
     {
-        return $this->update(self::FIELD_PERMISSIONS, $user_id, 'a:0:{}');
+        return $this->updateValue(self::FIELD_PERMISSIONS, $user_id, 'a:0:{}');
     }
 }
 
