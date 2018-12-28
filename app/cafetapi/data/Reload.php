@@ -40,7 +40,7 @@ class Reload extends JSONParsable implements Data
      * @param float $amount
      * @param float $balanceAfterTransaction
      * @see Client::getReloads()
-     * @see \cafetapi\io\DataFetcher::getClientReloads()
+     * @see \cafetapi\io\ReloadManager::getClientReloads()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, int $client_id, string $details, Calendar $date, float $amount, float $balanceAfterTransaction)
