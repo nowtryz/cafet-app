@@ -1,9 +1,10 @@
 <?php
 namespace cafetapi\user;
 
+use cafetapi\data\Calendar;
 use cafetapi\data\Data;
 use cafetapi\data\JSONParsable;
-use cafetapi\data\Calendar;
+use cafetapi\exceptions\EmailFormatException;
 
 /**
  *
@@ -139,6 +140,63 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
     public final function getGroup()
     {
         return $this->group;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $pseudo
+     */
+    public function setPseudo(string $pseudo)
+    {
+        $this->pseudo = $pseudo;
+    }
+
+    /**
+     * @param string $firstname
+     */
+    public function setFirstname(string $firstname)
+    {
+        $this->firstname = $firstname;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email)
+    {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new EmailFormatException('"' . $email . '" is not valid!');
+        $this->email = $email;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone(string $phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function setGroup(Group $group)
+    {
+        $this->group = $group;
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 namespace cafetapi\modules\rest\user;
 
-use cafetapi\io\DatabaseConnection;
 use cafetapi\io\UserManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
@@ -134,29 +133,38 @@ class UserNode implements RestNode
                 case 'pseudo':
                     if($value == $user->getPseudo()) break;
                     elseif($updater->getUser($value)) $conflicts[$field] = 'duplicated';
-                    else $updater->setPseudo($user->getId(), strval($value));
+                    else {
+                        $updater->setPseudo($user->getId(), strval($value));
+                        $request->getUser()->setPseudo($value);
+                    }
                     break;
                     
                 case 'email':
                     if($value == $user->getEmail()) break;
                     elseif (!filter_var($value, FILTER_VALIDATE_EMAIL)) $conflicts[$field] = 'not valid';
                     elseif($updater->getUser($value)) $conflicts[$field] = 'duplicated';
-                    else $updater->setEmail($user->getId(), strval($value));
+                    else {
+                        $updater->setEmail($user->getId(), strval($value));
+                        $request->getUser()->setEmail($value);
+                    }
                     break;
                         
                 case 'firstname':
                     if($value == $user->getFirstname()) break;
                     $updater->setFirstname($user->getId(), strval($value));
+                    $request->getUser()->setFirstname($value);
                     break;
                     
                 case 'name':
                     if($value == $user->getName()) break;
                     $updater->setName($user->getId(), strval($value));
+                    $request->getUser()->setName($value);
                     break;
                     
                 case 'phone':
                     if($value == $user->getPhone()) break;
                     $updater->setPhone($user->getId(), strval($value));
+                    $request->getUser()->setPhone($value);
                     break;
                     
                 case 'password':

@@ -106,6 +106,7 @@ class Rest
                 break;
         }
         
+        if ($this->session && $this->user) cafet_set_logged_user($this->user);
         exit();
     }
     
