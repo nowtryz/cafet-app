@@ -4,7 +4,7 @@ if (isset($_GET['session']) && $_GET['session'])
     cafet_init_session(true, $_GET['session']);
 
 // form to show an image
-$products = cafetapi\io\DataFetcher::getInstance()->getProducts(true);
+$products = cafetapi\io\ProductManager::getInstance()->getProducts(true);
 ?>
 <h2>Show product image</h2>
 

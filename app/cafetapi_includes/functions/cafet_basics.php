@@ -8,8 +8,10 @@
 
 use cafetapi\Mail;
 use cafetapi\config\Database;
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ClientManager;
 use cafetapi\io\DatabaseConnection;
+use cafetapi\io\FormulaManager;
+use cafetapi\io\ProductManager;
 use cafetapi\modules\cafet_app\CafetApp;
 use cafetapi\user\Group;
 
@@ -244,7 +246,7 @@ if (! defined('basics_functions_loaded') ) {
     {
         if (headers_sent()) return false;
 
-        $product = DataFetcher::getInstance()->getProduct($product_id);
+        $product = ProductManager::getInstance()->getProduct($product_id);
 
         if (! $product) return false;
 
@@ -259,7 +261,7 @@ if (! defined('basics_functions_loaded') ) {
     {
         if (headers_sent()) return false;
         
-        $formula = DataFetcher::getInstance()->getFormula($formula_id);
+        $formula = FormulaManager::getInstance()->getFormula($formula_id);
 
         if (! $formula) return false;
 
@@ -272,8 +274,7 @@ if (! defined('basics_functions_loaded') ) {
 
     function cafet_send_reload_request(int $client_id)
     {
-        $f = DataFetcher::getInstance();
-        $c = $f->getClient($client_id);
+        $c = ClientManager::getInstance()->getClient($client_id);
         $mail = new Mail('reload_request', $c->getEmail());
         $mail->setVar('surname', $c->getSurname());
         $mail->setVar('name', $c->getFamilyNane());
