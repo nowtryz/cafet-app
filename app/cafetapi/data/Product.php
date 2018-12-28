@@ -1,7 +1,7 @@
 <?php
 namespace cafetapi\data;
 
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ProductManager;
 
 /**
  *
@@ -58,7 +58,7 @@ class Product extends Payable
      */
     public final function getGroup(): ProductGroup
     {
-        return DataFetcher::getInstance()->getProductGroup($this->group);
+        return ProductManager::getInstance()->getProductGroup($this->group);
     }
 
     /**

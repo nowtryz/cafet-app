@@ -1,8 +1,7 @@
 <?php
 namespace cafetapi\data;
 
-use cafetapi;
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ClientManager;
 
 /**
  * The Client object is the wich stores every client information for later use
@@ -51,7 +50,7 @@ class Client extends JSONParsable implements Data
      *            the actual balance of the client
      * @param int $registrationYear
      *            the year of the client's registration
-     * @see \cafetapi\io\DataFetcher::getClient()
+     * @see \cafetapi\io\ClientManager::getClient()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, string $email, string $alias, string $familyNane, string $surname, bool $member, float $balance, int $registrationYear)
@@ -162,7 +161,7 @@ class Client extends JSONParsable implements Data
      */
     public final function getExpenses(): array
     {
-        return DataFetcher::getInstance()->getClientExpenses($this->id);
+        return ClientManager::getInstance()->getClientExpenses($this->id);
     }
 
     /**
@@ -173,7 +172,7 @@ class Client extends JSONParsable implements Data
      */
     public final function getLastExpenses(): array
     {
-        return DataFetcher::getInstance()->getClientLastExpenses($this->id);
+        return ClientManager::getInstance()->getClientLastExpenses($this->id);
     }
 
     /**
@@ -184,7 +183,7 @@ class Client extends JSONParsable implements Data
      */
     public final function getReloads(): array
     {
-        return DataFetcher::getInstance()->getClientReloads($this->id);
+        return ClientManager::getInstance()->getClientReloads($this->id);
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 namespace cafetapi\data;
 
-use cafetapi\io\DataFetcher;
+use cafetapi\io\FormulaManager;
 
 /**
  * A formula with a list of choices
@@ -40,7 +40,7 @@ class Formula extends Payable
      */
     public final function getChoices(): array
     {
-        return DataFetcher::getInstance()->getFormulaChoices($this->id);
+        return FormulaManager::getInstance()->getFormulaChoices($this->id);
     }
 
     public function __toString(): string

@@ -1,7 +1,7 @@
 <?php
 namespace cafetapi\data;
 
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ProductManager;
 
 /**
  * A group of products
@@ -77,7 +77,7 @@ class ProductGroup extends JSONParsable implements Data
      */
     public final function getProducts(): array
     {
-        return DataFetcher::getInstance()->getGroupProducts($this->id);
+        return ProductManager::getInstance()->getGroupProducts($this->id);
     }
 
     /**
@@ -88,7 +88,7 @@ class ProductGroup extends JSONParsable implements Data
      */
     public final function getAllProducts(): array
     {
-        return DataFetcher::getInstance()->getGroupProducts($this->id, true);
+        return ProductManager::getInstance()->getGroupProducts($this->id, true);
     }
 
     public function __toString(): string

@@ -29,7 +29,7 @@ class Choice extends JSONParsable implements Data
      *            the id of the formula
      * @param array $choice
      *            a list of products for this choice
-     * @see \cafetapi\io\DataFetcher::getFormulaChoices()
+     * @see \cafetapi\io\FormulaManager::getFormulaChoices()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, string $name, int $formula_id, array $choice)

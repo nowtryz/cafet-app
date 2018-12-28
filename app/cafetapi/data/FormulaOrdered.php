@@ -23,7 +23,7 @@ class FormulaOrdered extends Ordered implements Data
      *            the quantity of formula
      * @param array $products
      *            an
-     * @see \cafetapi\io\DataUpdater::saveOrder()
+     * @see \cafetapi\io\FormulaManager::saveOrder()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, int $amount, array $products)
