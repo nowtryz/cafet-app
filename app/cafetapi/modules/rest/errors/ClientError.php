@@ -12,10 +12,15 @@ use cafetapi\modules\rest\RestResponse;
 class ClientError
 {
     
-    public static function badRequest(string $reason = '', array $additional_headers = array()) : RestResponse
+    public static function badRequest(string $reason = '', array $datails = array(), array $additional_headers = array()) : RestResponse
     {
         $headers = array_merge($additional_headers, array('Reason' => $reason));
-        return new RestResponse(400, HttpCodes::HTTP_400, cafet_grab_error_infos('02-400', $reason), $headers);
+        $result = $datails ? array(
+            'datails' => $datails
+        ) : array();
+        $result = array_merge($result, cafet_grab_error_infos('02-400', $reason));
+        
+        return new RestResponse(409, HttpCodes::HTTP_409, $result, $headers);
     }
     
     public static function unauthorized(array $additional_headers = array(), $reason = null) : RestResponse

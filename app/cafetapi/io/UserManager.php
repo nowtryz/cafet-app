@@ -166,6 +166,64 @@ class UserManager extends Updater
         return $user;
     }
     
+    public final function getUsers(): array
+    {
+        $statement = $this->connection->prepare('SELECT '
+            . self::FIELD_ID . ' id, '
+            . self::FIELD_USERNAME . ' username, '
+            . self::FIELD_EMAIL . ' mail, '
+            . self::FIELD_PASSWORD . ' hash, '
+            . self::FIELD_FIRSTNAME . ' firstname, '
+            . self::FIELD_FAMILYNAME . ' name, '
+            . self::FIELD_PHONE . ' phone, '
+            . self::FIELD_GROUP_ID . ' group_id, '
+            . self::FIELD_REGISTRATION . ' registration, '
+            . self::FIELD_LAST_SIGNIN . ' last_signin, '
+            . self::FIELD_SIGNIN_COUNT . ' signin_count, '
+            . self::FIELD_PERMISSIONS . ' permissions '
+            . 'FROM ' . self::USERS);
+        
+        $id = $_group = $signin_count = 0;
+        $username = $mail = $hash = $firstname = $name = $phone = '';
+        $_last_signin = $_registration = '2018-01-01 00:00:00';
+        $_permissions = 'a:0:{}';
+        
+        $statement->bindColumn('id', $id, PDO::PARAM_INT);
+        $statement->bindColumn('username', $username, PDO::PARAM_STR);
+        $statement->bindColumn('mail', $mail, PDO::PARAM_STR);
+        $statement->bindColumn('hash', $hash, PDO::PARAM_STR);
+        $statement->bindColumn('firstname', $firstname, PDO::PARAM_STR);
+        $statement->bindColumn('name', $name, PDO::PARAM_STR);
+        $statement->bindColumn('phone', $phone, PDO::PARAM_STR);
+        $statement->bindColumn('group_id', $_group, PDO::PARAM_INT);
+        $statement->bindColumn('last_signin', $_last_signin, PDO::PARAM_STR);
+        $statement->bindColumn('registration', $_registration, PDO::PARAM_STR);
+        $statement->bindColumn('signin_count', $signin_count, PDO::PARAM_INT);
+        $statement->bindColumn('permissions', $_permissions, PDO::PARAM_STR);
+        
+        $statement->execute();
+        $this->check_fetch_errors($statement);
+        
+        $result = array();
+        
+        while ($statement->fetch()) {
+            $last_signin = get_calendar_from_datetime($_last_signin);
+            $registration = get_calendar_from_datetime($_registration);
+            $permissions = @unserialize($_permissions) ?: array();
+            
+            if (isset(Group::GROUPS[$_group])){
+                $group = new Group($_group, Group::GROUPS[$_group]);
+            } else {
+                $group = new Group(0, Group::GUEST);
+            }
+            
+            $result[] = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
+        }
+        
+        $statement->closeCursor();
+        return $result;
+    }
+    
     public final function getPermissions(int $user_id) : array
     {
         $_permissions = 'a:0:{}';
@@ -303,6 +361,27 @@ class UserManager extends Updater
     public final function clearPermissions(int $user_id) : bool
     {
         return $this->updateValue(self::FIELD_PERMISSIONS, $user_id, 'a:0:{}');
+    }
+    
+    /**
+     * Delete a product from the database
+     *
+     * @param int $id
+     * @return bool if the query have correctly been completed
+     * @since API 1.0.0 (2018)
+     */
+    public final function deleteUser(int $id): bool
+    {
+        $this->beginTransaction();
+        
+        $stmt = $this->connection->prepare('DELETE FROM ' . self::USERS . ' WHERE id = :id');
+        $stmt->execute(array(
+            'id' => $id
+        ));
+        $this->checkUpdate($stmt, 'unable to delete the user');
+        
+        $this->commit();
+        return true;
     }
 }
 

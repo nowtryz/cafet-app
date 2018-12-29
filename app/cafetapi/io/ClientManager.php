@@ -63,7 +63,8 @@ class ClientManager extends Updater
         $result = array();
         
         while ($stmt->fetch()) $result[] = new Client($id, $email, $alias, $familyNane, $surname, $member, floatval($balance), $registrationYear);
-            
+        
+        $stmt->closeCursor();
         return $result;
     }
     

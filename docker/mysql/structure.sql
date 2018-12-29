@@ -35,7 +35,6 @@ CREATE TABLE IF NOT EXISTS `cafet_customers` (
   `member` int(11) NOT NULL DEFAULT '0',
   `balance` float(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `cafet_users`(`id`),
   UNIQUE KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 

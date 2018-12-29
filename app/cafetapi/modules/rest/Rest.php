@@ -15,13 +15,25 @@ use SimpleXMLElement;
  */
 class Rest
 {
-    const VERSION_FIELD = 'version';
-    const PATH_FIELD = 'path';
-    const RETURN_TYPE_FIELD = 'return_type';
+    //types
+    const PARAM_INT = 1;
+    const PARAM_SCALAR = 2;
+    const PARAM_STR = 3;
+    const PARAM_BOOL = 4;
+    const PARAM_ANY = 5;
     
-    const API_VERSION = '2.0.0';
-    const DEFAUL_RETURN_TYPE = 'json';
-    const CHARSET = 'UTF-8';
+    //conflicts
+    const CONFLICT_DUPLICATED = 'duplicated';
+    const CONFLICT_NOT_VALID = 'not valid';
+    const CONFLICT_DIFFERENT = 'different';
+    
+    private const VERSION_FIELD = 'version';
+    private const PATH_FIELD = 'path';
+    private const RETURN_TYPE_FIELD = 'return_type';
+    
+    private const API_VERSION = '2.0.0';
+    private const DEFAUL_RETURN_TYPE = 'json';
+    private const CHARSET = 'UTF-8';
     
     private $root_url;
     
@@ -180,15 +192,39 @@ class Rest
         if(!in_array($this->method, $methods)) $this->printResponse(ClientError::methodNotAllowed($this->method, $methods));
     }
     
-    public final function isClientAbleTo(string $permission) : bool
-    {
-        //TODO permission check
-        return true;
-    }
-    
     public final function shiftPath() : ?string
     {
         return array_shift($this->path);
+    }
+    
+    public final function checkBody(array $fields) {
+        if (!$this->getBody()) $this->printResponse(ClientError::badRequest('Empty body'));
+        
+        $missing = array();
+        foreach ($fields as $key => $value) if (!isset($this->body[$key])) $missing[] = $key;
+        if ($missing) $this->printResponse(ClientError::badRequest('Missing fields', array(
+            "missing" => $missing
+        )));
+        unset($missing);
+        
+        $wrong_types = array();
+        foreach ($fields as $key => $value) switch ($value) {
+            case self::PARAM_INT:
+                if (!intval($this->body[$key], 0)) $wrong_types[$key] = 'integer';
+            break;
+            
+            case self::PARAM_SCALAR:
+                if (!is_scalar($this->body[$key])) $wrong_types[$key] = 'float';
+            break;
+            
+            case self::PARAM_BOOL:
+                if (!is_bool($this->body[$key])) $wrong_types[$key] = 'boolean';
+            break;
+        }
+        if ($wrong_types) $this->printResponse(ClientError::badRequest('Missing fields', array(
+            "type_expectation" => $wrong_types
+        )));
+        unset($wrong_types);
     }
 
     /*************

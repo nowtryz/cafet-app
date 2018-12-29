@@ -104,14 +104,13 @@ class UserNode implements RestNode
     
     private static function current(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET', 'PUT', 'PATCH'));
+        $request->allowMethods(array('GET', 'PATCH'));
         $request->needLogin();
         
         switch ($request->getMethod())
         {
             case 'GET' :  return new RestResponse(200, HttpCodes::HTTP_200, $request->getUser()->getProperties());
             case 'PATCH': return self::patchCurrent($request);
-            default: return ClientError::imATeapot();
         }
     }
     
@@ -132,7 +131,7 @@ class UserNode implements RestNode
             {
                 case 'pseudo':
                     if($value == $user->getPseudo()) break;
-                    elseif($updater->getUser($value)) $conflicts[$field] = 'duplicated';
+                    elseif($updater->getUser($value)) $conflicts[$field] = Rest::CONFLICT_DUPLICATED;
                     else {
                         $updater->setPseudo($user->getId(), strval($value));
                         $request->getUser()->setPseudo($value);
@@ -141,8 +140,8 @@ class UserNode implements RestNode
                     
                 case 'email':
                     if($value == $user->getEmail()) break;
-                    elseif (!filter_var($value, FILTER_VALIDATE_EMAIL)) $conflicts[$field] = 'not valid';
-                    elseif($updater->getUser($value)) $conflicts[$field] = 'duplicated';
+                    elseif (!filter_var($value, FILTER_VALIDATE_EMAIL)) $conflicts[$field] = Rest::CONFLICT_NOT_VALID;
+                    elseif($updater->getUser($value)) $conflicts[$field] = Rest::CONFLICT_DUPLICATED;
                     else {
                         $updater->setEmail($user->getId(), strval($value));
                         $request->getUser()->setEmail($value);
