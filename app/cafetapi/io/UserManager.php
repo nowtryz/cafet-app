@@ -40,6 +40,67 @@ class UserManager extends Updater
         return self::$instance;
     }
     
+    /**
+     * Fetch user information for the given username/email
+     *
+     * @param string $mail_or_pseudo
+     *            the mail/pseudo of the user
+     * @return NULL|User A User object that represents the user
+     * @since API 1.0.0 (2018)
+     */
+    //     public function getUser(string $mail_or_pseudo): ?User
+    //     {
+    //         $statement = $this->connection->prepare('SELECT '
+    //             . 'ID id, '
+    //             . 'Pseudo pseudo, '
+    //             . 'MDP hash, '
+    //             . 'SU super_user, '
+    //             . 'admin admin, '
+    //             . 'res_cafet cafet_manager, '
+    //             . 'adm_cafet cafet_admin, '
+    //             . 'Nom name, '
+    //             . 'Prenom firstname, '
+    //             . 'Email mail, '
+    //             . 'Tel phone '
+    //             . 'FROM ' . self::USERS . ' '
+    //             . 'WHERE Pseudo = :param1 '
+    //             . 'OR Email = :param2');
+    
+    //         $id = 0;
+    //         $super_user = $admin = $cafet_manager = $cafet_admin = false;
+    
+    //         $statement->bindColumn('id', $id, PDO::PARAM_INT);
+    //         $statement->bindColumn('super_user', $super_user, PDO::PARAM_BOOL);
+    //         $statement->bindColumn('admin', $admin, PDO::PARAM_BOOL);
+    //         $statement->bindColumn('cafet_manager', $cafet_manager, PDO::PARAM_BOOL);
+    //         $statement->bindColumn('cafet_admin', $cafet_admin, PDO::PARAM_BOOL);
+    
+    //         $statement->execute(array(
+    //             'param1' => $mail_or_pseudo,
+    //             'param2' => $mail_or_pseudo
+    //         ));
+    
+    //         if ($statement->errorCode() != '00000')
+        //             self::registerErrorOccurence($statement);
+    
+        //         $result = $statement->fetch();
+    
+        //         if (! $result)
+            //             return null;
+        
+            //         // support for old website
+            //         if ($super_user) $group = new Group('super user', Group::SUPER_USER);
+            //         elseif ($admin) $group = new Group('administrator', Group::ADMIN);
+            //         elseif ($cafet_admin) $group = new Group('cafet admin', Group::CAFET_ADMIN);
+            //         elseif ($cafet_manager) $group = new Group('cafet manager', Group::CAFET_MANAGER);
+            //         else $group = new Group('consumer', Group::CONSUMER);
+        
+            //         $user = new User($id, $result['pseudo'], $result['firstname'], $result['name'], $result['hash'], $result['mail'], $result['phone'], new Calendar(2018, 1, 1, 0, 0, 0), new Calendar(2018, 1, 1, 0, 0, 1), 0, $group);
+            //         $statement->closeCursor();
+        
+            //         return $user;
+            //     }
+    
     public final function getUser(string $mail_or_pseudo): ?User
     {
         $statement = $this->connection->prepare('SELECT '

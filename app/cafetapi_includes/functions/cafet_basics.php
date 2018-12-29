@@ -14,6 +14,7 @@ use cafetapi\io\FormulaManager;
 use cafetapi\io\ProductManager;
 use cafetapi\modules\cafet_app\CafetApp;
 use cafetapi\user\Group;
+use cafetapi\io\OptionManager;
 
 if (! defined('basics_functions_loaded') ) {
     define('basics_functions_loaded', true);
@@ -199,25 +200,21 @@ if (! defined('basics_functions_loaded') ) {
      * Gives configurations depending on registered properties and default ones
      *
      * @return array configurations
-     * @global $DB
      * @since API 1.0.0 (2018)
      */
     function cafet_get_configurations(): array
     {
         static $conf = array();
-        global $DB;
 
         if (! empty($conf))
             return $conf;
 
         if (! defined("DEFAULT_CONFIGURATIONS"))
             cafet_load_conf_file();
-        if (! isset($DB))
-            $DB = DatabaseConnection::getDatabaseConnectionInstance();
 
         foreach (DEFAULT_CONFIGURATIONS as $key => $value)
             $conf[$key] = $value;
-        foreach ($DB->getConfigurations() as $key => $value)
+        foreach (OptionManager::getConfigurations() as $key => $value)
             $conf[$key] = $value;
 
         return $conf;
