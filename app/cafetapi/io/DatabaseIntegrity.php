@@ -10,7 +10,7 @@ class DatabaseIntegrity extends DatabaseConnection
      */
     public static final function checkTables()
     {
-        $stmt = self::$globalConnection->query('SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = "BASE TABLE" AND TABLE_SCHEMA = "' . parent::$database . '"');
+        $stmt = self::$globalConnection->query('SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = "BASE TABLE" AND TABLE_SCHEMA = "' . self::$database . '"');
         $tables = array();
         while ($row = $stmt->fetch()) $tables[] = $row[0];
         $stmt->closeCursor();

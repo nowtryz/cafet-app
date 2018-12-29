@@ -4,8 +4,6 @@ namespace cafetapi\modules\rest;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\User;
-use Error;
-use Exception;
 use SimpleXMLElement;
 
 /**
@@ -80,13 +78,6 @@ class Rest
         }
         
         $this->user = cafet_get_logged_user();
-
-        try {
-            $this->printResponse(RootNode::handle($this));
-        } catch (Error | Exception $e) {
-            cafet_log($e);
-            $this->printResponse(ServerError::internalServerError());
-        }
     }
     
     private function registerContentType(string $contentType) {
@@ -97,7 +88,7 @@ class Rest
      ** Rest printers **
      *******************/
     
-    private function printResponse(RestResponse $response) {
+    public function printResponse(RestResponse $response) {
         header('HTTP/1.1 ' . $response->getCode() . ' ' . $response->getMessage());
         foreach ($response->getRemoveHeader() as $header) header_remove($header);
         foreach($response->getHeaders() as $name => $content) header("$name: $content");
