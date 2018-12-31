@@ -57,7 +57,7 @@ class FormulasNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $formulas = array();
         foreach (FormulaManager::getInstance()->getFormulas(isset($_REQUEST['hidden'])) as $formula){
@@ -71,7 +71,7 @@ class FormulasNode implements RestNode
     private static function new(Rest $request) : RestResponse
     {
         $request->allowMethods(array('POST'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         //body checks
         if (!$request->getBody())                      return ClientError::badRequest('Empty body');
@@ -126,7 +126,7 @@ class FormulasNode implements RestNode
     
     private static function getFormula(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $formula = FormulaManager::getInstance()->getFormula($id);
         
@@ -139,7 +139,7 @@ class FormulasNode implements RestNode
     
     private static function putFormula(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         $formula = FormulaManager::getInstance()->getFormula($id);
         if (!$formula) return ClientError::resourceNotFound('Unknown product with id ' . $id);
@@ -184,7 +184,7 @@ class FormulasNode implements RestNode
     
     private static function patchFormula(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         if (!FormulaManager::getInstance()->getFormula($id)) return ClientError::resourceNotFound('Unknown formula with id ' . $id);
         
@@ -241,7 +241,7 @@ class FormulasNode implements RestNode
     
     private static function deleteFormula(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         if (!FormulaManager::getInstance()->getFormula($id)) return ClientError::resourceNotFound('Unknown formula with id ' . $id);
         
@@ -281,7 +281,7 @@ class FormulasNode implements RestNode
     private static function listChoices(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $choices = array();
         
@@ -301,7 +301,7 @@ class FormulasNode implements RestNode
     private static function addChoice(Rest $request, int $formula_id) : RestResponse
     {
         $request->allowMethods(array('POST'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         //body checks
         if (!$request->getBody())                return ClientError::badRequest('Empty body');
@@ -329,7 +329,7 @@ class FormulasNode implements RestNode
     
     private static function getChoice(Rest $request, int $formula_id, int $choice_id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
@@ -342,7 +342,7 @@ class FormulasNode implements RestNode
     
     private static function putChoice(Rest $request, int $formula_id, int $choice_id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
@@ -400,7 +400,7 @@ class FormulasNode implements RestNode
     
     private static function patchChoice(Rest $request, int $formula_id, int $choice_id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         $updater = FormulaManager::getInstance();
         $updater->createTransaction();
@@ -454,7 +454,7 @@ class FormulasNode implements RestNode
     
     private static function deleteChoice(Rest $request, int $formula_id, int $choice_id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         if (FormulaManager::getInstance()->deleteFormulaChoice($choice_id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
     }

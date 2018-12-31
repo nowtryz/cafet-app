@@ -38,12 +38,12 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
         Perm::CAFET_ADMIN_STATS => true,
         Perm::CAFET_ADMIN_GET => true,
         Perm::CAFET_PURCHASE => true,
-        Perm::CAFET_GET_CLIENTS_ME => true
+        Perm::CAFET_ME => true
     );
 
     const CONSUMER = array(
         Perm::CAFET_PURCHASE => true,
-        Perm::CAFET_GET_CLIENTS_ME => true
+        Perm::CAFET_ME => true
     );
     
     const GROUPS = array(

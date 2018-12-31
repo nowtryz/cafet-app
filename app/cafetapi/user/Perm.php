@@ -29,7 +29,10 @@ class Perm
     // CAFET
     const CAFET = 'd';
     
-    const CAFET_GET_CLIENTS_ME = 'd_a_a_a';
+    const CAFET_ME = 'd_a';
+    const CAFET_ME_CLIENT = 'd_a_a';
+    const CAFET_ME_RELOADS = 'd_a_b';
+    const CAFET_ME_EXPENSES = 'd_a_c';
     const CAFET_PURCHASE = 'd_b';
     const CAFET_ADMIN = 'd_c';
     const CAFET_ADMIN_PANELACCESS = 'd_c_a';

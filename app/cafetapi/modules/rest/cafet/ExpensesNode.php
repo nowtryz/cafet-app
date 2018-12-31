@@ -50,7 +50,7 @@ class ExpensesNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $expenses = array();
         foreach (ExpenseManager::getInstance()->getExpenses() as $expense) $expenses[] = $expense->getProperties();
@@ -60,24 +60,35 @@ class ExpensesNode implements RestNode
     private static function expense(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
         
-        $reload = ExpenseManager::getInstance()->getExpense($id);
-        if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
+        $expense = ExpenseManager::getInstance()->getExpense($id);
+        
+        if($request->getUser() && $request->getUser()->getId() == $expense->getClient())
+        {
+            $request->needPermissions(Perm::CAFET_ME_EXPENSES);
+        }
+        else $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
+        
+        if($expense) return new RestResponse('200', HttpCodes::HTTP_200, $expense->getProperties());
         else return ClientError::resourceNotFound('Unknown expense with id ' . $id);
     }
     
     private static function expenseDetails(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
+        
+        $expense = ExpenseManager::getInstance()->getExpense($id);
+        if (!$expense) return ClientError::resourceNotFound('Unknown expense with id ' . $id);
+        
+        if($request->getUser() && $request->getUser()->getId() == $expense->getClient())
+        {
+            $request->needPermissions(Perm::CAFET_ME_EXPENSES);
+        }
+        else $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);;
         
         $details = array();
         foreach (ExpenseManager::getInstance()->getExpenseDetails($id) as $detail) $details[] = $detail->getProperties();
-        
-        if($details) return new RestResponse('200', HttpCodes::HTTP_200, $details);
-        elseif (ExpenseManager::getInstance()->getExpense($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
-        else return ClientError::resourceNotFound('Unknown expense with id ' . $id);
+        return new RestResponse('200', HttpCodes::HTTP_200, $details);
     }
 }
 

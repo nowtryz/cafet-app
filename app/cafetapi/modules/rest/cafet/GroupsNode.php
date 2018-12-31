@@ -52,7 +52,7 @@ class GroupsNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $groups = array();
         foreach (ProductManager::getInstance()->getProductGroups() as $group) $groups[] = $group->getProperties();
@@ -62,7 +62,7 @@ class GroupsNode implements RestNode
     private static function new(Rest $request) : RestResponse
     {
         $request->allowMethods(array('POST'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         //body checks
         if(!$request->getBody())                return ClientError::badRequest('Empty body');
@@ -93,7 +93,7 @@ class GroupsNode implements RestNode
     private static function groupProducts(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $products = array();
         foreach (ProductManager::getInstance()->getGroupProducts($id, isset($_REQUEST['hidden'])) as $product)
@@ -110,7 +110,7 @@ class GroupsNode implements RestNode
     
     private static function getGroup(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $group = ProductManager::getInstance()->getProductGroup($id);
         if($group) return new RestResponse('200', HttpCodes::HTTP_200, $group->getProperties());
@@ -119,7 +119,7 @@ class GroupsNode implements RestNode
     
     private static function putGroup(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         $group = ProductManager::getInstance()->getProductGroup($id);
         if (!$group) return ClientError::resourceNotFound('Unknown group with id ' . $id);
@@ -159,7 +159,7 @@ class GroupsNode implements RestNode
     
     private static function patchGroup(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         if (!ProductManager::getInstance()->getProductGroup($id)) return ClientError::resourceNotFound('Unknown group with id ' . $id);
         
@@ -189,7 +189,7 @@ class GroupsNode implements RestNode
     
     private static function deleteGroup(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         if (!ProductManager::getInstance()->getProductGroup($id)) return ClientError::resourceNotFound('Unknown group with id ' . $id);
         

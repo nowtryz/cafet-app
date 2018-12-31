@@ -12,6 +12,8 @@ use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\user\Perm;
 use cafetapi\exceptions\CafetAPIException;
 use cafetapi\io\ClientManager;
+use cafetapi\io\ReloadManager;
+use cafetapi\io\ExpenseManager;
 
 /**
  *
@@ -65,7 +67,7 @@ class ClientsNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_CLIENTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
         
         $clients = array();
         foreach (ClientManager::getInstance()->getClients() as $client) $clients[] = $client->getProperties();
@@ -75,7 +77,7 @@ class ClientsNode implements RestNode
     private static function search(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_CLIENTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
         
         $clients = array();
         foreach (ClientManager::getInstance()->searchClient(urldecode($request->shiftPath())) as $client) $clients[] = $client->getProperties();
@@ -87,7 +89,9 @@ class ClientsNode implements RestNode
     private static function client(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_CLIENTS));
+        
+        if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_CLIENT);
+        else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
         
         $client = ClientManager::getInstance()->getClient($id);
         if($client) return new RestResponse('200', HttpCodes::HTTP_200, $client->getProperties());
@@ -97,10 +101,12 @@ class ClientsNode implements RestNode
     private static function clientReloads(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_RELOADS));
+        
+        if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_RELOADS);
+        else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_RELOADS);
         
         $reloads = array();
-        foreach (ClientManager::getInstance()->getClientReloads($id) as $reload) $reloads[] = $reload->getProperties();
+        foreach (ReloadManager::getInstance()->getClientReloads($id) as $reload) $reloads[] = $reload->getProperties();
         if($reloads || ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $reloads);
         elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
@@ -109,10 +115,12 @@ class ClientsNode implements RestNode
     private static function clientExpenses(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
+        
+        if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_EXPENSES);
+        else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $expenses = array();
-        foreach (ClientManager::getInstance()->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
+        foreach (ExpenseManager::getInstance()->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
         if($expenses || ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
         elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
@@ -121,10 +129,12 @@ class ClientsNode implements RestNode
     private static function clientLastExpenses(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
+        
+        if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_EXPENSES);
+        else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $expenses = array();
-        foreach (ClientManager::getInstance()->getClientLastExpenses($id) as $expense) $expenses[] = $expense->getProperties();
+        foreach (ExpenseManager::getInstance()->getClientLastExpenses($id) as $expense) $expenses[] = $expense->getProperties();
         
         if($expenses) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
         elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
@@ -134,7 +144,7 @@ class ClientsNode implements RestNode
     private static function clientOrder(Rest $request, int $client_id) : RestResponse
     {
         $request->allowMethods(array('POST'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_ORDER));
+        $request->needPermissions(Perm::CAFET_ADMIN_ORDER);
 
         //body checks
         if (!$request->getBody()) return ClientError::badRequest('Empty body');

@@ -51,7 +51,7 @@ class ProductsNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $products = array();
         foreach (ProductManager::getInstance()->getProducts(isset($_REQUEST['hidden'])) as $product){
@@ -65,7 +65,7 @@ class ProductsNode implements RestNode
     private static function new(Rest $request) : RestResponse
     {
         $request->allowMethods(array('POST'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         //body checks
         if (!$request->getBody())                      return ClientError::badRequest('Empty body');
@@ -123,7 +123,7 @@ class ProductsNode implements RestNode
     private static function productReplenishments(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         return ClientError::imATeapot();
     }
@@ -131,7 +131,7 @@ class ProductsNode implements RestNode
     
     private static function getProduct(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $product = ProductManager::getInstance()->getProduct($id);
         
@@ -144,7 +144,7 @@ class ProductsNode implements RestNode
     
     private static function putProduct(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         $product = ProductManager::getInstance()->getProduct($id);
         if (!$product) return ClientError::resourceNotFound('Unknown product with id ' . $id);
@@ -194,7 +194,7 @@ class ProductsNode implements RestNode
     
     private static function patchProduct(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         if (!ProductManager::getInstance()->getProduct($id)) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
@@ -261,7 +261,7 @@ class ProductsNode implements RestNode
     
     private static function deleteProduct(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_PRODUCTS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         if (!ProductManager::getInstance()->getProduct($id)) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         

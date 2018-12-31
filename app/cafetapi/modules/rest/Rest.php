@@ -150,10 +150,10 @@ class Rest
      ***************/
     
     /**
-     * Set wich permission to check, print a 403 error if one of the given permissions is not granted  to the client
+     * Set wich permissions to check, print a 403 error if one of the given permissions is not granted to the client
      * @param array $permission
      */
-    public final function needPermissions(array $permissions)
+    public final function needPermissions(string... $permissions)
     {
         if ($this->user) {
             foreach ($permissions as $permission) if (!$this->user->hasPermission($permission)) {

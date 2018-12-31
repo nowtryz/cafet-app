@@ -47,7 +47,7 @@ class FormulasBoughtNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $formulasBought = array();
         foreach (ExpenseManager::getInstance()->getFormulasBought() as $formulaBought) $formulasBought[] = $formulaBought->getProperties();
@@ -57,7 +57,7 @@ class FormulasBoughtNode implements RestNode
     private static function formulaBought(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $formulaBought = ExpenseManager::getInstance()->getFormulaBought($id);
         if($formulaBought) return new RestResponse('200', HttpCodes::HTTP_200, $formulaBought->getProperties());
@@ -67,7 +67,7 @@ class FormulasBoughtNode implements RestNode
     private static function products(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_EXPENSES));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $products = array();
         foreach (ExpenseManager::getInstance()->getFormulaBoughtProducts($id) as $product) $products[] = $product->getProperties();

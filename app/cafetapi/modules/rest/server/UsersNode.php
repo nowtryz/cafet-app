@@ -44,7 +44,7 @@ class UsersNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::SITE_GET_USERS));
+        $request->needPermissions(Perm::SITE_GET_USERS);
         
         $users = array();
         foreach (UserManager::getInstance()->getUsers() as $user) $users[] = $user->getProperties();
@@ -70,7 +70,7 @@ class UsersNode implements RestNode
     
     private static function get(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::SITE_GET_USERS));
+        $request->needPermissions(Perm::SITE_GET_USERS);
         $user = UserManager::getInstance()->getUserById($id);
         if (!$user) return ClientError::resourceNotFound('Unknown user with id ' . $id);
         return new RestResponse('200', HttpCodes::HTTP_200, $user->getProperties());
@@ -78,7 +78,7 @@ class UsersNode implements RestNode
     
     private static function put(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::SITE_MANAGE_USERS));
+        $request->needPermissions(Perm::SITE_MANAGE_USERS);
         
         $user = UserManager::getInstance()->getUserById($id);
         if (!$user) return ClientError::resourceNotFound('Unknown user with id ' . $id);
@@ -216,7 +216,7 @@ class UsersNode implements RestNode
     
     private static function delete(Rest $request, int $id) : RestResponse
     {
-        $request->needPermissions(array(Perm::SITE_MANAGE_USERS));
+        $request->needPermissions(Perm::SITE_MANAGE_USERS);
         
         if (!UserManager::getInstance()->getUserById($id)) return ClientError::resourceNotFound('Unknown user with id ' . $id);
         

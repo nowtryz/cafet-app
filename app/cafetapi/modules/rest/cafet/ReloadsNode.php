@@ -41,7 +41,7 @@ class ReloadsNode implements RestNode
     private static function list(Rest $request) : RestResponse
     {
         $request->allowMethods( array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_RELOADS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_RELOADS);
         
         $reloads = array();
         foreach (ReloadManager::getInstance()->getReloads() as $reload) $reloads[] = $reload->getProperties();
@@ -51,7 +51,7 @@ class ReloadsNode implements RestNode
     private static function new(Rest $request) : RestResponse
     {
         $request->allowMethods( array('POST'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_RELOAD));
+        $request->needPermissions(Perm::CAFET_ADMIN_RELOAD);
         
         //body checks
         if(!$request->getBody())                         return ClientError::badRequest('Empty body');
@@ -70,10 +70,16 @@ class ReloadsNode implements RestNode
     
     private static function reload(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods( array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_RELOADS));
+        $request->allowMethods(array('GET'));
         
         $reload = ReloadManager::getInstance()->getReload($id);
+        
+        if($request->getUser() && $request->getUser()->getId() == $reload->getClient())
+        {
+            $request->needPermissions(Perm::CAFET_ME_RELOADS);
+        }
+        else $request->needPermissions(Perm::CAFET_ADMIN_GET_RELOADS);
+        
         if($reload) return new RestResponse('200', HttpCodes::HTTP_200, $reload->getProperties());
         else return ClientError::resourceNotFound('Unknown reload with id ' . $id);
     }

@@ -49,7 +49,7 @@ class ChoicesNode implements RestNode
     private static function listChoices(Rest $request) : RestResponse
     {
         $request->allowMethods(array('GET'));
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $choices = array();
         
@@ -66,7 +66,7 @@ class ChoicesNode implements RestNode
     
     private static function getChoice(Rest $request, int $choice_id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_GET_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
@@ -79,7 +79,7 @@ class ChoicesNode implements RestNode
     
     private static function putChoice(Rest $request, int $choice_id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
@@ -137,7 +137,7 @@ class ChoicesNode implements RestNode
     
     private static function patchChoice(Rest $request, int $choice_id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         $updater = FormulaManager::getInstance();
         $updater->createTransaction();
@@ -191,7 +191,7 @@ class ChoicesNode implements RestNode
     
     private static function deleteChoice(Rest $request, int $choice_id) : RestResponse
     {
-        $request->needPermissions(array(Perm::CAFET_ADMIN_MANAGE_FORMULAS));
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         if (FormulaManager::getInstance()->deleteFormulaChoice($choice_id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
     }
