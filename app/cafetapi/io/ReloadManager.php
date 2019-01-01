@@ -12,6 +12,12 @@ use PDO;
  */
 class ReloadManager extends Updater
 {
+    const FIELD_USER_ID = 'user_id';
+    const FIELD_AMOUNT = 'amount';
+    const FIELD_USER_BALANCE = 'user_balance';
+    const FIELD_DETAILS = 'details';
+    const FIELD_DATE= 'date';
+    
     private static $instance;
     
     /**

@@ -180,7 +180,7 @@ class ClientsNode implements RestNode
         
         try {
             // TODO retrun the id of the expense
-            ClientManager::getInstance()->saveOrder($client_id, $order);
+            ExpenseManager::getInstance()->saveOrder($client_id, $order);
         } catch (NotEnoughtMoneyException $e) {
             return ClientError::conflict($e->getMessage());
         } catch (CafetAPIException $e) {

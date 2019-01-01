@@ -101,6 +101,19 @@ class UserManager extends Updater
             //         return $user;
             //     }
     
+    public final function count() : int
+    {
+        $count = 0;
+        $statement = $this->connection->prepare("SELECT COUNT(*) count FROM " . self::USERS);
+        $statement->bindColumn('count', $count, PDO::PARAM_INT);
+        $statement->execute();
+        
+        $this->check_fetch_errors($statement);
+        
+        $statement->fetch();
+        return $count;
+    }
+        
     public final function getUser(string $mail_or_pseudo): ?User
     {
         $statement = $this->connection->prepare('SELECT '

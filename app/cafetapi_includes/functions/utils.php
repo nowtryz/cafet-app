@@ -172,3 +172,13 @@ function get_calendar_from_datetime(string $datetime) : Calendar
     
     return new Calendar($year, $month, $day, $hour, $mins, $secs);
 }
+
+function storage_info(&$used, &$total)
+{
+    $_total = disk_total_space('.') / (1024**3);
+    $_free = disk_free_space('.') / (1024**3);
+    $_used = $_total - $_free;
+    
+    $used = round($_used, 2);
+    $total = round($_total, 2);
+}

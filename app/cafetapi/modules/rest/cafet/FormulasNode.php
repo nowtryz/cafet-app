@@ -9,6 +9,7 @@ use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
 use cafetapi\io\FormulaManager;
+use cafetapi\io\ProductManager;
 
 /**
  *
@@ -256,12 +257,11 @@ class FormulasNode implements RestNode
     
     private static function choices(Rest $request, int $formula_id) : RestResponse
     {
-        $request->allowMethods(array('GET','PUT','PATCH','DELETE'));
-        
         if (!FormulaManager::getInstance()->getFormula($formula_id)) return ClientError::resourceNotFound('Unknown formula with id ' . $formula_id);
         $dir = $request->shiftPath();
         
         if (intval($dir, 0)) {
+            $request->allowMethods(array('GET','PUT','PATCH','DELETE'));
             $choice_id = intval($dir, 0);
             if(!in_array($choice_id, FormulaManager::getInstance()->getFormulaChoicesIDs($formula_id))) return ClientError::resourceNotFound('Unknown choice with id ' . $choice_id . ' for the formula ' . $formula_id);
             
@@ -417,7 +417,7 @@ class FormulasNode implements RestNode
                     
                     foreach ($value as $product)
                     {
-                        if (!FormulaManager::getInstance()->getProduct(intval($product, 0)))
+                        if (!ProductManager::getInstance()->getProduct(intval($product, 0)))
                         {
                             $updater->cancelTransaction();
                             return ClientError::conflict('product ' . intval($product, 0) . ' does not exist');
