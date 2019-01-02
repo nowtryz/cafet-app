@@ -1,7 +1,7 @@
 image: alpine
 
 stages:
-  - compress
+  - build
   - deploy
 
 variables:
@@ -12,7 +12,7 @@ cache:
   key: "$CI_COMMIT_REF_SLUG"
   paths:
     # Actual build
-    - ./*.tar.gz
+    - ./doc
 
 # Linux docker container runner
 .linux-docker-runner-template: &linux-docker-runner
@@ -20,37 +20,30 @@ cache:
     - linux
     - docker
 
+## ##
+## Build
+## ##
 
-compress:
-  <<: *linux-docker-runner
-  stage: compress
+documentation:
+  image: swaggerapi/swagger-codegen-cli
+  stage: build
   script:
-    # Compose archive folder
-    - mkdir .build
-    - chmod -R 755 .build/
-    - cp -r app/* .build/
-    - cp README.md .build/
-    # Compress folder
-    - cd .build
-    - tar -czvf ${TAR_NAME} ./*
-    - cd ..
-    - cp .build/${TAR_NAME} .
-    # Remove archive folder
-    - rm -r .build
+    - generate -i http://petstore.swagger.io/v2/swagger.json -l html -o ./doc
+    - ls doc/ > doc/ls.txt
 
+## ##
+## Deploy
+## ##
 
 # Artifact publish templates
 .publish-artifact-template: &publish-artifact
     name: application
     paths:
-      - ./*.tar.gz
       - app/
 .publish-template: &publish
   <<: *linux-docker-runner
   stage: deploy
   script: date
-  dependencies:
-    - compress
 
 # Artifact publish
 non tag application:
@@ -94,3 +87,15 @@ database structure:
   only:
     - tags
   artifacts: *db-struct-artifact
+
+
+pages:
+  <<: *linux-docker-runner
+  stage: deploy
+  dependencies:
+    - documentation
+  script: mv doc public
+  artifacts:
+    paths:
+      - public
+    expire_in: 20 mins
