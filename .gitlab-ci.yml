@@ -13,6 +13,8 @@ cache:
   paths:
     # Actual build
     - ./doc
+    # Node JS
+    - ./node_modules
 
 # Linux docker container runner
 .linux-docker-runner-template: &linux-docker-runner
@@ -26,7 +28,7 @@ cache:
 
 documentation:
   <<: *linux-docker-runner
-  image: 
+  image: node
   stage: build
   script:
     - npm install
