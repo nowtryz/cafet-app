@@ -31,7 +31,7 @@ documentation:
     entrypoint: [""]
   stage: build
   script:
-    - java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate -i http://petstore.swagger.io/v2/swagger.json -l html2 -o doc
+    - java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate -i http://petstore.swagger.io/v2/swagger.json -l dynamic-html -o doc
 
 ## ##
 ## Deploy
@@ -96,7 +96,7 @@ pages:
   stage: deploy
   dependencies:
     - documentation
-  script: mv doc public
+  script: mv doc/docs public
   artifacts:
     paths:
       - public
