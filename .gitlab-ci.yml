@@ -26,11 +26,12 @@ cache:
 
 documentation:
   <<: *linux-docker-runner
-  image: swaggerapi/swagger-codegen-cli
+  image:
+    name: swaggerapi/swagger-codegen-cli
+    entrypoint: [""]
   stage: build
   script:
-    - generate -i http://petstore.swagger.io/v2/swagger.json -l html -o ./doc
-    - ls doc/ > doc/ls.txt
+    - java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate -i http://petstore.swagger.io/v2/swagger.json -l html -o ./doc
 
 ## ##
 ## Deploy
