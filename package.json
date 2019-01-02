@@ -1,0 +1,18 @@
+{
+  "name": "cafet-api-php",
+  "version": "1.0.0",
+  "description": "Both REST API for http connections and PHP librairy. Manage Interactions between client applications and database",
+  "private": true,
+  "scripts": {
+    "api:doc":"bootprint openapi http://petstore.swagger.io/v2/swagger.json doc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.nowtryz.net:cafet-app/php-api-server.git"
+  },
+  "author": "Nowtryz",
+  "devDependencies": {
+    "bootprint": "^1.0.2",
+    "bootprint-openapi": "^1.1.0"
+  }
+}

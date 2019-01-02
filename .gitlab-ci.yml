@@ -26,12 +26,11 @@ cache:
 
 documentation:
   <<: *linux-docker-runner
-  image:
-    name: swaggerapi/swagger-codegen-cli
-    entrypoint: [""]
+  image: 
   stage: build
   script:
-    - java -jar /opt/swagger-codegen-cli/swagger-codegen-cli.jar generate -i http://petstore.swagger.io/v2/swagger.json -l dynamic-html -o doc
+    - npm install
+    - npm run api:doc
 
 ## ##
 ## Deploy
@@ -96,7 +95,7 @@ pages:
   stage: deploy
   dependencies:
     - documentation
-  script: mv doc/docs public
+  script: mv doc public
   artifacts:
     paths:
       - public
