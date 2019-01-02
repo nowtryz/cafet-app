@@ -25,6 +25,7 @@ cache:
 ## ##
 
 documentation:
+  <<: *linux-docker-runner
   image: swaggerapi/swagger-codegen-cli
   stage: build
   script:
