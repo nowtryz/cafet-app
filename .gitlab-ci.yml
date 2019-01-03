@@ -33,12 +33,12 @@ documentation:
     entrypoint: [""]
   stage: build
   script:
-    - |
-    java -jar /opt/openapi-generator/modules/openapi-generator-cli/target/openapi-generator-cli.jar
-    generate
-    -i openapi.yml
-    -g html
-    -o doc
+    - >
+      java -jar /opt/openapi-generator/modules/openapi-generator-cli/target/openapi-generator-cli.jar
+      generate
+      -i openapi.yml
+      -g html
+      -o doc
 
 ## ##
 ## Deploy
