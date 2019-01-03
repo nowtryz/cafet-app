@@ -122,7 +122,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Client"
-  /cafet/clients/%{clientId}/reloads:
+  /cafet/clients/{clientId}/reloads:
     get:
       tags:
         - "cafet"
@@ -144,7 +144,7 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Reload"
-  /cafet/clients/%{clientId}/expenses:
+  /cafet/clients/{clientId}/expenses:
     get:
       tags:
         - "cafet"
