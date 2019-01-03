@@ -33,6 +33,7 @@ documentation:
   script:
     - npm install
     - npm run api:doc
+    - cp openapi.yml doc/
 
 ## ##
 ## Deploy
