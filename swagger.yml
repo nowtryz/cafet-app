@@ -1,0 +1,302 @@
+openapi: 3.0.0
+info:
+  title: "PHP API Server"
+  description: "The api enables you to interact with the data saved on the server"
+  version: "1.0.0"
+servers:
+  - description: "development server"
+    url: "http://localhost/api/v1"
+
+x-shemas:
+  error: &error
+    type: "object"
+    properties:
+      error_code:
+        type: "string"
+        description: "The code of the error"
+        enum:
+          - "01-001"
+          - "01-002"
+          - "01-003"
+          - "01-500"
+          - "01-501"
+          - "01-502"
+          - "01-503"
+          - "01-504"
+          - "01-505"
+          - "02-001"
+          - "02-002"
+          - "02-003"
+          - "02-400"
+          - "02-401"
+          - "02-403"
+          - "02-404"
+          - "02-405"
+          - "02-408"
+          - "02-409"
+          - "03-001"
+          - "03-002"
+          - "03-003"
+          - "03-004"
+          - "03-005"
+          - "03-006"
+          - "03-007"
+          - "03-009"
+          - "04-001"
+          - "04-002"
+          - "04-003"
+      error_type:
+        type: "string"
+        description: "Category of the error"
+        enum:
+          - "server exception"
+          - "user exception"
+          - "message exception"
+          - "application exception"
+      error_message:
+        type: "string"
+        descrption: "Detailed message corresponding to the error code"
+      additional_message:
+        type: "string"
+        descrption: "An additionnal message explaining the error that occured"
+    
+      
+
+paths:
+  /cafet/clients:
+    get:
+      tags:
+        - "cafet"
+      summary: "Return a list of clients"
+      responses:
+        "200":
+          description: "A list of client objects"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Client"
+        "403":
+          description: "The ressource cannot be found due to wrong id or malformed URI"
+  /cafet/clients/search/{search}:
+    get:
+      tags:
+        - "cafet"
+      summary: "Return a list of clients matching the search"
+      parameters:
+        - name: "search"
+          in: "path"
+          required: true
+          description: "The pathern of the search"
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "A list of client objects"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Client"
+        "403":
+          description: "The ressource cannot be found due to wrong id or malformed URI"
+  /cafet/clients/{clientId}:
+    get:
+      tags:
+        - "cafet"
+      summary: "Returns a client by id"
+      parameters:
+        - name: "clientId"
+          in: "path"
+          required: true
+          description: "The id of the client wanted"
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "The user"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+  /cafet/clients/%{clientId}/reloads:
+    get:
+      tags:
+        - "cafet"
+      summary: "Returns the reloads of a specific client"
+      parameters:
+        - name: "clientId"
+          in: "path"
+          required: true
+          description: "The id of the client wanted"
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "The user"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Reload"
+  /cafet/clients/%{clientId}/expenses:
+    get:
+      tags:
+        - "cafet"
+      summary: "Returns the expenses of a specific client"
+      parameters:
+        - name: "clientId"
+          in: "path"
+          required: true
+          description: "The id of the client wanted"
+          schema:
+            type: "integer"
+            format: "int64"
+      responses:
+        "200":
+          description: "The user"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Expenses"
+
+components:
+  securitySchemes:
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    Client: 
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          example: "Client"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 4
+        email:
+          type: "string"
+          example: "scientist10@no.dom"
+        alias:
+          type: "string"
+          example: "darwin"
+        familyNane:
+          type: "string"
+          example: "Darwin"
+        surname:
+          type: "string"
+          example: "Charles"
+        member:
+          type: "boolean"
+          example: false
+        balance:
+          type: "number"
+          example: 20.0
+        registrationYear:
+          type: "integer"
+          format: "int64"
+          example: 2019
+    Reload:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          example: "Reload"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 54
+        client_id:
+          type: "integer"
+          format: "int64"
+          example: 4
+        details:
+          type: "string"
+          example: "by Nowtryz: user 1"
+        date:
+          $ref: "#/components/schemas/Calendar"
+        amount:
+          type: "number"
+          format: "float"
+          example: 5.6
+        balanceAfterTransaction:
+          type: "number"
+          format: "float"
+          example: 7.4
+    Expenses:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          example: "Expense"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 54
+        client:
+          type: "integer"
+          format: "int64"
+          example: 4
+        date:
+          $ref: "#/components/schemas/Calendar"
+        total:
+          type: "number"
+          format: "float"
+          example: 3.6
+        balanceAfterTransaction:
+          type: "number"
+          format: "float"
+          example: 7.4
+    Calendar:
+      type: "object"
+      properties:
+        type:
+          type: "string"
+          example: "Calendar"
+        year:
+          type: "integer"
+          format: "int32"
+          example: "2019"
+        month:
+          type: "integer"
+          format: "int32"
+          example: "1"
+        day:
+          type: "integer"
+          format: "int32"
+          example: "1"
+        hour:
+          type: "integer"
+          format: "int32"
+          example: "19"
+        mins:
+          type: "integer"
+          format: "int32"
+          example: "12"
+        secs:
+          type: "integer"
+          format: "int32"
+          example: "13"
+      
+
+security:
+  - BasicAuth: []
+
+tags:
+  - name: "cafet"
+    description: "Cafet operations"
+  - name: "user"
+    description: "Current loged user operations"
+  - name: "server"
+    description: "server operations"
+  - name: "stats"
+    description: "statistics operations"

@@ -33,8 +33,7 @@
 		"005": "Invalid arguments for the given action",
 		"006": "Missing arguments for the given action",
 		"007": "Too many arguments for the given action",
-		"008": "Is this action correct ?",
-		"401": "Synthax error in the json query"
+		"008": "Is this action correct ?"
 	},
 	"04": {
 		"def": "application exception",
