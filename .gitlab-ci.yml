@@ -28,11 +28,17 @@ cache:
 
 documentation:
   <<: *linux-docker-runner
-  image: node
+  image:
+    name: openapitools/openapi-generator-cli
+    entrypoint: [""]
   stage: build
   script:
-    - npm install
-    - npm run api:doc
+    - |
+    java -jar /opt/openapi-generator/modules/openapi-generator-cli/target/openapi-generator-cli.jar
+    generate
+    -i openapi.yml
+    -g html
+    -o doc
 
 ## ##
 ## Deploy
