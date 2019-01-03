@@ -28,7 +28,7 @@ cache:
 
 documentation:
   <<: *linux-docker-runner
-  image: noded
+  image: node
   stage: build
   script:
     - npm install
