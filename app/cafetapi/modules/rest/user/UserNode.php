@@ -104,7 +104,7 @@ class UserNode implements RestNode
     
     private static function current(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET', 'PATCH'));
+        $request->allowMethods('GET', 'PATCH');
         $request->needLogin();
         
         switch ($request->getMethod())

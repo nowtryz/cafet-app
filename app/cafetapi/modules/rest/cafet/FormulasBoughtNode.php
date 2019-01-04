@@ -46,7 +46,7 @@ class FormulasBoughtNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $formulasBought = array();
@@ -56,7 +56,7 @@ class FormulasBoughtNode implements RestNode
     
     private static function formulaBought(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $formulaBought = ExpenseManager::getInstance()->getFormulaBought($id);
@@ -66,7 +66,7 @@ class FormulasBoughtNode implements RestNode
     
     private static function products(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $products = array();

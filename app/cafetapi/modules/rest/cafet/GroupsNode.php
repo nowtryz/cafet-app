@@ -51,7 +51,7 @@ class GroupsNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $groups = array();
@@ -61,7 +61,7 @@ class GroupsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('POST'));
+        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         //body checks
@@ -79,7 +79,7 @@ class GroupsNode implements RestNode
     
     private static function group(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET','PUT','PATCH','DELETE'));
+        $request->allowMethods('GET','PUT','PATCH','DELETE');
         
         switch ($request->getMethod())
         {
@@ -92,7 +92,7 @@ class GroupsNode implements RestNode
     
     private static function groupProducts(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $products = array();

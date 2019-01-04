@@ -66,7 +66,7 @@ class ClientsNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
         
         $clients = array();
@@ -76,7 +76,7 @@ class ClientsNode implements RestNode
     
     private static function search(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
         
         $clients = array();
@@ -88,7 +88,7 @@ class ClientsNode implements RestNode
     
     private static function client(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         
         if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_CLIENT);
         else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
@@ -100,7 +100,7 @@ class ClientsNode implements RestNode
     
     private static function clientReloads(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         
         if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_RELOADS);
         else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_RELOADS);
@@ -114,7 +114,7 @@ class ClientsNode implements RestNode
     
     private static function clientExpenses(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         
         if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_EXPENSES);
         else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
@@ -128,7 +128,7 @@ class ClientsNode implements RestNode
     
     private static function clientLastExpenses(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         
         if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_EXPENSES);
         else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
@@ -143,7 +143,7 @@ class ClientsNode implements RestNode
 
     private static function clientOrder(Rest $request, int $client_id) : RestResponse
     {
-        $request->allowMethods(array('POST'));
+        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_ORDER);
 
         //body checks

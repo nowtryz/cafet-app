@@ -36,7 +36,7 @@ class ProductsBoughtNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $productsBought = array();
@@ -46,7 +46,7 @@ class ProductsBoughtNode implements RestNode
     
     private static function productBought(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $productBought = ExpenseManager::getInstance()->getProductBought($id);

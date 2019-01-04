@@ -39,7 +39,7 @@ class StatsNode implements RestNode
     
     private static function overview(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_STATS);
         
         $used = $total = 0;

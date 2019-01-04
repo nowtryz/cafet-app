@@ -40,7 +40,7 @@ class ReloadsNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods( array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_RELOADS);
         
         $reloads = array();
@@ -50,7 +50,7 @@ class ReloadsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        $request->allowMethods( array('POST'));
+        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_RELOAD);
         
         //body checks
@@ -70,7 +70,7 @@ class ReloadsNode implements RestNode
     
     private static function reload(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         
         $reload = ReloadManager::getInstance()->getReload($id);
         

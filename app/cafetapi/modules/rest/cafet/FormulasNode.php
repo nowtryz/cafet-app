@@ -57,7 +57,7 @@ class FormulasNode implements RestNode
 
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $formulas = array();
@@ -71,7 +71,7 @@ class FormulasNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('POST'));
+        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         //body checks
@@ -114,7 +114,7 @@ class FormulasNode implements RestNode
     
     private static function formula(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET','PUT','PATCH','DELETE'));
+        $request->allowMethods('GET','PUT','PATCH','DELETE');
         
         switch ($request->getMethod())
         {
@@ -261,7 +261,7 @@ class FormulasNode implements RestNode
         $dir = $request->shiftPath();
         
         if (intval($dir, 0)) {
-            $request->allowMethods(array('GET','PUT','PATCH','DELETE'));
+            $request->allowMethods('GET','PUT','PATCH','DELETE');
             $choice_id = intval($dir, 0);
             if(!in_array($choice_id, FormulaManager::getInstance()->getFormulaChoicesIDs($formula_id))) return ClientError::resourceNotFound('Unknown choice with id ' . $choice_id . ' for the formula ' . $formula_id);
             
@@ -280,7 +280,7 @@ class FormulasNode implements RestNode
     
     private static function listChoices(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $choices = array();
@@ -300,7 +300,7 @@ class FormulasNode implements RestNode
     
     private static function addChoice(Rest $request, int $formula_id) : RestResponse
     {
-        $request->allowMethods(array('POST'));
+        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         //body checks

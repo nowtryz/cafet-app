@@ -43,7 +43,7 @@ class UsersNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::SITE_GET_USERS);
         
         $users = array();
@@ -53,7 +53,7 @@ class UsersNode implements RestNode
     
     private static function user(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET', 'PUT', 'PATCH', 'DELETE'));
+        $request->allowMethods('GET', 'PUT', 'PATCH', 'DELETE');
         $request->needLogin();
         
         header('method: ' . $request->getMethod());

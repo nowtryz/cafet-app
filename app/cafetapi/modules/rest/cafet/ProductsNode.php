@@ -50,7 +50,7 @@ class ProductsNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $products = array();
@@ -64,7 +64,7 @@ class ProductsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('POST'));
+        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         //body checks
@@ -109,7 +109,7 @@ class ProductsNode implements RestNode
     
     private static function product(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET','PUT','PATCH','DELETE'));
+        $request->allowMethods('GET','PUT','PATCH','DELETE');
         
         switch ($request->getMethod())
         {
@@ -122,7 +122,7 @@ class ProductsNode implements RestNode
     
     private static function productReplenishments(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         return ClientError::imATeapot();

@@ -178,7 +178,7 @@ class Rest
         }
     }
     
-    public final function allowMethods(array $methods)
+    public final function allowMethods(string... $methods)
     {
         if(!in_array($this->method, $methods)) $this->printResponse(ClientError::methodNotAllowed($this->method, $methods));
     }

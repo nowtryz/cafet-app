@@ -49,7 +49,7 @@ class ExpensesNode implements RestNode
     
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
         $expenses = array();
@@ -59,7 +59,7 @@ class ExpensesNode implements RestNode
     
     private static function expense(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         
         $expense = ExpenseManager::getInstance()->getExpense($id);
         
@@ -75,7 +75,7 @@ class ExpensesNode implements RestNode
     
     private static function expenseDetails(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         
         $expense = ExpenseManager::getInstance()->getExpense($id);
         if (!$expense) return ClientError::resourceNotFound('Unknown expense with id ' . $id);

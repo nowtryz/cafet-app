@@ -30,7 +30,7 @@ class ChoicesNode implements RestNode
         $dir = $request->shiftPath();
         
         if (intval($dir, 0)) {
-            $request->allowMethods(array('GET', 'PUT', 'PATCH', 'DELETE'));
+            $request->allowMethods('GET', 'PUT', 'PATCH', 'DELETE');
             
             $choice_id = intval($dir, 0);
             
@@ -48,7 +48,7 @@ class ChoicesNode implements RestNode
     
     private static function listChoices(Rest $request) : RestResponse
     {
-        $request->allowMethods(array('GET'));
+        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $choices = array();
