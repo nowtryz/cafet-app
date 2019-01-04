@@ -128,7 +128,7 @@ INSERT INTO `cafet_products` (`id`, `product_group`, `image`, `stock`, `viewable
 -- Auto increments
 -- --
 
-ALTER TABLE `users` AUTO_INCREMENT=42;
+ALTER TABLE `cafet_users` AUTO_INCREMENT=42;
 ALTER TABLE `cafet_products_groups` AUTO_INCREMENT=5;
 ALTER TABLE `cafet_products` AUTO_INCREMENT=20;
 ALTER TABLE `cafet_products_edits` AUTO_INCREMENT=20;
