@@ -2,6 +2,8 @@
 namespace cafetapi\data;
 
 use cafetapi\io\ClientManager;
+use cafetapi\io\ExpenseManager;
+use cafetapi\io\ReloadManager;
 
 /**
  * The Client object is the wich stores every client information for later use
@@ -161,7 +163,7 @@ class Client extends JSONParsable implements Data
      */
     public final function getExpenses(): array
     {
-        return ClientManager::getInstance()->getClientExpenses($this->id);
+        return ExpenseManager::getInstance()->getClientExpenses($this->id);
     }
 
     /**
@@ -172,7 +174,7 @@ class Client extends JSONParsable implements Data
      */
     public final function getLastExpenses(): array
     {
-        return ClientManager::getInstance()->getClientLastExpenses($this->id);
+        return ExpenseManager::getInstance()->getClientLastExpenses($this->id);
     }
 
     /**
@@ -183,7 +185,7 @@ class Client extends JSONParsable implements Data
      */
     public final function getReloads(): array
     {
-        return ClientManager::getInstance()->getClientReloads($this->id);
+        return ReloadManager::getInstance()->getClientReloads($this->id);
     }
 
     /**

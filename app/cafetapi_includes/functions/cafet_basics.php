@@ -7,14 +7,12 @@
  */
 
 use cafetapi\Mail;
-use cafetapi\config\Database;
 use cafetapi\io\ClientManager;
 use cafetapi\io\DatabaseConnection;
 use cafetapi\io\FormulaManager;
 use cafetapi\io\ProductManager;
 use cafetapi\modules\cafet_app\CafetApp;
 use cafetapi\user\Group;
-use cafetapi\io\OptionManager;
 
 if (! defined('basics_functions_loaded') ) {
     define('basics_functions_loaded', true);
