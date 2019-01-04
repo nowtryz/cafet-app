@@ -99,7 +99,7 @@ class StatsManager extends DatabaseConnection
         return $sales;
     }
     
-    public function getYearlySubscription() : array
+    public function getMonthlySubscription() : array
     {
         $stmt = $this->connection->prepare('SELECT '
             	. 'COUNT(*) count, '

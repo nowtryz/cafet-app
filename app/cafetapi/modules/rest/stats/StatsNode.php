@@ -55,7 +55,7 @@ class StatsNode implements RestNode
             'user_count' => UserManager::getInstance()->count(),
             'weekly_balance_reloads' => $manager->getWeeklyBalanceReloads(),
             'last_monthly_sales_count' => $manager->getLastMonthlySalesCount(),
-            'yearly_subscription' => $manager->getYearlySubscription()
+            'monthly_subscription' => $manager->getMonthlySubscription()
         ));
     }
 }
