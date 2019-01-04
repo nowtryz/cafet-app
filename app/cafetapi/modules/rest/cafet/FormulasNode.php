@@ -150,16 +150,14 @@ class FormulasNode implements RestNode
         if (!$formula) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
         //body checks
-        if (!$request->getBody())                      return ClientError::badRequest('Empty body');
-        if (!isset($request->getBody()['id']))         return ClientError::badRequest('Missing `id` field');
-        if (!isset($request->getBody()['type']))       return ClientError::badRequest('Missing `type` field');
-        if (!isset($request->getBody()['name']))       return ClientError::badRequest('Missing `name` field');
-        if (!isset($request->getBody()['price']))      return ClientError::badRequest('Missing `price` field');
-        if (!isset($request->getBody()['viewable']))   return ClientError::badRequest('Missing `viewable` field');
-        if (!intval($request->getBody()['id'], 0))     return ClientError::badRequest('Expected `id` field to be an integer');
-        if (!is_scalar($request->getBody()['price']))  return ClientError::badRequest('Expected `price` field to be a float');
-        if (!is_bool($request->getBody()['viewable'])) return ClientError::badRequest('Expected `viewable` field to be a boolean');
-        
+        $request->checkBody(array(
+            'id' => Rest::PARAM_INT,
+            'type' => Rest::PARAM_STR,
+            'name' => Rest::PARAM_STR,
+            'price' => Rest::PARAM_SCALAR,
+            'viewable' => Rest::PARAM_BOOL
+        ));
+
         if ($formula->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($formula) != $request->getBody()['type']) return ClientError::conflict('different type');
         
@@ -308,9 +306,10 @@ class FormulasNode implements RestNode
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         //body checks
-        if (!$request->getBody())                return ClientError::badRequest('Empty body');
-        if (!isset($request->getBody()['name'])) return ClientError::badRequest('Missing `name` field');
-        
+        $request->checkBody(array(
+            'name' => Rest::PARAM_ANY
+        ));
+
         $name = strval($request->getBody()['name']);
         
         $updater = FormulaManager::getInstance();
@@ -351,14 +350,13 @@ class FormulasNode implements RestNode
         $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
         //body checks
-        if (!$request->getBody())                     return ClientError::badRequest('Empty body');
-        if (!isset($request->getBody()['id']))        return ClientError::badRequest('Missing `id` field');
-        if (!isset($request->getBody()['type']))      return ClientError::badRequest('Missing `type` field');
-        if (!isset($request->getBody()['name']))      return ClientError::badRequest('Missing `name` field');
-        if (!isset($request->getBody()['choice']))    return ClientError::badRequest('Missing `choice` field');
-        if (!intval($request->getBody()['id'], 0))    return ClientError::badRequest('Expected `id` field to be an integer');
-        if (!is_array($request->getBody()['choice'])) return ClientError::badRequest('Expected `choice` field to be an array');
-        
+        $request->checkBody(array(
+            'id' => Rest::PARAM_INT,
+            'type' => Rest::PARAM_STR,
+            'name' => Rest::PARAM_ANY,
+            'choice' => Rest::PARAM_ARRAY
+        ));
+
         if ($choice->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($choice) != $request->getBody()['type']) return ClientError::conflict('different type');
         

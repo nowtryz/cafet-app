@@ -129,13 +129,13 @@ class GroupsNode implements RestNode
         if (!$group) return ClientError::resourceNotFound('Unknown group with id ' . $id);
         
         //body checks
-        if(!$request->getBody())                       return ClientError::badRequest('Empty body');
-        if(!isset($request->getBody()['id']))          return ClientError::badRequest('Missing `id` field');
-        if(!isset($request->getBody()['type']))        return ClientError::badRequest('Missing `type` field');
-        if(!isset($request->getBody()['name']))        return ClientError::badRequest('Missing `name` field');
-        if(!isset($request->getBody()['displayName'])) return ClientError::badRequest('Missing `displayName` field');
-        if(!intval($request->getBody()['id'], 0))      return ClientError::badRequest('Expected `id` field to be an integer');
-        
+        $request->checkBody(array(
+            'id' => Rest::PARAM_INT,
+            'type' => Rest::PARAM_STR,
+            'name' => Rest::PARAM_STR,
+            'displayName' => Rest::PARAM_STR
+        ));
+
         if ($group->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($group) != $request->getBody()['type']) return ClientError::conflict('different type');
         

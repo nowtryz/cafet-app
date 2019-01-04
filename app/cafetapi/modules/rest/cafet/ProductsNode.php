@@ -153,18 +153,15 @@ class ProductsNode implements RestNode
         if (!$product) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
         //body checks
-        if (!$request->getBody())                      return ClientError::badRequest('Empty body');
-        if (!isset($request->getBody()['id']))         return ClientError::badRequest('Missing `id` field');
-        if (!isset($request->getBody()['type']))       return ClientError::badRequest('Missing `type` field');
-        if (!isset($request->getBody()['name']))       return ClientError::badRequest('Missing `name` field');
-        if (!isset($request->getBody()['group']))      return ClientError::badRequest('Missing `group` field');
-        if (!isset($request->getBody()['price']))      return ClientError::badRequest('Missing `price` field');
-        if (!isset($request->getBody()['viewable']))   return ClientError::badRequest('Missing `viewable` field');
-        if (!intval($request->getBody()['id'], 0))     return ClientError::badRequest('Expected `id` field to be an integer');
-        if (!intval($request->getBody()['group'], 0))  return ClientError::badRequest('Expected `group` field to be an integer');
-        if (!is_scalar($request->getBody()['price']))  return ClientError::badRequest('Expected `price` field to be a float');
-        if (!is_bool($request->getBody()['viewable'])) return ClientError::badRequest('Expected `viewable` field to be a boolean');
-        
+        $request->checkBody(array(
+            'id' => Rest::PARAM_INT,
+            'type' => Rest::PARAM_STR,
+            'group' => Rest::PARAM_INT,
+            'name' => Rest::PARAM_ANY,
+            'price' => Rest::PARAM_SCALAR,
+            'viewable' => Rest::PARAM_BOOL
+        ));
+
         if ($product->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($product) != $request->getBody()['type']) return ClientError::conflict('different type');
         

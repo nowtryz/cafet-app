@@ -18,7 +18,8 @@ class Rest
     const PARAM_SCALAR = 2;
     const PARAM_STR = 3;
     const PARAM_BOOL = 4;
-    const PARAM_ANY = 5;
+    const PARAM_ARRAY = 5;
+    const PARAM_ANY = 6;
     
     //conflicts
     const CONFLICT_DUPLICATED = 'duplicated';
@@ -210,6 +211,10 @@ class Rest
             
             case self::PARAM_BOOL:
                 if (!is_bool($this->body[$key])) $wrong_types[$key] = 'boolean';
+            break;
+            
+            case self::PARAM_ARRAY:
+                if (!is_array($this->body[$key])) $wrong_types[$key] = 'array';
             break;
         }
         if ($wrong_types) $this->printResponse(ClientError::badRequest('Wrong types', array(
