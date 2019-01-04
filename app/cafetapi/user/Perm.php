@@ -28,7 +28,6 @@ class Perm
 
     // CAFET
     const CAFET = 'd';
-    
     const CAFET_ME = 'd_a';
     const CAFET_ME_CLIENT = 'd_a_a';
     const CAFET_ME_RELOADS = 'd_a_b';
