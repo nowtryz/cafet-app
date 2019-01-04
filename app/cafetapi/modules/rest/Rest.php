@@ -212,7 +212,7 @@ class Rest
                 if (!is_bool($this->body[$key])) $wrong_types[$key] = 'boolean';
             break;
         }
-        if ($wrong_types) $this->printResponse(ClientError::badRequest('Missing fields', array(
+        if ($wrong_types) $this->printResponse(ClientError::badRequest('Wrong types', array(
             "type_expectation" => $wrong_types
         )));
         unset($wrong_types);

@@ -29,18 +29,25 @@ class ReloadsNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::NEW:  return self::new($request);
-            
-            case null: return self::list($request);
+            case null: return self::index($request);
             default:
                 if(intval($dir)) return self::reload($request, intval($dir));
                 else return ClientError::resourceNotFound('Unknown cafet/reload/' . $dir . ' node');
         }
     }
     
+    private static function index(Rest $request) : RestResponse
+    {
+        $request->allowMethods('GET','POST');
+        
+        switch ($request->getMethod()) {
+            case 'GET': return self::list($request);
+            case 'POST': return self::new($request);
+        }
+    }
+    
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_RELOADS);
         
         $reloads = array();
@@ -50,15 +57,13 @@ class ReloadsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_RELOAD);
         
         //body checks
-        if(!$request->getBody())                         return ClientError::badRequest('Empty body');
-        if(!isset($request->getBody()['client_id']))     return ClientError::badRequest('Missing `client_id` field');
-        if(!isset($request->getBody()['amount']))        return ClientError::badRequest('Missing `amount` field');
-        if(!intval($request->getBody()['client_id'], 0)) return ClientError::badRequest('Expected `client_id` field to be an integer');
-        if(!is_scalar($request->getBody()['amount']))    return ClientError::badRequest('Expected `amount` field to be a float');
+        $request->checkBody(array(
+            'client_id' => Rest::PARAM_BOOL,
+            'amount' => Rest::PARAM_SCALAR
+        ));
         
         $client_id = intval($request->getBody()['client_id'], 0);
         $amount = intval($request->getBody()['amount']);

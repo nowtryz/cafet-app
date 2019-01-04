@@ -18,8 +18,6 @@ use cafetapi\io\ProductManager;
  */
 class FormulasNode implements RestNode
 {
-    const NEW = 'new';
-    
     const CHOICES = 'choices';
     const CHOICE = 'choice';
 
@@ -33,8 +31,7 @@ class FormulasNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::NEW: return self::new($request);
-            case null: return self::list($request);
+            case null: return self::index($request);
             
             default:
                 if (intval($dir, 0)) {
@@ -54,10 +51,19 @@ class FormulasNode implements RestNode
                 else return ClientError::resourceNotFound('Unknown cafet/formula/' . $dir . ' node');
         }
     }
+    
+    private static function index(Rest $request) : RestResponse
+    {
+        $request->allowMethods('GET','POST');
+        
+        switch ($request->getMethod()) {
+            case 'GET': return self::list($request);
+            case 'POST': return self::new($request);
+        }
+    }
 
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $formulas = array();
@@ -71,17 +77,15 @@ class FormulasNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_FORMULAS);
         
         //body checks
-        if (!$request->getBody())                      return ClientError::badRequest('Empty body');
-        if (!isset($request->getBody()['name']))       return ClientError::badRequest('Missing `name` field');
-        if (!isset($request->getBody()['price']))      return ClientError::badRequest('Missing `price` field');
-        if (!isset($request->getBody()['viewable']))   return ClientError::badRequest('Missing `viewable` field');
-        if (!is_scalar($request->getBody()['price']))  return ClientError::badRequest('Expected `price` field to be a float');
-        if (!is_bool($request->getBody()['viewable'])) return ClientError::badRequest('Expected `viewable` field to be a boolean');
-        
+        $request->checkBody(array(
+            'name' => Rest::PARAM_STR,
+            'price' => Rest::PARAM_SCALAR,
+            'viewable' => Rest::PARAM_BOOL
+        ));
+
         $name = $request->getBody()['name'];
         $price = floatval($request->getBody()['price']);
         $visibility = boolval($request->getBody()['viewable']);

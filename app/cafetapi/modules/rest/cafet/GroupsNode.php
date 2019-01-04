@@ -18,8 +18,6 @@ use cafetapi\io\ProductManager;
  */
 class GroupsNode implements RestNode
 {
-    const NEW = 'new';
-    
     const PRODUCTS = 'products';
 
     /**
@@ -32,8 +30,7 @@ class GroupsNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::NEW: return self::new($request);
-            case null: return self::list($request);
+            case null: return self::index($request);
             
             default:
                 if (intval($dir, 0)) {
@@ -49,9 +46,18 @@ class GroupsNode implements RestNode
         }
     }
     
+    private static function index(Rest $request) : RestResponse
+    {
+        $request->allowMethods('GET','POST');
+        
+        switch ($request->getMethod()) {
+            case 'GET': return self::list($request);
+            case 'POST': return self::new($request);
+        }
+    }
+    
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $groups = array();
@@ -61,16 +67,14 @@ class GroupsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         //body checks
-        if(!$request->getBody())                return ClientError::badRequest('Empty body');
-        if(!isset($request->getBody()['name'])) return ClientError::badRequest('Missing `name` field');
-//         if(!isset($request->getBody()['displayName'])) return ClientError::badRequest('Missing `displayName` field');
-        
+        $request->checkBody(array(
+            'name' => Rest::PARAM_STR
+        ));
+
         $name = $request->getBody()['name'];
-//         $displayName = $request->getBody()['displayName'];
         
         $group = ProductManager::getInstance()->addProductGroup($name);
         if($group) return new RestResponse('201', HttpCodes::HTTP_201, $group->getProperties());

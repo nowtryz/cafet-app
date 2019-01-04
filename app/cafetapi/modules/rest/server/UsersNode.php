@@ -18,7 +18,6 @@ use cafetapi\user\Group;
  */
 class UsersNode implements RestNode
 {
-    const NEW = 'new';
 
     /**
      * (non-PHPdoc)
@@ -31,19 +30,25 @@ class UsersNode implements RestNode
         
         
         switch ($dir) {
-            case self::NEW: return self::new($request);
-            case null: return self::list($request);
-            
-            case null: return ClientError::forbidden();
+            case null: return self::index($request);
             default:
                 if (intval($dir, 0)) return self::user($request, intval($dir, 0));
                 else return ClientError::resourceNotFound('Unknown server/user/' . $dir . ' node');
         }
     }
     
+    private static function index(Rest $request) : RestResponse
+    {
+        $request->allowMethods('GET','POST');
+        
+        switch ($request->getMethod()) {
+            case 'GET': return self::list($request);
+            case 'POST': return self::new($request);
+        }
+    }
+    
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods('GET');
         $request->needPermissions(Perm::SITE_GET_USERS);
         
         $users = array();
@@ -51,12 +56,45 @@ class UsersNode implements RestNode
         return new RestResponse('200', HttpCodes::HTTP_200, $users);
     }
     
+    private static function new(Rest $request) : RestResponse
+    {
+        $request->needPermissions(Perm::SITE_MANAGE_USERS);
+        $request->checkBody(array(
+            'pseudo' => Rest::PARAM_STR,
+            'email' => Rest::PARAM_STR,
+            'password' => Rest::PARAM_STR,
+            'firstname' => Rest::PARAM_STR,
+            'name' => Rest::PARAM_STR,
+            'group' => Rest::PARAM_INT
+        ));
+        
+        $username = $request->getBody()['pseudo'];
+        $password = $request->getBody()['password'];
+        $firstname = $request->getBody()['firstname'];
+        $name = $request->getBody()['name'];
+        $email = $request->getBody()['email'];
+        $group = intval($request->getBody()['group'], 0);
+        
+        $manager = UserManager::getInstance();
+        $conflicts = array();
+        
+        if (!array_key_exists($group, Group::GROUPS)) $conflicts['group'] = Rest::CONFLICT_NOT_VALID;
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $conflicts['email'] = Rest::CONFLICT_NOT_VALID;
+        if ($manager->getUser($username)) $conflicts['pseudo'] = Rest::CONFLICT_DUPLICATED;
+        if ($manager->getUser($email)) $conflicts['email'] = Rest::CONFLICT_DUPLICATED;
+        
+        if($conflicts) return ClientError::conflict(null, $conflicts);
+        unset($conflicts);
+        
+        $user = $manager->addUser($username, $email, $firstname, $name, $password, $group);
+        if($user) return new RestResponse(201, HttpCodes::HTTP_201, $user->getProperties());
+        else return ServerError::internalServerError();
+    }
+    
     private static function user(Rest $request, int $id) : RestResponse
     {
         $request->allowMethods('GET', 'PUT', 'PATCH', 'DELETE');
         $request->needLogin();
-        
-        header('method: ' . $request->getMethod());
         
         switch ($request->getMethod())
         {
@@ -142,6 +180,8 @@ class UsersNode implements RestNode
     
     private static function patch(Rest $request, int $id) : RestResponse
     {
+        $request->needPermissions(Perm::SITE_MANAGE_USERS);
+        
         $manager = UserManager::getInstance();
         $user = $manager->getUserById($id);
         

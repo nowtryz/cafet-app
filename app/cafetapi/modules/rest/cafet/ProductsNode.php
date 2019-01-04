@@ -17,8 +17,6 @@ use cafetapi\io\ProductManager;
  */
 class ProductsNode implements RestNode
 {
-    const NEW = 'new';
-    
     const REPLENISHMENTS = 'replenishments ';
 
     /**
@@ -31,8 +29,7 @@ class ProductsNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::NEW: return self::new($request);
-            case null: return self::list($request);
+            case null: return self::index($request);
             
             default:
                 if (intval($dir, 0)) {
@@ -48,9 +45,18 @@ class ProductsNode implements RestNode
         }
     }
     
+    private static function index(Rest $request) : RestResponse
+    {
+        $request->allowMethods('GET','POST');
+        
+        switch ($request->getMethod()) {
+            case 'GET': return self::list($request);
+            case 'POST': return self::new($request);
+        }
+    }
+    
     private static function list(Rest $request) : RestResponse
     {
-        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
         $products = array();
@@ -64,19 +70,16 @@ class ProductsNode implements RestNode
     
     private static function new(Rest $request) : RestResponse
     {
-        $request->allowMethods('POST');
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         //body checks
-        if (!$request->getBody())                      return ClientError::badRequest('Empty body');
-        if (!isset($request->getBody()['group']))      return ClientError::badRequest('Missing `group` field');
-        if (!isset($request->getBody()['name']))       return ClientError::badRequest('Missing `name` field');
-        if (!isset($request->getBody()['price']))      return ClientError::badRequest('Missing `price` field');
-        if (!isset($request->getBody()['viewable']))   return ClientError::badRequest('Missing `viewable` field');
-        if (!intval($request->getBody()['group'], 0))  return ClientError::badRequest('Expected `group` field to be an integer');
-        if (!is_scalar($request->getBody()['price']))  return ClientError::badRequest('Expected `price` field to be a float');
-        if (!is_bool($request->getBody()['viewable'])) return ClientError::badRequest('Expected `viewable` field to be a boolean');
-        
+        $request->checkBody(array(
+            'group' => Rest::PARAM_INT,
+            'name' => Rest::PARAM_ANY,
+            'price' => Rest::PARAM_SCALAR,
+            'viewable' => Rest::PARAM_BOOL
+        ));
+
         $name = $request->getBody()['name'];
         $group = intval($request->getBody()['group'], 0);
         $price = floatval($request->getBody()['price']);
