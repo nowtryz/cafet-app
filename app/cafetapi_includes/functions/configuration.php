@@ -23,14 +23,14 @@ if (! defined('configurations_functions_loaded') ) {
             require_once CONTENT_DIR . 'config.php';
             
             if (! defined("DB_INFO")) {
-                $db_info = array();
-                
-                $db_info['driver'] = Database::driver;
-                $db_info['host'] = Database::host;
-                $db_info['port'] = Database::port;
-                $db_info['database'] = Database::database;
-                $db_info['username'] = Database::username;
-                $db_info['password'] = Database::password;
+                $db_info = [
+                    'driver'   => Database::driver,
+                    'host'     => Database::host,
+                    'port'     => Database::port,
+                    'database' => Database::database,
+                    'username' => Database::username,
+                    'password' => Database::password
+                ];
                 
                 /**
                  * Databases configurations
@@ -111,19 +111,15 @@ if (! defined('configurations_functions_loaded') ) {
     {
         static $conf = array();
         
-        if (! empty($conf))
-            return $conf;
+        if (! empty($conf)) return $conf;
             
-            if (! defined("DEFAULT_CONFIGURATIONS"))
-                cafet_load_conf_file();
+        if (! defined("DEFAULT_CONFIGURATIONS")) cafet_load_conf_file();
+            
+        foreach (DEFAULT_CONFIGURATIONS as $key => $value) $conf[$key] = $value;
+        foreach (OptionManager::getConfigurations() as $key => $value) $conf[$key] = $value;
                 
-                foreach (DEFAULT_CONFIGURATIONS as $key => $value)
-                    $conf[$key] = $value;
-                    foreach (OptionManager::getConfigurations() as $key => $value)
-                        $conf[$key] = $value;
-                        
-                        return $conf;
-    }
+        return $conf;
+}
     
     /**
      * Gives the specified configuration
@@ -132,10 +128,8 @@ if (! defined('configurations_functions_loaded') ) {
      */
     function cafet_get_configuration(string $key)
     {
-        static $conf = array();
-        
+        static $conf = [];
         if (empty($conf)) $conf = cafet_get_configurations();
-        
         return @$conf[$key];
     }
 }

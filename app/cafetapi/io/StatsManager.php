@@ -52,7 +52,7 @@ class StatsManager extends DatabaseConnection
     {
         $stmt = $this->connection->prepare("SELECT SUM(" . ReloadManager::FIELD_AMOUNT . ") reload, (DAYOFWEEK(date) + 6 - DAYOFWEEK(CURDATE())) % 7 day FROM " . self::RELOADS . " WHERE " . ReloadManager::FIELD_DATE . " >= (CURDATE() - INTERVAL 1 WEEK ) GROUP BY DATE(" . ReloadManager::FIELD_DATE . ")");
         
-        $reloads = array(0., 0., 0., 0., 0., 0., 0.);
+        $reloads = array_fill(0, 7, 0.);
         $reload = 0.;
         $day = 0;
         $stmt->bindColumn('reload', $reload);
@@ -66,7 +66,7 @@ class StatsManager extends DatabaseConnection
     
     public function getLastMonthlySalesCount() : array
     {
-        $sales = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        $sales = array_fill(0, 12, 0);
         $sale = 0;
         $month = 0;
         
@@ -108,7 +108,7 @@ class StatsManager extends DatabaseConnection
             . 'WHERE `registration` >= (CURDATE() - INTERVAL 1 YEAR) '
             . 'GROUP BY EXTRACT(YEAR_MONTH FROM `registration`)');
         
-        $registrations = array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        $registrations = array_fill(0, 12, 0);
         $registration = 0;
         $month = 0;
         

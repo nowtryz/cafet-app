@@ -11,7 +11,7 @@ class OptionManager extends DatabaseConnection
      */
     public static final function getConfigurations(): array
     {
-        $conf = array();
+        $conf = [];
         $statement = DatabaseConnection::getDatabaseConnectionInstance()->getPDOObject()->query('SELECT name, value FROM ' . self::CONFIG . ' ORDER BY name');
         
         while ($data = $statement->fetch()) {
@@ -34,18 +34,14 @@ class OptionManager extends DatabaseConnection
     public static final function getConfiguration(String $name): string
     {
         $statement = DatabaseConnection::getDatabaseConnectionInstance()->getPDOObject()->prepare('SELECT value FROM ' . self::CONFIG . ' WHERE name = :name ORDER BY edit DESK LIMIT 1');
-        $statement->execute(array(
+        $statement->execute([
             'name' => $name
-        ));
+        ]);
         
         $conf = null;
-        
-        if ($data = $statement->fetch())
-            $conf = $data['value'];
-            
-            $statement->closeCursor();
-            
-            return $conf;
+        if ($data = $statement->fetch()) $conf = $data['value'];
+        $statement->closeCursor();
+        return $conf;
     }
 }
 

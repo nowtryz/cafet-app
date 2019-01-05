@@ -9,17 +9,11 @@ namespace cafetapi\data;
  */
 final class Calendar extends JSONParsable implements Data, \Serializable
 {
-
     private $year;
-
     private $month;
-
     private $day;
-
     private $hour;
-
     private $mins;
-
     private $secs;
 
     /**
@@ -230,7 +224,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
     
     public function getProperties(): array
     {
-        return array_merge(array('type' => get_simple_classname($this)), get_object_vars($this));
+        return array_merge(['type' => get_simple_classname($this)], get_object_vars($this));
     }
 }
 

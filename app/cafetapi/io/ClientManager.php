@@ -62,7 +62,7 @@ class ClientManager extends Updater
         $stmt->execute();
         $this->check_fetch_errors($stmt);
         
-        $result = array();
+        $result = [];
         
         while ($stmt->fetch()) $result[] = new Client($id, $email, $alias, $familyNane, $surname, $member, floatval($balance), $registrationYear);
         
@@ -99,9 +99,9 @@ class ClientManager extends Updater
         $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
         $stmt->bindColumn('regyear', $registrationYear, PDO::PARAM_INT);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $id
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
         if ($stmt->fetch()) return new Client($id, $email, $alias, $familyNane, $surname, $member, floatval($balance), $registrationYear);
@@ -143,12 +143,12 @@ class ClientManager extends Updater
         
         $search = "%$expression%";
         
-        $stmt->execute(array(
+        $stmt->execute([
             'expression' =>  $search
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
-        $result = array();
+        $result = [];
         
         while ($stmt->fetch()) $result[] = new Client($id, $email, $alias, $familyNane, $surname, $member, floatval($balance), $registrationYear);
             

@@ -44,7 +44,7 @@ class ProductManager extends Updater
         $stmt->execute();
         $this->check_fetch_errors($stmt);
         
-        $result = array();
+        $result = [];
         
         while ($stmt->fetch()) $result[] = new ProductGroup($id, $name, $dname);
             
@@ -68,13 +68,12 @@ class ProductManager extends Updater
         $stmt->bindColumn('name', $name, PDO::PARAM_STR);
         $stmt->bindColumn('dname', $dname, PDO::PARAM_STR);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $group_id
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
         if ($stmt->fetch()) return new ProductGroup($id, $name, $dname);
-            
         else return NULL;
     }
     
@@ -116,12 +115,12 @@ class ProductManager extends Updater
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'group' => $group_id
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
-        $result = array();
+        $result = [];
         
         while ($stmt->fetch()) $result[] = new Product($id, $name, $price, $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
             
@@ -170,7 +169,7 @@ class ProductManager extends Updater
         $stmt->execute();
         $this->check_fetch_errors($stmt);
         
-        $result = array();
+        $result = [];
         
         while ($stmt->fetch()) $result[] = new Product($id, $name, $price, $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
             
@@ -216,9 +215,9 @@ class ProductManager extends Updater
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $id
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
         if ($stmt->fetch()) return new Product($id, $name, $price, $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
@@ -240,19 +239,19 @@ class ProductManager extends Updater
         $this->connection->exec('SET foreign_key_checks=0');
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS . '(product_group) VALUES (:group)');
-        $stmt->execute(array(
+        $stmt->execute([
             'group' => $group_id
-        ));
+        ]);
         
         $this->checkUpdate($stmt, 'unable to add the product (product insertion)');
         
         $stmt->closeCursor();
         $product_id = $this->connection->lastInsertId();
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_EDITS . '(product, name) VALUES(:product,:name)');
-        $stmt->execute(array(
+        $stmt->execute([
             'product' => $product_id,
             'name' => $name
-        ));
+        ]);
         
         $this->checkUpdate($stmt, 'unable to add the product (edit insertion)');
         $stmt->closeCursor();
@@ -274,10 +273,10 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_GROUPS . '(name, display_name) VALUES(:name, :dname)');
-        $stmt->execute(array(
+        $stmt->execute([
             'name' => $name,
             'dname' => $name
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to add the product group');
         
         $id = $this->connection->lastInsertId();
@@ -298,10 +297,10 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS_GROUPS . ' SET display_name = :dname WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'dname' => $display_name,
             'id' => $group_id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to change product group display name');
         
         $this->commit();
@@ -321,10 +320,10 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS_GROUPS . ' SET name = :name WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'name' => $name,
             'id' => $group_id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to change product group name');
         
         $this->commit();
@@ -344,10 +343,10 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_EDITS . '(product, name) VALUES (:id, :name)');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $product_id,
             'name' => $name
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update product information');
         
         $this->commit();
@@ -367,10 +366,10 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_EDITS . '(product, price) VALUES (:id, :price)');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $product_id,
             'price' => $price
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update product information');
         
         $this->commit();
@@ -390,11 +389,11 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::PRODUCTS_EDITS . '(product, name, price) VALUES (:id, :name, :price)');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $product_id,
             'name' => $name,
             'price' => $price
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update product information');
         
         $this->commit();
@@ -414,16 +413,16 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('SELECT 1 FROM ' . self::PRODUCTS_GROUPS . ' WHERE id = :id LIMIT 1');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $group_id
-        ));
+        ]);
         if (! $stmt->fetch()) cafet_throw_error('03-005', 'the group with id ' . $group_id . ' doesn\'t exist');
             
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS . ' SET product_group = :group WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'group' => $group_id,
             'id' => $product_id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update the product group');
         
         $this->commit();
@@ -443,10 +442,10 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS . ' SET image = :image WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'image' => $image_base64,
             'id' => $product_id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update product image');
         
         $this->commit();
@@ -489,9 +488,9 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('DELETE FROM ' . self::PRODUCTS . ' WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to delete the product');
         
         $this->commit();
@@ -510,9 +509,9 @@ class ProductManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('DELETE FROM ' . self::PRODUCTS_GROUPS . ' WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to delete the product group');
         
         $this->commit();

@@ -35,8 +35,7 @@ function capitalize_first_letter(string $source): string
  */
 function is_associative_array(array $array): bool
 {
-    if (array() === $array)
-        return false;
+    if (!$array) return false;
     return count(array_filter(array_keys($array), 'is_string')) > 0;
 }
 
@@ -49,14 +48,12 @@ function is_associative_array(array $array): bool
  */
 function guess_image_mime(string $base64): string
 {
-    if (substr($base64, 0, 1) == '/')
-        return 'image/jpeg';
-    else if (substr($base64, 0, 1) == 'R')
-        return 'image/gif';
-    else if (substr($base64, 0, 1) == 'i')
-        return 'image/png';
-    else
-        return 'application/*';
+    switch (substr($base64, 0, 1)) {
+        case '/': return 'image/jpeg';
+        case 'R': return 'image/gif';
+        case 'i': return 'image/png';
+        default:  return 'application/*';
+    }
 }
 
 /**
@@ -66,14 +63,12 @@ function guess_image_mime(string $base64): string
  */
 function get_base64_image_format(string $base64): string
 {
-    if (substr($base64, 0, 1) == '/')
-        return '.jpeg';
-    else if (substr($base64, 0, 1) == 'R')
-        return '.gif';
-    else if (substr($base64, 0, 1) == 'i')
-        return '.png';
-    else
-        return '';
+    switch (substr($base64, 0, 1)) {
+        case '/': return '.jpeg';
+        case 'R': return '.gif';
+        case 'i': return '.png';
+        default:  return '';
+    }
 }
 
 /**
@@ -163,14 +158,14 @@ function get_calendar_from_datetime(string $datetime) : Calendar
 {
     $_datetime = new DateTime($datetime);
     
-    $year = intval($_datetime->format('Y'));
-    $month = intval($_datetime->format('m'));
-    $day = intval($_datetime->format('d'));
-    $hour = intval($_datetime->format('H'));
-    $mins = intval($_datetime->format('i'));
-    $secs =intval($_datetime->format('s'));
-    
-    return new Calendar($year, $month, $day, $hour, $mins, $secs);
+    return new Calendar(
+        intval($_datetime->format('Y')),
+        intval($_datetime->format('m')),
+        intval($_datetime->format('d')),
+        intval($_datetime->format('H')),
+        intval($_datetime->format('i')),
+        intval($_datetime->format('s'))
+   );
 }
 
 /**

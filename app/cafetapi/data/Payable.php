@@ -11,15 +11,10 @@ abstract class Payable extends JSONParsable implements Data
 {
 
     protected $id;
-
     protected $name;
-
     protected $image;
-
     protected $price;
-
     protected $viewable;
-
     protected $edit;
 
     /**

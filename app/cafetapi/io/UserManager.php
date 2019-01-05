@@ -151,10 +151,10 @@ class UserManager extends Updater
         $statement->bindColumn('signin_count', $signin_count, PDO::PARAM_INT);
         $statement->bindColumn('permissions', $_permissions, PDO::PARAM_STR);
         
-        $statement->execute(array(
+        $statement->execute([
             'param1' => $mail_or_pseudo,
             'param2' => $mail_or_pseudo
-        ));
+        ]);
         
         $this->check_fetch_errors($statement);
 
@@ -164,13 +164,9 @@ class UserManager extends Updater
         
         $last_signin = get_calendar_from_datetime($_last_signin);
         $registration = get_calendar_from_datetime($_registration);
-        $permissions = @unserialize($_permissions) ?: array();
+        $permissions = @unserialize($_permissions) ?? [];
         
-        if (isset(Group::GROUPS[$_group])){
-            $group = new Group($_group, Group::GROUPS[$_group]);
-        } else {
-            $group = new Group(0, Group::GUEST);
-        }
+        $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group]) : cafet_get_guest_group();
 
         $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
         $statement->closeCursor();
@@ -214,9 +210,9 @@ class UserManager extends Updater
         $statement->bindColumn('signin_count', $signin_count, PDO::PARAM_INT);
         $statement->bindColumn('permissions', $_permissions, PDO::PARAM_STR);
         
-        $statement->execute(array(
+        $statement->execute([
             'id' => $user_id
-        ));
+        ]);
         
         $this->check_fetch_errors($statement);
         
@@ -226,13 +222,9 @@ class UserManager extends Updater
         
         $last_signin = get_calendar_from_datetime($_last_signin);
         $registration = get_calendar_from_datetime($_registration);
-        $permissions = @unserialize($_permissions) ?: array();
+        $permissions = @unserialize($_permissions) ?: [];
         
-        if (isset(Group::GROUPS[$_group])){
-            $group = new Group($_group, Group::GROUPS[$_group]);
-        } else {
-            $group = new Group(0, Group::GUEST);
-        }
+        $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group]) : cafet_get_guest_group();
         
         $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
         $statement->closeCursor();
@@ -278,18 +270,14 @@ class UserManager extends Updater
         $statement->execute();
         $this->check_fetch_errors($statement);
         
-        $result = array();
+        $result = [];
         
         while ($statement->fetch()) {
             $last_signin = get_calendar_from_datetime($_last_signin);
             $registration = get_calendar_from_datetime($_registration);
-            $permissions = @unserialize($_permissions) ?: array();
+            $permissions = @unserialize($_permissions) ?: [];
             
-            if (isset(Group::GROUPS[$_group])){
-                $group = new Group($_group, Group::GROUPS[$_group]);
-            } else {
-                $group = new Group(0, Group::GUEST);
-            }
+            $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group]) : cafet_get_guest_group();
             
             $result[] = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
         }
@@ -307,14 +295,14 @@ class UserManager extends Updater
             . 'FROM ' . self::USERS . ' '
             . 'WHERE ' . self::FIELD_ID . ' = :id');
         $statement->bindColumn('permissions', $_permissions, PDO::PARAM_STR);
-        $statement->execute(array('id' => $user_id));
+        $statement->execute(['id' => $user_id]);
         
         $this->check_fetch_errors($statement);
         $result = $statement->fetch();
         $statement->closeCursor();
         
-        if (! $result) return array();
-        else return @unserialize($_permissions) ?: array();
+        if (! $result) return [];
+        else return @unserialize($_permissions) ?: [];
     }
     
     /**
@@ -336,7 +324,7 @@ class UserManager extends Updater
         
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new EmailFormatException('"' . $email . '" is not valid!');
         
-        $stmt->execute(array(
+        $stmt->execute([
             'username' => $username,
             'email' => $email,
             'firstname' => $firstname,
@@ -344,7 +332,7 @@ class UserManager extends Updater
             'password' => cafet_generate_hashed_pwd($password),
             'group_id' => $group_id,
             'permissions' => 'a:0:{}'
-        ));
+        ]);
         
         $this->checkUpdate($stmt, 'unable to add the user');
         
@@ -449,9 +437,9 @@ class UserManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('DELETE FROM ' . self::USERS . ' WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to delete the user');
         
         $this->commit();

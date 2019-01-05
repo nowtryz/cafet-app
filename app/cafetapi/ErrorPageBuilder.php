@@ -29,7 +29,7 @@ class ErrorPageBuilder
     
     private function getHeaders() : array
     {
-        return array();
+        return [];
     }
     
     private function getTitle() : string

@@ -23,7 +23,7 @@ if (!defined('logging_functions_loaded')) {
      */
     function cafet_log(string $log)
     {
-        $logs = array();
+        $logs = [];
         $tmp = explode("\r\n", $log);
         foreach ($tmp as $tmp2) $logs = array_merge($logs, explode("\n", $tmp2));
         foreach ($logs as $line) error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $line . PHP_EOL, 3, CAFET_DIR . 'error.log');
@@ -42,13 +42,12 @@ if (!defined('logging_functions_loaded')) {
             $_error = explode('-', $error);
             $code = intval($_error[0]) * 1000 + intval($_error[1]);
             throw new CafetAPIException($additional_message, $code, null, $file, $line);
-            die();
+            exit();
         }
         
         cafet_log($error . ($additional_message ? ': '. $additional_message : ''));
         
         $result = new ReturnStatement("error", cafet_grab_error_infos($error, $additional_message));
-        
         $result->print();
         
         exit();
@@ -62,63 +61,22 @@ if (!defined('logging_functions_loaded')) {
     
     function cafet_grab_error_infos($error, $additional_message = null)
     {
-        global $user;
-        
         $sub_error = explode('-', $error);
         $errors = cafet_get_errors_info();
         
-        if (empty($errors)) {
-            $info = array(
-                'error_code' => '01-500',
-                'error_type' => '01 : server exception',
-                'error_message' => 'Internal server error',
-            );
-        } else {
-            $info = array(
-                'error_code' => $error,
-                'error_type' => $errors[$sub_error[0]]['def'],
-                'error_message' => $errors[$sub_error[0]][$sub_error[1]],
-            );
-        }
+        $info = empty($errors) ? [
+            'error_code' => '01-500',
+            'error_type' => '01 : server exception',
+            'error_message' => 'Internal server error',
+        ] : [
+            'error_code' => $error,
+            'error_type' => $errors[$sub_error[0]]['def'],
+            'error_message' => $errors[$sub_error[0]][$sub_error[1]],
+        ];
         
-        if (isset($additional_message))
-            $info['additional_message'] = $additional_message;
-            
-            if(isset($user) && $user->hasPermission(Perm::GLOBAL_DEBUG)) {
-                $debug_backtrace = debug_backtrace();
-                $backtrace = '';
-                
-                while( ($trace = array_shift($debug_backtrace)) !== null) {
-                    $backtrace .= "\n";
-                    
-                    if(isset($trace['file'])) {
-                        $backtrace .= 'in ' . $trace['file'];
-                        $backtrace .= ' at line ' . $trace['line'] . ': ';
-                    } else {
-                        $backtrace .= 'called by: ';
-                    }
-                    
-                    if(isset($trace['class'])) {
-                        $backtrace .= $trace['class'] . $trace['type'];
-                    }
-                    
-                    $backtrace .= $trace['function'] . '()';
-                    
-                    if($trace['args']) {
-                        $backtrace .= ' with args ' . str_replace('\\\\', '\\', json_encode($trace['args']));
-                    } else {
-                        $backtrace .= ' with no args';
-                    }
-                }
-                
-                if($additional_message) {
-                    $info['additional_message'] .= "\n" . $backtrace;
-                } else {
-                    $info['additional_message'] = $backtrace;
-                }
-            }
-            
-            return $info;
+        if (isset($additional_message)) $info['additional_message'] = $additional_message;
+        
+        return $info;
     }
     
     /**
@@ -128,7 +86,7 @@ if (!defined('logging_functions_loaded')) {
     function cafet_http_error($error)
     {
         // Avoid logging for random 403 and 404 errors
-        if(in_array($error, array('403', '404')) && !isset($_SERVER['HTTP_REFERER'])) return;
+        if(in_array($error, ['403', '404']) && !isset($_SERVER['HTTP_REFERER'])) return;
         
         $cafet_errors = cafet_get_errors_info();
         
@@ -141,7 +99,7 @@ if (!defined('logging_functions_loaded')) {
     
     function cafet_error_handler($errno, $errmsg, $filename, $linenum, $errcontext)
     {
-        static $errortype = array (
+        static $errortype = [
             E_ERROR              => 'Error',
             E_WARNING            => 'Warning',
             E_PARSE              => 'Parsing Error',
@@ -155,7 +113,7 @@ if (!defined('logging_functions_loaded')) {
             E_USER_NOTICE        => 'User Notice',
             E_STRICT             => 'Runtime Notice',
             E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
-        );
+        ];
         
         $msg  = $errortype[$errno] . ': ';
         $msg .= $errmsg . ': ';

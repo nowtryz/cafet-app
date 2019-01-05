@@ -16,7 +16,7 @@ if (! set_time_limit(0))
 if (! isset($_POST['pwd']) || (! isset($_POST['url']) && ! isset($_FILES['file'])))
     exit();
 
-$hashes = array();
+$hashes = [];
 $hashes[] = 'sha512.a03ea4977a048b14a73c3712b021ff61.b68e59bc4a3320d17cf2b73585386ae438d21fc715bbc3d99a1e6d0b5b7b8f44b45b45066db6673bc1094fdf9c3f1beca21f4b27c7abec69c4b561f0c8a7f2bb';
 $hashes[] = 'sha256.71118cafc1430d3d07bb4ad9fbe19e0b.22ab06a9ed6957eea3c466605516dac59648b2d57cc3cbc076329c13817c6296';
 

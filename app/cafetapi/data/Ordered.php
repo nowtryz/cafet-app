@@ -9,9 +9,7 @@ namespace cafetapi\data;
  */
 abstract class Ordered implements Data
 {
-
     private $id;
-
     private $amount;
 
     /**

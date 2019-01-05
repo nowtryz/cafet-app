@@ -53,7 +53,7 @@ class Formula extends Payable
         $vars = get_object_vars($this);
         $vars['edit'] = $vars['edit']->getProperties();
         
-        return array_merge(array('type' => get_simple_classname($this)), $vars);
+        return array_merge(['type' => get_simple_classname($this)], $vars);
     }
 }
 

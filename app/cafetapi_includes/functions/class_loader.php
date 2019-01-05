@@ -12,7 +12,7 @@ if (! defined('loader_functions_loaded') ) {
     
     function cafet_class_autoload($class)
     {
-        static $classlist = array();
+        static $classlist = [];
         
         if (! $classlist) {
             cafet_list_classes(CLASS_DIR, $classlist);
@@ -35,10 +35,7 @@ if (! defined('loader_functions_loaded') ) {
             $files = scandir($dir);
             
             foreach ($files as $file) {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $file) && ! in_array($file, array(
-                    '.',
-                    '..'
-                ))) {
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $file) && ! in_array($file, ['.', '..'])) {
                     cafet_list_classes($dir . $file . DIRECTORY_SEPARATOR, $classlist);
                 }
                 elseif (strpos($file, '.php') == (strlen($file) - strlen('.php'))) {
@@ -62,13 +59,10 @@ if (! defined('loader_functions_loaded') ) {
             $files = scandir($dir);
             
             foreach ($files as $file) {
-                if (is_dir($dir . DIRECTORY_SEPARATOR . $file) && ! in_array($file, array(
-                    '.',
-                    '..'
-                )))
+                if (is_dir($dir . DIRECTORY_SEPARATOR . $file) && ! in_array($file, ['.', '..']))
                     cafet_load_class_folder($dir . $file . DIRECTORY_SEPARATOR);
-                    elseif (strpos($file, '.php'))
-                    require_once $dir . $file;
+                elseif (strpos($file, '.php'))
+                require_once $dir . $file;
             }
         }
     }

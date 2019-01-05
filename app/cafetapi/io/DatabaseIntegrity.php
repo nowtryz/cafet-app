@@ -11,11 +11,11 @@ class DatabaseIntegrity extends DatabaseConnection
     public static final function checkTables()
     {
         $stmt = self::$globalConnection->query('SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = "BASE TABLE" AND TABLE_SCHEMA = "' . self::$database . '"');
-        $tables = array();
+        $tables = [];
         while ($row = $stmt->fetch()) $tables[] = $row[0];
         $stmt->closeCursor();
         
-        $needed_tables = array(
+        $needed_tables = [
             self::CONFIG,
             self::RELOADS,
             self::EXPENSES,
@@ -31,7 +31,7 @@ class DatabaseIntegrity extends DatabaseConnection
             self::PRODUCTS_GROUPS,
             self::REPLENISHMENTS,
             self::USERS
-        );
+        ];
         
         if(count(array_intersect($tables, $needed_tables)) >= count($needed_tables)) return;
         

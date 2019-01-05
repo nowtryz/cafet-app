@@ -92,6 +92,7 @@ abstract class Updater extends DatabaseConnection
         $statement->bindValue(':value', $value, $value_type);
         $statement->execute();
         $this->checkUpdate($statement, 'unable to update field ' . $field . ' in ' . static::TABLE_NAME);
+        $statement->closeCursor();
         
         if (!$this->inTransaction) $this->connection->commit();
         return true;
@@ -116,9 +117,20 @@ abstract class Updater extends DatabaseConnection
         foreach ($key_values_pairs as $key => $value) $statement->bindValue(':' . $key, $value, $value_type);
         $statement->execute();
         $this->checkUpdate($statement, 'unable to update fields in ' . static::TABLE_NAME);
+        $statement->closeCursor();
         
         if (!$this->inTransaction) $this->connection->commit();
         return true;
+    }
+    
+    protected final function exists(int $id) : bool
+    {
+        $statement = $this->connection->prepare('SELECT 1 FROM ' . static::TABLE_NAME . ' WHERE ' . static::FIELD_ID . ' = ?');
+        $statement->execute([$id]);
+        $result = $statement->fetch();
+        $statement->closeCursor();
+        
+        return $result;
     }
 }
 

@@ -11,27 +11,27 @@ use cafetapi\data\JSONParsable;
  */
 class Group extends JSONParsable implements Permissible, Data, \Serializable
 {
-    const GUEST = array(
+    const GUEST = [
         Perm::GLOBAL_CONNECT => true,
         Perm::CAFET_ADMIN_GET_PRODUCTS => true,
         Perm::CAFET_ADMIN_GET_FORMULAS => true
-    );
+    ];
 
-    const SUPER_USER = array(
+    const SUPER_USER = [
         Perm::ALL => true
-    );
+    ];
 
-    const ADMIN = array(
+    const ADMIN = [
         Perm::ALL => true,
         Perm::GLOBAL_HIDDEN => false,
         Perm::GLOBAL_UNTOUCHABLE => false
-    );
+    ];
 
-    const CAFET_ADMIN = array(
+    const CAFET_ADMIN = [
         Perm::CAFET => true
-    );
+    ];
 
-    const CAFET_MANAGER = array(
+    const CAFET_MANAGER = [
         Perm::CAFET_ADMIN_PANELACCESS => true,
         Perm::CAFET_ADMIN_ORDER => true,
         Perm::CAFET_ADMIN_RELOAD => true,
@@ -39,25 +39,25 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
         Perm::CAFET_ADMIN_GET => true,
         Perm::CAFET_PURCHASE => true,
         Perm::CAFET_ME => true
-    );
+    ];
 
-    const CONSUMER = array(
+    const CONSUMER = [
         Perm::CAFET_PURCHASE => true,
         Perm::CAFET_ME => true
-    );
+    ];
     
-    const GROUPS = array(
+    const GROUPS = [
         0 => self::GUEST,
         1 => self::CONSUMER,
         2 => self::CAFET_MANAGER,
         3 => self::CAFET_ADMIN,
         4 => self::ADMIN,
         5 => self::SUPER_USER
-    );
+    ];
 
     private $name;
 
-    private $permissions;
+    private $permissions = [];
 
     /**
      *
@@ -70,11 +70,9 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
         $this->name = $name;
 
         if (is_associative_array($permissions))
-            foreach ($permissions as $permission => $value) {
-                if (is_string($permission)) {
+            foreach ($permissions as $permission => $value)
+                if (is_string($permission))
                     $this->permissions[$permission] = (bool) $value;
-                }
-            }
     }
 
     public function hasPermission(string $permission): bool
@@ -115,7 +113,7 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
     
     public function getProperties(): array
     {
-        return array_merge(array('type' => get_simple_classname($this)), get_object_vars($this));
+        return array_merge(['type' => get_simple_classname($this)], get_object_vars($this));
     }
 }
 

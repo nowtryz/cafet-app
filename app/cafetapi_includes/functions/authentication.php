@@ -130,8 +130,10 @@ if (!defined('authentication_functions_loaded')) {
         if (count($hash_info) < 3) {
             throw new InvalidArgumentException('Wrong password hash format');
         }
+        
+        [$algo, $salt, $hashed] = $hash_info;
             
-        return hash($hash_info[0], $hash_info[1] . $password) === $hash_info[2];
+        return hash($algo, $salt . $password) === $hashed;
     }
     
     /**

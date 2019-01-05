@@ -69,7 +69,7 @@ class ProductBought extends ExpenseDetail
         $vars = get_object_vars($this);
         $vars['date'] = $vars['date']->getProperties();
         
-        return array_merge(array('type' => get_simple_classname($this)), $vars);
+        return array_merge(['type' => get_simple_classname($this)], $vars);
     }
 }
 

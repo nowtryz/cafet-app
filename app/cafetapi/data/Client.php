@@ -1,7 +1,6 @@
 <?php
 namespace cafetapi\data;
 
-use cafetapi\io\ClientManager;
 use cafetapi\io\ExpenseManager;
 use cafetapi\io\ReloadManager;
 
@@ -14,21 +13,13 @@ use cafetapi\io\ReloadManager;
  */
 class Client extends JSONParsable implements Data
 {
-
     private $id;
-
     private $email;
-
     private $alias;
-
     private $familyNane;
-
     private $surname;
-
     private $member;
-
     private $balance;
-
     private $registrationYear;
 
     /**
@@ -206,7 +197,7 @@ class Client extends JSONParsable implements Data
     
     public function getProperties(): array
     {
-        return array_merge(array('type' => get_simple_classname($this)), get_object_vars($this));
+        return array_merge(['type' => get_simple_classname($this)], get_object_vars($this));
     }
 }
 

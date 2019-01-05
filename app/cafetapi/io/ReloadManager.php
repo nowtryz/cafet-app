@@ -61,12 +61,12 @@ class ReloadManager extends Updater
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $client_id
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
-        $result = array();
+        $result = [];
         
         while ($stmt->fetch()) $result[] = new Reload($id, $client_id, $details, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($amount), floatval($balance));
             
@@ -106,9 +106,9 @@ class ReloadManager extends Updater
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $reload_id
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
         if ($stmt->fetch()) return new Reload($id, $client_id, $details, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($amount), floatval($balance));
@@ -150,7 +150,7 @@ class ReloadManager extends Updater
         $stmt->execute();
         $this->check_fetch_errors($stmt);
         
-        $result = array();
+        $result = [];
         
         while ($stmt->fetch()) $result[] = new Reload($id, $client_id, $details, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($amount), floatval($balance));
             
@@ -171,11 +171,11 @@ class ReloadManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::RELOADS . '(user_id, amount, details) VALUES (:client,:amount,:details)');
-        $stmt->execute(array(
+        $stmt->execute([
             'client' => $client_id,
             'amount' => $amount,
             'details' => $comment
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to save balance reload');
         
         $this->commit();

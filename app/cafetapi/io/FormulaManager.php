@@ -64,7 +64,7 @@ class FormulaManager extends Updater
         $stmt->execute();
         $this->check_fetch_errors($stmt);
         
-        $result = array();
+        $result = [];
         
         while ($stmt->fetch()) $result[] = new Formula($id, $name, $image, $price, $viewable, new Calendar($year, $month, $day, $hour, $mins, $secs));
             
@@ -106,9 +106,9 @@ class FormulaManager extends Updater
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $id
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
         if ($stmt->fetch()) return new Formula($id, $name, $image, $price, $viewable, new Calendar($year, $month, $day, $hour, $mins, $secs));
@@ -123,12 +123,12 @@ class FormulaManager extends Updater
             . 'FROM ' . self::FORMULAS_CHOICES . ' '
             . 'WHERE formula = :id');
         
-        $stmt->execute(array('id' => $formula_id));
+        $stmt->execute(['id' => $formula_id]);
         $this->check_fetch_errors($stmt);
         $datas = $stmt->fetchAll();
         
         $choices = array();
-        foreach ($datas as $data) $choices[] = $data['id'];
+        foreach ($datas as $data) ['id' => $choices[]] = $data;
         return $choices;
     }
     
@@ -140,9 +140,9 @@ class FormulaManager extends Updater
             . 'FROM ' . self::FORMULAS_CHOICES . ' '
             . 'WHERE formula = :id');
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $formula_id
-        ));
+        ]);
         $this->check_fetch_errors($stmt);
         
         $datas = $stmt->fetchAll();
@@ -186,14 +186,14 @@ class FormulaManager extends Updater
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
         
-        $result = array();
+        $result = [];
         
         foreach ($datas as $data) {
             $choice = array();
             
-            $stmt->execute(array(
+            $stmt->execute([
                 'id' => $data['id']
-            ));
+            ]);
             $this->check_fetch_errors($stmt);
             
             $choice = array();
@@ -222,9 +222,9 @@ class FormulaManager extends Updater
         $stmt->bindColumn('formula', $formula_id, PDO::PARAM_INT);
         $stmt->bindColumn('name', $choice_name, PDO::PARAM_STR);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $choice_id
-        ));
+        ]);
         
         $this->check_fetch_errors($stmt);
         
@@ -269,13 +269,13 @@ class FormulaManager extends Updater
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
         
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $choice_id
-        ));
+        ]);
         
         $this->check_fetch_errors($stmt);
         
-        $choice = array();
+        $choice = [];
         
         while ($stmt->fetch()) $choice[] = new Product($id, $name, floatval($price), $group_id, $image, $viewable, $stock, new Calendar($year, $month, $day, $hour, $mins, $secs));
             
@@ -304,10 +304,10 @@ class FormulaManager extends Updater
         $stmt->closeCursor();
         $formula_id = $this->connection->lastInsertId();
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_EDITS . '(formula, name) VALUES(:formula,:name)');
-        $stmt->execute(array(
+        $stmt->execute([
             'formula' => $formula_id,
             'name' => $name
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to add the formula');
         $stmt->closeCursor();
         
@@ -329,10 +329,10 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_CHOICES . '(formula, name) VALUES (:formula, :name)');
-        $stmt->execute(array(
+        $stmt->execute([
             'formula' => $formula_id,
             'name' => $name
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to add the choice');
         
         $id = $this->connection->lastInsertId();
@@ -353,10 +353,10 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_CHOICES_PRODUCTS . '(choice, product) VALUES (:choice, :product)');
-        $stmt->execute(array(
+        $stmt->execute([
             'choice' => $choice_id,
             'product' => $product_id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to register product');
         
         $this->commit();
@@ -376,10 +376,10 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS_CHOICES_PRODUCTS . ' WHERE choice = :choice AND product = :product');
-        $stmt->execute(array(
+        $stmt->execute([
             'choice' => $choice_id,
             'product' => $product_id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to unregister product');
         
         $this->commit();
@@ -398,7 +398,7 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS_CHOICES_PRODUCTS . ' WHERE choice = :choice');
-        $stmt->execute(array('choice' => $choice_id));
+        $stmt->execute(['choice' => $choice_id]);
         $this->checkUpdate($stmt, 'unable to unregister product');
         
         $this->commit();
@@ -418,10 +418,10 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_EDITS . '(formula,name) VALUES (:id, :name)');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $formula_id,
             'name' => $name
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update formula');
         
         $this->commit();
@@ -441,10 +441,10 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::FORMULAS_EDITS . '(formula,price) VALUES (:id, :price)');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $formula_id,
             'price' => $price
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update formula');
         
         $this->commit();
@@ -489,10 +489,10 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('UPDATE ' . self::FORMULAS . ' SET image = :image WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'image' => $image_base64,
             'id' => $formula_id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update formula');
         
         $this->commit();
@@ -510,10 +510,10 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('UPDATE ' . self::FORMULAS_CHOICES . ' SET name = :name WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'name' => $name,
             'id' => $choice_id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to update formula choice');
         
         $this->commit();
@@ -532,9 +532,9 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS . ' WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to delete the formula');
         
         $this->commit();
@@ -553,9 +553,9 @@ class FormulaManager extends Updater
         $this->beginTransaction();
         
         $stmt = $this->connection->prepare('DELETE FROM ' . self::FORMULAS_CHOICES . ' WHERE id = :id');
-        $stmt->execute(array(
+        $stmt->execute([
             'id' => $id
-        ));
+        ]);
         $this->checkUpdate($stmt, 'unable to delete the choice');
         
         $this->commit();

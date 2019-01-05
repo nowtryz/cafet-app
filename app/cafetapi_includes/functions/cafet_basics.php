@@ -106,9 +106,9 @@ if (! defined('basics_functions_loaded') ) {
     function cafet_headers_check()
     {
         $list = headers_list();
-        $headers_to_remove = array(
+        $headers_to_remove = [
             'X-Powered'
-        );
+        ];
 
         foreach ($list as $header) {
             foreach ($headers_to_remove as $to_remove) {

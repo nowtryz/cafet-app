@@ -16,15 +16,10 @@ use cafetapi\io\ExpenseManager;
  */
 class Expense extends JSONParsable implements Data
 {
-
     private $id;
-
     private $client;
-
     private $date;
-
     private $total;
-
     private $balanceAfterTransaction;
 
     /**
@@ -131,7 +126,7 @@ class Expense extends JSONParsable implements Data
         $vars = get_object_vars($this);
         $vars['date'] = $vars['date']->getProperties();
         
-        return array_merge(array('type' => get_simple_classname($this)), $vars);
+        return array_merge(['type' => get_simple_classname($this)], $vars);
     }
 }
 
