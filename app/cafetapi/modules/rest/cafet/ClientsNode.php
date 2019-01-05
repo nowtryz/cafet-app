@@ -3,17 +3,19 @@ namespace cafetapi\modules\rest\cafet;
 
 use cafetapi\data\FormulaOrdered;
 use cafetapi\data\ProductOrdered;
+use cafetapi\exceptions\CafetAPIException;
 use cafetapi\exceptions\NotEnoughtMoneyException;
+use cafetapi\io\ClientManager;
+use cafetapi\io\ExpenseManager;
+use cafetapi\io\ReloadManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
+use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
-use cafetapi\exceptions\CafetAPIException;
-use cafetapi\io\ClientManager;
-use cafetapi\io\ReloadManager;
-use cafetapi\io\ExpenseManager;
+use Exception;
 
 /**
  *
@@ -88,14 +90,47 @@ class ClientsNode implements RestNode
     
     private static function client(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods('GET');
+        $request->allowMethods('GET', 'PATCH');
         
+        switch ($request->getMethod()) {
+            case 'GET': return self:: get($request, $id);
+            case 'PATCH': return self::patch($request, $id);
+        }
+    }
+    
+    private static function get(Rest $request, int $id) : RestResponse
+    {
         if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_CLIENT);
         else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
         
         $client = ClientManager::getInstance()->getClient($id);
         if($client) return new RestResponse('200', HttpCodes::HTTP_200, $client->getProperties());
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
+    }
+    
+    private static function patch(Rest $request, int $id) : RestResponse
+    {
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_CLIENTS);
+        
+        $manager = ClientManager::getInstance();
+        $body = $request->getBody();
+        
+        if (!$manager->getClient($id)) return ClientError::resourceNotFound('Unknown client with id ' . $id);
+        if($body && isset($body['member']))
+        {
+            $request->checkBody(array(
+                'member' => Rest::PARAM_BOOL
+            ));
+            
+            try {
+                $manager->setMember($id, $body['member']);
+            } catch (Exception $e) {
+                cafet_log($e->__toString());
+                return ServerError::internalServerError();
+            }
+        }
+        
+        return new RestResponse('204', HttpCodes::HTTP_204, null);
     }
     
     private static function clientReloads(Rest $request, int $id) : RestResponse

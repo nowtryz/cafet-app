@@ -50,6 +50,7 @@ class Perm
     const CAFET_ADMIN_MANAGE_FORMULAS = 'd_c_g_b';
     const CAFET_ADMIN_MANAGE_SETTINGS = 'd_c_g_c';
     const CAFET_ADMIN_MANAGE_STOCKS = 'd_c_g_d';
+    const CAFET_ADMIN_MANAGE_CLIENTS = 'd_c_g_e';
 
     public static function checkPermission(string $permission, Permissible $permissible): bool
     {

@@ -11,6 +11,8 @@ use PDO;
  */
 class ClientManager extends Updater
 {
+    const TABLE_NAME = self::CLIENTS;
+    
     const FIELD_ID = 'id';
     const FIELD_USER_ID = 'user_id';
     const FIELD_MEMBER = 'member';
@@ -151,6 +153,11 @@ class ClientManager extends Updater
         while ($stmt->fetch()) $result[] = new Client($id, $email, $alias, $familyNane, $surname, $member, floatval($balance), $registrationYear);
             
         return $result;
+    }
+    
+    public final  function setMember(int $client_id, bool $member)
+    {
+        $this->updateValue(self::FIELD_MEMBER, $client_id, $member, PDO::PARAM_BOOL);
     }
 }
 
