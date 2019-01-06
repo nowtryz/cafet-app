@@ -1,37 +1,37 @@
 <?php
 namespace cafetapi\user;
 
+use cafetapi\data\Calendar;
+use cafetapi\data\Data;
 use cafetapi\data\JSONParsable;
+use cafetapi\exceptions\EmailFormatException;
 
 /**
  *
  * @author Damien
  *        
  */
-class User extends JSONParsable implements Permissible, \Serializable
+class User extends JSONParsable implements Permissible, Data, \Serializable
 {
 
     private $id;
-
     private $pseudo;
-
     private $firstname;
-
     private $name;
-
     private $password;
-
     private $email;
-
     private $phone;
-
     private $permissions;
-
     private $group;
+    
+    private $signin_count;
+    private $last_signin;
+    private $registration;
 
     /**
      */
-    public function __construct(int $id, string $pseudo, string $firstname, string $name, string $password, string $email, $phone, Group $group, array $additional_permissions = null)
+    public function __construct(int $id, string $pseudo, string $firstname, string $name, string $password, string $email, $phone, 
+        Calendar $last_signin, Calendar $registration, int $signin_count, Group $group, array $additional_permissions = null)
     {
         $this->id = $id;
         $this->pseudo = $pseudo;
@@ -41,6 +41,10 @@ class User extends JSONParsable implements Permissible, \Serializable
         $this->email = $email;
         $this->phone = $phone;
         $this->group = $group;
+        
+        $this->signin_count = $signin_count;
+        $this->last_signin = $last_signin;
+        $this->registration = $registration;
 
         $this->permissions = $group->getPermissions();
 
@@ -139,6 +143,63 @@ class User extends JSONParsable implements Permissible, \Serializable
     }
 
     /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $pseudo
+     */
+    public function setPseudo(string $pseudo)
+    {
+        $this->pseudo = $pseudo;
+    }
+
+    /**
+     * @param string $firstname
+     */
+    public function setFirstname(string $firstname)
+    {
+        $this->firstname = $firstname;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail(string $email)
+    {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new EmailFormatException('"' . $email . '" is not valid!');
+        $this->email = $email;
+    }
+
+    /**
+     * @param mixed $phone
+     */
+    public function setPhone(string $phone)
+    {
+        $this->phone = $phone;
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function setGroup(Group $group)
+    {
+        $this->group = $group;
+    }
+
+    /**
      *
      * {@inheritdoc}
      * @see \cafetapi\user\Permissible::hasPermission()
@@ -170,15 +231,12 @@ class User extends JSONParsable implements Permissible, \Serializable
 
     public function serialize()
     {
-        return $this->__toString();
+        return serialize(get_object_vars($this));
     }
 
     public function unserialize($serialized)
     {
-        $array = json_decode($serialized, true);
-
-        $this->group = new Group($array['group']['name'], $array['group']['permissions']);
-        unset($array['group']);
+        $array = unserialize($serialized);
 
         foreach ($array as $name => $value) {
             $this->$name = $value;
@@ -194,6 +252,16 @@ class User extends JSONParsable implements Permissible, \Serializable
             unset($vars['password']);
 
         return $this->parse_JSON($vars);
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['group']=$this->group->getProperties();
+        $vars['last_signin']=$this->last_signin->getProperties();
+        $vars['registration']=$this->registration->getProperties();
+        unset($vars['password']);
+        return array_merge(array('type' => get_simple_classname($this)), $vars);
     }
 }
 

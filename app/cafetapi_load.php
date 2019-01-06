@@ -52,6 +52,10 @@ require CAFET_DIR . 'cafetapi_includes' . DIRECTORY_SEPARATOR . 'constants.php';
  */
 require FUNCTIONS_DIR . 'utils.php';
 require FUNCTIONS_DIR . 'cafet_basics.php';
+require FUNCTIONS_DIR . 'logging.php';
+require FUNCTIONS_DIR . 'authentication.php';
+require FUNCTIONS_DIR . 'class_loader.php';
+require FUNCTIONS_DIR . 'configuration.php';
 
 /*
  * Configure header check
@@ -82,4 +86,4 @@ define('CONFIGURATIONS', cafet_get_configurations());
 /*
  * initialise database conection
  */
-$DB = DatabaseConnection::getDatabaseConnectionInstance();
+DatabaseConnection::getDatabaseConnectionInstance();

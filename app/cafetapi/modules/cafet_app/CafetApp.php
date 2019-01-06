@@ -2,12 +2,11 @@
 namespace cafetapi\modules\cafet_app;
 
 use cafetapi\ReturnStatement;
+use cafetapi\exceptions\NotEnoughtMoneyException;
+use cafetapi\exceptions\PermissionNotGrantedException;
 use cafetapi\exceptions\RequestFailureException;
 use cafetapi\io\DatabaseConnection;
 use cafetapi\user\Perm;
-use cafetapi\exceptions\PermissionNotGrantedException;
-use Exception;
-use cafetapi\exceptions\NotEnoughtMoneyException;
 
 /**
  *
@@ -107,7 +106,7 @@ class CafetApp
         } else if (! Perm::checkPermission(PERM::GLOBAL_CONNECT, $this->user) || ! Perm::checkPermission(PERM::CAFET_ADMIN_PANELACCESS, $this->user)) {
             cafet_throw_error("02-002");
         } else
-            $_SESSION['user'] = serialize($this->user);
+            cafet_set_logged_user($this->user);
 
         $this->returnLogedSession();
     }
@@ -135,7 +134,7 @@ class CafetApp
         cafet_destroy_session();
 
         $result = array(
-            'logout_message' => CONFIGURATIONS['logout_message']
+            'logout_message' => cafet_get_configurations()['logout_message']
         );
 
         $return = new ReturnStatement('ok', $result);
@@ -179,8 +178,9 @@ class CafetApp
 
     private function sendUpdateInfos(bool $diferent_numbers = false)
     {
-        $jar_url = (((bool) CONFIGURATIONS['installer_external']) ? CONFIGURATIONS['url'] : '') . CONFIGURATIONS['installer_jar_url'];
-        $win_url = (((bool) CONFIGURATIONS['installer_external']) ? CONFIGURATIONS['url'] : '') . CONFIGURATIONS['installer_url'];
+        $configuration = cafet_get_configurations();
+        $jar_url = (((bool) $configuration['installer_external']) ? $configuration['url'] : '') . $configuration['installer_jar_url'];
+        $win_url = (((bool) $configuration['installer_external']) ? $configuration['url'] : '') . $configuration['installer_url'];
 
         if ($diferent_numbers) {
             $result = array(

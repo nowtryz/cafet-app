@@ -7,19 +7,13 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-final class Calendar extends JSONParsable
+final class Calendar extends JSONParsable implements Data, \Serializable
 {
-
     private $year;
-
     private $month;
-
     private $day;
-
     private $hour;
-
     private $mins;
-
     private $secs;
 
     /**
@@ -206,10 +200,31 @@ final class Calendar extends JSONParsable
     {
         $this->secs = $secs;
     }
+    
+    public function serialize()
+    {
+        return serialize(get_object_vars($this));
+    }
+    
+    public function unserialize($serialized)
+    {
+        $array = unserialize($serialized);
+        
+        foreach ($array as $name => $value) {
+            $this->$name = $value;
+        }
+        
+        return $this;
+    }
 
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        return array_merge(['type' => get_simple_classname($this)], get_object_vars($this));
     }
 }
 

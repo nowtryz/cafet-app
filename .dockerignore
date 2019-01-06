@@ -1,9 +1,12 @@
 # Eclypse
-.settings/
-.buildpath
-.project
-.classpath
+**/.settings/
+**/.buildpath
+**/.project
+**/.classpath
 bin/
 
-#Docker
+# Docker
 Dockerfile
+
+# Logs
+**/*.log

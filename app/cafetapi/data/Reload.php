@@ -12,19 +12,14 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-class Reload extends JSONParsable
+class Reload extends JSONParsable implements Data
 {
 
     private $id;
-
     private $client_id;
-
     private $details;
-
     private $date;
-
     private $amount;
-
     private $balanceAfterTransaction;
 
     /**
@@ -40,7 +35,7 @@ class Reload extends JSONParsable
      * @param float $amount
      * @param float $balanceAfterTransaction
      * @see Client::getReloads()
-     * @see \cafetapi\io\DataFetcher::getClientReloads()
+     * @see \cafetapi\io\ReloadManager::getClientReloads()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, int $client_id, string $details, Calendar $date, float $amount, float $balanceAfterTransaction)
@@ -122,6 +117,14 @@ class Reload extends JSONParsable
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['date'] = $vars['date']->getProperties();
+        
+        return array_merge(['type' => get_simple_classname($this)], $vars);
     }
 }
 

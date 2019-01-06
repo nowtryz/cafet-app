@@ -1,8 +1,8 @@
 <?php
 namespace cafetapi\data;
 
-use cafetapi;
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ExpenseManager;
+use cafetapi\io\ReloadManager;
 
 /**
  * The Client object is the wich stores every client information for later use
@@ -11,23 +11,15 @@ use cafetapi\io\DataFetcher;
  * @since API 1.0.0 (2018)
  *       
  */
-class Client extends JSONParsable
+class Client extends JSONParsable implements Data
 {
-
     private $id;
-
     private $email;
-
     private $alias;
-
     private $familyNane;
-
     private $surname;
-
     private $member;
-
     private $balance;
-
     private $registrationYear;
 
     /**
@@ -51,7 +43,7 @@ class Client extends JSONParsable
      *            the actual balance of the client
      * @param int $registrationYear
      *            the year of the client's registration
-     * @see \cafetapi\io\DataFetcher::getClient()
+     * @see \cafetapi\io\ClientManager::getClient()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, string $email, string $alias, string $familyNane, string $surname, bool $member, float $balance, int $registrationYear)
@@ -162,7 +154,7 @@ class Client extends JSONParsable
      */
     public final function getExpenses(): array
     {
-        return DataFetcher::getInstance()->getClientExpenses($this->id);
+        return ExpenseManager::getInstance()->getClientExpenses($this->id);
     }
 
     /**
@@ -173,7 +165,7 @@ class Client extends JSONParsable
      */
     public final function getLastExpenses(): array
     {
-        return DataFetcher::getInstance()->getClientLastExpenses($this->id);
+        return ExpenseManager::getInstance()->getClientLastExpenses($this->id);
     }
 
     /**
@@ -184,7 +176,7 @@ class Client extends JSONParsable
      */
     public final function getReloads(): array
     {
-        return DataFetcher::getInstance()->getClientReloads($this->id);
+        return ReloadManager::getInstance()->getClientReloads($this->id);
     }
 
     /**
@@ -201,6 +193,11 @@ class Client extends JSONParsable
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        return array_merge(['type' => get_simple_classname($this)], get_object_vars($this));
     }
 }
 

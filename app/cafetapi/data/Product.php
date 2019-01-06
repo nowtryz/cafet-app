@@ -1,7 +1,7 @@
 <?php
 namespace cafetapi\data;
 
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ProductManager;
 
 /**
  *
@@ -12,6 +12,7 @@ class Product extends Payable
 {
 
     private $group;
+    private $stock;
 
     /**
      *
@@ -31,10 +32,11 @@ class Product extends Payable
      *            the date of the last edition
      * @since API 1.0.0 (2018)
      */
-    public function __construct(int $id, string $name, float $price, int $group_id, string $image, bool $viewable, Calendar $edit)
+    public function __construct(int $id, string $name, float $price, int $group_id, string $image, bool $viewable, int $stock, Calendar $edit)
     {
         parent::__construct($id, $name, $image, $price, $viewable, $edit);
         $this->group = $group_id;
+        $this->stock = $stock;
     }
 
     /**
@@ -56,7 +58,7 @@ class Product extends Payable
      */
     public final function getGroup(): ProductGroup
     {
-        return DataFetcher::getInstance()->getProductGroup($this->group);
+        return ProductManager::getInstance()->getProductGroup($this->group);
     }
 
     /**
@@ -73,5 +75,13 @@ class Product extends Payable
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['edit'] = $vars['edit']->getProperties();
+        
+        return array_merge(['type' => get_simple_classname($this)], $vars);
     }
 }

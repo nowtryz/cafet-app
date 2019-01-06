@@ -95,8 +95,7 @@ class Mail
         }
 
         // finalise initialisation with object arguments
-        if (isset($subject))
-            $this->subject = (string) $subject;
+        if (isset($subject)) $this->subject = (string) $subject;
         $this->recipient = $recipient;
     }
 

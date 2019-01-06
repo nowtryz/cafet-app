@@ -1,7 +1,7 @@
 <?php
 namespace cafetapi\data;
 
-use cafetapi\io\DataFetcher;
+use cafetapi\io\ExpenseManager;
 
 /**
  * The Expense object is the one that stores every expense's information for
@@ -14,17 +14,12 @@ use cafetapi\io\DataFetcher;
  * @see Client::getExpenses()
  * @since API 1.0.0 (2018)
  */
-class Expense extends JSONParsable
+class Expense extends JSONParsable implements Data
 {
-
     private $id;
-
     private $client;
-
     private $date;
-
     private $total;
-
     private $balanceAfterTransaction;
 
     /**
@@ -42,7 +37,7 @@ class Expense extends JSONParsable
      *            the total price dued from the client
      * @param float $balanceAfterTransaction
      *            the balance of the clien after the transaction
-     * @see \cafetapi\io\DataFetcher::getClientExpenses()
+     * @see \cafetapi\io\ExpenseManager::getClientExpenses()
      * @see Client::getExpenses()
      * @since API 1.0.0 (2018)
      */
@@ -118,12 +113,20 @@ class Expense extends JSONParsable
      */
     public final function getDetails(): array
     {
-        return DataFetcher::getInstance()->getExpenseDetails($this->id);
+        return ExpenseManager::getInstance()->getExpenseDetails($this->id);
     }
 
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['date'] = $vars['date']->getProperties();
+        
+        return array_merge(['type' => get_simple_classname($this)], $vars);
     }
 }
 

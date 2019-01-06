@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi\user;
 
+use cafetapi\data\Data;
 use cafetapi\data\JSONParsable;
 
 /**
@@ -8,39 +9,55 @@ use cafetapi\data\JSONParsable;
  * @author Damien
  *        
  */
-class Group extends JSONParsable implements Permissible, \Serializable
+class Group extends JSONParsable implements Permissible, Data, \Serializable
 {
+    const GUEST = [
+        Perm::GLOBAL_CONNECT => true,
+        Perm::CAFET_ADMIN_GET_PRODUCTS => true,
+        Perm::CAFET_ADMIN_GET_FORMULAS => true
+    ];
 
-    const SUPER_USER = array(
+    const SUPER_USER = [
         Perm::ALL => true
-    );
+    ];
 
-    const ADMIN = array(
+    const ADMIN = [
         Perm::ALL => true,
         Perm::GLOBAL_HIDDEN => false,
         Perm::GLOBAL_UNTOUCHABLE => false
-    );
+    ];
 
-    const CAFET_ADMIN = array(
+    const CAFET_ADMIN = [
         Perm::CAFET => true
-    );
+    ];
 
-    const CAFET_MANAGER = array(
+    const CAFET_MANAGER = [
         Perm::CAFET_ADMIN_PANELACCESS => true,
         Perm::CAFET_ADMIN_ORDER => true,
         Perm::CAFET_ADMIN_RELOAD => true,
         Perm::CAFET_ADMIN_STATS => true,
         Perm::CAFET_ADMIN_GET => true,
-        Perm::CAFET_PURCHASE => true
-    );
+        Perm::CAFET_PURCHASE => true,
+        Perm::CAFET_ME => true
+    ];
 
-    const CONSUMER = array(
-        Perm::CAFET_PURCHASE => true
-    );
+    const CONSUMER = [
+        Perm::CAFET_PURCHASE => true,
+        Perm::CAFET_ME => true
+    ];
+    
+    const GROUPS = [
+        0 => self::GUEST,
+        1 => self::CONSUMER,
+        2 => self::CAFET_MANAGER,
+        3 => self::CAFET_ADMIN,
+        4 => self::ADMIN,
+        5 => self::SUPER_USER
+    ];
 
     private $name;
 
-    private $permissions;
+    private $permissions = [];
 
     /**
      *
@@ -53,11 +70,9 @@ class Group extends JSONParsable implements Permissible, \Serializable
         $this->name = $name;
 
         if (is_associative_array($permissions))
-            foreach ($permissions as $permission => $value) {
-                if (is_string($permission)) {
+            foreach ($permissions as $permission => $value)
+                if (is_string($permission))
                     $this->permissions[$permission] = (bool) $value;
-                }
-            }
     }
 
     public function hasPermission(string $permission): bool
@@ -79,21 +94,26 @@ class Group extends JSONParsable implements Permissible, \Serializable
     {
         return $this->parse_JSON(get_object_vars($this));
     }
-
+    
     public function serialize()
     {
-        return $this->__toString();
+        return serialize(get_object_vars($this));
     }
-
+    
     public function unserialize($serialized)
     {
-        $array = json_decode($serialized);
-
+        $array = unserialize($serialized);
+        
         foreach ($array as $name => $value) {
             $this->$name = $value;
         }
-
+        
         return $this;
+    }
+    
+    public function getProperties(): array
+    {
+        return array_merge(['type' => get_simple_classname($this)], get_object_vars($this));
     }
 }
 

@@ -7,15 +7,11 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-class Choice extends JSONParsable
+class Choice extends JSONParsable implements Data
 {
-
     private $id;
-
     private $name;
-
     private $choice;
-
     private $formula;
 
     /**
@@ -29,7 +25,7 @@ class Choice extends JSONParsable
      *            the id of the formula
      * @param array $choice
      *            a list of products for this choice
-     * @see \cafetapi\io\DataFetcher::getFormulaChoices()
+     * @see \cafetapi\io\FormulaManager::getFormulaChoices()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, string $name, int $formula_id, array $choice)
@@ -88,5 +84,14 @@ class Choice extends JSONParsable
     {
         return $this->parse_JSON(get_object_vars($this));
     }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        foreach ($vars['choice'] as &$product) $product = $product->getProperties();
+        
+        return array_merge(['type' => get_simple_classname($this)], $vars);
+    }
+
 }
 

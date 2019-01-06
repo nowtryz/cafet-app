@@ -7,11 +7,9 @@ namespace cafetapi\data;
  * @author Damien
  * @since API 1.0.0 (2018)
  */
-abstract class Ordered
+abstract class Ordered implements Data
 {
-
     private $id;
-
     private $amount;
 
     /**

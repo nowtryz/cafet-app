@@ -1,0 +1,18 @@
+{
+  "name": "cafet-api-php",
+  "version": "1.0.0",
+  "description": "Both REST API for http connections and PHP librairy. Manage Interactions between client applications and database",
+  "private": true,
+  "scripts": {
+    "api:doc": "redoc-cli bundle openapi.yml -o doc/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.nowtryz.net:cafet-app/php-api-server.git"
+  },
+  "author": "Nowtryz",
+  "devDependencies": {
+    "@openapitools/openapi-generator-cli": "0.0.7-3.0.0",
+    "redoc-cli": "^0.7.0"
+  }
+}

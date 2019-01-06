@@ -8,7 +8,7 @@ namespace cafetapi\data;
  * @author damien
  * @since API 1.0.0 (2018)
  */
-class FormulaOrdered extends Ordered
+class FormulaOrdered extends Ordered implements Data
 {
 
     private $products;
@@ -23,7 +23,7 @@ class FormulaOrdered extends Ordered
      *            the quantity of formula
      * @param array $products
      *            an
-     * @see \cafetapi\io\DataUpdater::saveOrder()
+     * @see \cafetapi\io\FormulaManager::saveOrder()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, int $amount, array $products)
@@ -41,6 +41,11 @@ class FormulaOrdered extends Ordered
     public function getProducts(): array
     {
         return $this->products;
+    }
+    
+    public function getProperties(): array
+    {
+        return array_merge(['type' => get_simple_classname($this)], get_object_vars($this));
     }
 }
 

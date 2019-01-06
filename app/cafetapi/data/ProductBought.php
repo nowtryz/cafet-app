@@ -38,7 +38,7 @@ class ProductBought extends ExpenseDetail
      * @param Calendar $date
      *            the date of the transaction
      * @see \cafetapi\data\Expense::getDetails()
-     * @see \cafetapi\io\DataFetcher::getExpenseDetails()
+     * @see \cafetapi\io\FormulaManager::getExpenseDetails()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, int $product_id, string $name, int $client_id, float $price, int $quantity, Calendar $date)
@@ -62,6 +62,14 @@ class ProductBought extends ExpenseDetail
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['date'] = $vars['date']->getProperties();
+        
+        return array_merge(['type' => get_simple_classname($this)], $vars);
     }
 }
 

@@ -13,9 +13,7 @@ namespace cafetapi\data;
  */
 class FormulaBought extends ExpenseDetail
 {
-
     private $id;
-
     private $formula;
 
     /**
@@ -38,13 +36,13 @@ class FormulaBought extends ExpenseDetail
      * @param Calendar $date
      *            the date of the transaction
      * @see \cafetapi\data\Expense::getDetails()
-     * @see \cafetapi\io\DataFetcher::getExpenseDetails()
+     * @see \cafetapi\io\FormulaManager::getExpenseDetails()
      * @since API 1.0.0 (2018)
      */
     public function __construct(int $id, int $formula_id, string $name, int $client_id, float $price, int $quantity, Calendar $date)
     {
         parent::__construct($name, $client_id, $price, $quantity, $date);
-        $this->formula_id = $formula_id;
+        $this->formula = $formula_id;
         $this->id = $id;
     }
 
@@ -73,6 +71,14 @@ class FormulaBought extends ExpenseDetail
     public function __toString(): string
     {
         return $this->parse_JSON(get_object_vars($this));
+    }
+    
+    public function getProperties(): array
+    {
+        $vars = get_object_vars($this);
+        $vars['date'] = $vars['date']->getProperties();
+        
+        return array_merge(['type' => get_simple_classname($this)], $vars);
     }
 }
 

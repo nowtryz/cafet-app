@@ -1,0 +1,105 @@
+image: alpine
+
+stages:
+  - build
+  - deploy
+
+variables:
+  TAR_NAME: CafetApp-server-${CI_COMMIT_REF_SLUG}.tar.gz
+
+# Cache policy
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    # Actual build
+    - ./doc
+    # Node JS
+    - ./node_modules
+
+# Linux docker container runner
+.linux-docker-runner-template: &linux-docker-runner
+  tags:
+    - linux
+    - docker
+
+## ##
+## Build
+## ##
+
+documentation:
+  <<: *linux-docker-runner
+  image: node
+  stage: build
+  script:
+    - npm install
+    - npm run api:doc
+    - cp openapi.yml doc/
+
+## ##
+## Deploy
+## ##
+
+# Artifact publish templates
+.publish-artifact-template: &publish-artifact
+    name: application
+    paths:
+      - app/
+.publish-template: &publish
+  <<: *linux-docker-runner
+  stage: deploy
+  script: date
+
+# Artifact publish
+non tag application:
+  <<: *publish
+  except:
+    - tags
+  artifacts:
+    <<: *publish-artifact
+    expire_in: 1 day
+
+application:
+  <<: *publish
+  only:
+    - tags
+  artifacts: *publish-artifact
+
+
+# db structure templates
+.db-struct-artifact-template: &db-struct-artifact
+    name: database structure
+    paths:
+      - ./*.sql
+.db-struct-template: &db-struct
+  <<: *linux-docker-runner
+  stage: deploy
+  script:
+    - cp docker/mysql/structure.sql .
+    - cp docker/mysql/demo.sql .
+
+# Artifact publish
+non tag database structure:
+  <<: *db-struct
+  except:
+    - tags
+  artifacts:
+    <<: *db-struct-artifact
+    expire_in: 1 day
+
+database structure:
+  <<: *db-struct
+  only:
+    - tags
+  artifacts: *db-struct-artifact
+
+
+pages:
+  <<: *linux-docker-runner
+  stage: deploy
+  dependencies:
+    - documentation
+  script: mv doc public
+  artifacts:
+    paths:
+      - public
+    expire_in: 20 mins

@@ -1,15 +1,23 @@
 <IfModule mod_rewrite.c>
 	Options +FollowSymlinks
 	RewriteEngine On
-	RewriteOptions MaxRedirects=1
+	RewriteBase /
+	
+    RewriteCond %{ENV:REDIRECT_STATUS} !^$
+    RewriteRule ^ - [L]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    RewriteCond %{REQUEST_FILENAME} -s
+    RewriteRule ^ - [L]
 
-	RewriteRule ^[^/]+.ico$ - [L]
-	RewriteRule ^assets/.*$ - [L]
-	RewriteRule ^.*\.php.*$ - [L]
-	RewriteRule ^(.+)/(.+)\.html$ index.php?module=$1&path=$2 [L]
-	RewriteRule ^(.*).html$ index.php?t=$1 [L]
-	RewriteRule ^(.+)/(.+)$ index.php?module=$1&path=$2 [L]
-	RewriteRule ^(.*)$ index.php?t=$1 [L]
+
+	RewriteRule ^api\/v([^\s\/]+)\/([^\.]*)(?:\.(.*))?$ api.php?version=$1&path=$2&return_type=$3 [L,QSA]
+	RewriteRule ^api\/v([^\s\/]+)\/ api.php?version=$1&path&return_type [L,QSA]
+	RewriteRule ^api\/ api.php?version&path&return_type [L,QSA]
+	RewriteRule ^image\/(product|formula)(?:\/([0-9]+))?(?:\/size/([^\/\s\.]))? image.php?item=$1&id=$2&size=$3 [QSA,L]
+	RewriteRule ^debug/([^\/\s\.]+)(?:\.[a-zA-Z0-9]+)?$ index.php?module=debug&path=$1 [L,QSA]
 
     ErrorDocument 404 /error.php
 </IfModule>
@@ -22,7 +30,7 @@
 	Deny from all
 </Files>
 
-<Files debug.log>
+<Files *.log>
 	Deny from all
 </Files>
 
@@ -37,3 +45,6 @@ ErrorDocument 502 /error.php
 ErrorDocument 503 /error.php
 ErrorDocument 504 /error.php
 ErrorDocument 505 /error.php
+
+Options -Indexes
+Options -MultiViews
