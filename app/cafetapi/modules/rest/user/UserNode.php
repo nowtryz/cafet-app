@@ -16,9 +16,10 @@ use cafetapi\modules\rest\errors\ServerError;
  */
 class UserNode implements RestNode
 {
-    const LOGIN   = 'login';
-    const LOGOUT  = 'logout';
-    const CURRENT = 'current';
+    const LOGIN    = 'login';
+    const LOGOUT   = 'logout';
+    const CURRENT  = 'current';
+    const REGISTER = 'register';
 
     /**
      * (non-PHPdoc)
@@ -31,9 +32,10 @@ class UserNode implements RestNode
         
         
         switch ($dir) {
-            case self::LOGIN:   return self::login($request);
-            case self::LOGOUT:  return self::logout($request);
-            case self::CURRENT: return self::current($request);
+            case self::LOGIN:    return self::login($request);
+            case self::LOGOUT:   return self::logout($request);
+            case self::CURRENT:  return self::current($request);
+            case self::REGISTER: return self::register($request);
             
             case null: return ClientError::forbidden();
             default:   return ClientError::resourceNotFound('Unknown user/' . $dir . ' node');
@@ -185,6 +187,43 @@ class UserNode implements RestNode
         }
         
         return new RestResponse('204', HttpCodes::HTTP_204, null);
+    }
+    
+    private static function register(Rest $request) : RestResponse
+    {
+        if ($request->getSession() && $request->getUser())
+        {
+            return new RestResponse(200, HttpCodes::HTTP_200, $request->getUser()->getProperties());
+        }
+        
+        $request->checkBody([
+            'email' => Rest::PARAM_STR,
+            'password' => Rest::PARAM_STR,
+            'firstname' => Rest::PARAM_STR,
+            'name' => Rest::PARAM_STR
+        ]);
+        
+        $password = $request->getBody()['password'];
+        $firstname = $request->getBody()['firstname'];
+        $name = $request->getBody()['name'];
+        $email = $request->getBody()['email'];
+        
+        $manager = UserManager::getInstance();
+        $conflicts = [];
+        
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $conflicts['email'] = Rest::CONFLICT_NOT_VALID;
+        if ($manager->getUser($email)) $conflicts['email'] = Rest::CONFLICT_DUPLICATED;
+        
+        if($conflicts) return ClientError::conflict(null, $conflicts);
+        unset($conflicts);
+        
+        $user = $manager->addUser($email, $email, $firstname, $name, $password);
+        if ($user)
+        {
+            $manager->registerLogin($user->getId());
+            return new RestResponse(201, HttpCodes::HTTP_201, $user->getProperties());
+        }
+        else return ServerError::internalServerError();
     }
 }
 
