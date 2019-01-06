@@ -155,9 +155,20 @@ class ClientManager extends Updater
         return $result;
     }
     
-    public final  function setMember(int $client_id, bool $member)
+    public final function setMember(int $client_id, bool $member)
     {
         $this->updateValue(self::FIELD_MEMBER, $client_id, $member, PDO::PARAM_BOOL);
+    }
+    
+    public final function createCustomer(int $user_id)
+    {
+        $this->beginTransaction();
+        $statement = $this->connection->prepare('INSERT INTO ' . self::CLIENTS . ' (' . self::FIELD_USER_ID . ') VALUES (?)');
+        $statement->execute([$user_id]);
+        $this->checkUpdate($statement, 'unable to create customer');
+        $statement->closeCursor();
+        $this->commit();
+        return true;
     }
 }
 
