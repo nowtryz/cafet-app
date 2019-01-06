@@ -31,11 +31,14 @@ CREATE TABLE IF NOT EXISTS `cafet_users` (
 
 CREATE TABLE IF NOT EXISTS `cafet_customers` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) NOT NULL COMMENT "user\'s id",
+  `user_id` bigint(20) COMMENT "user\'s id",
   `member` int(11) NOT NULL DEFAULT '0',
   `balance` float(10,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `user_id` (`user_id`)
+  FOREIGN KEY (`user_id`)
+    REFERENCES `cafet_users`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- --
@@ -51,7 +54,9 @@ CREATE TABLE IF NOT EXISTS `cafet_balance_reloads` (
   `details` varchar(255) NOT NULL DEFAULT "APP/UNKNOW" COMMENT "reload method",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction\'s date",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `cafet_users`(`id`)
+  FOREIGN KEY (`user_id`)
+    REFERENCES `cafet_customers`(`id`)
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
@@ -95,7 +100,9 @@ CREATE TABLE IF NOT EXISTS `cafet_expenses` (
   `user_balance` float(10,2) NOT NULL DEFAULT "0.00" COMMENT "user\'s balance after transaction",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction\'s date",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `cafet_users`(`id`)
+  FOREIGN KEY (`user_id`)
+    REFERENCES `cafet_customers`(`id`)
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 
@@ -112,19 +119,6 @@ CREATE TABLE IF NOT EXISTS `cafet_products_groups` (
   `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "edit time",
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
-
--- Triggers
-DELIMITER $$
-
-CREATE TRIGGER `cafet_product_group_deleted` 
-BEFORE DELETE ON `cafet_products_groups` 
-FOR EACH ROW 
-BEGIN 
-	DELETE FROM `cafet_products` WHERE product_group = OLD.id; 
-END
-$$
-
-DELIMITER ;
 
 
 
@@ -191,8 +185,13 @@ CREATE TABLE IF NOT EXISTS `cafet_products` (
   `viewable` tinyint(1) NOT NULL DEFAULT "1" COMMENT "does the product have to be shown",
   `last_edit` bigint(20) NOT NULL DEFAULT "0" COMMENT "last product edit id",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`last_edit`) REFERENCES `cafet_products_edits`(`id`),
-  FOREIGN KEY (`product_group`) REFERENCES `cafet_products_groups`(`id`)
+  FOREIGN KEY (`last_edit`)
+    REFERENCES `cafet_products_edits`(`id`)
+    ON UPDATE CASCADE,
+  FOREIGN KEY (`product_group`)
+    REFERENCES `cafet_products_groups`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 
@@ -211,9 +210,16 @@ CREATE TABLE IF NOT EXISTS `cafet_products_bought` (
   `quantity` int(11) NOT NULL DEFAULT "1" COMMENT "product quantity",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction date",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`expense_id`) REFERENCES `cafet_expenses`(`id`),
-  FOREIGN KEY (`edit_id`) REFERENCES `cafet_products_edits`(`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `cafet_users`(`id`)
+  FOREIGN KEY (`expense_id`)
+    REFERENCES `cafet_expenses`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (`edit_id`)
+    REFERENCES `cafet_products_edits`(`id`)
+    ON UPDATE CASCADE,
+  FOREIGN KEY (`user_id`)
+    REFERENCES `cafet_customers`(`id`)
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
@@ -242,11 +248,14 @@ DELIMITER ;
 -- Table
 CREATE TABLE IF NOT EXISTS `cafet_replenishments` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "replenishment id",
-  `product_id` bigint(11) NOT NULL COMMENT "product id",
+  `product_id` bigint(11) COMMENT "product id",
   `quantity` int(11) NOT NULL COMMENT "replenishment quantity",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "replenishment date",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`product_id`) REFERENCES `cafet_products`(`id`)
+  FOREIGN KEY (`product_id`)
+    REFERENCES `cafet_products`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
@@ -327,21 +336,10 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas` (
   `viewable` tinyint(1) NOT NULL DEFAULT "1" COMMENT "is the formula viewable",
   `last_edit` bigint(20) NOT NULL DEFAULT "0" COMMENT "last formula edit id",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`last_edit`) REFERENCES `cafet_formulas_edits`(`id`)
+  FOREIGN KEY (`last_edit`)
+    REFERENCES `cafet_formulas_edits`(`id`)
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
-
--- Triggers
-DELIMITER $$
-
-CREATE TRIGGER `cafet_formula_deleted` 
-BEFORE DELETE ON `cafet_formulas` 
-FOR EACH ROW 
-BEGIN 
-	DELETE FROM `cafet_formulas_choices` WHERE formula = OLD.id; 
-END
-$$
-
-DELIMITER ;
 
 
 
@@ -359,9 +357,16 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_bought` (
   `quantity` int(11) NOT NULL DEFAULT "1" COMMENT "quantity",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction date",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`expense_id`) REFERENCES `cafet_expenses`(`id`),
-  FOREIGN KEY (`edit_id`) REFERENCES `cafet_formulas_edits`(`id`),
-  FOREIGN KEY (`user_id`) REFERENCES `cafet_users`(`id`)
+  FOREIGN KEY (`expense_id`)
+    REFERENCES `cafet_expenses`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (`edit_id`)
+    REFERENCES `cafet_formulas_edits`(`id`)
+    ON UPDATE CASCADE,
+  FOREIGN KEY (`user_id`)
+    REFERENCES `cafet_customers`(`id`)
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
@@ -388,14 +393,19 @@ DELIMITER ;
 
 -- Table
 CREATE TABLE IF NOT EXISTS `cafet_formulas_bought_products` (
- `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "id",
+  `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "id",
   `transaction_id` bigint(11) NOT NULL COMMENT "id in formulas bought",
   `product_id` bigint(11) NOT NULL COMMENT "product id",
   `product_edit` BIGINT(20) NULL COMMENT "the product edit",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction date",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`transaction_id`) REFERENCES `cafet_formulas_bought`(`id`),
-  FOREIGN KEY (`product_edit`) REFERENCES `cafet_products_edits`(`id`)
+  FOREIGN KEY (`transaction_id`)
+    REFERENCES `cafet_formulas_bought`(`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
+  FOREIGN KEY (`product_edit`)
+    REFERENCES `cafet_products_edits`(`id`)
+    ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 -- Triggers
@@ -432,21 +442,10 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_choices` (
   `name` varchar(255) NOT NULL COMMENT "choice name",
   `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "edit time",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`formula`) REFERENCES `cafet_formulas`(`id`)
+  FOREIGN KEY (`formula`)
+    REFERENCES `cafet_formulas`(`id`)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
-
--- Triggers
-DELIMITER $$
-
-CREATE TRIGGER `cafet_formula_choice_deleted` 
-BEFORE DELETE ON `cafet_formulas_choices` 
-FOR EACH ROW 
-BEGIN 
-	DELETE FROM `cafet_formulas_choices_products` WHERE choice = OLD.id; 
-END
-$$
-
-DELIMITER ;
 
 
 
@@ -461,8 +460,12 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_choices_products` (
   `product` bigint(11) NOT NULL COMMENT "product id",
   `edit` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT "edit time",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`choice`) REFERENCES `cafet_formulas_choices`(`id`),
-  FOREIGN KEY (`product`) REFERENCES `cafet_products`(`id`)
+  FOREIGN KEY (`choice`)
+    REFERENCES `cafet_formulas_choices`(`id`)
+    ON DELETE CASCADE,
+  FOREIGN KEY (`product`)
+    REFERENCES `cafet_products`(`id`)
+    ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
 
 
