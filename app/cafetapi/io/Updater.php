@@ -87,7 +87,7 @@ abstract class Updater extends DatabaseConnection
     {
         if (!$this->inTransaction) $this->connection->beginTransaction();
         
-        $statement = $this->connection->prepare('UPDATE ' . static::TABLE_NAME . ' SET ' . $field . ' = :value WHERE ' . static::FIELD_ID . ' = :id');
+        $statement = $this->connection->prepare('UPDATE ' . static::TABLE_NAME . ' SET `' . $field . '` = :value WHERE ' . static::FIELD_ID . ' = :id');
         $statement->bindValue(':id', $id);
         $statement->bindValue(':value', $value, $value_type);
         $statement->execute();
