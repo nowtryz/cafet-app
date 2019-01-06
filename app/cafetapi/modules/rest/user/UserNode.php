@@ -191,6 +191,8 @@ class UserNode implements RestNode
     
     private static function register(Rest $request) : RestResponse
     {
+        $request->allowMethods('POST');
+        
         if ($request->getSession() && $request->getUser())
         {
             return new RestResponse(200, HttpCodes::HTTP_200, $request->getUser()->getProperties());

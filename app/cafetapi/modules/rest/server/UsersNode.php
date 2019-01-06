@@ -10,6 +10,7 @@ use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
 use cafetapi\user\Group;
+use cafetapi\io\ClientManager;
 
 /**
  *
@@ -18,6 +19,7 @@ use cafetapi\user\Group;
  */
 class UsersNode implements RestNode
 {
+    const CREATE_CUSTOMER = 'create-customer';
 
     /**
      * (non-PHPdoc)
@@ -32,7 +34,10 @@ class UsersNode implements RestNode
         switch ($dir) {
             case null: return self::index($request);
             default:
-                if (intval($dir, 0)) return self::user($request, intval($dir, 0));
+                if (intval($dir, 0)) {
+                    if ($request->shiftPath() == self::CREATE_CUSTOMER) return self::createCustomer($request, intval($dir, 0));
+                    return self::user($request, intval($dir, 0));
+                }
                 else return ClientError::resourceNotFound('Unknown server/user/' . $dir . ' node');
         }
     }
@@ -262,6 +267,19 @@ class UsersNode implements RestNode
         
         if (UserManager::getInstance()->deleteUser($id)) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
+    }
+    
+    
+    private static function createCustomer(Rest $request, int $user_id) : RestResponse
+    {
+        $request->allowMethods('POST');
+        $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_CLIENTS);
+        
+        ClientManager::getInstance()->createCustomer($user_id);
+
+        return new RestResponse(201, HttpCodes::HTTP_201, null, [
+            'Location' => $request->getRoot_url() . '/api/v' . $request->getVersion() . '/cafet/clients/' . $user_id
+        ]);
     }
 }
 
