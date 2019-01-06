@@ -3,7 +3,10 @@
 
 Both REST API for http connections and PHP librairy. Manage Interactions between client/server-side applications and database
 
-## Usage
+## Rest API
+
+Documentation about the rest api can found [here](http://cafet-app.static.nowtryz.net/php-api-server/) or in [the openapi specifications file](./openapi.yml)
+## Old API Usage
 
 ### API calls
 API call are made through the `{docker_host}:80/index.php` or even `{docker_host}:80/`. *Maybe `{docker_host}:80/api/` in future versions.*
@@ -122,16 +125,15 @@ Demo user is `Nowtryz <damien.djmb@gmail.com>` with password `admin`. Easy to ke
 - Tested with Apache 2.4.33
 - Extension mod_rewrite enabled
 
-### PHP 7.1 or upper with PDO, tested with:
+### PHP 7.2 or upper with PDO, tested with:
 - Tested versions:
-    - PHP 7.1.16
     - PHP 7.2.4
     - PHP 7.2.9
 - Extensions:
     - PDO
     - PDO_mysql
 
-### MySQL or PostgreSQL
+### MySQL 5.7 or upper
 - tested with MySQL 5.7.21
 
 
