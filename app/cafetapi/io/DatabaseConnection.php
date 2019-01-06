@@ -78,8 +78,10 @@ class DatabaseConnection
             self::$globalConnection = new PDO($dsn, self::$username, self::$password);
             self::$globalConnection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
             self::$globalConnection->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-            DatabaseIntegrity::checkTables();
-            DatabaseIntegrity::checkTriggers();
+            
+            $integrityCheck = new DatabaseIntegrity();
+            $integrityCheck->checkTables();
+            $integrityCheck->checkTriggers();
         } catch (PDOException $e) {
             $backtrace = debug_backtrace()[1];
             cafet_log($e->getMessage());
