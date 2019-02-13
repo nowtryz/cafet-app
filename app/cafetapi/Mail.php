@@ -39,7 +39,7 @@ class Mail
     {
         if (! isset($recipient))
             throw new InvalidArgumentException("The recipient haven't been set");
-        if (! isset($template) || ! file_exists(CONTENT_DIR . 'mails' . DIRECTORY_SEPARATOR . $template . '.html')) {
+        if (! isset($template) || ! file_exists(MAILS_DIR . $template . '.html')) {
             throw new InvalidArgumentException("'" . $template . '.html' . "' isn't a valid template");
         }
 

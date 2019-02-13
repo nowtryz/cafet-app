@@ -674,7 +674,7 @@ class ExpenseManager extends Updater
         if (($delta = $e->getBalanceAfterTransaction() - $conf['balance_limit']) < 0) {
             $this->connection->rollBack();
             $backtrace = debug_backtrace()[1];
-            throw new NotEnoughtMoneyException('missing ' . $delta . ' money to perform this action', null, null, $backtrace['file'], $backtrace['line']);
+            throw new NotEnoughtMoneyException('missing ' . abs($delta) . '€ to perform this action', null, null, $backtrace['file'], $backtrace['line']);
             return false;
         } else {
             $this->commit();
