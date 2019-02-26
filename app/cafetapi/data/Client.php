@@ -11,13 +11,10 @@ use cafetapi\io\ReloadManager;
  * @since API 1.0.0 (2018)
  *       
  */
-class Client extends JSONParsable implements Data
+class Client extends People implements Data
 {
     private $id;
-    private $email;
     private $alias;
-    private $familyNane;
-    private $surname;
     private $member;
     private $balance;
     private $registrationYear;
@@ -46,13 +43,11 @@ class Client extends JSONParsable implements Data
      * @see \cafetapi\io\ClientManager::getClient()
      * @since API 1.0.0 (2018)
      */
-    public function __construct(int $id, string $email, string $alias, string $familyNane, string $surname, bool $member, float $balance, int $registrationYear)
+    public function __construct(int $id, string $email, string $alias, string $familyName, string $surname, bool $member, float $balance, int $registrationYear)
     {
+        parent::__construct($email, $familyName, $surname);
         $this->id = $id;
-        $this->email = $email;
         $this->alias = $alias;
-        $this->familyNane = $familyNane;
-        $this->surname = $surname;
         $this->member = $member;
         $this->balance = $balance;
         $this->registrationYear = $registrationYear;
@@ -70,17 +65,6 @@ class Client extends JSONParsable implements Data
     }
 
     /**
-     * Return the email
-     *
-     * @return string the email
-     * @since API 1.0.0 (2018)
-     */
-    public final function getEmail(): string
-    {
-        return $this->email;
-    }
-
-    /**
      * Return the alias
      *
      * @return string the alias
@@ -89,28 +73,6 @@ class Client extends JSONParsable implements Data
     public final function getAlias(): string
     {
         return $this->alias;
-    }
-
-    /**
-     * Return the family name
-     *
-     * @return string the family name
-     * @since API 1.0.0 (2018)
-     */
-    public final function getFamilyNane(): string
-    {
-        return $this->familyNane;
-    }
-
-    /**
-     * Return the surname
-     *
-     * @return string the surname
-     * @since API 1.0.0 (2018)
-     */
-    public final function getSurname(): string
-    {
-        return $this->surname;
     }
 
     /**
@@ -187,7 +149,7 @@ class Client extends JSONParsable implements Data
      */
     public final function getFormatedName(): string
     {
-        return capitalize_first_letter($this->surname) . ' ' . strtoupper($this->familyNane);
+        return capitalize_first_letter($this->surname) . ' ' . strtoupper($this->familyName);
     }
 
     public function __toString(): string

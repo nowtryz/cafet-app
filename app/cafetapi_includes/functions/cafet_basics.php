@@ -81,7 +81,7 @@ if (! defined('basics_functions_loaded') ) {
     {
         $c = ClientManager::getInstance()->getClient($client_id);
         $mail = new Mail('reload_request', $c->getEmail());
-        $mail->setVar('surname', $c->getSurname());
+        $mail->setVar('surname', $c->getFirstname());
         $mail->setVar('name', $c->getFamilyNane());
         $mail->setVar('balance', number_format($c->getBalance(), 2, ',', ' '));
 

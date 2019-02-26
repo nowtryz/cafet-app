@@ -3,23 +3,19 @@ namespace cafetapi\user;
 
 use cafetapi\data\Calendar;
 use cafetapi\data\Data;
-use cafetapi\data\JSONParsable;
-use cafetapi\exceptions\EmailFormatException;
+use cafetapi\data\People;
 
 /**
  *
  * @author Damien
  *        
  */
-class User extends JSONParsable implements Permissible, Data, \Serializable
+class User extends People implements Permissible, Data, \Serializable
 {
 
     private $id;
     private $pseudo;
-    private $firstname;
-    private $name;
     private $password;
-    private $email;
     private $phone;
     private $permissions;
     private $group;
@@ -30,15 +26,13 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
 
     /**
      */
-    public function __construct(int $id, string $pseudo, string $firstname, string $name, string $password, string $email, $phone, 
+    public function __construct(int $id, string $pseudo, string $surname, string $familyName, string $password, string $email, $phone, 
         Calendar $last_signin, Calendar $registration, int $signin_count, Group $group, array $additional_permissions = null)
     {
+        parent::__construct($email, $familyName, $surname);
         $this->id = $id;
         $this->pseudo = $pseudo;
-        $this->firstname = $firstname;
-        $this->name = $name;
         $this->password = $password;
-        $this->email = $email;
         $this->phone = $phone;
         $this->group = $group;
         
@@ -77,28 +71,6 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
     }
 
     /**
-     * Returns the $firstname
-     *
-     * @return string the $firstname
-     * @since API 1.0.0 (2018)
-     */
-    public final function getFirstname()
-    {
-        return $this->firstname;
-    }
-
-    /**
-     * Returns the $name
-     *
-     * @return string the $name
-     * @since API 1.0.0 (2018)
-     */
-    public final function getName()
-    {
-        return $this->name;
-    }
-
-    /**
      * Returns the $hash
      *
      * @return string the $hash
@@ -107,17 +79,6 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
     public final function getHash()
     {
         return $this->password;
-    }
-
-    /**
-     * Returns the $email
-     *
-     * @return string the $email
-     * @since API 1.0.0 (2018)
-     */
-    public final function getEmail()
-    {
-        return $this->email;
     }
 
     /**
@@ -156,31 +117,6 @@ class User extends JSONParsable implements Permissible, Data, \Serializable
     public function setPseudo(string $pseudo)
     {
         $this->pseudo = $pseudo;
-    }
-
-    /**
-     * @param string $firstname
-     */
-    public function setFirstname(string $firstname)
-    {
-        $this->firstname = $firstname;
-    }
-
-    /**
-     * @param string $name
-     */
-    public function setName(string $name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @param string $email
-     */
-    public function setEmail(string $email)
-    {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) throw new EmailFormatException('"' . $email . '" is not valid!');
-        $this->email = $email;
     }
 
     /**
