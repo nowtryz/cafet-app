@@ -113,6 +113,11 @@ final class Calendar extends JSONParsable implements Data, \Serializable
     {
         return $this->year . '-' . $this->month . '-' . $this->day;
     }
+    
+    public final function getTimestamp(): string
+    {
+        return ($this->toDateTime())->getTimestamp();
+    }
 
     public final function getDateTime(): string
     {
@@ -127,6 +132,11 @@ final class Calendar extends JSONParsable implements Data, \Serializable
     public final function getFormatedTime(bool $show_secs = false)
     {
         return ($this->hour < 10 ? '0' : '') . $this->hour . ':' . ($this->mins < 10 ? '0' : '') . $this->mins . ($show_secs ? ':' . ($this->secs < 10 ? '0' : '') . $this->secs : '');
+    }
+    
+    public final function toDateTime(): \DateTime
+    {
+        return new \DateTime($this->getDateTime());
     }
 
     /**
