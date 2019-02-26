@@ -22,6 +22,8 @@ class Mail
     private $subject = "";
     private $message;
     private $additionalHeaders;
+    
+    private $vars = [];
 
     /**
      * Constructs the object
@@ -252,7 +254,7 @@ class Mail
      */
     public final function setVar(string $varName, $value)
     {
-        $this->message = str_replace('{' . $varName . '}', $value, $this->message);
+        $this->vars['{' . $varName . '}'] = $value;
     }
 
     /**
@@ -269,12 +271,12 @@ class Mail
 
     public final function send()
     {
-        mail($this->recipient, $this->subject, $this->message, $this->getHeader());
+        mail($this->recipient, $this->subject, $this->__toString(), $this->getHeader());
     }
 
     public final function __toString()
     {
-        return $this->message;
+        return str_replace(array_keys($this->vars), array_values($this->vars), $this->message);
     }
 }
 
