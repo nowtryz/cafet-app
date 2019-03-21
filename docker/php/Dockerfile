@@ -13,6 +13,6 @@ COPY docker/php/config.php /var/www/html/cafetapi_content/
 RUN cp -r /var/www/html/cafetapi_content /var/cafetapi_content_defaults
 RUN mkdir -p /var/tmp && mkdir -p /var/log
 
-COPY docker/php/docker-php-entrypoint /usr/local/bin/
+COPY docker/php/docker-php-entrypoint.sh /usr/local/bin/docker-php-entrypoint
 
 VOLUME ["/var/log", "/var/www/html/cafetapi_content"]
