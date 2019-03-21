@@ -8,7 +8,7 @@ fi
 
 # look if the container need to be first install
 if [ ! "$(ls -A /var/www/html/cafetapi_content)" ]; then
-     cp /var/cafetapi_content_defaults /var/www/html/cafetapi_content
+     cp -r /var/cafetapi_content_defaults /var/www/html/cafetapi_content
 fi
 
 exec "$@"
