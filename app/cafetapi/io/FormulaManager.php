@@ -290,7 +290,7 @@ class FormulaManager extends Updater
      * @param
      *            string name
      * @return Formula the formula inserted
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function addFormula(string $name): Formula
     {
@@ -322,7 +322,7 @@ class FormulaManager extends Updater
      * @param string $name
      * @param int $formula_id
      * @return Choice the choice inserted
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function addChoice(string $name, int $formula_id): Choice
     {
@@ -346,7 +346,7 @@ class FormulaManager extends Updater
      * @param int $choice_id
      * @param int $product_id
      * @return bool if the query has been correctly completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function addProductToChoice(int $choice_id, int $product_id): bool
     {
@@ -369,7 +369,7 @@ class FormulaManager extends Updater
      * @param int $choice_id
      * @param int $product_id
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function removeProductFromChoice(int $choice_id, int $product_id): bool
     {
@@ -391,7 +391,7 @@ class FormulaManager extends Updater
      *
      * @param int $choice_id
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function removeAllProductsFromChoice(int $choice_id): bool
     {
@@ -411,7 +411,7 @@ class FormulaManager extends Updater
      * @param int $formula_id
      * @param string $name
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setFormulaName(int $formula_id, string $name): bool
     {
@@ -434,7 +434,7 @@ class FormulaManager extends Updater
      * @param int $formula_id
      * @param float $price
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setFormulaPrice(int $formula_id, float $price): bool
     {
@@ -457,7 +457,7 @@ class FormulaManager extends Updater
      * @param int $formula_id
      * @param bool $flag
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setFormulaViewable(int $formula_id, bool $flag): bool
     {
@@ -482,7 +482,7 @@ class FormulaManager extends Updater
      * @param int $formula_id
      * @param string $image_base64
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setFormulaImage(int $formula_id, string $image_base64): bool
     {
@@ -525,7 +525,7 @@ class FormulaManager extends Updater
      *
      * @param int $id
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function deleteFormula(int $id): bool
     {
@@ -546,7 +546,7 @@ class FormulaManager extends Updater
      *
      * @param int $id
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function deleteFormulaChoice(int $id): bool
     {

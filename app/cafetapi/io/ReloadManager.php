@@ -3,7 +3,9 @@ namespace cafetapi\io;
 
 use cafetapi\data\Calendar;
 use cafetapi\data\Reload;
+use cafetapi\exceptions\RequestFailureException;
 use PDO;
+use cafetapi\MailManager;
 
 /**
  *
@@ -164,11 +166,14 @@ class ReloadManager extends Updater
      * @param float $amount
      * @param string $comment
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function saveReload(int $client_id, float $amount, string $comment): bool
     {
         $this->beginTransaction();
+        
+        $client = ClientManager::getInstance()->getClient($client_id);
+        if (!$client) throw new RequestFailureException('Unexisting client');
         
         $stmt = $this->connection->prepare('INSERT INTO ' . self::RELOADS . '(user_id, amount, details) VALUES (:client,:amount,:details)');
         $stmt->execute([
@@ -177,8 +182,14 @@ class ReloadManager extends Updater
             'details' => $comment
         ]);
         $this->checkUpdate($stmt, 'unable to save balance reload');
+        $reload_id = $this->connection->lastInsertId();
         
         $this->commit();
+        try {
+            if ($client->getMailPreference('reload_notice')) MailManager::reloadNotice($client, $this->getReload($reload_id))->send();
+        } catch (\Exception | \Error $e) {
+            cafet_log($e);
+        }
         return true;
     }
 }

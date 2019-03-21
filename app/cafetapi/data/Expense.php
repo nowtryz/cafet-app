@@ -12,7 +12,7 @@ use cafetapi\io\ExpenseManager;
  * @author Damien
  * @see \cafetapi\io\DataFetcher::getClientExpenses()
  * @see Client::getExpenses()
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class Expense extends JSONParsable implements Data
 {
@@ -39,7 +39,7 @@ class Expense extends JSONParsable implements Data
      *            the balance of the clien after the transaction
      * @see \cafetapi\io\ExpenseManager::getClientExpenses()
      * @see Client::getExpenses()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, int $client_id, Calendar $date, float $total, float $balanceAfterTransaction)
     {
@@ -54,7 +54,7 @@ class Expense extends JSONParsable implements Data
      * Returns the $id
      *
      * @return mixed the $id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getId(): int
     {
@@ -65,7 +65,7 @@ class Expense extends JSONParsable implements Data
      * Returns the $client
      *
      * @return mixed the $client
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getClient(): int
     {
@@ -76,7 +76,7 @@ class Expense extends JSONParsable implements Data
      * Returns the $date
      *
      * @return Calendar the $date
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getDate(): Calendar
     {
@@ -87,7 +87,7 @@ class Expense extends JSONParsable implements Data
      * Returns the $total
      *
      * @return float the $total
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getTotal(): float
     {
@@ -98,7 +98,7 @@ class Expense extends JSONParsable implements Data
      * Returns the $balanceAfterTransaction
      *
      * @return float the $balanceAfterTransaction
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getBalanceAfterTransaction(): float
     {
@@ -109,7 +109,7 @@ class Expense extends JSONParsable implements Data
      * Returns details of the expense
      *
      * @return array
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getDetails(): array
     {

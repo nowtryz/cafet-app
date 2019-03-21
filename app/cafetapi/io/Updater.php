@@ -60,7 +60,7 @@ abstract class Updater extends DatabaseConnection
      * @param string $message
      *            the message to throw if no data have been updated
      * @throws RequestFailureException if no data have been updated
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     protected final function checkUpdate(PDOStatement $stmt, string $message, bool $autorisation_error = false)
     {

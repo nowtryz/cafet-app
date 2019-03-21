@@ -5,7 +5,7 @@ use cafetapi\data\Calendar;
 /**
  * Function file for classic functions
  * @package essaim_cafet
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 
 /**
@@ -14,7 +14,7 @@ use cafetapi\data\Calendar;
  * @param string $source
  *            the string to format
  * @return string the formated string
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 function capitalize_first_letter(string $source): string
 {
@@ -31,7 +31,7 @@ function capitalize_first_letter(string $source): string
  * @param array $array
  *            the array to check
  * @return bool the result of the test
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 function is_associative_array(array $array): bool
 {
@@ -44,7 +44,7 @@ function is_associative_array(array $array): bool
  *
  * @param string $base64 the encoded image
  * @return string the mime
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 function guess_image_mime(string $base64): string
 {

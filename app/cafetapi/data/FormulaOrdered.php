@@ -6,7 +6,7 @@ namespace cafetapi\data;
  *
  * @see \cafetapi\io\DataUpdater::saveOrder()
  * @author damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class FormulaOrdered extends Ordered implements Data
 {
@@ -24,7 +24,7 @@ class FormulaOrdered extends Ordered implements Data
      * @param array $products
      *            an
      * @see \cafetapi\io\FormulaManager::saveOrder()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, int $amount, array $products)
     {
@@ -36,7 +36,7 @@ class FormulaOrdered extends Ordered implements Data
      * Returns the $products
      *
      * @return array the $products
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getProducts(): array
     {

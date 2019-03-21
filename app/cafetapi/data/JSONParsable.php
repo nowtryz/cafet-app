@@ -5,7 +5,7 @@ namespace cafetapi\data;
  * An object that can be parse into a JSON string
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 abstract class JSONParsable
 {
@@ -16,7 +16,7 @@ abstract class JSONParsable
      * @param array $vars
      *            called with get_object_vars( $this )
      * @return string the JSON
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     protected final function parse_JSON(array $vars): string
     {
@@ -37,7 +37,7 @@ abstract class JSONParsable
      * @param array $array
      *            the array to parse
      * @return string the JSON string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     private function parse_associative_array(array $array): string
     {
@@ -61,7 +61,7 @@ abstract class JSONParsable
      * @param array $array
      *            the array to parse
      * @return string the JSON string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     private function parse_array(array $array): string
     {
@@ -86,7 +86,7 @@ abstract class JSONParsable
      * @param Mixed $value
      *            the value to parse
      * @return string the JSON string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     private function parse_value($value): string
     {
@@ -124,7 +124,7 @@ abstract class JSONParsable
      * Call $this->parseJSON(get_object_vars( $this )) to parse this object
      *
      * @return string the JSON encoded string of the given object
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     abstract public function __toString(): string;
 }

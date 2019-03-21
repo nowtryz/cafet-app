@@ -8,7 +8,7 @@ use PDOStatement;
 /**
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class DatabaseConnection
 {
@@ -18,7 +18,7 @@ class DatabaseConnection
      * Common connection for all objects
      *
      * @var PDO
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     protected static $globalConnection;
 
@@ -26,7 +26,7 @@ class DatabaseConnection
      * Object specifique connection
      *
      * @var PDO
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     protected $connection;
     protected static $database;
@@ -58,7 +58,7 @@ class DatabaseConnection
      *
      * @param array $db_infos
      *            the array containing login information
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     private static final function init(array $db_infos)
     {
@@ -112,7 +112,7 @@ class DatabaseConnection
      *            the query
      * @return bool true if success, false on failure
      * @see DatabaseConnection::getLastQueryError()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final static function query(string $sql, $parameters = array()): bool
     {
@@ -134,7 +134,7 @@ class DatabaseConnection
      * <br />3 Request.
      *
      * @return array the error array (empty if no error occured)
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public static final function getLastQueryErrors(): array
     {
@@ -150,7 +150,7 @@ class DatabaseConnection
      * <br />3 Request.
      *
      * @return array the error array (empty if no error occured)
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public static final function getLastQueryError(): array
     {
@@ -162,7 +162,7 @@ class DatabaseConnection
      * Get the PDO object used by the class
      *
      * @return PDO the PDO object
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public static final function getPDOObject(): PDO
     {
@@ -172,7 +172,7 @@ class DatabaseConnection
     /**
      * Inialises connection if it haven't been initialised yet
      *
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public static final function initIfNotAlready()
     {
@@ -199,7 +199,7 @@ class DatabaseConnection
      *            an array containing needed information to connect to the database
      * @param bool $force_new_connection
      *            if this object must create a new connection with given configuration
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     protected function __construct(array $db_infos = DB_INFO, bool $force_new_connection = false)
     {
@@ -234,7 +234,7 @@ class DatabaseConnection
      *            the query
      * @return PDOStatement|null PDOStatement on succes, null on faillur
      * @see DatabaseConnection::getLastQueryError()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function execute(string $sql, $parametters = array()): ?PDOStatement
     {

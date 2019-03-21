@@ -52,7 +52,7 @@ class User extends People implements Permissible, Data, \Serializable
      * Returns the $id
      *
      * @return int the $id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getId()
     {
@@ -63,7 +63,7 @@ class User extends People implements Permissible, Data, \Serializable
      * Returns the $pseudo
      *
      * @return string the $pseudo
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getPseudo()
     {
@@ -74,7 +74,7 @@ class User extends People implements Permissible, Data, \Serializable
      * Returns the $hash
      *
      * @return string the $hash
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getHash()
     {
@@ -85,7 +85,7 @@ class User extends People implements Permissible, Data, \Serializable
      * Returns the $phone
      *
      * @return mixed the $phone
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getPhone()
     {
@@ -96,7 +96,7 @@ class User extends People implements Permissible, Data, \Serializable
      * Returns the $group
      *
      * @return Group the $group
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getGroup()
     {

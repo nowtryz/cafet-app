@@ -2,26 +2,29 @@
 namespace cafetapi\data;
 
 use cafetapi\exceptions\EmailFormatException;
+use cafetapi\config\Defaults;
 
 abstract class People extends JSONParsable
 {
     protected $email;
     protected $familyName;
     protected $firstname;
+    protected $mail_preferences;
     
     
-    public function __construct($email, $familyName, $firstname)
+    public function __construct($email, $familyName, $firstname, $mail_preferences = [])
     {
         $this->email = $email;
         $this->familyName = $familyName;
         $this->firstname = $firstname;
+        $this->mail_preferences = array_merge(Defaults::mail_preferences, $mail_preferences);
     }
     
     /**
      * Return the email
      *
      * @return string the email
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getEmail(): string
     {
@@ -32,7 +35,7 @@ abstract class People extends JSONParsable
      * Return the family name
      *
      * @return string the family name
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getFamilyName(): string
     {
@@ -43,13 +46,22 @@ abstract class People extends JSONParsable
      * Return the surname
      *
      * @return string the surname
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getFirstname(): string
     {
         return $this->firstname;
     }
     
+    /**
+     * @return array
+     * @since API 0.3.0 (2019)
+     */
+    public function getMailPreference(string $preference) : bool
+    {
+        return (bool) $this->mail_preferences[$preference] ?? false;
+    }
+
     /**
      * @param string $surname
      */

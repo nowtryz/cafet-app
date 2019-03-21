@@ -5,7 +5,7 @@ namespace cafetapi\data;
  * The calendar is an object representing a date
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 final class Calendar extends JSONParsable implements Data, \Serializable
 {
@@ -31,7 +31,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      *            the minutes in format mm
      * @param int $secs
      *            the seconds int format ss
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $year, int $month, int $day, int $hour, int $mins, int $secs)
     {
@@ -47,7 +47,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      * Returns the year
      *
      * @return int the year
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getYear(): int
     {
@@ -58,7 +58,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      * Returns the month
      *
      * @return int the month
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getMonth(): int
     {
@@ -69,7 +69,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      * Returns the day
      *
      * @return int the day
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getDay(): int
     {
@@ -80,7 +80,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      * Returns the hour
      *
      * @return int the hour
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getHour(): int
     {
@@ -91,7 +91,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      * Returns the minutes
      *
      * @return int the minustes
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getMins(): int
     {
@@ -102,7 +102,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      * Returns the seconds
      *
      * @return int the seconds
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getSecs(): int
     {
@@ -144,7 +144,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      *
      * @param int $year
      *            the year to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setYear(int $year)
     {
@@ -156,7 +156,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      *
      * @param int $month
      *            the month to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setMonth(int $month)
     {
@@ -168,7 +168,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      *
      * @param int $day
      *            the day to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setDay(int $day)
     {
@@ -180,7 +180,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      *
      * @param int $hour
      *            the hour to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setHour(int $hour)
     {
@@ -192,7 +192,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      *
      * @param int $mins
      *            the minutes to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setMins(int $mins)
     {
@@ -204,7 +204,7 @@ final class Calendar extends JSONParsable implements Data, \Serializable
      *
      * @param int $secs
      *            the seconds to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setSecs(int $secs)
     {

@@ -19,14 +19,14 @@ use cafetapi\io\DatabaseConnection;
  * Launch time of the application
  *
  * @var string|float START_TIME
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 define('START_TIME', microtime(true));
 /**
  * The cafet API directory
  *
  * @var string CAFET_DIR
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 define('CAFET_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 

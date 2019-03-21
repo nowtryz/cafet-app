@@ -8,7 +8,7 @@ use cafetapi\io\ReloadManager;
  * The Client object is the wich stores every client information for later use
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  *       
  */
 class Client extends People implements Data
@@ -41,7 +41,7 @@ class Client extends People implements Data
      * @param int $registrationYear
      *            the year of the client's registration
      * @see \cafetapi\io\ClientManager::getClient()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, string $email, string $alias, string $familyName, string $surname, bool $member, float $balance, int $registrationYear)
     {
@@ -57,7 +57,7 @@ class Client extends People implements Data
      * Return the id
      *
      * @return int the id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getId(): int
     {
@@ -68,7 +68,7 @@ class Client extends People implements Data
      * Return the alias
      *
      * @return string the alias
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getAlias(): string
     {
@@ -79,7 +79,7 @@ class Client extends People implements Data
      * Return is the client is a member
      *
      * @return bool is member
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function isMember(): bool
     {
@@ -90,7 +90,7 @@ class Client extends People implements Data
      * Return the balance
      *
      * @return float the balance
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getBalance(): float
     {
@@ -101,7 +101,7 @@ class Client extends People implements Data
      * Return the registration yean
      *
      * @return int the registration year
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getRegistrationYear(): int
     {
@@ -112,7 +112,7 @@ class Client extends People implements Data
      * Return a list of client's expenses
      *
      * @return array a list of client's expenses
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getExpenses(): array
     {
@@ -123,7 +123,7 @@ class Client extends People implements Data
      * Return a list of latest client's expenses
      *
      * @return array a list of client's expenses
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getLastExpenses(): array
     {
@@ -134,7 +134,7 @@ class Client extends People implements Data
      * Return a list of latest client's reloads
      *
      * @return array a list of client's reloads
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getReloads(): array
     {
@@ -145,7 +145,7 @@ class Client extends People implements Data
      * Returns the name like Suname NAME
      *
      * @return string the formated name
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getFormatedName(): string
     {

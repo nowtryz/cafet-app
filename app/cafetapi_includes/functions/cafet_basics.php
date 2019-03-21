@@ -24,7 +24,7 @@ if (! defined('basics_functions_loaded') ) {
     /**
      * Listen post request for app call
      *
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_listen_app_request()
     {
@@ -101,7 +101,7 @@ if (! defined('basics_functions_loaded') ) {
     /**
      * Checks headers before sending them to the client
      *
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_headers_check()
     {
@@ -123,7 +123,7 @@ if (! defined('basics_functions_loaded') ) {
      * Return the time difference between launch and now
      *
      * @return float the duration
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_execution_duration(): float
     {
@@ -133,7 +133,7 @@ if (! defined('basics_functions_loaded') ) {
     /**
      * Only for debug
      *
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_dump_server_vars()
     {

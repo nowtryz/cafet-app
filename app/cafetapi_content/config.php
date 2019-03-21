@@ -3,7 +3,7 @@
  * API config file
  * 
  * @package configurations
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 namespace cafetapi\config;
 
@@ -14,7 +14,7 @@ namespace cafetapi\config;
  *
  * @author Damien
  *        
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class Database
 {
@@ -23,7 +23,7 @@ class Database
      * SGBD du serveur de base de données
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const driver = 'mysql';
 
@@ -31,7 +31,7 @@ class Database
      * Adresse du serveur
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const host = 'localhost';
 
@@ -39,7 +39,7 @@ class Database
      * Port du serveur
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const port = '3306';
 
@@ -47,7 +47,7 @@ class Database
      * Nom de la base de données à utiliser
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const database = 'mecatronesql';
 
@@ -55,7 +55,7 @@ class Database
      * Nom d'utilisateur, identifiant de connexion
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const username = 'mecatro';
 
@@ -63,7 +63,7 @@ class Database
      * Mot de passe
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const password = '';
 }
@@ -73,7 +73,7 @@ class Database
  *
  * @author Damien
  *        
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class Defaults
 {
@@ -82,7 +82,7 @@ class Defaults
      * Si le serveur serveur doit se comporter en mode debug
      *
      * @var boolean
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const debug = true;
 
@@ -90,7 +90,7 @@ class Defaults
      * Seuil en dessous duquel un mail pour inciter le rechargement est envoyé à chaque achat
      *
      * @var float
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const balance_warning = 2.0;
 
@@ -98,7 +98,7 @@ class Defaults
      * Solde minimum possible sur un compte
      *
      * @var float
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const balance_limit = 0.0;
 
@@ -106,7 +106,7 @@ class Defaults
      * Nom de l'organisation
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const organisation = 'Essaim';
 
@@ -114,7 +114,7 @@ class Defaults
      * Langue du de l'api (=> langue par defaut lors de l'installation des logiciel)
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const lang = 'fr_FR';
 
@@ -122,7 +122,7 @@ class Defaults
      * Hash utilisé pour l'encryption des mots de passes
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const hash_algo = 'sha256';
 
@@ -132,7 +132,7 @@ class Defaults
      *
      * @var string
      * @deprecated
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const salt = 'ISTYmecatronique';
 
@@ -140,7 +140,7 @@ class Defaults
      * Adresse URL de l'application
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const url = 'cafet/';
 
@@ -148,7 +148,7 @@ class Defaults
      * Si l'installateur se trouve sur un serveur distant
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const installer_external = true;
 
@@ -156,7 +156,7 @@ class Defaults
      * Adresse (relative a la racine de l'API ou lien vers le serveur distant) de l'installateur .exe ou .msi
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const installer_url = self::url . 'get/installer.exe';
 
@@ -164,7 +164,7 @@ class Defaults
      * Adresse (relative a la racine de l'API ou lien vers le serveur distant) de l'installateur .jar
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const installer_jar_url = self::url . 'get/installer.jar';
 
@@ -172,7 +172,7 @@ class Defaults
      * Adresse e-mail utilisée pour l'envoie de mails
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const email_sender = 'cafet@exemple.com';
     
@@ -180,7 +180,7 @@ class Defaults
      * Adresse e-mail utilisée pour le pour le champ reply-to
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const email_noreply = 'noreply@exemple.com';
 
@@ -188,7 +188,7 @@ class Defaults
      * Adresse e-mail de contact de l'organisation
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const email_contact = 'contact@exemple.com';
 
@@ -196,7 +196,7 @@ class Defaults
      * Nom de l'expediteur des mails
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const email_name = 'Cafet\' Essaim';
 
@@ -204,7 +204,7 @@ class Defaults
      * Sujet par defaut des mails
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     // const email_default_subject = '';
     
@@ -212,15 +212,30 @@ class Defaults
      * Nom des cookies de session
      * 
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const session_name = '_cafetapp_' . self::organisation . '_session';
+    
+    /**
+     * Préférences de reception de mail par défaut pour les utilisateurs
+     * 
+     * @var string
+     * @since API 0.3.0 (2019)
+     */
+    const mail_preferences = [
+        // send a mail after each purchase, providing a recap of it
+        'payment_notice' => true,
+        // send a mail after each acount reload
+        'reload_notice' => true,
+        // send a mail to warn the user that it sold passed under a threshold, providing a recap of last expenses
+        'reload_request' => true,
+    ];
 
     /**
      * Message envoyé par l'API lors d'une déconnexion
      *
      * @var string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     const logout_message = 'see you later ;)';
 }

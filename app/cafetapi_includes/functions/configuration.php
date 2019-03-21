@@ -15,7 +15,7 @@ if (! defined('configurations_functions_loaded') ) {
     /**
      * Load configurations from the yaml configuration file
      *
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_load_conf_file()
     {
@@ -36,7 +36,7 @@ if (! defined('configurations_functions_loaded') ) {
                  * Databases configurations
                  *
                  * @var array
-                 * @since API 1.0.0 (2018)
+                 * @since API 0.1.0 (2018)
                  */
                 define("DB_INFO", $db_info);
             }
@@ -46,7 +46,7 @@ if (! defined('configurations_functions_loaded') ) {
                  * Default configurations
                  *
                  * @var array
-                 * @since API 1.0.0 (2018)
+                 * @since API 0.1.0 (2018)
                  */
                 define("DEFAULT_CONFIGURATIONS", (new ReflectionClass('cafetapi\config\Defaults'))->getConstants());
             }
@@ -85,7 +85,7 @@ if (! defined('configurations_functions_loaded') ) {
      * Gives the errors messages of the application
      *
      * @return array an array containing all errors lmessages
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_get_errors_info(): array
     {
@@ -105,7 +105,7 @@ if (! defined('configurations_functions_loaded') ) {
      * Gives configurations depending on registered properties and default ones
      *
      * @return array configurations
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_get_configurations(): array
     {

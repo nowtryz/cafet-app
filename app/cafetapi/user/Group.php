@@ -63,7 +63,7 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
      *
      * @param string $name
      * @param array $permissions
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(string $name, array $permissions)
     {

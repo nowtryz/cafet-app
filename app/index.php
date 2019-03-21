@@ -44,7 +44,7 @@ use cafetapi\ErrorPageBuilder;
  * URL adressr of the current script
  *
  * @var string
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 define('URL_LOCATION', substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/')));
 

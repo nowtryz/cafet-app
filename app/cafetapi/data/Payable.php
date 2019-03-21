@@ -5,7 +5,7 @@ namespace cafetapi\data;
  * A thing that we can pay for, such as a formula or a product
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 abstract class Payable extends JSONParsable implements Data
 {
@@ -32,7 +32,7 @@ abstract class Payable extends JSONParsable implements Data
      *            whether this thing would be displayed or not
      * @param Calendar $edit
      *            the last edition
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, string $name, string $image, float $price, bool $viewable, Calendar $edit)
     {
@@ -48,7 +48,7 @@ abstract class Payable extends JSONParsable implements Data
      * Returns the $id
      *
      * @return int the $id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getId(): int
     {
@@ -59,7 +59,7 @@ abstract class Payable extends JSONParsable implements Data
      * Returns the $name
      *
      * @return string the $name
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getName(): string
     {
@@ -70,7 +70,7 @@ abstract class Payable extends JSONParsable implements Data
      * Returns the $price
      *
      * @return float the $price
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getPrice(): float
     {
@@ -81,7 +81,7 @@ abstract class Payable extends JSONParsable implements Data
      * Returns the $viewable
      *
      * @return bool the $viewable
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getViewable(): bool
     {
@@ -92,7 +92,7 @@ abstract class Payable extends JSONParsable implements Data
      * Returns the $edit
      *
      * @return Calendar the $edit
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getEdit(): Calendar
     {

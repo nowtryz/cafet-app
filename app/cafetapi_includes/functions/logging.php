@@ -19,7 +19,7 @@ if (!defined('logging_functions_loaded')) {
      * @param String $log
      *            the text to log
      * @global $avoid_log
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_log(string $log)
     {
@@ -34,7 +34,7 @@ if (!defined('logging_functions_loaded')) {
      *
      * @param String $error
      *            the error code
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_throw_error(string $error, string $additional_message = null, string $file = null, int $line = 0)
     {

@@ -20,7 +20,7 @@ if (!defined('authentication_functions_loaded')) {
      * @param string $session_id
      *            if specified, the session id is set to the given one
      * @return string
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_init_session(bool $no_cookie = false, string $session_id = null): string
     {
@@ -58,7 +58,7 @@ if (!defined('authentication_functions_loaded')) {
      *
      * @param string $session_id
      *            if specified, destroy the given session
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_destroy_session(string $session_id = null)
     {
@@ -94,7 +94,7 @@ if (!defined('authentication_functions_loaded')) {
      * @param string $pseudo
      *            [optional] the pseudo to hash with the old method
      * @return string the hash version of the password
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_generate_hashed_pwd(string $password): string
     {
@@ -115,7 +115,7 @@ if (!defined('authentication_functions_loaded')) {
      *            [optional] the pseudo, to works with old site
      * @throws InvalidArgumentException if hash doesn't respect its synthax
      * @return bool if password is correct
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_verify_password(string $password, string $hash, string $pseudo = null): bool
     {
@@ -144,7 +144,7 @@ if (!defined('authentication_functions_loaded')) {
      * @param string $password
      *            the password entered
      * @return User a User object if logins are correct, false on failure
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_check_login(string $pseudo_or_name, $password): ?User
     {
