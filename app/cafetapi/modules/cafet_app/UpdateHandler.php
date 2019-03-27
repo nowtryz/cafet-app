@@ -28,7 +28,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containing "name" and "group_id"
      * @return Product the product inserted
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function add_product(array $arguments): Product
     {
@@ -52,7 +52,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containing "name"
      * @return ProductGroup the group inserted
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function add_product_group(array $arguments): ProductGroup
     {
@@ -73,7 +73,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containig "name"
      * @return Formula the formula inserted
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function add_formula(array $arguments): Formula
     {
@@ -94,7 +94,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containing "formula_id" and "name"
      * @return Choice the choice inserted
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function add_choice(array $arguments): Choice
     {
@@ -118,7 +118,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containing "choice_id" and "product_id"
      * @return bool if the query has been correctly completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function add_product_to_choice(array $arguments): bool
     {
@@ -142,7 +142,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containing "choice_id" and "product_id"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function remove_product_from_choice(array $arguments): bool
     {
@@ -167,7 +167,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containing "client_id" and "order"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function save_order(array $arguments): bool
     {
@@ -212,7 +212,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "client_id" and "amount"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function save_reload(array $arguments): bool
     {
@@ -242,7 +242,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "group_id" and "display_name"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_product_group_display_name(array $arguments): bool
     {
@@ -266,7 +266,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "group_id" and "name"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_product_group_name(array $arguments): bool
     {
@@ -290,7 +290,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "product_id" and "name"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_product_name(array $arguments): bool
     {
@@ -314,7 +314,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "product_id" and "price"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_product_price(array $arguments): bool
     {
@@ -340,7 +340,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "product_id" and "group_id"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_product_group(array $arguments): bool
     {
@@ -364,7 +364,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "product_id" and "image_base64"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_product_image(array $arguments): bool
     {
@@ -388,7 +388,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "produc_id" and "flag"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_product_viewable(array $arguments): bool
     {
@@ -414,7 +414,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "formula_id" and "name"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_formula_name(array $arguments): bool
     {
@@ -438,7 +438,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "formula_id" and "price"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_formula_price(array $arguments): bool
     {
@@ -464,7 +464,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "formula_id" and "flag"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_formula_viewable(array $arguments): bool
     {
@@ -490,7 +490,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "formula_id" and "image_base64"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function set_formula_image(array $arguments): bool
     {
@@ -514,7 +514,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "product_id"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function delete_product(array $arguments): bool
     {
@@ -535,7 +535,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "group_id"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function delete_product_group(array $arguments): bool
     {
@@ -556,7 +556,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containg "formula_id"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function delete_formula(array $arguments): bool
     {
@@ -577,7 +577,7 @@ class UpdateHandler extends Handler
      * @param array $arguments
      *            an array containing "choice_id"
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function delete_formula_choice(array $arguments): bool
     {

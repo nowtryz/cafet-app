@@ -7,7 +7,7 @@ class OptionManager extends DatabaseConnection
      * Returns every configuration stored in the database
      *
      * @return array - an array of key-value
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public static final function getConfigurations(): array
     {
@@ -29,7 +29,7 @@ class OptionManager extends DatabaseConnection
      * @param String $name
      *            the key
      * @return string the value
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public static final function getConfiguration(String $name): string
     {

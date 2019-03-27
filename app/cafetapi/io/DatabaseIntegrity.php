@@ -25,7 +25,7 @@ class DatabaseIntegrity extends DatabaseConnection
     /**
      * Cheks the existence of every cafetAPI tables an create those doesn't exist
      *
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function checkTables()
     {
@@ -371,7 +371,7 @@ EOSQL
     /**
      * Check the existence of cafetapi triggers
      *
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function checkTriggers()
     {

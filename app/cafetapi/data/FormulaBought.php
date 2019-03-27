@@ -9,7 +9,7 @@ namespace cafetapi\data;
  * @see \cafetapi\data\Expense::getDetails()
  * @see \cafetapi\io\DataFetcher::getExpenseDetails()
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class FormulaBought extends ExpenseDetail
 {
@@ -37,7 +37,7 @@ class FormulaBought extends ExpenseDetail
      *            the date of the transaction
      * @see \cafetapi\data\Expense::getDetails()
      * @see \cafetapi\io\FormulaManager::getExpenseDetails()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, int $formula_id, string $name, int $client_id, float $price, int $quantity, Calendar $date)
     {
@@ -50,7 +50,7 @@ class FormulaBought extends ExpenseDetail
      * Returns the $id
      *
      * @return int the $id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getId(): int
     {
@@ -61,7 +61,7 @@ class FormulaBought extends ExpenseDetail
      * Returns the $formula
      *
      * @return Formula the $formula
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getFormula(): int
     {

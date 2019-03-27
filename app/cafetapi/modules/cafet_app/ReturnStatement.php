@@ -58,7 +58,7 @@ class ReturnStatement
      * Returns the $array
      *
      * @return array the $array
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getArray()
     {
@@ -72,7 +72,7 @@ class ReturnStatement
      * Returns the $json
      *
      * @return string the $json
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getJson()
     {

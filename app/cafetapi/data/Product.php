@@ -6,7 +6,7 @@ use cafetapi\io\ProductManager;
 /**
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class Product extends Payable
 {
@@ -30,7 +30,7 @@ class Product extends Payable
      *            whether or not the product should be visible
      * @param Calendar $edit
      *            the date of the last edition
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, string $name, float $price, int $group_id, string $image, bool $viewable, int $stock, Calendar $edit)
     {
@@ -43,7 +43,7 @@ class Product extends Payable
      * Returns the $group_id
      *
      * @return int the $group_id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getGroup_id(): int
     {
@@ -54,7 +54,7 @@ class Product extends Payable
      * Returns the $group
      *
      * @return ProductGroup the $group
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getGroup(): ProductGroup
     {
@@ -65,7 +65,7 @@ class Product extends Payable
      * Returns the $image
      *
      * @return string the $image
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getImage(): string
     {

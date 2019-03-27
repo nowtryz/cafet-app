@@ -51,7 +51,7 @@ if (! defined('loader_functions_loaded') ) {
      *
      * @param string $dir
      *            the directory to analyse
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     function cafet_load_class_folder(string $dir)
     {

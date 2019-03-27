@@ -231,7 +231,7 @@ class ProductManager extends Updater
      * @param string $name
      * @param int $group_id
      * @return Product the product inserted
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function addProduct(string $name, int $group_id): Product
     {
@@ -266,7 +266,7 @@ class ProductManager extends Updater
      *
      * @param string $name
      * @return ProductGroup the group inserted
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function addProductGroup(string $name): ProductGroup
     {
@@ -290,7 +290,7 @@ class ProductManager extends Updater
      * @param int $group_id
      * @param string $display_name
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setProductGroupDisplayName(int $group_id, string $display_name): bool
     {
@@ -313,7 +313,7 @@ class ProductManager extends Updater
      * @param int $group_id
      * @param string $name
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setProductGroupName(int $group_id, string $name): bool
     {
@@ -336,7 +336,7 @@ class ProductManager extends Updater
      * @param int $product_id
      * @param string $name
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setProductName(int $product_id, string $name): bool
     {
@@ -359,7 +359,7 @@ class ProductManager extends Updater
      * @param int $product_id
      * @param float $price
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setProductPrice(int $product_id, float $price): bool
     {
@@ -382,7 +382,7 @@ class ProductManager extends Updater
      * @param int $product_id
      * @param float $price
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setProductInformation(int $product_id, string $name, float $price): bool
     {
@@ -406,7 +406,7 @@ class ProductManager extends Updater
      * @param int $product_id
      * @param int $group_id
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setProductGroup(int $product_id, int $group_id): bool
     {
@@ -435,7 +435,7 @@ class ProductManager extends Updater
      * @param int $product_id
      * @param string $image_base64
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setProductImage(int $product_id, string $image_base64): bool
     {
@@ -458,7 +458,7 @@ class ProductManager extends Updater
      * @param int $product_id
      * @param bool $flag
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setProductViewable(int $product_id, bool $flag): bool
     {
@@ -481,7 +481,7 @@ class ProductManager extends Updater
      *
      * @param int $id
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function deleteProduct(int $id): bool
     {
@@ -502,7 +502,7 @@ class ProductManager extends Updater
      *
      * @param int $id
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function deleteProductGroup(int $id): bool
     {

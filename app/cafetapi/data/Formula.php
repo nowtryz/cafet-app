@@ -7,7 +7,7 @@ use cafetapi\io\FormulaManager;
  * A formula with a list of choices
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class Formula extends Payable
 {
@@ -25,7 +25,7 @@ class Formula extends Payable
      *            whether the formula should be displyed or not
      * @param Calendar $edit
      *            the date of the last edit
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, string $name, string $image, float $price, bool $viewable, Calendar $edit)
     {
@@ -36,7 +36,7 @@ class Formula extends Payable
      * Return the choices
      *
      * @return array the availible choices
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getChoices(): array
     {

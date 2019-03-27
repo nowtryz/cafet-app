@@ -10,7 +10,7 @@ namespace cafetapi\data;
  * @see Client::getReloads()
  * @see \cafetapi\io\DataFetcher::getClientReloads()
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class Reload extends JSONParsable implements Data
 {
@@ -36,7 +36,7 @@ class Reload extends JSONParsable implements Data
      * @param float $balanceAfterTransaction
      * @see Client::getReloads()
      * @see \cafetapi\io\ReloadManager::getClientReloads()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, int $client_id, string $details, Calendar $date, float $amount, float $balanceAfterTransaction)
     {
@@ -52,7 +52,7 @@ class Reload extends JSONParsable implements Data
      * Returns the $id
      *
      * @return int the $id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getId(): int
     {
@@ -63,7 +63,7 @@ class Reload extends JSONParsable implements Data
      * Returns the $client
      *
      * @return Client the $client
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getClient(): int
     {
@@ -74,7 +74,7 @@ class Reload extends JSONParsable implements Data
      * Returns the $details
      *
      * @return string the $details
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getDetails(): string
     {
@@ -85,7 +85,7 @@ class Reload extends JSONParsable implements Data
      * Returns the $date
      *
      * @return Calendar the $date
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getDate(): Calendar
     {
@@ -96,7 +96,7 @@ class Reload extends JSONParsable implements Data
      * Returns the $amount
      *
      * @return float the $amount
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getAmount(): float
     {
@@ -107,7 +107,7 @@ class Reload extends JSONParsable implements Data
      * Returns the $balanceAfterTransaction
      *
      * @return float the $balanceAfterTransaction
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getBalanceAfterTransaction(): float
     {

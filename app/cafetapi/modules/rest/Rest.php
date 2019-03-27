@@ -67,9 +67,10 @@ class Rest
         $this->method = $_SERVER['REQUEST_METHOD'];
         $this->contentType = $_REQUEST[self::RETURN_TYPE_FIELD] !== '' ? $_REQUEST[self::RETURN_TYPE_FIELD] : self::DEFAUL_RETURN_TYPE;
         $this->pretty = isset($_REQUEST['pretty']);
-        
         $this->headers = apache_request_headers();
-        if(!$this->headers) $this->headers = array();
+        
+        if ($this->method == 'HEAD') $this->method = 'GET';
+        if (!$this->headers) $this->headers = array();
         
         if (isset($_COOKIE[cafet_get_configuration('session_name')])) {
             $this->session = cafet_init_session();
@@ -91,10 +92,10 @@ class Rest
     
     public function printResponse(RestResponse $response) {
         header('HTTP/1.1 ' . $response->getCode() . ' ' . $response->getMessage());
+        header('Cache-Control: max-age=0, private, must-revalidate', true);
+        header_remove('Expires');
         foreach ($response->getRemoveHeader() as $header) header_remove($header);
         foreach($response->getHeaders() as $name => $content) header("$name: $content");
-        
-        header('Runtime: ' . cafet_execution_duration());
         
         if ($response->getBody() !== null) switch ($this->contentType) {
             case 'xml':
@@ -124,9 +125,9 @@ class Rest
         if($this->pretty) {
             $dom = dom_import_simplexml($xml)->ownerDocument;
             $dom->formatOutput = true;
-            echo $dom->saveXML();
+            $this->send($dom->saveXML());
         } else {
-            echo $xml->asXML();
+            $this->send($xml->asXML());
         }
     }
     
@@ -134,14 +135,19 @@ class Rest
         $this->registerContentType('text/yaml');
         
         require_once INCLUDES_DIR . 'spyc.php';
-        echo spyc_dump($response->getBody());
+        $this->send(spyc_dump($response->getBody()));
     }
     
     private function printJSONResponse(RestResponse $response) {
         $this->registerContentType('application/json');
         
-        if($this->pretty) echo json_encode($response->getBody(), JSON_PRETTY_PRINT);
-        else              echo json_encode($response->getBody());
+        if($this->pretty) $this->send(json_encode($response->getBody(), JSON_PRETTY_PRINT));
+        else              $this->send(json_encode($response->getBody()));
+    }
+    
+    private function send(string $content) {
+        header('Runtime: ' . cafet_execution_duration());
+        echo $content;
     }
     
     

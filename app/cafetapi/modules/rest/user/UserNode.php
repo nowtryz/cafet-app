@@ -157,7 +157,7 @@ class UserNode implements RestNode
                     break;
                     
                 case 'name':
-                    if($value == $user->getName()) break;
+                    if($value == $user->getFamilyName()) break;
                     $updater->setName($user->getId(), strval($value));
                     $request->getUser()->setName($value);
                     break;

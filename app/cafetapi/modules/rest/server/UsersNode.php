@@ -219,7 +219,7 @@ class UsersNode implements RestNode
                     break;
                     
                 case 'name':
-                    if($value == $user->getName()) break;
+                    if($value == $user->getFamilyName()) break;
                     $manager->setName($id, strval($value));
                     break;
                     

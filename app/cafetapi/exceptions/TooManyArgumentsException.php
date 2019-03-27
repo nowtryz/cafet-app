@@ -17,7 +17,7 @@ class TooManyArgumentsException extends CafetAPIException
      *            [optional]
      * @param $previous \Throwable
      *            [optional]
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct($message = null, $code = null, $previous = null)
     {

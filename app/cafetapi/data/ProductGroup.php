@@ -7,7 +7,7 @@ use cafetapi\io\ProductManager;
  * A group of products
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class ProductGroup extends JSONParsable implements Data
 {
@@ -27,7 +27,7 @@ class ProductGroup extends JSONParsable implements Data
      *            the name of the group
      * @param string $displayName
      *            the name of the group that would be displayed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, string $name, string $displayName)
     {
@@ -40,7 +40,7 @@ class ProductGroup extends JSONParsable implements Data
      * Returns the $id
      *
      * @return int the $id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getId(): int
     {
@@ -51,7 +51,7 @@ class ProductGroup extends JSONParsable implements Data
      * Returns the $name
      *
      * @return string the $name
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getName(): string
     {
@@ -62,7 +62,7 @@ class ProductGroup extends JSONParsable implements Data
      * Returns the $displayName
      *
      * @return string the $displayName
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getDisplayName(): string
     {
@@ -73,7 +73,7 @@ class ProductGroup extends JSONParsable implements Data
      * Returns viewable products
      *
      * @return array products
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getProducts(): array
     {
@@ -84,7 +84,7 @@ class ProductGroup extends JSONParsable implements Data
      * Returns viewable and unviewable products
      *
      * @return array products
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getAllProducts(): array
     {

@@ -8,7 +8,9 @@ use cafetapi\data\FormulaOrdered;
 use cafetapi\data\ProductBought;
 use cafetapi\data\ProductOrdered;
 use cafetapi\exceptions\NotEnoughtMoneyException;
+use cafetapi\exceptions\RequestFailureException;
 use PDO;
+use cafetapi\MailManager;
 
 /**
  *
@@ -592,11 +594,14 @@ class ExpenseManager extends Updater
      * @param int $client_id
      * @param array $order array of Ordered
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function saveOrder(int $client_id, array $order): bool
     {
         $this->beginTransaction();
+        
+        $client = ClientManager::getInstance()->getClient($client_id);
+        if (!$client) throw new RequestFailureException('Unexisting client');
         
         // Save expense
         $stmt = $this->connection->prepare('INSERT INTO ' . self::EXPENSES . ' (user_id) VALUES (:id)');
@@ -668,18 +673,24 @@ class ExpenseManager extends Updater
             }
         }
         
-        $e = ExpenseManager::getInstance()->getExpense($expense_id);
+        $expense = ExpenseManager::getInstance()->getExpense($expense_id);
         $conf = cafet_get_configurations();
         
-        if (($delta = $e->getBalanceAfterTransaction() - $conf['balance_limit']) < 0) {
+        if (($delta = $expense->getBalanceAfterTransaction() - $conf['balance_limit']) < 0) {
             $this->connection->rollBack();
             $backtrace = debug_backtrace()[1];
             throw new NotEnoughtMoneyException('missing ' . abs($delta) . '€ to perform this action', null, null, $backtrace['file'], $backtrace['line']);
             return false;
         } else {
             $this->commit();
-            if ($e->getBalanceAfterTransaction() < $conf['balance_warning'])
-                cafet_send_reload_request($client_id);
+            try {
+                if ($client->getMailPreference('payment_notice')) MailManager::paymentNotice($client, $expense)->send();
+                if ($expense->getBalanceAfterTransaction() < $conf['balance_warning']) {
+                    if ($client->getMailPreference('reload_request')) MailManager::reloadRequest($client)->send();
+                }
+            } catch (\Exception | \Error $e) {
+                cafet_log($e);
+            }
         }
         
         return true;

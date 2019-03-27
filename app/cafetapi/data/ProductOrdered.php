@@ -6,7 +6,7 @@ namespace cafetapi\data;
  *
  * @see \cafetapi\io\ExpenseManager::saveOrder()
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class ProductOrdered extends Ordered implements Data
 {
@@ -19,7 +19,7 @@ class ProductOrdered extends Ordered implements Data
      * @param int $amount
      *            quantity of product
      * @see \cafetapi\io\ExpenseManager::saveOrder()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, int $amount)
     {

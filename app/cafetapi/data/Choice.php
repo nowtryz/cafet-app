@@ -5,7 +5,7 @@ namespace cafetapi\data;
  * A choice in a formula
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class Choice extends JSONParsable implements Data
 {
@@ -26,7 +26,7 @@ class Choice extends JSONParsable implements Data
      * @param array $choice
      *            a list of products for this choice
      * @see \cafetapi\io\FormulaManager::getFormulaChoices()
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, string $name, int $formula_id, array $choice)
     {
@@ -40,7 +40,7 @@ class Choice extends JSONParsable implements Data
      * Returns the $id
      *
      * @return int the $id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getId(): int
     {
@@ -51,7 +51,7 @@ class Choice extends JSONParsable implements Data
      * Returns the $name
      *
      * @return string the $name
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getName(): string
     {
@@ -62,7 +62,7 @@ class Choice extends JSONParsable implements Data
      * Returns the $choice
      *
      * @return array products of this $choice
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getProducts(): array
     {
@@ -73,7 +73,7 @@ class Choice extends JSONParsable implements Data
      * Returns the $formula
      *
      * @return \cafetapi\data\Formula the $formula
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getFormula(): int
     {

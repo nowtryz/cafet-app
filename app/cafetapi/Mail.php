@@ -9,7 +9,7 @@ use InvalidArgumentException;
  *
  * @author Damien
  *        
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 class Mail
 {
@@ -35,7 +35,7 @@ class Mail
      * @param string $subject
      *            (optional) the subject of the mail
      * @throws InvalidArgumentException if the template doesn't exist or if recipient is null
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function __construct(string $template, string $recipient, string $subject = null)
     {
@@ -105,7 +105,7 @@ class Mail
      * Get the sender email
      *
      * @return string the email
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getSender(): string
     {
@@ -116,7 +116,7 @@ class Mail
      * Get the Reply-to email
      *
      * @return string the email
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getReplyto(): string
     {
@@ -127,7 +127,7 @@ class Mail
      * Get the recipient email
      *
      * @return string the email
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getRecipient(): string
     {
@@ -138,7 +138,7 @@ class Mail
      * Get sender name set
      *
      * @return string the name
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getName(): string
     {
@@ -149,7 +149,7 @@ class Mail
      * Get the subject of the mail
      *
      * @return string the subject
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getSubject(): string
     {
@@ -159,7 +159,7 @@ class Mail
     /**
      *
      * @return mixed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function getHeader(): string
     {
@@ -189,7 +189,7 @@ class Mail
      *
      * @param string $sender
      *            the email to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setSender(string $sender)
     {
@@ -201,7 +201,7 @@ class Mail
      *
      * @param string $replyto
      *            the email to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setReplyto(string $replyto)
     {
@@ -213,7 +213,7 @@ class Mail
      *
      * @param string $recipient
      *            the email to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setRecipient(string $recipient)
     {
@@ -225,7 +225,7 @@ class Mail
      *
      * @param string $name
      *            the name to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setName(string $name)
     {
@@ -236,7 +236,7 @@ class Mail
      * Sets the mail subject
      *
      * @param string $subject
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setSubject(string $subject)
     {
@@ -250,7 +250,7 @@ class Mail
      *            the {name}
      * @param mixed $value
      *            the value to set
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function setVar(string $varName, $value)
     {
@@ -262,7 +262,7 @@ class Mail
      *
      * @param string $header
      *            the additional header
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function addHeader(string $header)
     {

@@ -5,7 +5,7 @@ namespace cafetapi\data;
  * Abstract class for order saving models
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 abstract class Ordered implements Data
 {
@@ -19,7 +19,7 @@ abstract class Ordered implements Data
      *            the id of the thing ordered
      * @param int $amount
      *            the amounut if this thing
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function __construct(int $id, int $amount)
     {
@@ -31,7 +31,7 @@ abstract class Ordered implements Data
      * Returns the $id
      *
      * @return int the $id
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getId(): int
     {
@@ -42,7 +42,7 @@ abstract class Ordered implements Data
      * Returns the $amount
      *
      * @return int the $amount
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getAmount(): int
     {

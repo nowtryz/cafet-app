@@ -46,7 +46,7 @@ class UserManager extends Updater
      * @param string $mail_or_pseudo
      *            the mail/pseudo of the user
      * @return NULL|User A User object that represents the user
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     //     public function getUser(string $mail_or_pseudo): ?User
     //     {
@@ -312,7 +312,7 @@ class UserManager extends Updater
      * @param int $group_id
      * @return User the user inserted
      * @throws EmailFormatException if the email is not valid
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function addUser(string $username, string $email, string $firstname, string $name, string $password, int $group_id = 1): ?User
     {
@@ -431,7 +431,7 @@ class UserManager extends Updater
      *
      * @param int $id
      * @return bool if the query have correctly been completed
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public final function deleteUser(int $id): bool
     {

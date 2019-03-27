@@ -5,7 +5,7 @@ namespace cafetapi\user;
  * Undergo the permission system
  *
  * @author Damien
- * @since API 1.0.0 (2018)
+ * @since API 0.1.0 (2018)
  */
 interface Permissible
 {
@@ -16,7 +16,7 @@ interface Permissible
      * @param string $permission
      *            the permission to check
      * @return bool the permission check
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function hasPermission(string $permission): bool;
 
@@ -24,7 +24,7 @@ interface Permissible
      * Return every permission witch the member is liable from
      *
      * @return array a array of permissions
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function getPermissions(): array;
 
@@ -35,7 +35,7 @@ interface Permissible
      *            th permission to set
      * @param bool $ability
      *            the ability
-     * @since API 1.0.0 (2018)
+     * @since API 0.1.0 (2018)
      */
     public function setPermission(string $permission, bool $ability);
 }
