@@ -1,0 +1,571 @@
+/* Définition des polices personnalisées */
+
+@font-face
+{
+    font-family: 'CrimeSyndicate';
+    src: url('polices/crimesyndicateacad.eot');
+    src: url('polices/crimesyndicateacad.eot?#iefix') format('embedded-opentype'),
+         url('polices/crimesyndicateacad.woff') format('woff'),
+         url('polices/crimesyndicateacad.ttf') format('truetype'),
+         url('polices/crimesyndicateacad.svg#crimesyndicateacad') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face
+{
+    font-family: 'Dayrom';
+    src: url('polices/dayrom.eot');
+    src: url('polices/dayrom.eot?#iefix') format('embedded-opentype'),
+         url('polices/dayrom.woff') format('woff'),
+         url('polices/dayrom.ttf') format('truetype'),
+         url('polices/dayrom.svg#Dayrom') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Eléments principaux de la page */
+
+html {
+
+    overflow-y:scroll;
+}
+
+#titre_principal
+{
+    width: 900px;
+    background: url('images/separateur.png') repeat-x bottom;
+    padding-bottom:  20px;
+}
+
+#corps
+{
+    margin:0;
+    padding:0;
+    background-image: url('images/bgpagetest3.png');
+    background-repeat: no-repeat; 
+    background-position: 50% 0%;
+    background-color: #FFFFFF;
+    font-family: 'Trebuchet MS', Arial, sans-serif;
+    color: #181818;
+}
+
+#bloc_page
+{
+    width: 900px;
+    margin: auto;
+}
+
+section h1, footer h1, nav a
+{
+    font-family: Dayrom, serif;
+    font-weight: normal;
+    text-transform: uppercase;
+    text-decoration:none;
+}
+
+/*-------------------------------------*/
+/*                HEADER               */
+/*-------------------------------------*/
+
+#titre_principal
+{
+    display: inline-block;
+}
+
+header h1 /* titre site */
+{
+    font-family: 'CrimeSyndicate', serif;
+    font-size: 2.5em;
+    font-weight: normal;
+    vertical-align: top;
+    text-align:center;
+    margin-left : 250px;
+}
+
+#logo
+{
+    float : left;
+    display: inline-block;
+    vertical-align: top;
+}
+
+
+header h3 /* Connexion/Inscription/Déco */
+{
+    font-family: Dayrom, serif;
+    font-size: 1em;
+    color: #181818;
+    padding-bottom: 0px;
+    text-decoration: none;
+    text-align:right;
+}
+
+/*-------------------------------------*/
+/*              NAVIGATION             */
+/*-------------------------------------*/
+
+nav /* bloc navigation */
+{
+    display: inline-block;
+    width: 900px;
+    text-align: center;
+	
+}
+
+nav ul
+{
+    list-style-type: none;
+}
+
+nav li /* blocs liste nav mettre un contour arrondi */
+{
+    display: inline-block;
+    margin-right: 20px;
+}
+
+nav a /* Liens nav */
+{
+    font-size: 1.3em;
+    color: #181818;
+    padding-bottom: 3px;
+    text-decoration: none;
+}
+
+nav a:hover /* Apparence au survol des liens */
+{
+   text-decoration: underline;
+   color: #181818;
+}
+
+/*-------------------------------------*/
+/*               ARTICLE               */
+/*-------------------------------------*/
+
+#Accueil { /* bloc principal avec aside */
+    position: relative;
+    width: 600px;
+    background-color: rgb(235,235,235);
+    border-radius: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 1em;
+    margin-right: 15px;
+    margin-top: 10px;
+}
+
+#Accueil article { /* sous bloc avec aside */
+    position: static;
+    width: 580px;
+    background-color: rgb(220,220,220);
+    border-radius: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+}
+
+#Liste h1 {
+  text-align: center;
+}
+
+#Liste p {
+    text-align: center;
+}
+
+#Accueil h3 { /*Ajouter une news*/
+    color : #990000;
+    font-size: 1em;
+}
+
+article {
+    display: inline-block;
+    vertical-align: top;
+    text-align: justify;
+}
+
+article h1 {
+    font-size: 1.3em;
+    color: #990000;
+    padding-bottom: 3px;
+    text-decoration: none;
+    text-align:center;
+}
+
+article { /* bloc principal sans aside */
+	position: relative;
+    width: 880px;
+    background-color: rgb(235,235,235);
+    border-radius: 2px;
+    padding: 10px;
+    font-size: 1em;
+    margin-top : 10px;
+}
+
+article a {
+    text-decoration: none;
+    color: #181818;
+    font-size: 1.1em;
+}
+
+article h2 {
+    font-size: 1.1em;
+    color: #181818;
+    text-decoration: none;
+    text-align: center;
+}
+
+article article /* Sous bloc sans aside */
+{
+    position: static;
+    background-color: rgb(220,220,220);
+    border-radius: 2px;
+    padding-left: 10px;
+    width : 860px;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    /*max-height:244px;
+    overflow:hidden;*/
+}
+
+/*-------------------------------------*/
+/*                ASIDE                */
+/*-------------------------------------*/
+
+aside table { /* Calendrier */
+    display: inline-block;
+    margin-left: 45px;
+}
+
+aside /* Bloc Evenements */
+{
+    position: relative;
+    width: 235px;
+    background-color: rgb(235,235,235);
+    border-radius: 2px;
+    padding: 10px;
+    font-size: 1em;
+    margin-top : 10px;
+    list-style-type: none;
+    display: inline-block;
+    vertical-align: top;
+    text-align: justify;
+}
+
+aside h1 { /* titre énènement*/
+    color: #990000; 
+}
+
+article li 
+{
+    display: inline-block;
+}
+
+aside h3 /* ajouter évènement */
+{
+    font-size: 1em;
+    color: #181818;
+    text-decoration: none;
+    text-align:left;
+    color : #990000;
+}
+
+aside article /* Bloc d'un évènement */
+{
+    position: relative;
+    width: 230px;
+    background-color: rgb(220,220,220);
+    border-radius: 2px;
+    padding: 0px 0px 0px 5px;
+    font-size: 0.9em;
+    margin-top : 5px;
+    margin-bottom: 5px;
+    
+}
+
+aside article h1 /* Titre des evenements */
+{
+    font-size: 1.2em;
+    color: #990000;
+    text-decoration: none;
+    text-align: center;
+}
+
+aside a /* Lien Titres Evenements */
+{
+    font-size: 1em;
+    color: #990000;
+    text-decoration:none;
+    text-align: center;
+}
+
+aside article h1:hover /* Apparence au survol des titres évènements */
+{
+   text-decoration: underline;
+   color: #181818;
+   text-align: center;
+}
+
+/*-------------------------------------*/
+/*               PHOTOS                */
+/*-------------------------------------*/
+
+
+/* line 11, ../sass/lightbox.sass */
+.lightboxOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  background-color: black;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=80);
+  opacity: 0.8;
+  display: none;
+}
+
+/* line 20, ../sass/lightbox.sass */
+.lightbox {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
+  text-align: center;
+  line-height: 0;
+  font-weight: normal;
+}
+/* line 28, ../sass/lightbox.sass */
+.lightbox .lb-image {
+  display: block;
+  height: auto;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  border-radius: 3px;
+}
+/* line 32, ../sass/lightbox.sass */
+.lightbox a img {
+  border: none;
+}
+
+/* line 35, ../sass/lightbox.sass */
+.lb-outerContainer {
+  position: relative;
+  background-color: white;
+  *zoom: 1;
+  width: 250px;
+  height: 250px;
+  margin: 0 auto;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  -ms-border-radius: 4px;
+  -o-border-radius: 4px;
+  border-radius: 4px;
+}
+/* line 38, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+.lb-outerContainer:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* line 44, ../sass/lightbox.sass */
+.lb-container {
+  padding: 4px;
+}
+
+/* line 47, ../sass/lightbox.sass */
+.lb-loader {
+  position: absolute;
+  top: 43%;
+  left: 0%;
+  height: 25%;
+  width: 100%;
+  text-align: center;
+  line-height: 0;
+}
+
+/* line 56, ../sass/lightbox.sass */
+.lb-cancel {
+  display: block;
+  width: 32px;
+  height: 32px;
+  margin: 0 auto;
+  background: url(./lightbox/img/loading.gif) no-repeat;
+}
+
+/* line 63, ../sass/lightbox.sass */
+.lb-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+}
+
+/* line 71, ../sass/lightbox.sass */
+.lb-container > .nav {
+  left: 0;
+}
+
+/* line 74, ../sass/lightbox.sass */
+.lb-nav a {
+  outline: none;
+}
+
+/* line 77, ../sass/lightbox.sass */
+.lb-prev, .lb-next {
+  width: 49%;
+  height: 100%;
+  cursor: pointer;
+  /* Trick IE into showing hover */
+  display: block;
+}
+
+/* line 84, ../sass/lightbox.sass */
+.lb-prev {
+  left: 0;
+  float: left;
+}
+
+/* line 90, ../sass/lightbox.sass */
+.lb-next {
+  right: 0;
+  float: right;
+}
+
+/* line 96, ../sass/lightbox.sass */
+.lb-dataContainer {
+  margin: 0 auto;
+  padding-top: 5px;
+  *zoom: 1;
+  width: 100%;
+  -moz-border-radius-bottomleft: 4px;
+  -webkit-border-bottom-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  -moz-border-radius-bottomright: 4px;
+  -webkit-border-bottom-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+/* line 38, ../../../../.rvm/gems/ruby-1.9.3-p392/gems/compass-0.12.2/frameworks/compass/stylesheets/compass/utilities/general/_clearfix.scss */
+.lb-dataContainer:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* line 103, ../sass/lightbox.sass */
+.lb-data {
+  padding: 0 4px;
+  color: #bbbbbb;
+}
+/* line 106, ../sass/lightbox.sass */
+.lb-data .lb-details {
+  width: 85%;
+  float: left;
+  text-align: left;
+  line-height: 1.1em;
+}
+/* line 111, ../sass/lightbox.sass */
+.lb-data .lb-caption {
+  font-size: 13px;
+  font-weight: bold;
+  line-height: 1em;
+}
+/* line 115, ../sass/lightbox.sass */
+.lb-data .lb-number {
+  display: block;
+  clear: left;
+  padding-bottom: 1em;
+  font-size: 12px;
+  color: #999999;
+}
+/* line 121, ../sass/lightbox.sass */
+.lb-data .lb-close {
+  display: block;
+  float: right;
+  width: 30px;
+  height: 30px;
+  text-align: right;
+  outline: none;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=70);
+  opacity: 0.7;
+}
+/* line 130, ../sass/lightbox.sass */
+.lb-data .lb-close:hover {
+  cursor: pointer;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+}
+
+
+
+/*-------------------------------------*/
+/*               FOOTER                */
+/*-------------------------------------*/
+
+footer
+{
+    background:  url('images/separateur.png') repeat-x top;
+    margin-top : 15px;
+
+}
+
+footer h1, footer h1 a
+{
+    font-size: 1em;
+    color: #990000;
+    text-decoration: none;
+}
+
+#Questions_Bug, #Site_du_BDE, #Version
+{
+    display: inline-block;
+}
+
+#Version
+{
+    width: 28%;
+    text-align: left;
+}
+
+#Site_du_BDE
+{
+    width: 40%;
+    text-align: center;
+}
+
+
+
+#Questions_Bug
+{
+    width: 30%;
+    text-align: right;
+}
+
+
+
+/* Correctifs pour les vieilles versions d'Internet Explorer */
+
+/* Pour activer un positionnement type inline-block sur les vieilles versions d'IE */
+
+.old_ie #titre_principal, .old_ie #logo, .old_ie header h1, .old_ie nav, .old_ie nav li, .old_ie article, .old_ie aside
+{
+    display: inline;
+    zoom: 1;
+}
+
+/* Quelques ajustements pour les vieilles versions d'IE */
+
+.old_ie section h1, .ie8 section h1
+{
+    font-size: 1.1em;
+}
+
+.old_ie footer div, .ie8 footer div
+{
+    margin-top: 30px;
+    background: url('images/separateur.png') repeat-x top;
+}
+

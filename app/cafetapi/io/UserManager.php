@@ -311,6 +311,7 @@ class UserManager extends Updater
      * @param string $name
      * @param int $group_id
      * @return User the user inserted
+     * @throws EmailFormatException if the email is not valid
      * @since API 1.0.0 (2018)
      */
     public final function addUser(string $username, string $email, string $firstname, string $name, string $password, int $group_id = 1): ?User
