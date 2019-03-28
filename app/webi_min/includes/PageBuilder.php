@@ -33,6 +33,8 @@ class PageBuilder
             'post'
         ]
     ];
+    
+    private $headComponents = [];
 
     private $title = null;
 
@@ -123,6 +125,15 @@ class PageBuilder
     {
         return $this->user;
     }
+    
+    /**
+     *
+     * @return mixed
+     */
+    public function getHeadComponents(): array
+    {
+        return $this->headComponents;
+    }
 
     /**
      *
@@ -177,6 +188,14 @@ class PageBuilder
     {
         $this->user = $user;
     }
+    
+    public function registerHeadComponents(callable $component) {
+        $this->headComponents[] = $component;
+    }
+    
+    public function registerPostComponents(callable $component) {
+        $this->post_page[] = $component;
+    }
 
     public static function head(PageBuilder $builder)
     {
@@ -184,6 +203,7 @@ class PageBuilder
 <head>
 <meta charset="utf-8" />
 <link rel="stylesheet" href="/webi_min/style.css" />
+<?php foreach ($builder->getHeadComponents() as $component) call_user_func($component, $builder)?>
 <title><?=$builder->title ? $builder->title . ' | ' : ''?>Site du BDE Isty M&eacute;catronique</title>
 <meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1" />
 <link rel="shortcut icon" href="/webi_min/images/favicon.ico"
