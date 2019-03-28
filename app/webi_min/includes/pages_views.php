@@ -1,9 +1,10 @@
 <?php
-use webi_min\includes\PageBuilder;
-use cafetapi\io\UserManager;
+
+namespace webi_min\includes;
+
 use cafetapi\io\ClientManager;
 
-function webi_show_profile(PageBuilder $builder)
+function show_profile(PageBuilder $builder)
 {
     $user = $builder->getUser();
 ?>
@@ -20,7 +21,7 @@ function webi_show_profile(PageBuilder $builder)
 		</form>
 	</section>
 	</a>
-    Nom : <?=$user->getName()?><br /> <br />
+    Nom : <?=$user->getFamilyName()?><br /> <br />
     Prénom : <?=$user->getFirstname()?><br /> <br />
     Promo : inconnue<br /> <br />
     Mail : <?=$user->getEmail()?><br /> <br />
@@ -33,14 +34,14 @@ function webi_show_profile(PageBuilder $builder)
 <?php
 }
 
-function webi_edit_profile(PageBuilder $builder) {
+function edit_profile(PageBuilder $builder) {
 ?>
 <article>
 	<form method="post" action="/webi/me/edit" id="Ajout" enctype="multipart/form-data">
 
 		<p>
 		<label for="name">Nom :</label>
-		<input type="text" name="name" id="Nom" value="<?=$builder->getUser()->getName()?>"/><br/>
+		<input type="text" name="name" id="Nom" value="<?=$builder->getUser()->getFamilyName()?>"/><br/>
 		
 		<p>
 		<label for="firstname">Prénom :</label>
@@ -57,23 +58,13 @@ function webi_edit_profile(PageBuilder $builder) {
 <?php
 }
 
-function webi_edit_password(PageBuilder $builder) {
-    if(isset($_POST['MDP'])){
-        if(@$_POST['MDP'] && @$_POST['MDP2'] && $_POST['MDP']==$_POST['MDP2']){
-            if(cafet_verify_password($_POST['old_MDP'], $builder->getUser()->getHash(), $builder->getUser()->getPseudo())) {
-                    echo "Mot de passe modifié.";
-                    return;
-            } else {
-                echo "Mot de passe incorrecte.";
-            }
-        } else {
-            echo "Les mots de passe ne correspondent pas, veuillez réésayer.";
-        }
-    }
+function edit_password(PageBuilder $builder, $message = null) {
 ?>
 
 
 <article>
+	<?php if ($message) echo '<p>' . $message . '</p>'?>
+
 	<form method="post" action="/webi/me/edit/pwd" id="Ajout" enctype="multipart/form-data">
 
 	<label for="old_MDP">Ancien mot de passe :</label>
@@ -95,7 +86,7 @@ function webi_edit_password(PageBuilder $builder) {
 <?php
 }
 
-function webi_maintenance() {
+function maintenance() {
 ?>
 <article id="Accueil">
 	<h1>
@@ -113,7 +104,7 @@ function webi_maintenance() {
 <?php
 }
 
-function webi_page_cafet() {
+function page_cafet() {
 ?>
 <article>
 	<h1>La Cafet</h1>
@@ -129,7 +120,7 @@ function webi_page_cafet() {
 <?php
 }
 
-function webi_signin() {
+function signin() {
 ?>
 <article>
 	<h1>Connexion</h1>
@@ -148,12 +139,12 @@ function webi_signin() {
 <?php
 }
 
-function webi_signup(PageBuilder $builder, $message = null) {
+function signup(PageBuilder $builder, $message = null) {
 ?>
 <article id="Inscription">
 	<h1>Inscription</h1><br/>
 	
-	<?php if ($message) echo $message ?>
+	<?php if ($message) echo '<p>' . $message . '</p>' ?>
 	
 	<form method="post" autocomplete="off" action="/webi/signup">
 	<p>
@@ -187,16 +178,18 @@ function webi_signup(PageBuilder $builder, $message = null) {
 <?php
 }
 
-function webi_account_reset() {
+function account_reset(PageBuilder $builder, $message = null) {
 ?>
 <article>
 	<h1>Demande de mot de passe</h1>
 	<br />
+	
+	<?php if ($message) echo '<p>' . $message . '</p>' ?>
 
-	<form method="post" action="/webi/account/reset" id="Ajout">
+	<form method="get" action="/webi/account/reset" id="Ajout">
 
 		<p>
-			<label for="mail">Mail:</label> <input type="text" name="Mail"
+			<label for="mail">Mail:</label> <input type="text" name="mail"
 				id="Mail" required />
 
 		</p>

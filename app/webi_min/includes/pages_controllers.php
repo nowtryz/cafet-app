@@ -1,11 +1,13 @@
 <?php
 
+namespace webi_min\includes;
+
 use cafetapi\exceptions\EmailFormatException;
 use cafetapi\io\UserManager;
-use webi_min\includes\PageBuilder;
 use cafetapi\MailManager;
+use cafetapi\config\Defaults;
 
-function webi_controller_show_profile()
+function controller_show_profile()
 {
     $b = new PageBuilder();
     
@@ -14,11 +16,11 @@ function webi_controller_show_profile()
             echo '<h1 style="text-align:center;color:red">Vous devez être connecté pour accèder à votre profil.</h1>';
         });
     } else {
-        $b->build('webi_show_profile');
+        $b->build(__NAMESPACE__ . '\show_profile');
     }
 }
 
-function webi_controller_edit_profile()
+function controller_edit_profile()
 {
     $b = new PageBuilder();
     $user = $b->getUser();
@@ -48,21 +50,31 @@ function webi_controller_edit_profile()
         
         cafet_set_logged_user($user);
         
-        $b->build('webi_edit_profile');
+        $b->build(__NAMESPACE__ . '\edit_profile');
     }
 }
 
-function webi_controller_edit_password()
+function controller_edit_password()
 {
+    $builder = new PageBuilder();
+    
     if (@$_POST['MDP'] && @$_POST['MDP2'] && $_POST['MDP'] == $_POST['MDP2'] && cafet_verify_password($_POST['old_MDP'], $builder->getUser()->getHash(), $builder->getUser()->getPseudo())) {
         UserManager::getInstance()->setPassword($builder->getUser()->getId(), $_POST['MDP']);
     }
     
-    $b = new PageBuilder();
-    $b->build('webi_edit_password');
+    if(isset($_POST['MDP'])){
+        if(@$_POST['MDP'] && @$_POST['MDP2'] && $_POST['MDP']==$_POST['MDP2']){
+            if(cafet_verify_password($_POST['old_MDP'], $builder->getUser()->getHash(), $builder->getUser()->getPseudo())) {
+                UserManager::getInstance()->setPassword($builder->getUser()->getId(), $_POST['MDP']);
+                $builder->build(function() {
+                    echo "Mot de passe modifié.";
+                });
+            } else $builder->build(__NAMESPACE__ . '\edit_password', "Mot de passe incorrecte.");
+        } else $builder->build(__NAMESPACE__ . '\edit_password', "Les mots de passe ne correspondent pas, veuillez réésayer.");
+    } else $builder->build(__NAMESPACE__ . '\edit_password');
 }
 
-function webi_controller_signout() {
+function controller_signout() {
     if (isset($_COOKIE[cafet_get_configuration('session_name')])) {
         cafet_init_session();
         cafet_destroy_session();
@@ -71,7 +83,7 @@ function webi_controller_signout() {
     exit();
 }
 
-function webi_controller_signin() {
+function controller_signin() {
     if(isset($_POST['Pseudo']) && $user = cafet_check_login(@$_POST['Pseudo'], @$_POST['MDP'])) {
         cafet_init_session();
         cafet_set_logged_user($user);
@@ -79,11 +91,11 @@ function webi_controller_signin() {
         exit();
     } else {
         $b = new PageBuilder();
-        $b->build('webi_signin');
+        $b->build(__NAMESPACE__ . '\signin');
     }
 }
 
-function webi_controller_signup() {
+function controller_signup() {
     $b = new PageBuilder();
     
     if(isset($_POST['Pseudo']) || isset($_POST['MDP']) || isset($_POST['MDP2']) || isset($_POST['Nom']) || isset($_POST['Prenom']) || isset($_POST['Email'])) {
@@ -91,8 +103,8 @@ function webi_controller_signup() {
             if ($_POST['MDP'] == $_POST['MDP2']) {
                 $manager = UserManager::getInstance();
                 
-                if ($manager->getUser($_POST['Email'])) $b->build('webi_signup', 'L\'addresse email entrée est déjà utilisée !');
-                else if ($manager->getUser($_POST['Pseudo'])) $b->build('webi_signup', 'Le nom d\'utilisateur entré est déjà utilisé !');
+                if ($manager->getUser($_POST['Email'])) $b->build(__NAMESPACE__ . '\signup', 'L\'addresse email entrée est déjà utilisée !');
+                else if ($manager->getUser($_POST['Pseudo'])) $b->build(__NAMESPACE__ . '\signup', 'Le nom d\'utilisateur entré est déjà utilisé !');
                 else try {
                     $user = UserManager::getInstance()->addUser($_POST['Pseudo'], $_POST['Email'], $_POST['Prenom'], $_POST['Nom'], $_POST['MDP']);
                     UserManager::getInstance()->registerLogin($user->getId());
@@ -101,19 +113,38 @@ function webi_controller_signup() {
                     header('Location: /webi');
                     exit();
                 } catch (EmailFormatException $e) {
-                    $b->build('webi_signup', 'L\'addresse email n\'est pas valide !');
+                    $b->build(__NAMESPACE__ . '\signup', 'L\'addresse email n\'est pas valide !');
                 }
-            } else $b->build('webi_signup', 'Les mots de passe ne correspondent pas !');
-        } else $b->build('webi_signup', 'Tous les champs doivent être remplis !');
-    } else $b->build('webi_signup');
+            } else $b->build(__NAMESPACE__ . '\signup', 'Les mots de passe ne correspondent pas !');
+        } else $b->build(__NAMESPACE__ . '\signup', 'Tous les champs doivent être remplis !');
+    } else $b->build(__NAMESPACE__ . '\signup');
 }
 
-function webi_controller_account_reset() {
+function controller_account_reset() {
     $b = new PageBuilder();
-    $pass = base64_encode(random_bytes(9));
-    $mail = MailManager::message($b->getUser(), "A votre demande, votre mot de passe a été modifié, votre nouveau mot de passe est désormais <strong>$pass</strong>");
-    $mail->setSubject('Réinirialisation de votre mot de pass');
-    echo $mail;
-    exit;
-    $b->build('webi_account_reset');
+    
+    if ($b->getUser()) {
+        $b->build(function() {
+            echo '<h1 style="text-align:center;color:red">Vous êtes déjà connecté(e) à votre profil.</h1>';
+        });
+    } elseif (isset($_REQUEST['mail'])) {
+        if ( filter_var($_REQUEST['mail'], FILTER_VALIDATE_EMAIL) && $user = UserManager::getInstance()->getUser($_REQUEST['mail'])) {
+            $pass = base64_encode(random_bytes(9));
+            $mail = MailManager::message($user, '<p>' .
+                'A votre demande, votre mot de passe a été modifié, ' . 
+                "votre nouveau mot de passe est désormais <strong>$pass</strong>, " .
+                'notez bien ce mot de passe, il vous sera demandé lors de votre prochaine connexion.</p>' .
+                '<p>Cliquez <a href="' . Defaults::url . 'webi/signin">ici</a> pour vous connecter.</p>');
+            $mail->setSubject('Réinirialisation de votre mot de pass');
+            if (@$mail->send() || true) {
+                UserManager::getInstance()->setPassword($user->getId(), $pass);
+                echo $mail;
+                exit;
+                // FIXME remove echo pass
+                $b->build(__NAMESPACE__ . '\account_reset', 'Votre mot de passe a été modifié, vous allez recevoir un mail avec votre nouveau mot de passe.' . " <strong>$pass</strong>");
+            } else $b->build(function() {
+               echo '<article>Nous n\'avons pas pu réinitialiser votre mot de passe.</article>'; 
+            });
+        } else $b->build(__NAMESPACE__ . '\account_reset', 'Nous ne connaissons aucun compte lié à l\'adresse email entrée.');
+    } else $b->build(__NAMESPACE__ . '\account_reset');
 }

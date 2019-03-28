@@ -198,7 +198,7 @@ class PageBuilder
         ?>
 <header>
 	<div id="titre_principal">
-		<a href="/index.php"> <img src="/webi_min/images/Logo.png"
+		<a href="/webi"> <img src="/webi_min/images/Logo.png"
 			style="margin-top: 20px" alt="Logo de l'ISTY" id="logo" /></a> <br />
 		<br /> <br /> <br /> <br /> <br /> <br /> <br /> <br /> <br />
     	<?php if ($builder->user): ?>
