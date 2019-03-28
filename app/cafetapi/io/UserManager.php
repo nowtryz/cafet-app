@@ -166,7 +166,7 @@ class UserManager extends Updater
         $registration = get_calendar_from_datetime($_registration);
         $permissions = @unserialize($_permissions) ?? [];
         
-        $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group]) : cafet_get_guest_group();
+        $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group], $_group) : cafet_get_guest_group();
 
         $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
         $statement->closeCursor();
@@ -224,7 +224,7 @@ class UserManager extends Updater
         $registration = get_calendar_from_datetime($_registration);
         $permissions = @unserialize($_permissions) ?: [];
         
-        $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group]) : cafet_get_guest_group();
+        $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group], $_group) : cafet_get_guest_group();
         
         $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
         $statement->closeCursor();
@@ -277,7 +277,7 @@ class UserManager extends Updater
             $registration = get_calendar_from_datetime($_registration);
             $permissions = @unserialize($_permissions) ?: [];
             
-            $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group]) : cafet_get_guest_group();
+            $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group], $_group) : cafet_get_guest_group();
             
             $result[] = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
         }
