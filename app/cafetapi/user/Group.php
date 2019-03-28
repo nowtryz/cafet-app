@@ -56,6 +56,7 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
     ];
 
     private $name;
+    private $id;
 
     private $permissions = [];
 
@@ -65,9 +66,10 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
      * @param array $permissions
      * @since API 0.1.0 (2018)
      */
-    public function __construct(string $name, array $permissions)
+    public function __construct(string $name, array $permissions, int $id = 0)
     {
         $this->name = $name;
+        $this->id = $id;
 
         if (is_associative_array($permissions))
             foreach ($permissions as $permission => $value)
@@ -83,6 +85,26 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
     public function getPermissions(): array
     {
         return $this->permissions;
+    }
+
+    /**
+     * Return the name of the group
+     * @return string
+     * @since API 0.3.0 (2019)
+     */
+    public function getName() : string
+    {
+        return $this->name;
+    }
+
+    /**
+     * Return the id of the group
+     * @return int
+     * @since API 0.3.0 (2019)
+     */
+    public function getId() : int
+    {
+        return $this->id;
     }
 
     public function setPermission(string $permission, bool $ability)
