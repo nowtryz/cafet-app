@@ -28,10 +28,12 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
     ];
 
     const CAFET_ADMIN = [
+        Perm::GLOBAL_CONNECT => true,
         Perm::CAFET => true
     ];
 
     const CAFET_MANAGER = [
+        Perm::GLOBAL_CONNECT => true,
         Perm::CAFET_ADMIN_PANELACCESS => true,
         Perm::CAFET_ADMIN_ORDER => true,
         Perm::CAFET_ADMIN_RELOAD => true,
@@ -42,6 +44,7 @@ class Group extends JSONParsable implements Permissible, Data, \Serializable
     ];
 
     const CONSUMER = [
+        Perm::GLOBAL_CONNECT => true,
         Perm::CAFET_PURCHASE => true,
         Perm::CAFET_ME => true
     ];
