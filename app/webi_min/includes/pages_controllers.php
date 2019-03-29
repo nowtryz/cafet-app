@@ -136,11 +136,8 @@ function controller_account_reset() {
                 'notez bien ce mot de passe, il vous sera demandé lors de votre prochaine connexion.</p>' .
                 '<p>Cliquez <a href="' . Defaults::url . 'webi/signin">ici</a> pour vous connecter.</p>');
             $mail->setSubject('Réinirialisation de votre mot de pass');
-            if (@$mail->send() || true) {
+            if (@$mail->send()) {
                 UserManager::getInstance()->setPassword($user->getId(), $pass);
-                echo $mail;
-                exit;
-                // FIXME remove echo pass
                 $b->build(__NAMESPACE__ . '\account_reset', 'Votre mot de passe a été modifié, vous allez recevoir un mail avec votre nouveau mot de passe.' . " <strong>$pass</strong>");
             } else $b->build(function() {
                echo '<article>Nous n\'avons pas pu réinitialiser votre mot de passe.</article>'; 
