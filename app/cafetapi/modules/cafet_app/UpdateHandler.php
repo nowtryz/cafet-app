@@ -33,7 +33,7 @@ class UpdateHandler extends Handler
     public final function add_product(array $arguments): Product
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['name']) || ! isset($arguments['group_id']))
             cafet_throw_error('03-006');
@@ -57,7 +57,7 @@ class UpdateHandler extends Handler
     public final function add_product_group(array $arguments): ProductGroup
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['name']))
             cafet_throw_error('03-006');
@@ -78,7 +78,7 @@ class UpdateHandler extends Handler
     public final function add_formula(array $arguments): Formula
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['name']))
             cafet_throw_error('03-006');
@@ -99,7 +99,7 @@ class UpdateHandler extends Handler
     public final function add_choice(array $arguments): Choice
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['formula_id']) || ! isset($arguments['name']))
             cafet_throw_error('03-006');
@@ -147,7 +147,7 @@ class UpdateHandler extends Handler
     public final function remove_product_from_choice(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['choice_id']) || ! isset($arguments['product_id']))
             cafet_throw_error('03-006');
@@ -172,7 +172,7 @@ class UpdateHandler extends Handler
     public final function save_order(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_ORDER, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['client_id']))              cafet_throw_error('03-006', 'missing client_id');
         if (! isset($arguments['order']))                  cafet_throw_error('03-006', 'missing order');
@@ -217,7 +217,7 @@ class UpdateHandler extends Handler
     public final function save_reload(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_RELOAD, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         global $user;
         global $app;
@@ -247,7 +247,7 @@ class UpdateHandler extends Handler
     public final function set_product_group_display_name(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['group_id']) || ! isset($arguments['display_name']))
             cafet_throw_error('03-006');
@@ -271,7 +271,7 @@ class UpdateHandler extends Handler
     public final function set_product_group_name(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['group_id']) || ! isset($arguments['name']))
             cafet_throw_error('03-006');
@@ -295,7 +295,7 @@ class UpdateHandler extends Handler
     public final function set_product_name(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['product_id']) || ! isset($arguments['name']))
             cafet_throw_error('03-006');
@@ -319,7 +319,7 @@ class UpdateHandler extends Handler
     public final function set_product_price(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['product_id']) || ! isset($arguments['price']))
             cafet_throw_error('03-006');
@@ -345,7 +345,7 @@ class UpdateHandler extends Handler
     public final function set_product_group(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['product_id']) || ! isset($arguments['group_id']))
             cafet_throw_error('03-006');
@@ -369,7 +369,7 @@ class UpdateHandler extends Handler
     public final function set_product_image(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['product_id']) || ! isset($arguments['image_base64']))
             cafet_throw_error('03-006');
@@ -393,7 +393,7 @@ class UpdateHandler extends Handler
     public final function set_product_viewable(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['product_id']) || ! isset($arguments['flag']))
             cafet_throw_error('03-006');
@@ -419,7 +419,7 @@ class UpdateHandler extends Handler
     public final function set_formula_name(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['formula_id']) || ! isset($arguments['name']))
             cafet_throw_error('03-006');
@@ -443,7 +443,7 @@ class UpdateHandler extends Handler
     public final function set_formula_price(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['formula_id']) || ! isset($arguments['price']))
             cafet_throw_error('03-006');
@@ -469,7 +469,7 @@ class UpdateHandler extends Handler
     public final function set_formula_viewable(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['formula_id']) || ! isset($arguments['flag']))
             cafet_throw_error('03-006');
@@ -495,7 +495,7 @@ class UpdateHandler extends Handler
     public final function set_formula_image(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['formula_id']) || ! isset($arguments['image_base64']))
             cafet_throw_error('03-006');
@@ -519,7 +519,7 @@ class UpdateHandler extends Handler
     public final function delete_product(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['product_id']))
             cafet_throw_error('03-006');
@@ -540,7 +540,7 @@ class UpdateHandler extends Handler
     public final function delete_product_group(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['group_id']))
             cafet_throw_error('03-006');
@@ -561,7 +561,7 @@ class UpdateHandler extends Handler
     public final function delete_formula(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['formula_id']))
             cafet_throw_error('03-006');
@@ -582,7 +582,7 @@ class UpdateHandler extends Handler
     public final function delete_formula_choice(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['choice_id']))
             cafet_throw_error('03-006');
