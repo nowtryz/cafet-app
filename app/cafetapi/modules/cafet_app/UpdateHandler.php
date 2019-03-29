@@ -123,7 +123,7 @@ class UpdateHandler extends Handler
     public final function add_product_to_choice(array $arguments): bool
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_MANAGE_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['choice_id']) || ! isset($arguments['product_id']))
             cafet_throw_error('03-006');
