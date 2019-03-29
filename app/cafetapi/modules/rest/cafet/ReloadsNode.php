@@ -68,6 +68,8 @@ class ReloadsNode implements RestNode
         $client_id = intval($request->getBody()['client_id'], 0);
         $amount = intval($request->getBody()['amount']);
         
+        if ($amount < 0) $request->needPermissions(Perm::CAFET_ADMIN_NEGATIVERELOAD);
+        
         $reload = ReloadManager::getInstance()->saveReload($client_id, $amount, 'by a registered capable user');
         if($reload) return new RestResponse('204', HttpCodes::HTTP_204, null);
         else return ServerError::internalServerError();
