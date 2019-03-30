@@ -2,10 +2,14 @@
 
 namespace webi_min\includes;
 
-use cafetapi\exceptions\EmailFormatException;
-use cafetapi\io\UserManager;
 use cafetapi\MailManager;
 use cafetapi\config\Defaults;
+use cafetapi\exceptions\EmailFormatException;
+use cafetapi\io\ClientManager;
+use cafetapi\io\UserManager;
+use cafetapi\user\Perm;
+
+require_once WEBI_INCLUDES . 'pages_views.php';
 
 function controller_show_profile()
 {
@@ -26,14 +30,12 @@ function controller_edit_profile()
     $user = $b->getUser();
     
     if (!$user) {
-        $b->build(function() {
-            echo '<h1 style="text-align:center;color:red">Vous devez être connecté pour accèder à votre profil.</h1>';
-        });
+        $b->build(__NAMESPACE__ . '\need_signin');
         exit();
     } elseif (isset($_REQUEST['name']) && isset($_REQUEST['firstname']) ||  isset($_REQUEST['phone'])) {
         $manager = UserManager::getInstance();
         
-        if ($_REQUEST['name'] != $user->getName()) {
+        if ($_REQUEST['name'] != $user->getFamilyName()) {
             $manager->setName($user->getId(), (string) $_REQUEST['name']);
             $user->setName((string) $_REQUEST['name']);
         }
@@ -49,9 +51,9 @@ function controller_edit_profile()
         }
         
         cafet_set_logged_user($user);
-        
-        $b->build(__NAMESPACE__ . '\edit_profile');
     }
+        
+    $b->build(__NAMESPACE__ . '\edit_profile');
 }
 
 function controller_edit_password()
@@ -67,7 +69,7 @@ function controller_edit_password()
             if(cafet_verify_password($_POST['old_MDP'], $builder->getUser()->getHash(), $builder->getUser()->getPseudo())) {
                 UserManager::getInstance()->setPassword($builder->getUser()->getId(), $_POST['MDP']);
                 $builder->build(function() {
-                    echo "Mot de passe modifié.";
+                    echo "<article>Mot de passe modifié.</article>";
                 });
             } else $builder->build(__NAMESPACE__ . '\edit_password', "Mot de passe incorrecte.");
         } else $builder->build(__NAMESPACE__ . '\edit_password', "Les mots de passe ne correspondent pas, veuillez réésayer.");
@@ -143,5 +145,29 @@ function controller_account_reset() {
                echo '<article>Nous n\'avons pas pu réinitialiser votre mot de passe.</article>'; 
             });
         } else $b->build(__NAMESPACE__ . '\account_reset', 'Nous ne connaissons aucun compte lié à l\'adresse email entrée.');
-    } else $b->build(__NAMESPACE__ . '\account_reset');
+    } else $b->build(__NAMESPACE__ . '\need_signin');
+}
+
+function controller_members_reset() {
+    $b = new PageBuilder();
+    
+    /*
+     * Permissions Check
+     */
+    if (!$b->getUser()) {
+        $b->build(function() {
+            echo '<h1 style="text-align:center;color:red">Vous devez être connecté pour accèder à votre profil.</h1>';
+        });
+            return;
+    } elseif (!$b->getUser()->hasPermission(Perm::SITE_MANAGE_USERS)) {
+        $b->build(function() {
+            echo '<h1 style="text-align:center;color:red">Vous n\'avez les permissions nécessaires pour accèder à cette page.</h1>';
+        });
+            return;
+    }
+    
+    $manager = ClientManager::getInstance();
+    foreach ($manager->getClients() as $client) $manager->setMember($client->getId(), false);
+    ;
+    $b->build(__NAMESPACE__ . '\members_reset');
 }

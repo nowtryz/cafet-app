@@ -68,7 +68,7 @@ class PageBuilder
 <?php
 
         foreach ($this->post_page as $callable) {
-            call_user_func($callable);
+            call_user_func($callable, $this);
         }
     }
 
@@ -248,24 +248,7 @@ class PageBuilder
 
     public static function nav(PageBuilder $builder)
     {
-        ?>
-<nav>
-	<div id="menu">
-		<ul class="Titres">
-			<li class="Titre" onmouseover="montre('smenu1',true);"
-				onmouseout="montre('smenu1',false);">L'ISTY
-				<ul id="smenu1">
-					<li>
-						<a href="/webi/pages?p=ecole">L'Ecole</a>
-						<a href="/webi/pages?p=BDE">Le BDE</a>
-						<a href="/webi/pages?p=cafet">La cafet</a>
-					</li>
-				</ul>
-			</li>
-		</ul>
-	</div>
-</nav>
-<?php
+        
     }
 
     public static function footer(PageBuilder $builder)

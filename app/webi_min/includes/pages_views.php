@@ -86,40 +86,6 @@ function edit_password(PageBuilder $builder, $message = null) {
 <?php
 }
 
-function maintenance() {
-?>
-<article id="Accueil">
-	<h1>
-		<img src="/webi_min/images/news.png" alt="News" class="ico_News" />
-	</h1>
-	<article>
-		<h1>Site en Maintenance</h1>
-		<p>Dans le cadre d'une démarche d'ingénieurie, le site Mecatronautes
-			est actuellement en cours de remise en conformité avec les besoins
-			clients ainsi que les exigences induites. Veuillez nous excuser de la
-			gene que cela serait sucsceptible de générer</p>
-		<p class="date">Posté le 16/02/16 par l'équipe développement</p>
-	</article>
-</article>
-<?php
-}
-
-function page_cafet() {
-?>
-<article>
-	<h1>La Cafet</h1>
-
-	<br/>
-
-	<p> A chaque pause et tous les jours, nous vendons aux étudiants ainsi qu'aux enseignants des boissons fraiches, chaudes, et des confiseries. N'hésitez pas à venir nous voir
-	 au deuxième étage du bâtiment de l'ISTY à Mantes la ville !<p></br>
-
-	<p align="center"><img src="/webi_min/images/Cafet.png"></p>
-	
-</article>
-<?php
-}
-
 function signin() {
 ?>
 <article>
@@ -201,5 +167,17 @@ function account_reset(PageBuilder $builder, $message = null) {
 	<br />
 
 </article>
+<?php
+}
+
+function members_reset() {
+?>
+<h1 style="text-align:center;color:green">Toutes les adhésions ont été réinitialisées.</h1>
+<?php
+}
+
+function need_signin() {
+?>
+<h1 style="text-align:center;color:red">Vous devez être connecté pour accèder à votre profil.</h1>
 <?php
 }

@@ -17,7 +17,7 @@
 	RewriteRule ^api\/v([^\s\/]+)\/ api.php?version=$1&path&return_type [L,QSA]
 	RewriteRule ^api\/ api.php?version&path&return_type [L,QSA]
     RewriteRule ^activat(?:e|ion)\/?(.+) index.php?module=activate&key=$1 [L]
-    RewriteRule ^webi\/?(.*) webi.php?action=$1 [L,QSA]
+    RewriteRule ^webi\/?(.*) webi_min/webi.php?action=$1 [L,QSA]
 	RewriteRule ^image\/(product|formula)(?:\/([0-9]+))?(?:\/size/([^\/\s\.]))? image.php?item=$1&id=$2&size=$3 [QSA,L]
 	RewriteRule ^debug(?:/([^\.]+))? index.php?module=debug&path=$1 [L,QSA]
 
