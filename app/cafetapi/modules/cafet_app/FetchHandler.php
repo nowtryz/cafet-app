@@ -25,7 +25,7 @@ class FetchHandler extends Handler
     public final function get_clients(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_CLIENTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         $return = array();
 
@@ -38,7 +38,7 @@ class FetchHandler extends Handler
     public final function get_client(array $arguments): ?Client
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_CLIENTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -53,7 +53,7 @@ class FetchHandler extends Handler
     public final function get_client_reloads(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_RELOADS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -73,7 +73,7 @@ class FetchHandler extends Handler
     public final function get_client_expenses(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -93,7 +93,7 @@ class FetchHandler extends Handler
     public final function get_expense_details(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -113,7 +113,7 @@ class FetchHandler extends Handler
     public final function get_product_bought(array $arguments): ?ProductBought
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
             
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -128,7 +128,7 @@ class FetchHandler extends Handler
     public final function get_formula_bought(array $arguments): ?FormulaBought
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
             
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -143,7 +143,7 @@ class FetchHandler extends Handler
     public final function get_product_groups(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         $return = array();
 
@@ -156,7 +156,7 @@ class FetchHandler extends Handler
     public final function get_product_group(array $arguments): ?ProductGroup
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -171,7 +171,7 @@ class FetchHandler extends Handler
     public final function get_group_products(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -194,7 +194,7 @@ class FetchHandler extends Handler
     public final function get_formula_bought_products(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -214,7 +214,7 @@ class FetchHandler extends Handler
     public final function get_product(array $arguments): ?Product
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_PRODUCTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -229,7 +229,7 @@ class FetchHandler extends Handler
     public final function get_formulas(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (isset($arguments['show_hiddens']) && gettype($arguments['show_hiddens']) != 'boolean')
             cafet_throw_error('03-005', 'show_hiddens must be a boolean');
@@ -247,7 +247,7 @@ class FetchHandler extends Handler
     public final function get_formula(array $arguments): ?Formula
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -262,7 +262,7 @@ class FetchHandler extends Handler
     public final function get_formula_choices(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_FORMULAS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['id']))
             cafet_throw_error('03-006');
@@ -282,7 +282,7 @@ class FetchHandler extends Handler
     public final function search_client(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_CLIENTS, $this->user))
-            cafet_throw_error('02_002');
+            cafet_throw_error('02-002');
 
         if (! isset($arguments['expression']))
             cafet_throw_error('03-006');

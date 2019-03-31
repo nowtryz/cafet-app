@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
     image: cafet-php-server:dev
-    container_name: cafet-server
+    container_name: cafet-server-servername
     ports:
       - "80:80"
     links:
@@ -15,6 +15,7 @@ services:
       - db
     volumes:
       - php-logs:/var/log
+      - "/srv/cafet-app/servername/content:/var/www/html/cafetapi_content"
     networks:
       - cafet_net
 
@@ -22,16 +23,18 @@ services:
     build:
       context: .
       dockerfile: docker/mysql/Dockerfile
-    container_name: cafet-server-mysql
+    container_name: cafet-server-mysql-servername
     restart: always
-    ports:
-      - '3306:3306'
+    # ports:
+      # - '3306:3306'
+    volumes:
+      - "/srv/cafet-app/servername/database:/var/lib/mysql"
     networks:
       - cafet_net
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:latest
-    container_name: cafet-server-phpmyadmin
+    container_name: cafet-server-phpmyadmin-servername
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=db
