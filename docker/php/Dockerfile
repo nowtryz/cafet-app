@@ -16,9 +16,6 @@ COPY docker/php/extentions/ /usr/local/lib/php/extensions/no-debug-non-zts-20170
 COPY app/ /var/www/html/
 COPY docker/php/config.php /var/www/html/cafetapi_content/
 
-<<<<<<< HEAD
-VOLUME ["/var/log"]
-=======
 # Prepare volumes
 RUN cp -r /var/www/html/cafetapi_content /var/cafetapi_content_defaults
 RUN mkdir -p /var/tmp && mkdir -p /var/log
@@ -28,4 +25,3 @@ COPY docker/php/docker-php-entrypoint.sh /usr/local/bin/docker-php-entrypoint
 RUN chmod 775 /usr/local/bin/docker-php-entrypoint
 
 VOLUME ["/var/log", "/var/www/html/cafetapi_content"]
->>>>>>> feature/docker-installation

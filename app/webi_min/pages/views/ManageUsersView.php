@@ -190,7 +190,7 @@ tr:not(.table-head ):hover {
 		<?php foreach (UserManager::getInstance()->getUsers() as $user) : if (!@$_REQUEST['group_id']  || $user->getGroup()->getId() == $_REQUEST['group_id']) :?>
 		<tr id="user<?=$user->getId() + 10?>"
 			<?=$user->getId() == @$_REQUEST['userid'] ? 'class="modified_user"' : ''?>>
-			<td width="20%"><?=$user->getPseudo()?></td>
+			<td width="20%"><?=$user->getFirstname()?> <?=$user->getFamilyName()?> (<?=$user->getPseudo()?>)</td>
 			<?php foreach ($this->groups as $group_id => $group_name) :?>
 			<td style="text-align: center"><a class="validate-checkbox tooltip"
 				href="<?=$this->set_group_link($user, $group_id)?>">
