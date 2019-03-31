@@ -11,7 +11,7 @@ if (! defined('CAFET_DIR'))
  * @var unknown
  * @since API 0.1.0 (2018)
  */
-define('SERVER_VERSION', 'O.2.0');
+define('SERVER_VERSION', 'O.2.2');
 /**
  * API version number for api calls
  *

@@ -1,6 +1,6 @@
 {
   "name": "cafet-api-php",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Both REST API for http connections and PHP librairy. Manage Interactions between client applications and database",
   "private": true,
   "scripts": {
