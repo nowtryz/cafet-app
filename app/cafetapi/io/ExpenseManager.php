@@ -11,6 +11,8 @@ use cafetapi\exceptions\NotEnoughtMoneyException;
 use cafetapi\exceptions\RequestFailureException;
 use PDO;
 use cafetapi\MailManager;
+use cafetapi\config\Config;
+use cafetapi\Logger;
 
 /**
  *
@@ -619,7 +621,7 @@ class ExpenseManager extends Updater
                     'id' => $entry->getId()
                 ]);
                 if (! $stmt->fetch())
-                    cafet_throw_error('03-005', 'product with id ' . $entry->getId() . ' doesn\'t exist');
+                    Logger::throwError('03-005', 'product with id ' . $entry->getId() . ' doesn\'t exist');
                     $stmt->closeCursor();
                     
                     $stmt = $this->connection->prepare('INSERT '
@@ -639,7 +641,7 @@ class ExpenseManager extends Updater
                     'id' => $entry->getId()
                 ]);
                 if (! $stmt->fetch())
-                    cafet_throw_error('03-005', 'formula with id ' . $entry->getId() . ' doesn\'t exist');
+                    Logger::throwError('03-005', 'formula with id ' . $entry->getId() . ' doesn\'t exist');
                     $stmt->closeCursor();
                     
                     $stmt = $this->connection->prepare('INSERT '
@@ -674,9 +676,8 @@ class ExpenseManager extends Updater
         }
         
         $expense = ExpenseManager::getInstance()->getExpense($expense_id);
-        $conf = cafet_get_configurations();
         
-        if (($delta = $expense->getBalanceAfterTransaction() - $conf['balance_limit']) < 0) {
+        if (($delta = $expense->getBalanceAfterTransaction() - Config::balance_limit) < 0) {
             $this->connection->rollBack();
             $backtrace = debug_backtrace()[1];
             throw new NotEnoughtMoneyException('missing ' . abs($delta) . '€ to perform this action', null, null, $backtrace['file'], $backtrace['line']);
@@ -685,11 +686,11 @@ class ExpenseManager extends Updater
             $this->commit();
             try {
                 if ($client->getMailPreference('payment_notice')) MailManager::paymentNotice($client, $expense)->send();
-                if ($expense->getBalanceAfterTransaction() < $conf['balance_warning']) {
+                if ($expense->getBalanceAfterTransaction() < Config::balance_warning) {
                     if ($client->getMailPreference('reload_request')) MailManager::reloadRequest($client)->send();
                 }
             } catch (\Exception | \Error $e) {
-                cafet_log($e);
+                Logger::log($e);
             }
         }
         

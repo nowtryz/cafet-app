@@ -3,6 +3,7 @@ namespace cafetapi;
 
 use Exception;
 use InvalidArgumentException;
+use cafetapi\config\Config;
 
 /**
  * Load a mail in order to send it
@@ -48,15 +49,10 @@ class Mail
         $lines = file(CONTENT_DIR . 'mails' . DIRECTORY_SEPARATOR . $template . '.html');
 
         // Load application confs
-        $conf = defined("CONFIGURATIONS") ? CONFIGURATIONS : cafet_get_configurations();
-        if (isset($conf['email_sender']))
-            $this->sender = (string) $conf['email_sender'];
-        if (isset($conf['email_contact']))
-            $this->replyto = (string) $conf['email_contact'];
-        if (isset($conf['email_name']))
-            $this->name = (string) $conf['email_name'];
-        if (isset($conf['email_default_subject']))
-            $this->subject = (string) $conf['email_default_subject'];
+        $this->sender = (string) Config::email_sender;
+        $this->replyto = (string) Config::email_contact;
+        $this->name = (string) Config::email_name;
+//         $this->subject = (string) Config::email_default_subject;
 
         // Load conf and message from html comments
         $commentLines = array();

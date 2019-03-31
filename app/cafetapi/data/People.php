@@ -1,8 +1,8 @@
 <?php
 namespace cafetapi\data;
 
+use cafetapi\config\Config;
 use cafetapi\exceptions\EmailFormatException;
-use cafetapi\config\Defaults;
 
 abstract class People extends JSONParsable
 {
@@ -17,7 +17,7 @@ abstract class People extends JSONParsable
         $this->email = $email;
         $this->familyName = $familyName;
         $this->firstname = $firstname;
-        $this->mail_preferences = array_merge(Defaults::mail_preferences, $mail_preferences);
+        $this->mail_preferences = array_merge(Config::mail_preferences, $mail_preferences);
     }
     
     /**

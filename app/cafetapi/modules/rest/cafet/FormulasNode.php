@@ -1,6 +1,9 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
+use cafetapi\Logger;
+use cafetapi\io\FormulaManager;
+use cafetapi\io\ProductManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
 use cafetapi\modules\rest\RestNode;
@@ -8,8 +11,6 @@ use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
-use cafetapi\io\FormulaManager;
-use cafetapi\io\ProductManager;
 
 /**
  *
@@ -105,7 +106,7 @@ class FormulasNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         
@@ -176,7 +177,7 @@ class FormulasNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         
@@ -235,7 +236,7 @@ class FormulasNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         
@@ -322,7 +323,7 @@ class FormulasNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         
@@ -384,7 +385,7 @@ class FormulasNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         
@@ -447,7 +448,7 @@ class FormulasNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         

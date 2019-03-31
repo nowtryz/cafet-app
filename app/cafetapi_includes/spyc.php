@@ -565,8 +565,7 @@ class Spyc {
     if (!$line) return array();
     $line = trim($line);
     if (!$line) return array();
-
-    $array = array();
+    
 
     $group = $this->nodeContainsGroup($line);
     if ($group) {
@@ -995,7 +994,7 @@ class Spyc {
     if ($indent == 0) $this->path = array();
     if (empty ($this->path)) return true;
 
-    foreach ($this->path as $k => $_) {
+    foreach (array_keys($this->path) as $k) {
       if ($k > $indent) unset ($this->path[$k]);
     }
 
@@ -1148,14 +1147,3 @@ class Spyc {
   }
 }
 }
-
-// Enable use of Spyc from command line
-// The syntax is the following: php Spyc.php spyc.yaml
-
-do {
-  if (PHP_SAPI != 'cli') break;
-  if (empty ($_SERVER['argc']) || $_SERVER['argc'] < 2) break;
-  if (empty ($_SERVER['PHP_SELF']) || FALSE === strpos ($_SERVER['PHP_SELF'], 'Spyc.php') ) break;
-  $file = $argv[1];
-  echo json_encode (spyc_load_file ($file));
-} while (0);

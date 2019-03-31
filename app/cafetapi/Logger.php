@@ -1,18 +1,11 @@
 <?php
-/**
- * Function file for logging functions
- *
- * @package cafetapi
- * @since API 1.0
- */
+namespace cafetapi;
 
-use cafetapi\ReturnStatement;
 use cafetapi\exceptions\CafetAPIException;
-use cafetapi\user\Perm;
+use Throwable;
 
-if (!defined('logging_functions_loaded')) {
-    define('logging_functions_loaded', true);
-
+class Logger
+{
     /**
      * Log some text in the API log file
      *
@@ -21,7 +14,7 @@ if (!defined('logging_functions_loaded')) {
      * @global $avoid_log
      * @since API 0.1.0 (2018)
      */
-    function cafet_log(string $log)
+    public static function log(string $log)
     {
         $logs = [];
         $tmp = explode("\r\n", $log);
@@ -36,7 +29,7 @@ if (!defined('logging_functions_loaded')) {
      *            the error code
      * @since API 0.1.0 (2018)
      */
-    function cafet_throw_error(string $error, string $additional_message = null, string $file = null, int $line = 0)
+    public static function throwError(string $error, string $additional_message = null, string $file = null, int $line = 0)
     {
         if (!cafet_is_app_request()) {
             $_error = explode('-', $error);
@@ -45,9 +38,9 @@ if (!defined('logging_functions_loaded')) {
             exit();
         }
         
-        cafet_log($error . ($additional_message ? ': '. $additional_message : ''));
+        self::log($error . ($additional_message ? ': '. $additional_message : ''));
         
-        $result = new ReturnStatement("error", cafet_grab_error_infos($error, $additional_message));
+        $result = new ReturnStatement("error", self::grabErrorInfos($error, $additional_message));
         $result->print();
         
         exit();
@@ -59,10 +52,10 @@ if (!defined('logging_functions_loaded')) {
      * @param additional_message
      */
     
-    function cafet_grab_error_infos($error, $additional_message = null)
+    public static function grabErrorInfos($error, $additional_message = null)
     {
         $sub_error = explode('-', $error);
-        $errors = cafet_get_errors_info();
+        $errors = Kernel::errorsInfo();
         
         $info = empty($errors) ? [
             'error_code' => '01-500',
@@ -83,21 +76,21 @@ if (!defined('logging_functions_loaded')) {
      * Thow the cafet error corresponding to the http error
      * @param string|int $error
      */
-    function cafet_http_error($error)
+    public static function logHttpError($error)
     {
         // Avoid logging for random 403 and 404 errors
         if(in_array($error, ['403', '404']) && !isset($_SERVER['HTTP_REFERER'])) return;
         
-        $cafet_errors = cafet_get_errors_info();
+        $cafet_errors = Kernel::errorsInfo();
         
         foreach ($cafet_errors as $cafet_error) if (in_array($error, array_keys($cafet_error))) {
-            cafet_log($error . ' Error: ' . $cafet_error[$error] . ': for "' . $_SERVER['REQUEST_URI'] . '"');
+            Logger::log($error . ' Error: ' . $cafet_error[$error] . ': for "' . $_SERVER['REQUEST_URI'] . '"');
         }
         
-        cafet_log('From: ' . $_SERVER['HTTP_REFERER']);
+        Logger::log('From: ' . $_SERVER['HTTP_REFERER']);
     }
     
-    function cafet_error_handler($errno, $errmsg, $filename, $linenum, $errcontext)
+    public static function errorHandler($errno, $errmsg, $filename, $linenum, $errcontext)
     {
         static $errortype = [
             E_ERROR              => 'Error',
@@ -120,17 +113,17 @@ if (!defined('logging_functions_loaded')) {
         $msg .= 'entry in ' . $filename;
         $msg .= ' on line ' . $linenum;
         
-        cafet_throw_error('01-500', $msg);
+        Logger::throwError('01-500', $msg);
     }
     
-    function cafet_exception_handler(Throwable $e)
+    public static function exceptionHandler(Throwable $e)
     {
         $msg  = get_class($e) . ' (' . $e->getCode() . '): ';
         $msg .= $e->getMessage() . ': ';
         $msg .= 'entry in ' . $e->getFile();
         $msg .= ' on line ' . $e->getLine();
         
-        cafet_throw_error('01-500', $msg);
+        Logger::throwError('01-500', $msg);
     }
-    
 }
+

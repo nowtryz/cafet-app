@@ -1,6 +1,8 @@
 <?php
 
 use cafetapi\ErrorPageBuilder;
+use cafetapi\Logger;
+use cafetapi\config\Config;
 
 /**
  * Default entry for the application
@@ -59,11 +61,11 @@ function echo_page() {
                 require PAGES_DIR . 'form.html';
                 exit();
             } else {
-                cafet_http_error(404);
+                Logger::logHttpError(404);
                 (new ErrorPageBuilder(404))->print();
             }
         } else {
-            cafet_http_error(404);
+            Logger::logHttpError(404);
             (new ErrorPageBuilder(404))->print();
         }
     } else {
@@ -75,7 +77,7 @@ function echo_index() {
     echo 'nothing to show now<br/><a href="' . URL_LOCATION . '/debug/infos.html">DEBUG</a><br/><a href="' . URL_LOCATION . '/debug/form.html">Request generator</a>';
 }
 
-if(cafet_get_configurations()['debug']) {
+if(Config::debug) {
     if(isset($_GET['module'])) echo_page();
     else                       echo_index();
 } else (new ErrorPageBuilder(403))->print();

@@ -19,8 +19,7 @@ class ErrorPageBuilder
     {
         $this->http_error = $http_error;
         
-        $cafet_errors = cafet_get_errors_info();
-        foreach ($cafet_errors as $errorgroup => $cafet_error) if (in_array($http_error, array_keys($cafet_error))) {
+        foreach (Kernel::errorsInfo() as $errorgroup => $cafet_error) if (in_array($http_error, array_keys($cafet_error))) {
             $this->error_group = $errorgroup;
             $this->def = $cafet_error['def'];
             $this->message = $cafet_error[$http_error];

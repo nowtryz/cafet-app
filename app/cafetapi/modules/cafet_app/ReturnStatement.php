@@ -42,8 +42,8 @@ class ReturnStatement
 
     private function throw_internal_server_error()
     {
-        cafet_log('An error occured while parsing the result');
-        cafet_throw_error('01-500', 'An error occured while parsing the result');
+        Logger::log('An error occured while parsing the result');
+        Logger::throwError('01-500', 'An error occured while parsing the result');
     }
 
     public final function print()

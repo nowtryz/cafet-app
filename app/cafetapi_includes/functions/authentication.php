@@ -8,6 +8,7 @@
 
 use cafetapi\user\User;
 use cafetapi\io\UserManager;
+use cafetapi\config\Config;
 
 if (!defined('authentication_functions_loaded')) {
     define('authentication_functions_loaded', true);
@@ -31,7 +32,7 @@ if (!defined('authentication_functions_loaded')) {
         }
         
         // Set session name and cookie name
-        session_name(cafet_get_configurations()['session_name']);
+        session_name(Config::session_name);
         
         // construe arguments
         if (isset($session_id)) session_id($session_id);
@@ -99,7 +100,7 @@ if (!defined('authentication_functions_loaded')) {
     function cafet_generate_hashed_pwd(string $password): string
     {
         $salt = bin2hex(random_bytes(16));
-        $algo = cafet_get_configurations()['hash_algo'];
+        $algo = in_array(Config::hash_algo, hash_algos()) ? Config::hash_algo : 'sha256';
         
         return $algo . '.' . $salt . '.' . hash($algo, $salt . $password);
     }
@@ -124,7 +125,7 @@ if (!defined('authentication_functions_loaded')) {
         $hash_info = explode('.', $hash);
         
         if (count($hash_info) == 1 && isset($pseudo)) {
-            return sha1(cafet_get_configurations()['salt'] . $password . $pseudo) === $hash;
+            return sha1(Config::salt . $password . $pseudo) === $hash;
         }
         
         if (count($hash_info) < 3) {

@@ -10,6 +10,7 @@ use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
 use cafetapi\io\FormulaManager;
 use cafetapi\io\ProductManager;
+use cafetapi\Logger;
 
 /**
  *
@@ -119,7 +120,7 @@ class ChoicesNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e);
             return ServerError::internalServerError();
         }
         
@@ -182,7 +183,7 @@ class ChoicesNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e);
             return ServerError::internalServerError();
         }
         

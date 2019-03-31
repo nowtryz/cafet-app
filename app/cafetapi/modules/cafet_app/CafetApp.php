@@ -1,7 +1,9 @@
 <?php
 namespace cafetapi\modules\cafet_app;
 
+use cafetapi\Logger;
 use cafetapi\ReturnStatement;
+use cafetapi\config\Config;
 use cafetapi\exceptions\NotEnoughtMoneyException;
 use cafetapi\exceptions\PermissionNotGrantedException;
 use cafetapi\exceptions\RequestFailureException;
@@ -34,11 +36,11 @@ class CafetApp
             return;
 
         if (! isset($_POST['action']) || ! $_POST['action'])
-            cafet_throw_error('03-001');
+            Logger::throwError('03-001');
         if (! isset($_POST['version']) || ! $_POST['version'])
-            cafet_throw_error('03-002');
+            Logger::throwError('03-002');
         if (! isset($_POST['arguments']) || ! $_POST['arguments'])
-            cafet_throw_error('03-004');
+            Logger::throwError('03-004');
 
         $this->action = str_replace(' ', '_', $_POST['action']);
         $this->version = $_POST['version'];
@@ -47,13 +49,13 @@ class CafetApp
         $client_version = explode('.', explode('-', $this->version)[0]);
         $server_version = explode('.', explode('-', API_VERSION)[0]);
         if (count($client_version) != count($server_version))
-            cafet_throw_error('04-001');
+            Logger::throwError('04-001');
         $n = count($server_version);
         for ($i = 0; $i < $n - 1; $i ++) {
             if ($client_version[$i] < $server_version[$i])
-                cafet_throw_error('04-001');
+                Logger::throwError('04-001');
             elseif ($client_version[$i] > $server_version[$i])
-                cafet_throw_error('04-002');
+                Logger::throwError('04-002');
         }
 
         $this->session_id = isset($_POST['session_id']) && $_POST['session_id'] ? cafet_init_session(true, $_POST['session_id']) : cafet_init_session(true);
@@ -61,13 +63,13 @@ class CafetApp
         if (isset($_SESSION['user']))
             $this->user = cafet_get_logged_user();
         elseif ($this->action == 'login' && ! $this->arguments)
-            cafet_throw_error('03-401');
+            Logger::throwError('03-401');
         elseif ($this->action == 'login')
             $this->login();
         elseif (isset($_POST['session_id']) && $_POST['session_id'])
-            cafet_throw_error('02-401');
+            Logger::throwError('02-401');
         else
-            cafet_throw_error('03-003');
+            Logger::throwError('03-003');
 
         if (isset($this->user) && $this->action == 'login')
             $this->returnLogedSession();
@@ -80,31 +82,31 @@ class CafetApp
                 break;
             default:
                 if ($this->arguments === NULL)
-                    cafet_throw_error('03-401');
+                    Logger::throwError('03-401');
 
                 if (in_array($this->action, get_class_methods(FetchHandler::class)))
                     $this->dataFunction(__NAMESPACE__ . '\FetchHandler');
                 elseif (in_array($this->action, get_class_methods(UpdateHandler::class)))
                     $this->dataFunction(__NAMESPACE__ . '\UpdateHandler');
                 else
-                    cafet_throw_error('03-008');
+                    Logger::throwError('03-008');
         }
     }
 
     private function login()
     {
         if (! isset($this->arguments['email']) || ! isset($this->arguments['password']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
 
         $this->user = cafet_check_login($this->arguments['email'], $this->arguments['password']);
 
         if (! $this->user) {
             if (! isset(DatabaseConnection::getLastQueryError()[2]))
-                cafet_throw_error('02-001');
+                Logger::throwError('02-001');
             else
-                cafet_throw_error('02-001', DatabaseConnection::getLastQueryError()[2]);
+                Logger::throwError('02-001', DatabaseConnection::getLastQueryError()[2]);
         } else if (! Perm::checkPermission(PERM::GLOBAL_CONNECT, $this->user) || ! Perm::checkPermission(PERM::CAFET_ADMIN_PANELACCESS, $this->user)) {
-            cafet_throw_error("02-002");
+            Logger::throwError("02-002");
         } else
             cafet_set_logged_user($this->user);
 
@@ -116,7 +118,7 @@ class CafetApp
         $array = json_decode($this->user->__toString(), true);
 
         if (! isset($array))
-            cafet_throw_error('01-002', 'the json has messed up!');
+            Logger::throwError('01-002', 'the json has messed up!');
 
         $result = array(
             'session_id' => $this->session_id,
@@ -134,7 +136,7 @@ class CafetApp
         cafet_destroy_session();
 
         $result = array(
-            'logout_message' => cafet_get_configurations()['logout_message']
+            'logout_message' => Config::logout_message
         );
 
         $return = new ReturnStatement('ok', $result);
@@ -145,12 +147,12 @@ class CafetApp
     private function updates()
     {
         if (! isset($this->arguments['app-version']))
-            cafet_throw_error('03-006', 'where is your version? I know mine but i don\'t your');
+            Logger::throwError('03-006', 'where is your version? I know mine but i don\'t your');
 
         $file = implode('', file(CONTENT_DIR . 'app_changelog.json'));
         $json = json_decode($file, true);
         if (! isset($json))
-            cafet_throw_error('01-002', 'the changelog json has messed up!');
+            Logger::throwError('01-002', 'the changelog json has messed up!');
 
         $last_version = explode('.', array_keys($json)[0]);
         $app_version = explode('.', $this->arguments['app-version']);
@@ -178,9 +180,8 @@ class CafetApp
 
     private function sendUpdateInfos(bool $diferent_numbers = false)
     {
-        $configuration = cafet_get_configurations();
-        $jar_url = (((bool) $configuration['installer_external']) ? $configuration['url'] : '') . $configuration['installer_jar_url'];
-        $win_url = (((bool) $configuration['installer_external']) ? $configuration['url'] : '') . $configuration['installer_url'];
+        $jar_url = (((bool) !Config::installer_external) ? Config::url : '') . Config::installer_jar_url;
+        $win_url = (((bool) !Config::installer_external) ? Config::url : '') . Config::installer_url;
 
         if ($diferent_numbers) {
             $result = array(
@@ -209,7 +210,7 @@ class CafetApp
         $json = json_decode($file, true);
 
         if (! isset($json))
-            cafet_throw_error('01-002', 'the json has messed up!');
+            Logger::throwError('01-002', 'the json has messed up!');
 
         $return = new ReturnStatement('ok', $json);
         $this->end();
@@ -223,22 +224,22 @@ class CafetApp
         $user = $this->user;
         $app = 'cafet_app';
 
-        // if( !in_array( $this->action, get_class_methods( $this ))) cafet_throw_error( '01-500', 'It seems that this action is not completely coded' );
+        // if( !in_array( $this->action, get_class_methods( $this ))) Logger::throwError( '01-500', 'It seems that this action is not completely coded' );
 
         // $handler = new $data_handler();
 
         try {
             $result = (new $data_handler())->{$this->action}($this->arguments);
         } catch (RequestFailureException $e) {
-            cafet_throw_error('01-002', $e->getMessage());
+            Logger::throwError('01-002', $e->getMessage());
         } catch (PermissionNotGrantedException $e) {
-            cafet_throw_error('02-002', $e->getMessage());
+            Logger::throwError('02-002', $e->getMessage());
         } catch (NotEnoughtMoneyException $e) {
-            cafet_throw_error('04-003', $e->getMessage());
+            Logger::throwError('04-003', $e->getMessage());
         }
 
         if ($result === null)
-            cafet_throw_error('01-002');
+            Logger::throwError('01-002');
 
         $return = new ReturnStatement('ok', $result);
         $this->end();
