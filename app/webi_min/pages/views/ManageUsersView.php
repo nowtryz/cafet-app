@@ -190,28 +190,33 @@ tr:not(.table-head ):hover {
 		<?php foreach (UserManager::getInstance()->getUsers() as $user) : if (!@$_REQUEST['group_id']  || $user->getGroup()->getId() == $_REQUEST['group_id']) :?>
 		<tr id="user<?=$user->getId() + 10?>"
 			<?=$user->getId() == @$_REQUEST['userid'] ? 'class="modified_user"' : ''?>>
-			<td width="20%"><?=$user->getFirstname()?> <?=$user->getFamilyName()?> (<?=$user->getPseudo()?>)</td>
+			<td class="tooltip">
+    			<span><?=$user->getFirstname()?> <?=$user->getFamilyName()?></span>
+    			<span class="tooltiptext"><?=$user->getPseudo()?> #<?=$user->getId()?></span>
+			</td>
 			<?php foreach ($this->groups as $group_id => $group_name) :?>
-			<td style="text-align: center"><a class="validate-checkbox tooltip"
-				href="<?=$this->set_group_link($user, $group_id)?>">
-					<INPUT class="change-user-info"
+			<td style="text-align: center">
+    			<a class="validate-checkbox tooltip" href="<?=$this->set_group_link($user, $group_id)?>">
+					<input class="change-user-info"
 					data-link="<?=$this->set_group_link($user, $group_id)?>"
 					type="radio" name="<?=$user->getId()?>" value="<?=$group_id?>"
-					<?=$user->getGroup()->getId() === $group_id ? 'checked' : ''?>> <span
-					class="tooltiptext"><?=$group_name?></span>
-			</a></td>
+					<?=$user->getGroup()->getId() === $group_id ? 'checked' : ''?>>
+					<span class="tooltiptext"><?=$group_name?></span>
+    			</a>
+			</td>
 			<?php endforeach;?>
 			<?php $client = ClientManager::getInstance()->getClient($user->getId()) ?>
-			<td style="text-align: center"><a class="validate-checkbox tooltip"
-				href="<?=$this->set_client_link($user, $client)?>">
-					<INPUT class="change-user-info"
+			<td style="text-align: center">
+    			<a class="validate-checkbox tooltip" href="<?=$this->set_client_link($user, $client)?>">
+					<input class="change-user-info"
 					data-link="<?=$this->set_client_link($user, $client)?>"
-					type="checkbox" <?=$client ? 'checked' : ''?>> <span
-					class="tooltiptext">Compte Cafet'</span>
-			</a></td>
+					type="checkbox" <?=$client ? 'checked' : ''?>>
+					<span class="tooltiptext">Compte Cafet'</span>
+    			</a>
+			</td>
 			<td style="text-align: center"><a class="validate-checkbox tooltip"
 				href="<?=$this->set_member_link($user, $client)?>">
-					<INPUT class="change-user-info"
+					<input class="change-user-info"
 					data-link="<?=$this->set_member_link($user, $client)?>"
 					type="checkbox"
 					<?=$client ? ($client->isMember() ? 'checked' : '') : 'disabled'?>>
