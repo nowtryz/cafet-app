@@ -11,6 +11,7 @@
  */
 
 use cafetapi\io\DatabaseConnection;
+use cafetapi\Autoloader;
 
 /*
  * Definition of the needed base constants
@@ -67,7 +68,7 @@ if (function_exists('cafet_headers_check')) {
 /*
  * Register cafet class loader
  */
-spl_autoload_register('cafet_class_autoload');
+cafet_register_classloader();
 
 /*
  * Load configuration file
