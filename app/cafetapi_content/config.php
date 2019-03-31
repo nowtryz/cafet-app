@@ -142,7 +142,7 @@ class Config
      * @var string
      * @since API 0.1.0 (2018)
      */
-    const url = 'cafet/';
+    const url = 'http://cafet/';
 
     /**
      * Si l'installateur se trouve sur un serveur distant

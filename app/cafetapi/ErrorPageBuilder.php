@@ -1,6 +1,8 @@
 <?php
 namespace cafetapi;
 
+use cafetapi\config\Config;
+
 /**
  *
  * @author damie
@@ -38,7 +40,9 @@ class ErrorPageBuilder
     
     private function getStyles() : string
     {
-        return <<< EOCSS
+        ob_start();
+?>
+<style>
 html {
     width: 100%;
     height: 100%;
@@ -73,55 +77,52 @@ h2 {
 p {
     color: #838789;
 }
-EOCSS;
+</style>
+<?php
+        return ob_get_clean();
     }
     
     private function getHead() : string
     {
-        $title = $this->getTitle();
-        $css = $this->getStyles();
-        return <<< EOHTML
+        ob_start();
+?>
 <head>
-	<title>$title</title>
+	<title><?=$this->getTitle()?></title>
 	<meta charset="UTF-8">
-    <style>
-$css
-    </style>
+<?=$this->getStyles()?>
 </head>
-EOHTML;
+<?php
+        return ob_get_clean();
     }
 
     private function getBody() : string
     {
-        $logo_uri = 'http://cafet/assets/logo.png';
-        return <<< EOHTML
+        ob_start();
+?>
 <body>
 	<div class="error">
-        <img src="$logo_uri" alt="Logo" />
-        <h2>$this->http_error Error</h2>
-        <p>An error occured: <strong>$this->message</strong>, ($this->def)</p>
+        <img src="<?=trim(Config::url, '/')?>/assets/logo.png" alt="Logo" />
+        <h2><?=$this->http_error?> Error</h2>
+        <p>An error occured: <strong><?=$this->message?></strong>, (<?=$this->def?>)</p>
         <hr />
         <p>Please contact an administrator</p>
     </div>
 </body>
-EOHTML;
+<?php
+        return ob_get_clean();
     }
     
     public function print()
     {
         header("HTTP/2 $this->http_error $this->message");
         foreach($this->getHeaders() as $name => $content) header("$name: $content");
-        
-        $head = $this->getHead();
-        $body = $this->getBody();
-        
-        print <<< EOHTML
+?>
 <!DOCTYPE html>
 <html>
-$head
-$body
+<?=$this->getHead()?>
+<?=$this->getBody()?>
 </html>
-EOHTML;
+<?php
         exit();
     }
 }

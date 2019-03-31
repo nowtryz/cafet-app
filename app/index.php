@@ -43,41 +43,77 @@ use cafetapi\config\Config;
  */
 
 /**
- * URL adressr of the current script
+ * URL adressrof the current script
  *
  * @var string
- * @since API 0.1.0 (2018)
+ * @since API 1.0.0 (2018)
  */
 define('URL_LOCATION', substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRIPT_NAME'], '/')));
 
-function echo_page() {
-    // DEBUG
-    if (URL_REWRITE) {
-        if (isset($_GET['path']) && $_GET['module'] == 'debug') {
-            if ($_GET['path'] == 'infos') {
-                require PAGES_DIR . 'debug.php';
-                exit();
-            } elseif ($_GET['path'] == 'form') {
-                require PAGES_DIR . 'form.html';
-                exit();
-            } else {
-                Logger::logHttpError(404);
-                (new ErrorPageBuilder(404))->print();
-            }
-        } else {
-            Logger::logHttpError(404);
-            (new ErrorPageBuilder(404))->print();
-        }
+function cafet_module_debug()
+{
+    if (! cafet_get_configurations()['debug']) {
+        (new ErrorPageBuilder(403))->print();
+    }
+
+    if (! isset($_GET['path']) || !$_GET['path']) {
+        echo 'nothing to show now<br/><a href="' . URL_LOCATION . '/debug/infos.html">DEBUG</a><br/><a href="' . URL_LOCATION . '/debug/form.html">Request generator</a>';
+        exit();
+    }
+
+    if ($_GET['path'] == 'infos') {
+        require PAGES_DIR . 'debug.php';
+        exit();
+    } elseif ($_GET['path'] == 'form') {
+        require PAGES_DIR . 'form.html';
+        exit();
     } else {
-        // work on $_SERVER['REQUEST_URI']
+        cafet_http_error(404);
+        (new ErrorPageBuilder(404))->print();
     }
 }
 
-function echo_index() {
-    echo 'nothing to show now<br/><a href="' . URL_LOCATION . '/debug/infos.html">DEBUG</a><br/><a href="' . URL_LOCATION . '/debug/form.html">Request generator</a>';
+function cafet_module_activation()
+{
+    echo 'We should process your key, don\'t we?<br>';
+    
+    if ( isset($_REQUEST['key']) && $key = htmlentities(@$_REQUEST['key'])) {
+        echo 'key: <a href="/activate/' . $key . '">' . $key . '</a>';
+    }
 }
 
-if(Config::debug) {
-    if(isset($_GET['module'])) echo_page();
-    else                       echo_index();
-} else (new ErrorPageBuilder(403))->print();
+function echo_page()
+{
+    if (! URL_REWRITE) {
+        // work on $_SERVER['REQUEST_URI']
+        return;
+    }
+
+    switch (@$_GET['module']) {
+        // DEBUG
+        case 'debug':
+            cafet_module_debug();
+            break;
+
+        case 'activate':
+            cafet_module_activation();
+            break;
+
+        default:
+            cafet_http_error(404);
+            (new ErrorPageBuilder(404))->print();
+            break;
+    }
+}
+
+function echo_index()
+{
+    (new ErrorPageBuilder(403))->print();
+    exit();
+}
+
+if (isset($_GET['module']))
+    echo_page();
+else
+    echo_index();
+
