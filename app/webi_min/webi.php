@@ -25,7 +25,6 @@ $loader->addNamespace('cafetapi\webi\pages\views', WEBI_PAGE_VIEWS, true);
 $loader->addNamespace('cafetapi\webi\pages\controllers', WEBI_PAGE_CONTROLLERS, true);
 
 require_once WEBI_INCLUDES . 'pages_controllers.php';
-require_once WEBI_INCLUDES . 'home_page.php';
 
 switch (@$_REQUEST['action']) {
     case 'me':
