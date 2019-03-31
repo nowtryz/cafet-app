@@ -1,17 +1,14 @@
 <?php
-
-namespace webi_min\includes;
-
+namespace cafetapi\webi\pages\views;
 
 use cafetapi\io\ProductManager;
+use cafetapi\webi\Core\PageBuilder;
 
-function controller_home_page() {
-    $b = new PageBuilder();
-    $b->registerHeadComponents(__NAMESPACE__ . '\home_page_css');
-    $b->build(__NAMESPACE__ . '\home_page_view');
-}
+class HomePageView extends View
+{
 
-function home_page_css() {
+    public function css(PageBuilder $builder)
+    {
 ?>
 <style>
 .product-list * {
@@ -77,11 +74,14 @@ function home_page_css() {
 }
 </style>
 <?php
-}
+    }
 
-function home_page_view()
-{
-    ?>
+    public function js(PageBuilder $builder)
+    {}
+
+    public function html(PageBuilder $builder)
+    {
+?>
 <article>
 	<h1>La Cafet</h1>
 
@@ -92,19 +92,22 @@ function home_page_view()
 
 	<div class="product-list">
 		<h2>Cafétaria</h2>
-		<?php foreach(ProductManager::getInstance()->getProductGroups() as $group) :?>
+<?php foreach(ProductManager::getInstance()->getProductGroups() as $group) :?>
+
 			<h3><?=$group->getName()?> :</h3>
 			<ul class="leaders">
-				<?php foreach ($group->getAllProducts() as $product) : if ($product->getViewable()) : ?>
+<?php foreach ($group->getAllProducts() as $product) : if ($product->getViewable()) : ?>
 				<li>
 					<span><?=$product->getName()?></span>
 					<span><?=number_format($product->getPrice(), 2, ',', ' ')?> €</span>
 				</li>
-				<?php endif; endforeach;?>
+<?php endif; endforeach;?>
 			</ul>
 		<?php endforeach;?>
 	</div>
 	
 </article>
 <?php
+    }
 }
+

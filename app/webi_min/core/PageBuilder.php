@@ -1,5 +1,5 @@
 <?php
-namespace webi_min\includes;
+namespace cafetapi\webi\Core;
 
 use cafetapi\user\Perm;
 use cafetapi\user\User;

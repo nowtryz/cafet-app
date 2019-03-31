@@ -1,16 +1,12 @@
 <?php
-namespace webi_min\pages\controllers;
+namespace cafetapi\webi\pages\controllers;
 
 use cafetapi\io\ClientManager;
 use cafetapi\io\UserManager;
 use cafetapi\user\Group;
 use cafetapi\user\Perm;
-use webi_min\pages\views\ManageUsersView;
-use webi_min\pages\views\CommonHTMLViews;
-
-require_once WEBI_PAGE_CONTROLLERS . 'PageController.php';
-require_once WEBI_PAGE_VIEWS . 'CommonHTMLViews.php';
-require_once WEBI_PAGE_VIEWS . 'ManageUsersView.php';
+use cafetapi\webi\pages\views\ManageUsersView;
+use cafetapi\webi\pages\views\CommonHTMLViews;
 
 class ManageUsersController extends PageController
 {
@@ -23,14 +19,11 @@ class ManageUsersController extends PageController
         4 => 'Administrateurs',
         5 => 'Super utilisateurs'
     ];
-    
-    private $view;
     private $html;
     private $user;
     
     public function __construct() {
-        parent::__construct();
-        $this->view = new ManageUsersView(self::GROUPS);
+        parent::__construct(new ManageUsersView(self::GROUPS));
     }
 
     public function buildPage()
@@ -45,10 +38,6 @@ class ManageUsersController extends PageController
             $this->builder->build([CommonHTMLViews::class, 'forbiden']);
             return;
         }
-
-        
-        $this->builder->registerHeadComponents([$this->view, 'css']);
-        $this->builder->registerPostComponents([$this->view, 'js']);
         
         
         $this->processForms();

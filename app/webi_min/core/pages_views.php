@@ -1,6 +1,6 @@
 <?php
 
-namespace webi_min\includes;
+namespace cafetapi\webi\Core;
 
 use cafetapi\io\ClientManager;
 

@@ -1,18 +1,12 @@
 <?php
-namespace webi_min\pages\views;
+namespace cafetapi\webi\pages\views;
 
+use cafetapi\config\Defaults;
 use cafetapi\data\Client;
 use cafetapi\io\ClientManager;
 use cafetapi\io\UserManager;
 use cafetapi\user\User;
-use webi_min\includes\PageBuilder;
-use function webi_min\pages\views\ManageUsers\set_client_link;
-use function webi_min\pages\views\ManageUsers\set_group_link;
-use function webi_min\pages\views\ManageUsers\set_member_link;
-use cafetapi\config\Defaults;
-
-require_once WEBI_PAGE_VIEWS . 'View.php';
-require_once WEBI_PAGE_VIEWS . 'MessageHolder.php';
+use cafetapi\webi\Core\PageBuilder;
 
 class ManageUsersView extends View implements MessageHolder
 {

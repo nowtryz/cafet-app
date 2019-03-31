@@ -1,7 +1,7 @@
 <?php
-namespace webi_min\pages\views;
+namespace cafetapi\webi\pages\views;
 
-use webi_min\includes\PageBuilder;
+use cafetapi\webi\Core\PageBuilder;
 
 abstract class View
 {

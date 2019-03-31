@@ -1,5 +1,5 @@
 <?php
-namespace webi_min\pages\views;
+namespace cafetapi\webi\pages\views;
 
 class CommonHTMLViews
 {
