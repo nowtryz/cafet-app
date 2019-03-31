@@ -62,7 +62,7 @@ define('INCLUDES_DIR', CAFET_DIR . 'cafetapi_includes' . DIRECTORY_SEPARATOR);
 define('PAGES_DIR', INCLUDES_DIR . 'pages' . DIRECTORY_SEPARATOR);
 /**
  * The cafet API function libraries directory
- * <br/><em>cafetapi_includes/pages/</em>
+ * <br/><em>cafetapi_includes/functions/</em>
  *
  * @var string FUNCTIONS_DIR
  * @since API 0.1.0 (2018)
@@ -70,7 +70,7 @@ define('PAGES_DIR', INCLUDES_DIR . 'pages' . DIRECTORY_SEPARATOR);
 define('FUNCTIONS_DIR', INCLUDES_DIR . 'functions' . DIRECTORY_SEPARATOR);
 /**
  * The cafet API mail templates directory
- * <br/><em>cafetapi_includes/pages/</em>
+ * <br/><em>cafetapi_content/mails/</em>
  *
  * @var string FUNCTIONS_DIR
  * @since API 0.1.0 (2018)
