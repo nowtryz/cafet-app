@@ -3,6 +3,7 @@
 namespace cafetapi\webi\Core;
 
 use cafetapi\MailManager;
+use cafetapi\config\Config;
 use cafetapi\config\Defaults;
 use cafetapi\exceptions\EmailFormatException;
 use cafetapi\io\ClientManager;
@@ -77,7 +78,7 @@ function controller_edit_password()
 }
 
 function controller_signout() {
-    if (isset($_COOKIE[cafet_get_configuration('session_name')])) {
+    if (isset($_COOKIE[Config::session_name])) {
         cafet_init_session();
         cafet_destroy_session();
     }

@@ -108,7 +108,7 @@ function echo_page()
 
 function echo_index()
 {
-    (new ErrorPageBuilder(403))->print();
+    header('Location: /webi');
     exit();
 }
 

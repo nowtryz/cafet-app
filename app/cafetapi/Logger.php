@@ -2,6 +2,7 @@
 namespace cafetapi;
 
 use cafetapi\exceptions\CafetAPIException;
+use cafetapi\modules\cafet_app\ReturnStatement;
 use Throwable;
 
 class Logger

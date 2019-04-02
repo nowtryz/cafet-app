@@ -10,6 +10,7 @@ use function cafetapi\webi\Core\controller_signout;
 use function cafetapi\webi\Core\controller_signup;
 use cafetapi\webi\pages\controllers\ManageUsersController;
 use cafetapi\webi\pages\controllers\HomePageController;
+use cafetapi\Kernel;
 
 require_once '../cafetapi_load.php';
 
@@ -18,7 +19,7 @@ define('WEBI_INCLUDES', WEBI_DIR . 'core' . DIRECTORY_SEPARATOR);
 define('WEBI_PAGE_VIEWS', WEBI_DIR . 'pages' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR);
 define('WEBI_PAGE_CONTROLLERS', WEBI_DIR . 'pages' . DIRECTORY_SEPARATOR . 'controllers' . DIRECTORY_SEPARATOR);
 
-$loader = cafet_get_class_autoloader();
+$loader = Kernel::getAutoloader();
 $loader->addNamespace('cafetapi\webi', WEBI_DIR);
 $loader->addNamespace('cafetapi\webi\Core', WEBI_INCLUDES, true);
 $loader->addNamespace('cafetapi\webi\pages\views', WEBI_PAGE_VIEWS, true);

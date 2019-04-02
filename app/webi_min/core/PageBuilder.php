@@ -3,6 +3,7 @@ namespace cafetapi\webi\Core;
 
 use cafetapi\user\Perm;
 use cafetapi\user\User;
+use cafetapi\config\Config;
 
 class PageBuilder
 {
@@ -42,7 +43,7 @@ class PageBuilder
 
     public function __construct()
     {
-        if (isset($_COOKIE[cafet_get_configuration('session_name')])) {
+        if (isset($_COOKIE[Config::session_name])) {
             if (!isset($_SESSION)) cafet_init_session();
             $this->user = cafet_get_logged_user();
         }
