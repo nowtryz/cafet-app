@@ -1,7 +1,8 @@
 <?php
 namespace cafetapi\modules\cafet_app;
 
-use cafetapi\ReturnStatement;
+use cafetapi\Logger;
+use cafetapi\config\Config;
 use cafetapi\exceptions\NotEnoughtMoneyException;
 use cafetapi\exceptions\PermissionNotGrantedException;
 use cafetapi\exceptions\RequestFailureException;

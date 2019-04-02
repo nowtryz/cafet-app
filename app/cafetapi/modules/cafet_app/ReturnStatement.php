@@ -1,6 +1,7 @@
 <?php
-namespace cafetapi;
+namespace cafetapi\modules\cafet_app;
 
+use cafetapi\Logger;
 use cafetapi\data\JSONParsable;
 
 /**
