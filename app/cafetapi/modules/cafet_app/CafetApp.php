@@ -2,7 +2,6 @@
 namespace cafetapi\modules\cafet_app;
 
 use cafetapi\Logger;
-use cafetapi\ReturnStatement;
 use cafetapi\config\Config;
 use cafetapi\exceptions\NotEnoughtMoneyException;
 use cafetapi\exceptions\PermissionNotGrantedException;

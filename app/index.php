@@ -1,7 +1,6 @@
 <?php
 
 use cafetapi\ErrorPageBuilder;
-use cafetapi\Logger;
 use cafetapi\config\Config;
 
 /**
@@ -52,15 +51,15 @@ define('URL_LOCATION', substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRI
 
 function cafet_module_debug()
 {
-    if (! cafet_get_configurations()['debug']) {
+    if (! Config::debug) {
         (new ErrorPageBuilder(403))->print();
     }
-
+    
     if (! isset($_GET['path']) || !$_GET['path']) {
         echo 'nothing to show now<br/><a href="' . URL_LOCATION . '/debug/infos.html">DEBUG</a><br/><a href="' . URL_LOCATION . '/debug/form.html">Request generator</a>';
         exit();
     }
-
+    
     if ($_GET['path'] == 'infos') {
         require PAGES_DIR . 'debug.php';
         exit();
@@ -88,17 +87,17 @@ function echo_page()
         // work on $_SERVER['REQUEST_URI']
         return;
     }
-
+    
     switch (@$_GET['module']) {
         // DEBUG
         case 'debug':
             cafet_module_debug();
             break;
-
+            
         case 'activate':
             cafet_module_activation();
             break;
-
+            
         default:
             cafet_http_error(404);
             (new ErrorPageBuilder(404))->print();
@@ -116,4 +115,5 @@ if (isset($_GET['module']))
     echo_page();
 else
     echo_index();
-
+        
+        

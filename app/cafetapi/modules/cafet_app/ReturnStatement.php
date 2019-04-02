@@ -1,5 +1,5 @@
 <?php
-namespace cafetapi;
+namespace cafetapi\modules\cafet_app;
 
 use cafetapi\data\JSONParsable;
 
