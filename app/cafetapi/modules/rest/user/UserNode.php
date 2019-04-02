@@ -1,6 +1,8 @@
 <?php
 namespace cafetapi\modules\rest\user;
 
+use cafetapi\Logger;
+use cafetapi\config\Config;
 use cafetapi\io\UserManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
@@ -87,7 +89,7 @@ class UserNode implements RestNode
     
     private static function logout(Rest $request) : RestResponse
     {
-        if (isset($_COOKIE[cafet_get_configuration('session_name')])) {
+        if (isset($_COOKIE[Config::session_name])) {
             $session = cafet_init_session();
             cafet_destroy_session();
         } elseif (isset($request->getHeaders()['Session'])) {
@@ -100,7 +102,7 @@ class UserNode implements RestNode
         
         return new RestResponse(200, HttpCodes::HTTP_200, array(
             'session_destroyed' => $session,
-            'message' => cafet_get_configuration('logout_message')
+            'message' => Config::logout_message
         ));
     }
     
@@ -182,7 +184,7 @@ class UserNode implements RestNode
             $updater->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $updater->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         

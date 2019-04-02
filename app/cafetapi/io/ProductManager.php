@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi\io;
 
+use cafetapi\Logger;
 use cafetapi\data\Calendar;
 use cafetapi\data\Product;
 use cafetapi\data\ProductGroup;
@@ -416,7 +417,7 @@ class ProductManager extends Updater
         $stmt->execute([
             'id' => $group_id
         ]);
-        if (! $stmt->fetch()) cafet_throw_error('03-005', 'the group with id ' . $group_id . ' doesn\'t exist');
+        if (! $stmt->fetch()) Logger::throwError('03-005', 'the group with id ' . $group_id . ' doesn\'t exist');
             
         $stmt = $this->connection->prepare('UPDATE ' . self::PRODUCTS . ' SET product_group = :group WHERE id = :id');
         $stmt->execute([

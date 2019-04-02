@@ -16,6 +16,7 @@ use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\Perm;
 use Exception;
+use cafetapi\Logger;
 
 /**
  *
@@ -125,7 +126,7 @@ class ClientsNode implements RestNode
             try {
                 $manager->setMember($id, $body['member']);
             } catch (Exception $e) {
-                cafet_log($e->__toString());
+                Logger::log($e);
                 return ServerError::internalServerError();
             }
         }

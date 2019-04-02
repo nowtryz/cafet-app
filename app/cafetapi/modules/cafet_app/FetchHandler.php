@@ -1,18 +1,19 @@
 <?php
 namespace cafetapi\modules\cafet_app;
 
+use cafetapi\Logger;
 use cafetapi\data\Client;
-use cafetapi\data\Product;
-use cafetapi\data\ProductGroup;
 use cafetapi\data\Formula;
-use cafetapi\user\Perm;
-use cafetapi\data\ProductBought;
 use cafetapi\data\FormulaBought;
+use cafetapi\data\Product;
+use cafetapi\data\ProductBought;
+use cafetapi\data\ProductGroup;
 use cafetapi\io\ClientManager;
 use cafetapi\io\ExpenseManager;
-use cafetapi\io\ReloadManager;
-use cafetapi\io\ProductManager;
 use cafetapi\io\FormulaManager;
+use cafetapi\io\ProductManager;
+use cafetapi\io\ReloadManager;
+use cafetapi\user\Perm;
 
 class FetchHandler extends Handler
 {
@@ -25,7 +26,7 @@ class FetchHandler extends Handler
     public final function get_clients(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_CLIENTS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         $return = array();
 
@@ -38,12 +39,12 @@ class FetchHandler extends Handler
     public final function get_client(array $arguments): ?Client
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_CLIENTS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -53,12 +54,12 @@ class FetchHandler extends Handler
     public final function get_client_reloads(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_RELOADS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -73,12 +74,12 @@ class FetchHandler extends Handler
     public final function get_client_expenses(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -93,12 +94,12 @@ class FetchHandler extends Handler
     public final function get_expense_details(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -113,12 +114,12 @@ class FetchHandler extends Handler
     public final function get_product_bought(array $arguments): ?ProductBought
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
             
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
                     
         $id = $arguments['id'];
         
@@ -128,12 +129,12 @@ class FetchHandler extends Handler
     public final function get_formula_bought(array $arguments): ?FormulaBought
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
             
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
                 
         $id = $arguments['id'];
         
@@ -143,7 +144,7 @@ class FetchHandler extends Handler
     public final function get_product_groups(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_PRODUCTS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         $return = array();
 
@@ -156,12 +157,12 @@ class FetchHandler extends Handler
     public final function get_product_group(array $arguments): ?ProductGroup
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_PRODUCTS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -171,14 +172,14 @@ class FetchHandler extends Handler
     public final function get_group_products(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_PRODUCTS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
         if (isset($arguments['show_hiddens']) && gettype($arguments['show_hiddens']) != 'boolean')
-            cafet_throw_error('03-005', 'show_hiddens must be a boolean');
+            Logger::throwError('03-005', 'show_hiddens must be a boolean');
 
         $id = $arguments['id'];
         $show_hiddens = isset($arguments['show_hiddens']) ? $arguments['show_hiddens'] : false;
@@ -194,12 +195,12 @@ class FetchHandler extends Handler
     public final function get_formula_bought_products(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_EXPENSES, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -214,12 +215,12 @@ class FetchHandler extends Handler
     public final function get_product(array $arguments): ?Product
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_PRODUCTS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -229,10 +230,10 @@ class FetchHandler extends Handler
     public final function get_formulas(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_FORMULAS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (isset($arguments['show_hiddens']) && gettype($arguments['show_hiddens']) != 'boolean')
-            cafet_throw_error('03-005', 'show_hiddens must be a boolean');
+            Logger::throwError('03-005', 'show_hiddens must be a boolean');
 
         $show_hiddens = isset($arguments['show_hiddens']) ? $arguments['show_hiddens'] : false;
 
@@ -247,12 +248,12 @@ class FetchHandler extends Handler
     public final function get_formula(array $arguments): ?Formula
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_FORMULAS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -262,12 +263,12 @@ class FetchHandler extends Handler
     public final function get_formula_choices(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_FORMULAS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['id']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['id']) != 'integer')
-            cafet_throw_error('03-005', 'id must be an integer');
+            Logger::throwError('03-005', 'id must be an integer');
 
         $id = $arguments['id'];
 
@@ -282,12 +283,12 @@ class FetchHandler extends Handler
     public final function search_client(array $arguments): array
     {
         if (! Perm::checkPermission(PERM::CAFET_ADMIN_GET_CLIENTS, $this->user))
-            cafet_throw_error('02-002');
+            Logger::throwError('02-002');
 
         if (! isset($arguments['expression']))
-            cafet_throw_error('03-006');
+            Logger::throwError('03-006');
         if (gettype($arguments['expression']) != 'string')
-            cafet_throw_error('03-005', 'expression must be a string');
+            Logger::throwError('03-005', 'expression must be a string');
 
         $expression = $arguments['expression'];
 

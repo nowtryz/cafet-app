@@ -1,6 +1,8 @@
 <?php
 namespace cafetapi\modules\rest\server;
 
+use cafetapi\Logger;
+use cafetapi\io\ClientManager;
 use cafetapi\io\UserManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
@@ -8,9 +10,8 @@ use cafetapi\modules\rest\RestNode;
 use cafetapi\modules\rest\RestResponse;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
-use cafetapi\user\Perm;
 use cafetapi\user\Group;
-use cafetapi\io\ClientManager;
+use cafetapi\user\Perm;
 
 /**
  *
@@ -174,7 +175,7 @@ class UsersNode implements RestNode
             $manager->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $manager->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         
@@ -252,7 +253,7 @@ class UsersNode implements RestNode
             $manager->confirmTransaction();
         } catch (\Error | \Exception $e) {
             $manager->cancelTransaction();
-            cafet_log($e->__toString());
+            Logger::log($e->__toString());
             return ServerError::internalServerError();
         }
         

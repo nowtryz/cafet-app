@@ -5,6 +5,7 @@ use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\User;
 use SimpleXMLElement;
+use cafetapi\config\Config;
 
 /**
  *
@@ -72,7 +73,7 @@ class Rest
         if ($this->method == 'HEAD') $this->method = 'GET';
         if (!$this->headers) $this->headers = array();
         
-        if (isset($_COOKIE[cafet_get_configuration('session_name')])) {
+        if (isset($_COOKIE[Config::session_name])) {
             $this->session = cafet_init_session();
         } elseif (isset($this->headers['Session'])) {
             $this->session = $this->headers['Session'];

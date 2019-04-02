@@ -1,9 +1,12 @@
 <?php
 namespace cafetapi\io;
 
+use cafetapi\config\Database;
+use Exception;
 use PDO;
 use PDOException;
 use PDOStatement;
+use cafetapi\Logger;
 
 /**
  *
@@ -34,6 +37,7 @@ class DatabaseConnection
     private static $host;
     private static $username;
     private static $password;
+    private static $port;
     private static $lastQueryErrors = array();
 
     const CONFIG = 'cafet_config';
@@ -56,23 +60,23 @@ class DatabaseConnection
     /**
      * Initialise connection for this class and all its children
      *
-     * @param array $db_infos
-     *            the array containing login information
      * @since API 0.1.0 (2018)
      */
-    private static final function init(array $db_infos)
+    private static final function init()
     {
-        if (! (isset($db_infos['driver']) && isset($db_infos['host']) && isset($db_infos['database']) && isset($db_infos['username']) && isset($db_infos['password'])))
-            cafet_throw_error('01-001');
-
-        self::$driver = $db_infos['driver'];
-        self::$host = $db_infos['host'];
-        self::$database = $db_infos['database'];
-        self::$username = $db_infos['username'];
-        self::$password = $db_infos['password'];
+        try {
+            self::$driver = Database::driver;
+            self::$host = Database::host;
+            self::$database = Database::database;
+            self::$username = Database::username;
+            self::$password = Database::password;
+            self::$port = Database::port;
+        } catch (Exception $e) {
+            Logger::throwError('01-001', $e->getMessage());
+        }
 
         $dsn  = self::$driver . ':host=' . self::$host . ';dbname=' . self::$database . ';charset=utf8';
-        $dsn .= isset($db_infos['port']) ? ';port=' . $db_infos['port'] : '';
+        $dsn .= isset(self::$port) ? ';port=' . self::$port : '';
 
         try {
             self::$globalConnection = new PDO($dsn, self::$username, self::$password);
@@ -84,8 +88,8 @@ class DatabaseConnection
             $integrityCheck->checkTriggers();
         } catch (PDOException $e) {
             $backtrace = debug_backtrace()[1];
-            cafet_log($e->getMessage());
-            cafet_throw_error('01-001', 'unable to connect to the database: ' . $e->getMessage(), $backtrace['file'], $backtrace['line']);
+            Logger::log($e->getMessage());
+            Logger::throwError('01-001', 'unable to connect to the database: ' . $e->getMessage(), $backtrace['file'], $backtrace['line']);
         }
     }
 
@@ -96,7 +100,7 @@ class DatabaseConnection
         $array = $stmt->errorInfo();
         $array[] = $stmt->queryString;
         self::$lastQueryErrors[] = $array;
-        cafet_log('SQL error: [' . $array[0] . '] ' . $array[2] . ' (with query:' . $array[3] . ')');
+        Logger::log('SQL error: [' . $array[0] . '] ' . $array[2] . ' (with query:' . $array[3] . ')');
     }
     
     protected final function check_fetch_errors(PDOStatement $stmt)
@@ -176,10 +180,8 @@ class DatabaseConnection
      */
     public static final function initIfNotAlready()
     {
-        if (! defined('DB_INFO'))
-            cafet_load_conf_file();
         if (! isset(self::$globalConnection))
-            self::init(DB_INFO);
+            self::init();
     }
     
     /**
@@ -195,35 +197,12 @@ class DatabaseConnection
     /**
      * Constructor for DatabaseConnection
      *
-     * @param array $db_infos
-     *            an array containing needed information to connect to the database
-     * @param bool $force_new_connection
-     *            if this object must create a new connection with given configuration
      * @since API 0.1.0 (2018)
      */
-    protected function __construct(array $db_infos = DB_INFO, bool $force_new_connection = false)
+    protected function __construct()
     {
-        if (! $force_new_connection) {
-            if (! isset(self::$globalConnection))
-                self::init($db_infos);
-            $this->connection = self::$globalConnection;
-        } else {
-            if (! (isset($db_infos['driver']) && isset($db_infos['host']) && isset($db_infos['database']) && isset($db_infos['username']) && isset($db_infos['password'])))
-                cafet_throw_error('01-001');
-
-            $dsn  = self::$driver . ':host=' . self::$host . ';dbname=' . self::$database . ';charset=utf8';
-            $dsn .= isset($db_infos['port']) ? ';port=' . $db_infos['port'] : '';
-    
-            try {
-                $this->connection = new PDO($dsn, self::$username, self::$password);
-                $this->connection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
-                $this->connection->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-            } catch (PDOException $e) {
-                $backtrace = debug_backtrace()[0];
-                cafet_log($e->getMessage());
-                cafet_throw_error('01-001', 'unable to connect to the database', $backtrace['file'], $backtrace['line']);
-            }
-        }
+        if (! isset(self::$globalConnection)) self::init();
+        $this->connection = self::$globalConnection;
     }
 
     /**

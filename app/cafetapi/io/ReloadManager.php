@@ -6,6 +6,7 @@ use cafetapi\data\Reload;
 use cafetapi\exceptions\RequestFailureException;
 use PDO;
 use cafetapi\MailManager;
+use cafetapi\Logger;
 
 /**
  *
@@ -188,7 +189,7 @@ class ReloadManager extends Updater
         try {
             if ($client->getMailPreference('reload_notice')) MailManager::reloadNotice($client, $this->getReload($reload_id))->send();
         } catch (\Exception | \Error $e) {
-            cafet_log($e);
+            Logger::log($e);
         }
         return true;
     }

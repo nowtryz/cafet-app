@@ -13,6 +13,7 @@ use cafetapi\io\FormulaManager;
 use cafetapi\io\ProductManager;
 use cafetapi\modules\cafet_app\CafetApp;
 use cafetapi\user\Group;
+use cafetapi\Logger;
 
 if (! defined('basics_functions_loaded') ) {
     define('basics_functions_loaded', true);
@@ -30,13 +31,13 @@ if (! defined('basics_functions_loaded') ) {
     {
         if (cafet_is_app_request()) {
             error_reporting(-1);
-            set_error_handler('cafet_error_handler');
-            set_exception_handler('cafet_exception_handler');
+            set_error_handler([Logger::class, 'errorHandler']);
+            set_exception_handler([Logger::class, 'exceptionHandler']);
             
             try {
                 new CafetApp();
             } catch (Exception $e) {
-                cafet_throw_error('01-003', $e->getMessage());
+                Logger::throwError('01-003', $e->getMessage());
             }
             exit();
         }
