@@ -99,10 +99,10 @@ if (!defined('authentication_functions_loaded')) {
      */
     function cafet_generate_hashed_pwd(string $password): string
     {
-        $salt = bin2hex(random_bytes(16));
+        $salt = base64_encode(random_bytes(32));
         $algo = in_array(Config::hash_algo, hash_algos()) ? Config::hash_algo : 'sha256';
         
-        return $algo . '.' . $salt . '.' . hash($algo, $salt . $password);
+        return $algo . '.' . $salt . '.' . cafet_digest($algo, $salt, $password);
     }
     
     /**
@@ -134,7 +134,14 @@ if (!defined('authentication_functions_loaded')) {
         
         [$algo, $salt, $hashed] = $hash_info;
             
-        return hash($algo, $salt . $password) === $hashed;
+        return cafet_digest($algo, $salt, $password) === $hashed;
+    }
+
+    function cafet_digest(string $algo, string $salt, string $password) : string
+    {
+        $hash1 = base64_encode(hash($algo, $salt . $password, true));
+        $hash2 = base64_encode(hash($algo, $password . $salt, true));
+        return base64_encode(hash($algo, $hash1 . $salt . $password . $hash2, true));
     }
     
     /**
