@@ -7,7 +7,7 @@
  * @license cafetapi_content/license.md proprietary license
  * @license cafetapi_content/license.txt proprietary license
  * @since API 0.1.0
- * @version 0.2.2
+ * @version 0.2.3
  */
 
 use cafetapi\io\DatabaseConnection;
