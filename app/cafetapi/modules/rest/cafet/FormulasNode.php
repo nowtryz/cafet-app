@@ -256,7 +256,6 @@ class FormulasNode implements RestNode
     
     
     
-    const ADD = 'add';
     
     private static function choices(Rest $request, int $formula_id) : RestResponse
     {
@@ -276,14 +275,19 @@ class FormulasNode implements RestNode
                 case 'DELETE': return self::deleteChoice($request, $formula_id, $choice_id);
             }
         }
-        elseif ($dir == self::ADD) return self::addChoice($request, $formula_id);
-        elseif (!$dir) return self::listChoices($request, $formula_id);
+        elseif (!$dir) {
+            $request->allowMethods('GET', 'POST');
+            switch ($request->getMethod())
+            {
+                case 'GET':  return self::listChoices($request, $formula_id);
+                case 'POST': return self::addChoice($request, $formula_id);
+            }
+        }
         else return ClientError::resourceNotFound('Unknown cafet/formula/' . $formula_id . '/choice/' . $dir . ' node');
     }
     
     private static function listChoices(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $choices = array();
