@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libzip-dev \
         zip \
         libjpeg-dev \
-        libpng-dev \
+        libpng-dev
 
 RUN docker-php-ext-install \
         gd \
