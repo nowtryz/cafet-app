@@ -8,9 +8,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         zip \
         libjpeg-dev \
         libpng-dev \
-        sendmail \
-        sendmail-bin \
-        mailutils
 
 RUN docker-php-ext-install \
         gd \
@@ -25,8 +22,6 @@ RUN rm -rfd /var/lib/apt/lists/*
 # PHP configurations
 RUN docker-php-ext-configure zip --with-libzip
 RUN docker-php-ext-configure gd --with-png-dir=/usr --with-jpeg-dir=/usr
-
-RUN echo "sendmail_path=sendmail -t -i" >> /usr/local/etc/php/conf.d/sendmail.ini
 
 # set recommended PHP.ini settings
 # see https://secure.php.net/manual/en/opcache.installation.php
