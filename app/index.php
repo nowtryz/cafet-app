@@ -52,7 +52,7 @@ define('URL_LOCATION', substr($_SERVER['SCRIPT_NAME'], 0, strrpos($_SERVER['SCRI
 function cafet_module_debug()
 {
     if (! Config::debug) {
-        (new ErrorPageBuilder(403))->print();
+        (new ErrorPageBuilder(404))->print();
     }
     
     if (! isset($_GET['path']) || !$_GET['path']) {
