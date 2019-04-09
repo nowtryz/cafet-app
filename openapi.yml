@@ -567,7 +567,7 @@ paths:
       description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
       responses:
         "200":
-          description: "The ProductBought wanted."
+          description: "Success."
           content:
             application/json:
               schema:
@@ -670,6 +670,156 @@ paths:
               schema:
                 $ref: "#/components/schemas/FormulaBought"
         "404": *FormulaBought404
+  "/cafet/formulas_bought/{id}/products":
+    parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        description: "The id of the FormulaBought wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get the products bought with formula specifying the formula bought's id."
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The wanted entites."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProductBought"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "details"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/ProductBought"
+        "404": *FormulaBought404
+  # Reloads
+  "/cafet/reloads":
+    get:
+      tags:
+        - "Reloads"
+      summary: "Get a list of reloads."
+      description: "Permissions: CAFET_ADMIN_GET_RELOADS."
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Reload"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "reloads"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Reload"
+    post:
+      tags:
+        - "Reloads"
+      summary: "Reload the balance of a customer account."
+      description: "Permissions: CAFET_ADMIN_RELOAD."
+      requestBody:
+        description: "The iformation about the reload to perform"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "client_id"
+                - "amount"
+              properties:
+                client_id:
+                  type: "integer"
+                  description: "The id of the Client whose account will be credited."
+                  format: "int64"
+                  example: 4
+                amount:
+                  type: "number"
+                  description: "The amount of money to credit to the account."
+                  example: 5.5
+      responses:
+        "204":
+          description: "The reload has been performed successfully."
+        "409":
+          description: "The request cannot be prossed due to synthax error or failed semantic validation."
+          content:
+            application/json:
+              schema: &Reload409Schema
+                type: "object"
+                properties:
+                  conflicts:
+                    type: "object"
+                    properties:
+                      on:
+                        type: "string"
+                        example: "client_id"
+                      problem:
+                        type: "string"
+                        enum:
+                          - "not found"
+                  <<: *409
+                  additional_message:
+                    type: "string"
+                    example: "Unknown client with id 5646"
+            application/xml:
+              schema:
+                <<: *Reload409Schema
+                xml:
+                  name: "error"
+  "/cafet/reloads/{id}":
+    parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        description: "The id of the reload wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Reloads"
+      summary: "Get a Reload entity specifying its id."
+      description: "Permissions: CAFET_ME_RELOADS if the Reload is own by the logged user, CAFET_ADMIN_GET_RELOADS otherwise."
+      responses:
+        "200":
+          description: "The wanted Reload entity."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reload"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Reload"
+        "404":
+          description: "No Reload entity has been found."
+          content:
+            application/json:
+              schema: &Reload404Schema
+                type: "object"
+                properties:
+                  <<: *404
+                  additional_message:
+                    type: "string"
+                    example: "Unknown reload with id 1456"
+            application/xml:
+              schema:
+                <<: *Reload404Schema
+                xml:
+                  name: "error"
 
 components:
   securitySchemes:
