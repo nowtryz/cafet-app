@@ -13,6 +13,6 @@
   "author": "Nowtryz",
   "devDependencies": {
     "@openapitools/openapi-generator-cli": "0.0.7-3.0.0",
-    "redoc-cli": "^0.7.0"
+    "redoc-cli": "^0.8.3"
   }
 }
