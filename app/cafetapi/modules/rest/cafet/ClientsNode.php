@@ -72,7 +72,7 @@ class ClientsNode implements RestNode
         $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
         
-        $clients = array();
+        $clients = [];
         foreach (ClientManager::getInstance()->getClients() as $client) $clients[] = $client->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $clients);
     }
@@ -82,7 +82,7 @@ class ClientsNode implements RestNode
         $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_CLIENTS);
         
-        $clients = array();
+        $clients = [];
         foreach (ClientManager::getInstance()->searchClient(urldecode($request->shiftPath())) as $client) $clients[] = $client->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $clients);
         
@@ -119,9 +119,9 @@ class ClientsNode implements RestNode
         if (!$manager->getClient($id)) return ClientError::resourceNotFound('Unknown client with id ' . $id);
         if($body && isset($body['member']))
         {
-            $request->checkBody(array(
+            $request->checkBody([
                 'member' => Rest::PARAM_BOOL
-            ));
+            ]);
             
             try {
                 $manager->setMember($id, $body['member']);
@@ -141,10 +141,10 @@ class ClientsNode implements RestNode
         if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_RELOADS);
         else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_RELOADS);
         
-        $reloads = array();
+        $reloads = [];
         foreach (ReloadManager::getInstance()->getClientReloads($id) as $reload) $reloads[] = $reload->getProperties();
         if($reloads || ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $reloads);
-        elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, []);
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }
     
@@ -155,10 +155,10 @@ class ClientsNode implements RestNode
         if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_EXPENSES);
         else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
-        $expenses = array();
+        $expenses = [];
         foreach (ExpenseManager::getInstance()->getClientExpenses($id) as $expense) $expenses[] = $expense->getProperties();
         if($expenses || ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
-        elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, []);
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }
     
@@ -169,11 +169,11 @@ class ClientsNode implements RestNode
         if($request->getUser() && $request->getUser()->getId() == $id) $request->needPermissions(Perm::CAFET_ME_EXPENSES);
         else                                                           $request->needPermissions(Perm::CAFET_ADMIN_GET_EXPENSES);
         
-        $expenses = array();
+        $expenses = [];
         foreach (ExpenseManager::getInstance()->getClientLastExpenses($id) as $expense) $expenses[] = $expense->getProperties();
         
         if($expenses) return new RestResponse('200', HttpCodes::HTTP_200, $expenses);
-        elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        elseif (ClientManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, []);
         else return ClientError::resourceNotFound('Unknown client with id ' . $id);
     }
 
@@ -185,7 +185,7 @@ class ClientsNode implements RestNode
         //body checks
         if (!$request->getBody()) return ClientError::badRequest('Empty body');
 
-        $order = array();
+        $order = [];
 
         foreach ($request->getBody() as $entry) {
             if (! isset($entry['type'])) return ClientError::badRequest('Missing `type` field');
@@ -205,7 +205,7 @@ class ClientsNode implements RestNode
                 if (! is_array($entry['products']))           return ClientError::badRequest('`products` field for a formula must be an array');
                 if (is_associative_array($entry['products'])) return ClientError::badRequest('`products` field for a formula must not be an object');
 
-                $products = array();
+                $products = [];
                 
                 foreach ($entry['products'] as $p) $products[] = intval($p, 0);
                 
@@ -222,9 +222,13 @@ class ClientsNode implements RestNode
         } catch (CafetAPIException $e) {
             if ($e->getCode() == 3005)
             {
-                $matches = array();
+                $matches = [];
                 preg_match('/\D*(product|formula)\D+(\d+).*/', $e->getMessage(), $matches);
-                return ClientError::conflict($e->getMessage(), array('On' => 'type: ' . @$matches[1] . '; id: ' . @$matches[2]));
+                return ClientError::conflict($e->getMessage(), [
+                    'type' => @$matches[1], 
+                    'id' => \intval(@$matches[2]),
+                    'problem' => 'not found'
+                ]);
             }
             else throw $e;
         }

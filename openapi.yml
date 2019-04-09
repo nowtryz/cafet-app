@@ -5,9 +5,55 @@ info:
   version: "1.0.0"
 servers:
   - description: "development server"
-    url: "http://localhost/api/v1"
+    url: "http://cafet/api/v1"
 
 x-shemas:
+  404: &404
+    error_code:
+      type: "string"
+      example: "02-404"
+    error_type:
+      type: "string"
+      example: "user exception"
+    error_message:
+      type: "string"
+      example: "Resource not found"
+  400: &400
+    error_code:
+      type: "string"
+      example: "02-400"
+    error_type:
+      type: "string"
+      example: "user exception"
+    error_message:
+      type: "string"
+      example: "Bad Request"
+  409: &409
+    error_code:
+      type: "string"
+      example: "02-409"
+    error_type:
+      type: "string"
+      example: "user exception"
+    error_message:
+      type: "string"
+      example: "Conflict"
+  Client404: &Client404
+    description: "The client cannot be found"
+    content:
+      application/json:
+        schema: &Client404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown client with id 156"
+      application/xml:
+        schema:
+          <<: *Client404Schema
+          xml:
+            name: "error"
   error: &error
     type: "object"
     properties:
@@ -63,78 +109,118 @@ x-shemas:
       
 
 paths:
-  /cafet/clients:
+  "/cafet/clients":
     get:
       tags:
-        - "cafet"
-      summary: "Return a list of clients"
+        - "Clients"
+      summary: "Get the list of clients"
+      description: "Permissions: CAFET_ADMIN_GET_CLIENTS"
       responses:
         "200":
-          description: "A list of client objects"
+          description: "A list of Client objects"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Client"
-        "403":
-          description: "The ressource cannot be found due to wrong id or malformed URI"
-  /cafet/clients/search/{search}:
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "clients"
+                items:
+                  $ref: "#/components/schemas/Client"
+  "/cafet/clients/search/{search}":
+    parameters:
+      - name: "search"
+        in: "path"
+        required: true
+        description: "The pathern of the search"
+        schema:
+          type: "string"
     get:
       tags:
-        - "cafet"
-      summary: "Return a list of clients matching the search"
-      parameters:
-        - name: "search"
-          in: "path"
-          required: true
-          description: "The pathern of the search"
-          schema:
-            type: "string"
+        - "Clients"
+      summary: "Get a list of clients matching the search"
+      description: "Permissions: CAFET_ADMIN_GET_CLIENTS"
       responses:
         "200":
-          description: "A list of client objects"
+          description: "A list of Client objects"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Client"
-        "403":
-          description: "The ressource cannot be found due to wrong id or malformed URI"
-  /cafet/clients/{clientId}:
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "clients"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Client"
+  "/cafet/clients/{clientId}":
+    summary: "Operations on a specific client"
+    parameters:
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted"
+        schema:
+          type: "integer"
+          format: "int64"
     get:
       tags:
-        - "cafet"
-      summary: "Returns a client by id"
-      parameters:
-        - name: "clientId"
-          in: "path"
-          required: true
-          description: "The id of the client wanted"
-          schema:
-            type: "integer"
-            format: "int64"
+        - "Clients"
+      summary: "Get a client providind its id"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
       responses:
         "200":
-          description: "The user"
+          description: "The client"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Client"
-  /cafet/clients/{clientId}/reloads:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404": *Client404
+    patch:
+      tags:
+        - "Clients"
+      summary: "Edit the client with the specified id"
+      description: "Permissions: CAFET_ADMIN_MANAGE_CLIENTS"
+      requestBody:
+        description: "Modifications to apply"
+        content: 
+          'application/json':
+            schema:
+              type: "object"
+              description: "Change the 'member' status"
+              properties:
+                member:
+                  type: "boolean"
+                  example: false
+      responses:
+        "204":
+          description: "The client has been updated"
+        "404": *Client404
+  "/cafet/clients/{clientId}/reloads":
+    parameters:
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted"
+        schema:
+          type: "integer"
+          format: "int64"
     get:
       tags:
-        - "cafet"
+        - "Clients"
       summary: "Returns the reloads of a specific client"
-      parameters:
-        - name: "clientId"
-          in: "path"
-          required: true
-          description: "The id of the client wanted"
-          schema:
-            type: "integer"
-            format: "int64"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
       responses:
         "200":
           description: "The user"
@@ -144,19 +230,29 @@ paths:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Reload"
-  /cafet/clients/{clientId}/expenses:
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "reloads"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Reload"
+        "404": *Client404
+  "/cafet/clients/{clientId}/expenses":
+    parameters:
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted"
+        schema:
+          type: "integer"
+          format: "int64"
     get:
       tags:
-        - "cafet"
+        - "Clients"
       summary: "Returns the expenses of a specific client"
-      parameters:
-        - name: "clientId"
-          in: "path"
-          required: true
-          description: "The id of the client wanted"
-          schema:
-            type: "integer"
-            format: "int64"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
       responses:
         "200":
           description: "The user"
@@ -165,7 +261,170 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Expenses"
+                  $ref: "#/components/schemas/Expense"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "expenses"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Expense"
+        "404": *Client404
+  "/cafet/clients/{clientId}/last_expenses":
+    parameters:
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted"
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Clients"
+      summary: "Returns the expenses of a specific client since its last reload"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Expense"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "expenses"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Expense"
+        "404": *Client404
+  "/cafet/clients/{clientId}/order":
+    parameters:
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted"
+        schema:
+          type: "integer"
+          format: "int64"
+    post:
+      tags:
+        - "Clients"
+      summary: "Perform an order and save it in the database"
+      description: "Permissions: CAFET_ADMIN_ORDER"
+      requestBody:
+        description: "The order to perform"
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: "array"
+              items:
+                oneOf:
+                  - type: "object"
+                    description: "a product ordered"
+                    required:
+                      - "type"
+                      - "id"
+                      - "amount"
+                    properties:
+                      type:
+                        type: "string"
+                        example: "product"
+                      id:
+                        type: "integer"
+                        format: "int64"
+                        example: 1
+                      amount:
+                        type: "integer"
+                        format: "int64"
+                        example: 4
+                  - type: "object"
+                    description: "A formula ordered"
+                    required:
+                      - "type"
+                      - "id"
+                      - "amount"
+                      - "products"
+                    properties:
+                      type:
+                        type: "string"
+                        example: "formula"
+                      id:
+                        type: "integer"
+                        format: "int64"
+                        example: 1
+                      amount:
+                        type: "integer"
+                        format: "int64"
+                        example: 1
+                      products:
+                        type: "array"
+                        items:
+                          type: "integer"
+                          format: "int64"
+                          example: 6
+                        example:
+                          - 2
+                          - 16
+                          - 19
+      responses:
+        "201":
+          description: The action has been performed successfully
+        "400":
+          description: "The request cannot be prossed due to synthax error or failed semantic validation"
+          content:
+            application/json:
+              schema: &Order400Schema
+                type: "object"
+                properties:
+                  <<: *400
+                  additional_message:
+                    type: "string"
+                    example: "`products` field for a formula must not be an object"
+            application/xml:
+              schema:
+                <<: *Order400Schema
+                xml:
+                  name: "error"
+        "404": *Client404
+        "409":
+          description: "The request cannot be prossed due to synthax error or failed semantic validation"
+          content:
+            application/json:
+              schema: &Order409Schema
+                type: "object"
+                properties:
+                  conflicts:
+                    type: "object"
+                    properties:
+                      type:
+                        type: "string"
+                        enum:
+                          - "product"
+                          - "formula"
+                      id:
+                        type: "integer"
+                        format: "int64"
+                        example: 5615
+                      problem:
+                        type: "string"
+                        enum:
+                          - "not found"
+                  <<: *409
+                  additional_message:
+                    type: "string"
+                    example: "product with id 5615 doesn't exist"
+            application/xml:
+              schema:
+                <<: *Order409Schema
+                xml:
+                  name: "error"
 
 components:
   securitySchemes:
@@ -175,6 +434,8 @@ components:
   schemas:
     Client: 
       type: "object"
+      xml:
+        name: "client"
       properties:
         type:
           type: "string"
@@ -183,18 +444,9 @@ components:
           type: "integer"
           format: "int64"
           example: 4
-        email:
-          type: "string"
-          example: "scientist10@no.dom"
         alias:
           type: "string"
           example: "darwin"
-        familyNane:
-          type: "string"
-          example: "Darwin"
-        surname:
-          type: "string"
-          example: "Charles"
         member:
           type: "boolean"
           example: false
@@ -205,8 +457,31 @@ components:
           type: "integer"
           format: "int64"
           example: 2019
+        email:
+          type: "string"
+          example: "scientist10@no.dom"
+        familyName:
+          type: "string"
+          example: "Darwin"
+        firstname:
+          type: "string"
+          example: "Charles"
+        mail_preferences:
+          type: "object"
+          properties:
+            payment_notice:
+              type: "boolean"
+              example: false
+            reload_notice:
+              type: "boolean"
+              example: false
+            reload_request:
+              type: "boolean"
+              example: true
     Reload:
       type: "object"
+      xml:
+        name: "reload"
       properties:
         type:
           type: "string"
@@ -232,8 +507,10 @@ components:
           type: "number"
           format: "float"
           example: 7.4
-    Expenses:
+    Expense:
       type: "object"
+      xml:
+        name: "expense"
       properties:
         type:
           type: "string"
@@ -258,6 +535,8 @@ components:
           example: 7.4
     Calendar:
       type: "object"
+      xml:
+        name: "calendar"
       properties:
         type:
           type: "string"
@@ -292,11 +571,19 @@ security:
   - BasicAuth: []
 
 tags:
-  - name: "cafet"
-    description: "Cafet operations"
-  - name: "user"
+  - name: "Clients"
+    description: "Cafet operations on clients"
+  - name: "Expenses"
+    description: "Cafet operations on expenses"
+  - name: "Reloads"
+    description: "Cafet operations on reloads"
+  - name: "Products"
+    description: "Cafet operations on products"
+  - name: "Formulas"
+    description: "Cafet operations on formulas"
+  - name: "User"
     description: "Current loged user operations"
-  - name: "server"
+  - name: "Server"
     description: "server operations"
-  - name: "stats"
+  - name: "Stats"
     description: "statistics operations"
