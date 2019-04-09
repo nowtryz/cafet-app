@@ -71,8 +71,7 @@ class FormulasBoughtNode implements RestNode
         
         $products = array();
         foreach (ExpenseManager::getInstance()->getFormulaBoughtProducts($id) as $product) $products[] = $product->getProperties();
-        if($products || ExpenseManager::getInstance()->getClient($id)) return new RestResponse('200', HttpCodes::HTTP_200, $products);
-        elseif (ExpenseManager::getInstance()->getFormulaBought($id)) return new RestResponse('200', HttpCodes::HTTP_200, array());
+        if($products || ExpenseManager::getInstance()->getFormulaBought($id)) return new RestResponse('200', HttpCodes::HTTP_200, $products);
         else return ClientError::resourceNotFound('Unknown formula bought with id ' . $id);
     }
 }
