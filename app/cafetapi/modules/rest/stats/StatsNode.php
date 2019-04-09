@@ -1,5 +1,5 @@
 <?php
-namespace cafetapi\modules\rest\server;
+namespace cafetapi\modules\rest\stats;
 
 use cafetapi\io\StatsManager;
 use cafetapi\io\UserManager;

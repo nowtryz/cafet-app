@@ -30,7 +30,7 @@ class ProductsBoughtNode implements RestNode
             
             default:
                 if(intval($dir, 0)) return self::productBought($request, intval($dir, 0));
-                else return ClientError::resourceNotFound('Unknown cafet/product_bought/' . $dir . ' node');
+                else return ClientError::resourceNotFound('Unknown cafet/products_bought/' . $dir . ' node');
         }
     }
     

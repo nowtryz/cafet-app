@@ -54,6 +54,38 @@ x-shemas:
           <<: *Client404Schema
           xml:
             name: "error"
+  Expense404: &Expense404
+    description: "The expense cannot be found"
+    content:
+      application/json:
+        schema: &Expense404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown expense with id 1456"
+      application/xml:
+        schema:
+          <<: *Expense404Schema
+          xml:
+            name: "error"
+  FormulaBought404: &FormulaBought404
+    description: "No FormulaBought entity has been found."
+    content:
+      application/json:
+        schema: &FormulaBought404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown formula bought with id 1456"
+      application/xml:
+        schema:
+          <<: *FormulaBought404Schema
+          xml:
+            name: "error"
   error: &error
     type: "object"
     properties:
@@ -109,6 +141,7 @@ x-shemas:
       
 
 paths:
+  # Clients
   "/cafet/clients":
     get:
       tags:
@@ -147,6 +180,7 @@ paths:
                 type: "array"
                 xml:
                   name: "clients"
+                  wrapped: true
                 items:
                   $ref: "#/components/schemas/Client"
   "/cafet/clients/search/{search}":
@@ -180,20 +214,20 @@ paths:
                 items:
                   $ref: "#/components/schemas/Client"
   "/cafet/clients/{clientId}":
-    summary: "Operations on a specific client"
+    summary: "Operations on a specific client."
     parameters:
       - name: "clientId"
         in: "path"
         required: true
-        description: "The id of the client wanted"
+        description: "The id of the client wanted."
         schema:
           type: "integer"
           format: "int64"
     get:
       tags:
         - "Clients"
-      summary: "Get a client providind its id"
-      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
+      summary: "Get a client providing its id"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise."
       responses:
         "200":
           description: "The client"
@@ -237,11 +271,11 @@ paths:
     get:
       tags:
         - "Clients"
-      summary: "Returns the reloads of a specific client"
-      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
+      summary: "Get the reloads of a specific client"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise."
       responses:
         "200":
-          description: "The user"
+          description: "The user reloads"
           content:
             application/json:
               schema:
@@ -262,18 +296,18 @@ paths:
       - name: "clientId"
         in: "path"
         required: true
-        description: "The id of the client wanted"
+        description: "The id of the client wanted."
         schema:
           type: "integer"
           format: "int64"
     get:
       tags:
         - "Clients"
-      summary: "Returns the expenses of a specific client"
-      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
+      summary: "Get the expenses of a specific client"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise."
       responses:
         "200":
-          description: "The user"
+          description: "The user expenses"
           content:
             application/json:
               schema:
@@ -294,14 +328,14 @@ paths:
       - name: "clientId"
         in: "path"
         required: true
-        description: "The id of the client wanted"
+        description: "The id of the client wanted."
         schema:
           type: "integer"
           format: "int64"
     get:
       tags:
         - "Clients"
-      summary: "Returns the expenses of a specific client since its last reload"
+      summary: "Get the expenses of a specific client since its last reload."
       description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
       responses:
         "200":
@@ -326,14 +360,14 @@ paths:
       - name: "clientId"
         in: "path"
         required: true
-        description: "The id of the client wanted"
+        description: "The id of the client wanted."
         schema:
           type: "integer"
           format: "int64"
     post:
       tags:
         - "Clients"
-      summary: "Perform an order and save it in the database"
+      summary: "Perform an order and save it in the database."
       description: "Permissions: CAFET_ADMIN_ORDER"
       requestBody:
         description: "The order to perform"
@@ -395,7 +429,7 @@ paths:
         "201":
           description: The action has been performed successfully
         "400":
-          description: "The request cannot be prossed due to synthax error or failed semantic validation"
+          description: "The request cannot be prossed due to synthax error or failed semantic validation."
           content:
             application/json:
               schema: &Order400Schema
@@ -412,7 +446,7 @@ paths:
                   name: "error"
         "404": *Client404
         "409":
-          description: "The request cannot be prossed due to synthax error or failed semantic validation"
+          description: "The request cannot be prossed due to synthax error or failed semantic validation."
           content:
             application/json:
               schema: &Order409Schema
@@ -444,6 +478,199 @@ paths:
                 xml:
                   name: "error"
 
+  # Expenses
+  "/cafet/expenses":
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get the list of expenses."
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES"
+      responses:
+        "200":
+          description: "A list of Expenses objects"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Expense"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "expenses"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Expense"
+  "/cafet/expenses/{expenseId}":
+    parameters:
+      - name: "expenseId"
+        in: "path"
+        required: true
+        description: "The id of the expense wanted"
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get an expense providing its id"
+      description: "Permissions: CAFET_ME_EXPENSES if the expense is own by the logged user, CAFET_ADMIN_GET_EXPENSES otherwise."
+      responses:
+        "200":
+          description: "The expense"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "404": *Expense404
+  "/cafet/expenses/{expenseId}/details":
+    parameters:
+      - name: "expenseId"
+        in: "path"
+        required: true
+        description: "The id of the expense wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get the details of a specific expense."
+      description: "Permissions: CAFET_ME_EXPENSES if the expense is own by the logged user, CAFET_ADMIN_GET_EXPENSES otherwise."
+      responses:
+        "200":
+          description: "The details of the specified expense."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ExpenseDetail"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "details"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/ExpenseDetail"
+        "404": *Expense404
+  "/cafet/products_bought":
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get a list of products bought."
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The ProductBought wanted."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProductBought"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "details"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/ProductBought"
+  "/cafet/products_bought/{id}":
+    parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        description: "The id of the ProductBought wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get a product bought specifying its id."
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The wanted ProductBought entity."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductBought"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ProductBought"
+        "404":
+          description: "No ProductBought entity has been found."
+          content:
+            application/json:
+              schema: &ProductBought404Schema
+                type: "object"
+                properties:
+                  <<: *404
+                  additional_message:
+                    type: "string"
+                    example: "Unknown product bought with id 1456"
+            application/xml:
+              schema:
+                <<: *ProductBought404Schema
+                xml:
+                  name: "error"
+  "/cafet/formulas_bought":
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get a list of formulas bought."
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The wanted FormulaBought entity."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FormulaBought"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "details"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/FormulaBought"
+  "/cafet/formulas_bought/{id}":
+    parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        description: "The id of the FormulaBought wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get the formula bought specifying its id."
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The specified FormulaBought entity."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormulaBought"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/FormulaBought"
+        "404": *FormulaBought404
+
 components:
   securitySchemes:
     BasicAuth:
@@ -457,7 +684,8 @@ components:
       properties:
         type:
           type: "string"
-          example: "Client"
+          enum:
+            - "Client"
         id:
           type: "integer"
           format: "int64"
@@ -503,7 +731,8 @@ components:
       properties:
         type:
           type: "string"
-          example: "Reload"
+          enum:
+            - "Reload"
         id:
           type: "integer"
           format: "int64"
@@ -532,7 +761,8 @@ components:
       properties:
         type:
           type: "string"
-          example: "Expense"
+          enum:
+            - "Expense"
         id:
           type: "integer"
           format: "int64"
@@ -551,6 +781,77 @@ components:
           type: "number"
           format: "float"
           example: 7.4
+    ExpenseDetail:
+      oneOf:
+        - $ref: "#/components/schemas/ProductBought"
+        - $ref: "#/components/schemas/FormulaBought"
+    ProductBought:
+      type: "object"
+      xml:
+        name: "product_bought"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "ProductBought"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        product:
+          type: "integer"
+          format: "int64"
+          example: 4
+        name:
+          type: "string"
+          example: "Ice Tea"
+        client_id:
+          type: "integer"
+          format: "int64"
+          example: 39
+        price:
+          type: "number"
+          example: 0.7
+        quantity:
+          type: "integer"
+          format: "int64"
+          example: 1
+        date:
+          $ref: "#/components/schemas/Calendar"
+    FormulaBought:
+      type: "object"
+      xml:
+        name: "formula_bought"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "FormulaBought"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        formula:
+          type: "integer"
+          format: "int64"
+          example: 4
+        name:
+          type: "string"
+          example: "Breakfast"
+        client_id:
+          type: "integer"
+          format: "int64"
+          example: 39
+        price:
+          type: "number"
+          example: 0.7
+        quantity:
+          type: "integer"
+          format: "int64"
+          example: 1
+        date:
+          $ref: "#/components/schemas/Calendar"
+        
     Calendar:
       type: "object"
       xml:
@@ -558,7 +859,8 @@ components:
       properties:
         type:
           type: "string"
-          example: "Calendar"
+          enum:
+            - "Calendar"
         year:
           type: "integer"
           format: "int32"

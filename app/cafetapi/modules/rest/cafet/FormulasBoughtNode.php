@@ -40,7 +40,7 @@ class FormulasBoughtNode implements RestNode
                     }
                 }
                 
-                else return ClientError::resourceNotFound('Unknown cafet/formula_bought/' . $dir . ' node');
+                else return ClientError::resourceNotFound('Unknown cafet/formulas_bought/' . $dir . ' node');
         }
     }
     
