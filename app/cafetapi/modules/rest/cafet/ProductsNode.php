@@ -42,7 +42,7 @@ class ProductsNode implements RestNode
                     }
                 }
                 
-                else return ClientError::resourceNotFound('Unknown cafet/product/' . $dir . ' node');
+                else return ClientError::resourceNotFound('Unknown cafet/products/' . $dir . ' node');
         }
     }
     
@@ -74,19 +74,22 @@ class ProductsNode implements RestNode
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         //body checks
-        $request->checkBody(array(
+        $request->checkBody([
             'group' => Rest::PARAM_INT,
             'name' => Rest::PARAM_ANY,
             'price' => Rest::PARAM_SCALAR,
             'viewable' => Rest::PARAM_BOOL
-        ));
+        ]);
 
         $name = $request->getBody()['name'];
         $group = intval($request->getBody()['group'], 0);
         $price = floatval($request->getBody()['price']);
         $visibility = boolval($request->getBody()['viewable']);
         
-        if (!ProductManager::getInstance()->getProductGroup($group)) ClientError::conflict('group ' . $group . ' does not exist');
+        if (!ProductManager::getInstance()->getProductGroup($group)) return ClientError::conflict('group ' . $group . ' does not exist', [
+            'on' => 'group',
+            'problem' => 'not found'
+        ]);
         
         $updater = ProductManager::getInstance();
         $updater->createTransaction();
@@ -154,14 +157,14 @@ class ProductsNode implements RestNode
         if (!$product) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
         //body checks
-        $request->checkBody(array(
+        $request->checkBody([
             'id' => Rest::PARAM_INT,
             'type' => Rest::PARAM_STR,
             'group' => Rest::PARAM_INT,
             'name' => Rest::PARAM_ANY,
             'price' => Rest::PARAM_SCALAR,
             'viewable' => Rest::PARAM_BOOL
-        ));
+        ]);
 
         if ($product->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($product) != $request->getBody()['type']) return ClientError::conflict('different type');
@@ -171,7 +174,7 @@ class ProductsNode implements RestNode
         $price = floatval($request->getBody()['price']);
         $visibility = boolval($request->getBody()['viewable']);
         
-        if (!ProductManager::getInstance()->getProductGroup($group)) ClientError::conflict('group ' . $group . ' does not exist');
+        if (!ProductManager::getInstance()->getProductGroup($group)) return ClientError::conflict('group ' . $group . ' does not exist');
         
         $updater = ProductManager::getInstance();
         $updater->createTransaction();
@@ -213,7 +216,9 @@ class ProductsNode implements RestNode
                     if (!is_string($value))
                     {
                         $updater->cancelTransaction();
-                        return ClientError::badRequest('Expected `image` field to be a string representing the image as base64');
+                        return ClientError::badRequest('Expected `image` field to be a string representing the image as base64', [
+                            'image' => 'string'
+                        ]);
                     }
                     
                     $updater->setProductImage($id, $value);
@@ -223,7 +228,9 @@ class ProductsNode implements RestNode
                     if(!intval($value, 0))
                     {
                         $updater->cancelTransaction();
-                        return ClientError::badRequest('Expected `group` field to be an integer');
+                        return ClientError::badRequest('Expected `group` field to be an integer', [
+                            'group' => 'integer'
+                        ]);
                     }
                     
                     $updater->setProductGroup($id, intval($value, 0));
@@ -233,7 +240,9 @@ class ProductsNode implements RestNode
                     if (!is_scalar($value))
                     {
                         $updater->cancelTransaction();
-                        return ClientError::badRequest('Expected `price` field to be a float');
+                        return ClientError::badRequest('Expected `price` field to be a float', [
+                            'price' => 'float'
+                        ]);
                     }
                     
                     $updater->setProductPrice($id, floatval($value));
@@ -243,7 +252,9 @@ class ProductsNode implements RestNode
                     if (!is_bool($value))
                     {
                         $updater->cancelTransaction();
-                        return ClientError::badRequest('Expected `viewable` field to be a boolean');
+                        return ClientError::badRequest('Expected `viewable` field to be a boolean', [
+                            'viewable' => 'boolean'
+                        ]);
                     }
                     
                     $updater->setProductViewable($id, boolval($value));

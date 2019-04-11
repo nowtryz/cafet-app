@@ -224,9 +224,9 @@ class Rest
                 if (!is_array($this->body[$key])) $wrong_types[$key] = 'array';
             break;
         }
-        if ($wrong_types) $this->printResponse(ClientError::badRequest('Wrong types', array(
+        if ($wrong_types) $this->printResponse(ClientError::badRequest('Wrong types', [
             "type_expectation" => $wrong_types
-        )));
+        ]));
         unset($wrong_types);
     }
 
