@@ -46,7 +46,7 @@ class HttpCodes
      */
     
     /**
-     * The request cannot be prossed due to synthax error or failed semantic validation
+     * The request cannot be processed due to synthax error or failed semantic validation
      * @var string
      */
     const HTTP_400 = 'Bad Request';
@@ -74,7 +74,7 @@ class HttpCodes
      */
     const HTTP_405 = 'Method Not Allowed';
     /**
-     * Existing conflict, there isa  mismatch with the resource id, its type or with linked resources
+     * Existing conflicts, there is a mismatch with the resource id, its type or with linked resources
      * Sould be return with a Reason header field.
      * @var string
      */
