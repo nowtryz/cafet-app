@@ -225,7 +225,7 @@ paths:
       x-code-samples:
         - lang: 'Java'
           source: |
-            CafetAPI.getInstance().setClients(); // synchronized
+            CafetAPI.getInstance().getClients(); // synchronized
             CafetAPI.getInstance().asyncGetClients(handler); // asynchronized
       responses:
         "200":
