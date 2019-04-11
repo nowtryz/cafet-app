@@ -225,21 +225,8 @@ paths:
       x-code-samples:
         - lang: 'Java'
           source: |
-            CafetAPI.getInstance().asyncGetClients(new AsyncArrayHandler<Client>() {
-            @Override
-            public void handleException(IOException e) {
-              // Something wrong -- check response for errors
-            }
-            @Override
-            public void handleException(APIException e) {
-              // Something wrong -- check response for errors
-            }
-            @Override
-            public void handleResult(ArrayResult<Client> result) throws APIException, IOException {
-              Client[] clients = result.getDatas();
-              // Successfully recieved
-            }
-            });
+            CafetAPI.getInstance().setClients(); // synchronized
+            CafetAPI.getInstance().asyncGetClients(handler); // asynchronized
       responses:
         "200":
           description: "A list of Client objects"
