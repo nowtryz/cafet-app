@@ -180,7 +180,7 @@ class Rest
             $after = urlencode($_SERVER['REQUEST_URI']);
             
             $this->printResponse(ClientError::forbidden(array(
-            'Location' => $api_root . '/user/login?after=' . $after,
+            'Location' => $api_root . '/user/login?after=' . $after . ($this->pretty ? '&pretty' : ''),
             'Cache-Control' => 'no-cache'
             )));
         }

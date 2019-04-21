@@ -85,13 +85,12 @@ class ChoicesNode implements RestNode
         $choice = FormulaManager::getInstance()->getChoice($choice_id);
         
         //body checks
-        if (!$request->getBody())                     return ClientError::badRequest('Empty body');
-        if (!isset($request->getBody()['id']))        return ClientError::badRequest('Missing `id` field');
-        if (!isset($request->getBody()['type']))      return ClientError::badRequest('Missing `type` field');
-        if (!isset($request->getBody()['name']))      return ClientError::badRequest('Missing `name` field');
-        if (!isset($request->getBody()['choice']))    return ClientError::badRequest('Missing `choice` field');
-        if (!intval($request->getBody()['id'], 0))    return ClientError::badRequest('Expected `id` field to be an integer');
-        if (!is_array($request->getBody()['choice'])) return ClientError::badRequest('Expected `choice` field to be an array');
+        $request->checkBody([
+            'id' => Rest::PARAM_INT,
+            'type' => Rest::PARAM_STR,
+            'name' => Rest::PARAM_STR,
+            'choice' => Rest::PARAM_ARRAY
+        ]);
         
         if ($choice->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($choice) != $request->getBody()['type']) return ClientError::conflict('different type');

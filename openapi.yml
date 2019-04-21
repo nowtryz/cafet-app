@@ -152,6 +152,22 @@ x-shemas:
           <<: *Formula404Schema
           xml:
             name: "error"
+  Choice404: &Choice404
+    description: "The choice cannot be found"
+    content:
+      application/json:
+        schema: &Choice404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown choice with id 156"
+      application/xml:
+        schema:
+          <<: *Choice404Schema
+          xml:
+            name: "error"
   error: &error
     type: "object"
     properties:
@@ -1292,6 +1308,13 @@ paths:
         - "Products"
       summary: "Get a list of products present in the group"
       description: "Permissions: CAFET_ADMIN_GET_PRODUCTS."
+      parameters:
+        - name: "hidden"
+          in: "query"
+          required: false
+          description: "If present, the response will include not availabe products."
+          schema:
+            type: "string"
       responses:
         "200":
           description: "Success."
@@ -1320,6 +1343,13 @@ paths:
         - "Formulas"
       summary: "Get a list of formulas"
       description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      parameters:
+        - name: "hidden"
+          in: "query"
+          required: false
+          description: "If present, the response will include not availabe products."
+          schema:
+            type: "string"
       responses:
         "200":
           description: "Success."
@@ -1485,6 +1515,150 @@ paths:
         "204":
           description: "The update has been made successfully."
         "404": *Formula404
+  "/cafet/choices":
+    parameters:
+      - <<: *pretty
+      - <<: *noimage
+    get:
+      tags:
+        - "Formulas"
+      summary: "Get the list of all choices"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "choices"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Choice"
+  "/cafet/choices/{choiceId}":
+    parameters:
+      - <<: *pretty
+      - name: "choiceId"
+        in: "path"
+        required: true
+        description: "The id of the choice wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      parameters:
+        - <<: *noimage
+      tags:
+        - "Formulas"
+      summary: "Get a choice"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      responses:
+        "200":
+          description: "The wanted choice."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Choice"
+        "404": *Choice404
+    put:
+      tags:
+        - "Formulas"
+      summary: "Replace a choice"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "The choice to put instead of the actual"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "type"
+                - "id"
+                - "name"
+                - "choice"
+              properties:
+                id:
+                  type: "integer"
+                  format: "int64"
+                  description: "An id that MUST match the formula's being edited."
+                  example: 14
+                type:
+                  type: "string"
+                  description: "The entity sent MUST include this field to avoid carelessness problems"
+                  enum:
+                    - "Formula"
+                name:
+                  type: "string"
+                  example: "Breakfast"
+                choice:
+                  type: "array"
+                  items:
+                    type: "integer"
+                    format: "int64"
+                    example: 2
+                  example: [1, 2, 3]
+      responses:
+        "200":
+          description: "The choice has been replaced"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Choice"
+        "400": *400Error
+        "404": *Choice404
+        "409": *409Error
+    patch:
+      tags:
+        - "Formulas"
+      summary: "Edit a choice"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "properties to change"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                add:
+                  type: "array"
+                  description: "Ids of products to add to the current choice."
+                  example: [4, 5, 6]
+                remove:
+                  type: "array"
+                  description: "Ids of products that must be removed from the current choice."
+                  example: [1, 2, 3]
+                name:
+                  type: "string"
+                  example: "Drink"
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "400": *400Error
+        "404": *Choice404
+        "409": *409Error
+    delete:
+      tags:
+        - "Formulas"
+      summary: "Delete a choice"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "404": *Choice404
 
 components:
   securitySchemes:
@@ -1778,6 +1952,30 @@ components:
           example: 3.2
         edit:
           $ref: "#/components/schemas/Calendar"
+    Choice:
+      type: "object"
+      xml:
+        name: "choice"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "Choice"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        name:
+          type: "string"
+          example: "Drink"
+        formula:
+          type: "integer"
+          format: "int64"
+          example: 1
+        choice:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Product"
     image:
       type: "string"
       format: "byte"

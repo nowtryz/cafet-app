@@ -20,7 +20,6 @@ use cafetapi\user\Perm;
 class FormulasNode implements RestNode
 {
     const CHOICES = 'choices';
-    const CHOICE = 'choice';
 
     /**
      * (non-PHPdoc)
@@ -151,13 +150,13 @@ class FormulasNode implements RestNode
         if (!$formula) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
         //body checks
-        $request->checkBody(array(
+        $request->checkBody([
             'id' => Rest::PARAM_INT,
             'type' => Rest::PARAM_STR,
             'name' => Rest::PARAM_STR,
             'price' => Rest::PARAM_SCALAR,
             'viewable' => Rest::PARAM_BOOL
-        ));
+        ]);
 
         if ($formula->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($formula) != $request->getBody()['type']) return ClientError::conflict('different type');
