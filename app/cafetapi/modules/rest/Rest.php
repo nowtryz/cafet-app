@@ -92,27 +92,37 @@ class Rest
      *******************/
     
     public function printResponse(RestResponse $response) {
+        // prepare Runtime header
+        ob_start(function (string $buff) {
+            if (!headers_sent()) {
+                header('Runtime: ' . cafet_execution_duration());
+            }
+            return $buff;
+        });
         header('HTTP/1.1 ' . $response->getCode() . ' ' . $response->getMessage());
         header('Cache-Control: max-age=0, private, must-revalidate', true);
         header_remove('Expires');
         foreach ($response->getRemoveHeader() as $header) header_remove($header);
-        foreach($response->getHeaders() as $name => $content) header("$name: $content");
-        
-        if ($response->getBody() !== null) switch ($this->contentType) {
-            case 'xml':
-                $this->printXMLResponse($response);
-                break;
-            case 'yaml':
-            case 'yml':
-                $this->printYAMLResponse($response);
-                break;
-            case 'json':
-            default:
-                $this->printJSONResponse($response);
-                break;
+        foreach ($response->getHeaders() as $name => $content) header("$name: $content");
+
+        if ($response->getBody() !== null) {
+            switch ($this->contentType) {
+                case 'xml':
+                    $this->printXMLResponse($response);
+                    break;
+                case 'yaml':
+                case 'yml':
+                    $this->printYAMLResponse($response);
+                    break;
+                case 'json':
+                default:
+                    $this->printJSONResponse($response);
+                    break;
+            }
         }
         
         if ($this->session && $this->user) cafet_set_logged_user($this->user);
+        
         exit();
     }
     
@@ -147,7 +157,6 @@ class Rest
     }
     
     private function send(string $content) {
-        header('Runtime: ' . cafet_execution_duration());
         echo $content;
     }
     
