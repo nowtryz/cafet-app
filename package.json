@@ -4,15 +4,38 @@
   "description": "Both REST API for http connections and PHP librairy. Manage Interactions between client applications and database",
   "private": true,
   "scripts": {
-    "api:doc": "redoc-cli bundle openapi.yml -o doc/index.html"
+    "api:doc": "redoc-cli bundle openapi.yml -o doc/index.html",
+    "prod:build": "rimraf app/dist && cross-env NODE_ENV=production webpack -p --progress",
+    "dev:build": "rimraf app/dist && cross-env NODE_ENV=development webpack --watch -p --progress",
+    "lint": "eslint src webpack.config.babel.js --ext .js,.jsx"
   },
   "repository": {
     "type": "git",
     "url": "git@git.nowtryz.net:cafet-app/php-api-server.git"
   },
   "author": "Nowtryz",
+  "browserslist": [
+    "> 1%"
+  ],
   "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.4.0",
     "@openapitools/openapi-generator-cli": "0.0.7-3.0.0",
-    "redoc-cli": "^0.8.3"
+    "babel-eslint": "^10.0.1",
+    "babel-loader": "^8.0.5",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-compat": "^3.1.1",
+    "redoc-cli": "^0.8.3",
+    "rimraf": "^2.6.3",
+    "webpack": "^4.30.0",
+    "webpack-cli": "^3.3.1",
+    "webpack-livereload-plugin": "^2.2.0"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.4.3"
   }
 }

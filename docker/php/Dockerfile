@@ -39,8 +39,8 @@ RUN { \
 COPY docker/php/phpinfo.php /var/www/html/
 
 
-# Copy app
-COPY app/ /var/www/html/
+# Copy server
+COPY server/ /var/www/html/
 COPY docker/php/config.php /var/www/html/cafetapi_content/
 
 

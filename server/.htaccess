@@ -1,0 +1,50 @@
+<IfModule mod_rewrite.c>
+	Options +FollowSymlinks
+	RewriteEngine On
+	RewriteBase /
+	
+    RewriteCond %{ENV:REDIRECT_STATUS} !^$
+    RewriteRule ^ - [L]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    RewriteCond %{REQUEST_FILENAME} -s
+    RewriteRule ^ - [L]
+
+
+	RewriteRule ^api\/v([^\s\/]+)\/([^\.]*)(?:\.(.*))?$ api.php?version=$1&path=$2&return_type=$3 [L,QSA]
+	RewriteRule ^api\/v([^\s\/]+)\/ api.php?version=$1&path&return_type [L,QSA]
+	RewriteRule ^api\/ api.php?version&path&return_type [L,QSA]
+	RewriteRule ^image\/(product|formula)(?:\/([0-9]+))?(?:\/size/([^\/\s\.]))? image.php?item=$1&id=$2&size=$3 [QSA,L]
+	RewriteRule ^debug(?:/([^\.]+))? index.php?module=debug&path=$1 [L,QSA]
+
+    ErrorDocument 404 /error.php
+</IfModule>
+
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 /index.php
+</IfModule>
+
+<Files cafetapi_load.php>
+	Deny from all
+</Files>
+
+<Files *.log>
+	Deny from all
+</Files>
+
+ErrorDocument 400 /error.php
+ErrorDocument 401 /error.php
+ErrorDocument 403 /error.php
+ErrorDocument 405 /error.php
+ErrorDocument 408 /error.php
+ErrorDocument 500 /error.php
+ErrorDocument 501 /error.php
+ErrorDocument 502 /error.php
+ErrorDocument 503 /error.php
+ErrorDocument 504 /error.php
+ErrorDocument 505 /error.php
+
+Options -Indexes
+Options -MultiViews
