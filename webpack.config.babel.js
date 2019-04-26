@@ -7,12 +7,12 @@ import LiveReloadPlugin from 'webpack-livereload-plugin'
 export default {
   mode: process.env.NODE_ENV,
   entry: [
-    './js',
+    './web-client',
   ],
   output: {
     filename: 'bundle.js',
-    path: resolve(__dirname, 'app/dist'),
-    publicPath: '/js/',
+    path: resolve(__dirname, 'server/dist'),
+    publicPath: '/dist/',
   },
   module: {
     rules: [

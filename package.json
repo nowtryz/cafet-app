@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "api:doc": "redoc-cli bundle openapi.yml -o doc/index.html",
-    "prod:build": "rimraf app/dist && cross-env NODE_ENV=production webpack -p --progress",
-    "dev:build": "rimraf app/dist && cross-env NODE_ENV=development webpack --watch -p --progress",
+    "prod:build": "rimraf server/dist && cross-env NODE_ENV=production webpack -p --progress",
+    "dev:build": "rimraf app/dist && cross-env NODE_ENV=development webpack --watch -p --progress && rimraf app/dist",
     "lint": "eslint src webpack.config.babel.js --ext .js,.jsx"
   },
   "repository": {
