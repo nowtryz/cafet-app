@@ -75,7 +75,7 @@ class ProductManager extends Updater
         $this->check_fetch_errors($stmt);
         
         if ($stmt->fetch()) return new ProductGroup($id, $name, $dname);
-        else return NULL;
+        else return null;
     }
     
     public final function getGroupProducts(int $group_id, bool $show_hiddens = false): array

@@ -228,7 +228,7 @@ class Config
         // send a mail after each acount reload
         'reload_notice' => false,
         // send a mail to warn the user that it sold passed under a threshold, providing a recap of last expenses
-        'reload_request' => true,
+        'reload_request' => false,
     ];
 
     /**

@@ -34,6 +34,12 @@ define('START_TIME', microtime(true));
 define('CAFET_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 /*
+ * ensure the charset is utf8
+ */
+mb_internal_encoding('UTF-8');
+mb_http_output('UTF-8');
+
+/*
  * constants file
  */
 require CAFET_DIR . 'cafetapi_includes' . DIRECTORY_SEPARATOR . 'constants.php';
@@ -58,7 +64,7 @@ error_reporting(E_ALL);
  *  Do not display errors for the end-users for security issue purposes
  */
 ini_set('display_errors', Config::debug ? 'On' : 'Off');
-/**
+/*
  *  Set the logging file
  */
 ini_set('error_log', CAFET_DIR . 'error.log');

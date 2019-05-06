@@ -5,7 +5,7 @@ use cafetapi\modules\rest\cafet\CafetNode;
 use cafetapi\modules\rest\user\UserNode;
 use cafetapi\modules\rest\server\ServerNode;
 use cafetapi\modules\rest\errors\ClientError;
-use cafetapi\modules\rest\server\StatsNode;
+use cafetapi\modules\rest\stats\StatsNode;
 
 /**
  *

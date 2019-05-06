@@ -21,7 +21,7 @@ class ClientError
         ) : array();
         $result = array_merge($result, Logger::grabErrorInfos('02-400', $reason));
         
-        return new RestResponse(409, HttpCodes::HTTP_409, $result, $headers);
+        return new RestResponse(400, HttpCodes::HTTP_400, $result, $headers);
     }
     
     public static function unauthorized(array $additional_headers = array(), $reason = null) : RestResponse

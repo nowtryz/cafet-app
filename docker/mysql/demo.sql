@@ -13,7 +13,7 @@ SET time_zone = "+00:00";
 -- --
 
 INSERT INTO `cafet_users` (`id`, `username`, `password`, `firstname`, `familyname`, `email`, `phone`, `group_id`, `permissions`) VALUES
-(1,  'Nowtryz',     'sha256.8db06fe120f43a26714ec40d798917e2.02927bec4687c5681529df1634f9109194d5f25ba00671a569d584990392dbfd', 'Damien', 'Djomby', 'damien.djmb@gmail.com', '0611223344', 4, 'a:3:{s:1:"a";b:1;s:3:"b_a";b:0;s:3:"b_b";b:0;}'),
+(1,  'Nowtryz',     'sha256.Wr0Fy8AGSviXr/BaPYjgoBeEqpshzoxxO6Nih14HVRk=.KVdIXUR5j+nI3vchg2u3ofBNHZzXq+9t9dNdb2sulMQ=', 'Damien', 'Djomby', 'damien.djmb@gmail.com', '0611223344', 4, 'a:3:{s:1:"a";b:1;s:3:"b_a";b:0;s:3:"b_b";b:0;}'),
 (2,  'Agassiz',     '', 'Louis',            'Agassiz',     'scientist01@no.dom',      '0611223344', 1, 'a:1:{s:3:"b_c";b:0;}'),
 (3,  'Ampère',      '', 'André-Marie',      'Ampère',      'scientist02@no.dom',      '0611223344', 1, 'a:1:{s:3:"b_c";b:0;}'),
 (4,  'Avogadro',    '', 'Amedeo',           'Avogadro',    'scientist03@no.dom',      '0611223344', 1, 'a:1:{s:3:"b_c";b:0;}'),

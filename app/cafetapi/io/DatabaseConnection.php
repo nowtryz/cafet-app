@@ -75,7 +75,7 @@ class DatabaseConnection
             Logger::throwError('01-001', $e->getMessage());
         }
 
-        $dsn  = self::$driver . ':host=' . self::$host . ';dbname=' . self::$database . ';charset=utf8';
+        $dsn  = self::$driver . ':host=' . self::$host . ';dbname=' . self::$database . ';charset=utf8mb4';
         $dsn .= isset(self::$port) ? ';port=' . self::$port : '';
 
         try {

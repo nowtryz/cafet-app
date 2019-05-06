@@ -1,13 +1,173 @@
-openapi: 3.0.0
+openapi: 3.0.2
 info:
   title: "PHP API Server"
   description: "The api enables you to interact with the data saved on the server"
   version: "1.0.0"
 servers:
   - description: "development server"
-    url: "http://localhost/api/v1"
+    url: "http://cafet/api/v1"
 
 x-shemas:
+  404: &404
+    error_code:
+      type: "string"
+      example: "02-404"
+    error_type:
+      type: "string"
+      example: "user exception"
+    error_message:
+      type: "string"
+      example: "Resource not found"
+  400: &400
+    error_code:
+      type: "string"
+      example: "02-400"
+    error_type:
+      type: "string"
+      example: "user exception"
+    error_message:
+      type: "string"
+      example: "Bad Request"
+  409: &409
+    error_code:
+      type: "string"
+      example: "02-409"
+    error_type:
+      type: "string"
+      example: "user exception"
+    error_message:
+      type: "string"
+      example: "Conflict"
+  400Error: &400Error
+    description: "The request cannot be prossed due to synthax error or failed semantic validation."
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/400Error"
+      application/xml:
+        schema:
+          $ref: "#/components/schemas/400Error"
+  409Error: &409Error
+    description: "Existing conflicts, there is a mismatch with the resource id, its type or with linked resources"
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/409Error"
+      application/xml:
+        schema:
+          $ref: "#/components/schemas/409Error"
+  Client404: &Client404
+    description: "The client cannot be found"
+    content:
+      application/json:
+        schema: &Client404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown client with id 156"
+      application/xml:
+        schema:
+          <<: *Client404Schema
+          xml:
+            name: "error"
+  Expense404: &Expense404
+    description: "The expense cannot be found"
+    content:
+      application/json:
+        schema: &Expense404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown expense with id 1456"
+      application/xml:
+        schema:
+          <<: *Expense404Schema
+          xml:
+            name: "error"
+  FormulaBought404: &FormulaBought404
+    description: "No FormulaBought entity has been found."
+    content:
+      application/json:
+        schema: &FormulaBought404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown formula bought with id 1456"
+      application/xml:
+        schema:
+          <<: *FormulaBought404Schema
+          xml:
+            name: "error"
+  Product404: &Product404
+    description: "The product cannot be found"
+    content:
+      application/json:
+        schema: &Product404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown product with id 156"
+      application/xml:
+        schema:
+          <<: *Product404Schema
+          xml:
+            name: "error"
+  Group404: &Group404
+    description: "The group cannot be found"
+    content:
+      application/json:
+        schema: &Group404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown group with id 156"
+      application/xml:
+        schema:
+          <<: *Group404Schema
+          xml:
+            name: "error"
+  Formula404: &Formula404
+    description: "The formula cannot be found"
+    content:
+      application/json:
+        schema: &Formula404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown formula with id 156"
+      application/xml:
+        schema:
+          <<: *Formula404Schema
+          xml:
+            name: "error"
+  Choice404: &Choice404
+    description: "The choice cannot be found"
+    content:
+      application/json:
+        schema: &Choice404Schema
+          type: "object"
+          properties:
+            <<: *404
+            additional_message:
+              type: "string"
+              example: "Unknown choice with id 156"
+      application/xml:
+        schema:
+          <<: *Choice404Schema
+          xml:
+            name: "error"
   error: &error
     type: "object"
     properties:
@@ -59,113 +219,1626 @@ x-shemas:
       additional_message:
         type: "string"
         descrption: "An additionnal message explaining the error that occured"
+  noimage: &noimage
+    name: "noimage"
+    in: "query"
+    required: false
+    description: "If present, prevent the server from sending the image linked to the entity."
+    schema:
+      type: "string"
+  pretty: &pretty
+    name: "pretty"
+    in: "query"
+    required: false
+    description: "If present, the output will be nicely formatted."
+    schema:
+      type: "string"
     
       
 
 paths:
-  /cafet/clients:
+  # Clients
+  "/cafet/clients":
+    parameters:
+      - <<: *pretty
     get:
       tags:
-        - "cafet"
-      summary: "Return a list of clients"
+        - "Clients"
+      summary: "Get the list of clients"
+      description: "Permissions: CAFET_ADMIN_GET_CLIENTS"
+      x-code-samples:
+        - lang: 'Java'
+          source: |
+            CafetAPI.getInstance().getClients(); // synchronized
+            CafetAPI.getInstance().asyncGetClients(handler); // asynchronized
       responses:
         "200":
-          description: "A list of client objects"
+          description: "A list of Client objects"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Client"
-        "403":
-          description: "The ressource cannot be found due to wrong id or malformed URI"
-  /cafet/clients/search/{search}:
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "clients"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Client"
+  "/cafet/clients/search/{search}":
+    parameters:
+      - <<: *pretty
+      - name: "search"
+        in: "path"
+        required: true
+        description: "The pathern of the search"
+        schema:
+          type: "string"
     get:
       tags:
-        - "cafet"
-      summary: "Return a list of clients matching the search"
-      parameters:
-        - name: "search"
-          in: "path"
-          required: true
-          description: "The pathern of the search"
-          schema:
-            type: "string"
+        - "Clients"
+      summary: "Get a list of clients matching the search"
+      description: >
+        The server will return every clients whose the firstname, the familyname or the username matched the pattern.
+        
+        
+        Permissions: *CAFET_ADMIN_GET_CLIENTS*
+        
       responses:
         "200":
-          description: "A list of client objects"
+          description: "A list of Client objects"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Client"
-        "403":
-          description: "The ressource cannot be found due to wrong id or malformed URI"
-  /cafet/clients/{clientId}:
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "clients"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Client"
+  "/cafet/clients/{clientId}":
+    summary: "Operations on a specific client."
+    parameters:
+      - <<: *pretty
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted."
+        schema:
+          type: "integer"
+          format: "int64"
     get:
       tags:
-        - "cafet"
-      summary: "Returns a client by id"
-      parameters:
-        - name: "clientId"
-          in: "path"
-          required: true
-          description: "The id of the client wanted"
-          schema:
-            type: "integer"
-            format: "int64"
+        - "Clients"
+      summary: "Get a specific client"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise."
       responses:
         "200":
-          description: "The user"
+          description: "The client"
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Client"
-  /cafet/clients/{clientId}/reloads:
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Client"
+        "404": *Client404
+    patch:
+      tags:
+        - "Clients"
+      summary: "Edit a client"
+      description: "Permissions: CAFET_ADMIN_MANAGE_CLIENTS"
+      requestBody:
+        description: "Modifications to apply"
+        content: 
+          'application/json':
+            schema:
+              type: "object"
+              description: "Change the 'member' status"
+              properties:
+                member:
+                  type: "boolean"
+                  example: false
+      responses:
+        "204":
+          description: "The client has been updated"
+        "404": *Client404
+  "/cafet/clients/{clientId}/reloads":
+    parameters:
+      - <<: *pretty
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted"
+        schema:
+          type: "integer"
+          format: "int64"
     get:
       tags:
-        - "cafet"
-      summary: "Returns the reloads of a specific client"
-      parameters:
-        - name: "clientId"
-          in: "path"
-          required: true
-          description: "The id of the client wanted"
-          schema:
-            type: "integer"
-            format: "int64"
+        - "Clients"
+      summary: "Get the reloads of a specific client"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise."
       responses:
         "200":
-          description: "The user"
+          description: "The user reloads"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
                   $ref: "#/components/schemas/Reload"
-  /cafet/clients/{clientId}/expenses:
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "reloads"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Reload"
+        "404": *Client404
+  "/cafet/clients/{clientId}/expenses":
+    parameters:
+      - <<: *pretty
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted."
+        schema:
+          type: "integer"
+          format: "int64"
     get:
       tags:
-        - "cafet"
-      summary: "Returns the expenses of a specific client"
-      parameters:
-        - name: "clientId"
-          in: "path"
-          required: true
-          description: "The id of the client wanted"
-          schema:
-            type: "integer"
-            format: "int64"
+        - "Clients"
+      summary: "Get the expenses of a specific client"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise."
       responses:
         "200":
-          description: "The user"
+          description: "The user expenses"
           content:
             application/json:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Expenses"
+                  $ref: "#/components/schemas/Expense"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "expenses"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Expense"
+        "404": *Client404
+  "/cafet/clients/{clientId}/last_expenses":
+    parameters:
+      - <<: *pretty
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Clients"
+      summary: "Get the expenses of a specific client since its last reload"
+      description: "Permissions: CAFET_ME_CLIENT if {clientId} corresponds to the logged user, CAFET_ADMIN_GET_CLIENTS otherwise"
+      responses:
+        "200":
+          description: "Success"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Expense"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "expenses"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Expense"
+        "404": *Client404
+  "/cafet/clients/{clientId}/order":
+    parameters:
+      - <<: *pretty
+      - name: "clientId"
+        in: "path"
+        required: true
+        description: "The id of the client wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    post:
+      tags:
+        - "Clients"
+      summary: "Perform an order and save it in the database"
+      description: "Permissions: CAFET_ADMIN_ORDER"
+      requestBody:
+        description: "The order to perform"
+        required: true
+        content: 
+          application/json:
+            schema:
+              type: "array"
+              items:
+                oneOf:
+                  - type: "object"
+                    description: "a product ordered"
+                    required:
+                      - "type"
+                      - "id"
+                      - "amount"
+                    properties:
+                      type:
+                        type: "string"
+                        enum:
+                          - "product"
+                      id:
+                        type: "integer"
+                        format: "int64"
+                        example: 1
+                      amount:
+                        type: "integer"
+                        format: "int64"
+                        example: 4
+                  - type: "object"
+                    description: "A formula ordered"
+                    required:
+                      - "type"
+                      - "id"
+                      - "amount"
+                      - "products"
+                    properties:
+                      type:
+                        type: "string"
+                        enum:
+                          - "formula"
+                      id:
+                        type: "integer"
+                        format: "int64"
+                        example: 1
+                      amount:
+                        type: "integer"
+                        format: "int64"
+                        example: 1
+                      products:
+                        type: "array"
+                        items:
+                          type: "integer"
+                          format: "int64"
+                          example: 6
+                        example:
+                          - 2
+                          - 16
+                          - 19
+      responses:
+        "201":
+          description: "The action has been performed successfully"
+        "400":
+          description: "The request cannot be prossed due to synthax error or failed semantic validation."
+          content:
+            application/json:
+              schema: &Order400Schema
+                type: "object"
+                properties:
+                  <<: *400
+                  additional_message:
+                    type: "string"
+                    example: "`products` field for a formula must not be an object"
+            application/xml:
+              schema:
+                <<: *Order400Schema
+                xml:
+                  name: "error"
+        "404": *Client404
+        "409":
+          description: "The request cannot be prossed due to synthax error or failed semantic validation."
+          content:
+            application/json:
+              schema: &Order409Schema
+                type: "object"
+                properties:
+                  conflicts:
+                    type: "object"
+                    properties:
+                      type:
+                        type: "string"
+                        enum:
+                          - "product"
+                          - "formula"
+                      id:
+                        type: "integer"
+                        format: "int64"
+                        example: 5615
+                      problem:
+                        type: "string"
+                        enum:
+                          - "not found"
+                  <<: *409
+                  additional_message:
+                    type: "string"
+                    example: "product with id 5615 doesn't exist"
+            application/xml:
+              schema:
+                <<: *Order409Schema
+                xml:
+                  name: "error"
+
+  # Expenses
+  "/cafet/expenses":
+    parameters:
+      - <<: *pretty
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get the list of expenses"
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES"
+      responses:
+        "200":
+          description: "A list of Expenses objects"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Expense"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "expenses"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Expense"
+  "/cafet/expenses/{expenseId}":
+    parameters:
+      - <<: *pretty
+      - name: "expenseId"
+        in: "path"
+        required: true
+        description: "The id of the expense wanted"
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get an expense"
+      description: "Permissions: CAFET_ME_EXPENSES if the expense is own by the logged user, CAFET_ADMIN_GET_EXPENSES otherwise."
+      responses:
+        "200":
+          description: "The expense"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Expense"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Expense"
+        "404": *Expense404
+  "/cafet/expenses/{expenseId}/details":
+    parameters:
+      - <<: *pretty
+      - name: "expenseId"
+        in: "path"
+        required: true
+        description: "The id of the expense wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get the details of a specific expense"
+      description: "Permissions: CAFET_ME_EXPENSES if the expense is own by the logged user, CAFET_ADMIN_GET_EXPENSES otherwise."
+      responses:
+        "200":
+          description: "The details of the specified expense."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ExpenseDetail"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "details"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/ExpenseDetail"
+        "404": *Expense404
+  "/cafet/products_bought":
+    parameters:
+      - <<: *pretty
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get a list of products bought"
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProductBought"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "details"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/ProductBought"
+  "/cafet/products_bought/{id}":
+    parameters:
+      - <<: *pretty
+      - name: "id"
+        in: "path"
+        required: true
+        description: "The id of the ProductBought wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get a product bought specifying its id"
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The wanted ProductBought entity."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductBought"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/ProductBought"
+        "404":
+          description: "No ProductBought entity has been found."
+          content:
+            application/json:
+              schema: &ProductBought404Schema
+                type: "object"
+                properties:
+                  <<: *404
+                  additional_message:
+                    type: "string"
+                    example: "Unknown product bought with id 1456"
+            application/xml:
+              schema:
+                <<: *ProductBought404Schema
+                xml:
+                  name: "error"
+  "/cafet/formulas_bought":
+    parameters:
+      - <<: *pretty
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get a list of formulas bought"
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The wanted FormulaBought entity."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/FormulaBought"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "details"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/FormulaBought"
+  "/cafet/formulas_bought/{id}":
+    parameters:
+      - <<: *pretty
+      - name: "id"
+        in: "path"
+        required: true
+        description: "The id of the FormulaBought wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get the formula bought specifying its id"
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The specified FormulaBought entity."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FormulaBought"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/FormulaBought"
+        "404": *FormulaBought404
+  "/cafet/formulas_bought/{id}/products":
+    parameters:
+      - <<: *pretty
+      - name: "id"
+        in: "path"
+        required: true
+        description: "The id of the FormulaBought wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Expenses"
+      summary: "Get the products bought in a specific ordered formula"
+      description: "Permissions: CAFET_ADMIN_GET_EXPENSES."
+      responses:
+        "200":
+          description: "The wanted entites."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/ProductBought"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "details"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/ProductBought"
+        "404": *FormulaBought404
+  # Reloads
+  "/cafet/reloads":
+    parameters:
+      - <<: *pretty
+    get:
+      tags:
+        - "Reloads"
+      summary: "Get a list of reloads."
+      description: "Permissions: CAFET_ADMIN_GET_RELOADS."
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Reload"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "reloads"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Reload"
+    post:
+      tags:
+        - "Reloads"
+      summary: "Reload the balance of a customer account"
+      description: "Permissions: CAFET_ADMIN_RELOAD."
+      requestBody:
+        description: "The iformation about the reload to perform"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "client_id"
+                - "amount"
+              properties:
+                client_id:
+                  type: "integer"
+                  description: "The id of the Client whose account will be credited."
+                  format: "int64"
+                  example: 4
+                amount:
+                  type: "number"
+                  description: "The amount of money to credit to the account."
+                  example: 5.5
+      responses:
+        "204":
+          description: "The reload has been performed successfully."
+        "409":
+          description: "The request cannot be prossed due to synthax error or failed semantic validation."
+          content:
+            application/json:
+              schema: &Reload409Schema
+                type: "object"
+                properties:
+                  conflicts:
+                    type: "object"
+                    properties:
+                      on:
+                        type: "string"
+                        example: "client_id"
+                      problem:
+                        type: "string"
+                        enum:
+                          - "not found"
+                  <<: *409
+                  additional_message:
+                    type: "string"
+                    example: "Unknown client with id 5646"
+            application/xml:
+              schema:
+                <<: *Reload409Schema
+                xml:
+                  name: "error"
+  "/cafet/reloads/{id}":
+    parameters:
+      - <<: *pretty
+      - name: "id"
+        in: "path"
+        required: true
+        description: "The id of the reload wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Reloads"
+      summary: "Get a Reload entity specifying its id"
+      description: "Permissions: CAFET_ME_RELOADS if the Reload is own by the logged user, CAFET_ADMIN_GET_RELOADS otherwise."
+      responses:
+        "200":
+          description: "The wanted Reload entity."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Reload"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Reload"
+        "404":
+          description: "No Reload entity has been found."
+          content:
+            application/json:
+              schema: &Reload404Schema
+                type: "object"
+                properties:
+                  <<: *404
+                  additional_message:
+                    type: "string"
+                    example: "Unknown reload with id 1456"
+            application/xml:
+              schema:
+                <<: *Reload404Schema
+                xml:
+                  name: "error"
+  #Products
+  "/cafet/products":
+    parameters:
+      - <<: *pretty
+      - <<: *noimage
+    get:
+      tags:
+        - "Products"
+      summary: "Get a list of products"
+      description: "Permissions: CAFET_ADMIN_GET_PRODUCTS."
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Product"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "products"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Product"
+    post:
+      tags:
+        - "Products"
+      summary: "Create a new product."
+      description: "Permissions: CAFET_ADMIN_MANAGE_PRODUCTS."
+      requestBody:
+        description: "The product to add"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "group"
+                - "name"
+                - "price"
+                - "viewable"
+              properties:
+                group:
+                  type: "integer"
+                  format: "int64"
+                  example: 3
+                name:
+                  type: "string"
+                  example: "Skittles"
+                price:
+                  type: "number"
+                  example: 0.8
+                viewable:
+                  type: "boolean"
+                  example: true
+      responses:
+        "204":
+          description: "The product has been successfully added."
+        "409": *409Error
+  "/cafet/products/{productId}":
+    parameters:
+      - <<: *pretty
+      - name: "productId"
+        in: "path"
+        required: true
+        description: "The id of the product wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      parameters:
+        - <<: *noimage
+      tags:
+        - "Products"
+      summary: "Get a product"
+      description: "Permissions: CAFET_ADMIN_GET_PRODUCTS."
+      responses:
+        "200":
+          description: "The wanted product."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404": *Product404
+    put:
+      tags:
+        - "Products"
+      summary: "Replace a product"
+      description: "Permissions: CAFET_ADMIN_MANAGE_PRODUCTS."
+      requestBody:
+        description: "The product to put instead of the actual"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "type"
+                - "id"
+                - "group"
+                - "name"
+                - "price"
+                - "viewable"
+              properties:
+                id:
+                  type: "integer"
+                  format: "int64"
+                  description: "An id that MUST match the product's being edited."
+                  example: 14
+                type:
+                  type: "string"
+                  description: "The entity sent MUST include this field to avoid carelessness problems"
+                  enum:
+                    - "Product"
+                group:
+                  type: "integer"
+                  format: "int64"
+                  example: 3
+                name:
+                  type: "string"
+                  example: "Skittles"
+                price:
+                  type: "number"
+                  example: 0.8
+                viewable:
+                  type: "boolean"
+                  example: true
+      responses:
+        "200":
+          description: "The product has been replaced"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "400": *400Error
+        "404": *Product404
+        "409": *409Error
+    patch:
+      tags:
+        - "Products"
+      summary: "Edit a product"
+      description: "Permissions: CAFET_ADMIN_MANAGE_PRODUCTS."
+      requestBody:
+        description: "properties to change"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                group:
+                  type: "integer"
+                  format: "int64"
+                  example: 3
+                name:
+                  type: "string"
+                  example: "Skittles"
+                price:
+                  type: "number"
+                  example: 0.8
+                viewable:
+                  type: "boolean"
+                  example: true
+                image:
+                  $ref: "#/components/schemas/image"
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "400": *400Error
+        "404": *Product404
+        "409": *409Error
+    delete:
+      tags:
+        - "Products"
+      summary: "Delete a product"
+      description: "Permissions: CAFET_ADMIN_MANAGE_PRODUCTS."
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "404": *Product404
+  "/cafet/products/{productId}/replenishments":
+    parameters:
+      - <<: *pretty
+      - name: "productId"
+        in: "path"
+        required: true
+        description: "The id of the product wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Products"
+      summary: "Get a list of a product's stock replenishments"
+      description: "Permissions: CAFET_ADMIN_GET_PRODUCTS."
+      responses:
+        "418":
+          description: "Currently not implemented"
+  "/cafet/groups":
+    parameters:
+      - <<: *pretty
+    get:
+      tags:
+        - "Products"
+      summary: "Get the list of groups"
+      description: "Permissions: CAFET_ADMIN_GET_PRODUCTS."
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Group"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "groups"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Group"
+    post:
+      tags:
+        - "Products"
+      summary: "Create a new group of products"
+      description: "Permissions: CAFET_ADMIN_MANAGE_PRODUCTS."
+      requestBody:
+        description: "The group to add"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "name"
+              properties:
+                name:
+                  type: "string"
+                  example: "Cold drinks"
+      responses:
+        "204":
+          description: "The group has been successfully created."
+  "/cafet/groups/{groupId}":
+    parameters:
+      - <<: *pretty
+      - name: "groupId"
+        in: "path"
+        required: true
+        description: "The id of the group wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      parameters:
+        - <<: *noimage
+      tags:
+        - "Products"
+      summary: "Get a specific group"
+      description: "Permissions: CAFET_ADMIN_GET_PRODUCTS."
+      responses:
+        "200":
+          description: "The wanted group."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "404": *Group404
+    put:
+      tags:
+        - "Products"
+      summary: "Replace a group"
+      description: "Permissions: CAFET_ADMIN_MANAGE_PRODUCTS."
+      requestBody:
+        description: "The group entity to put instead of the actual"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "type"
+                - "id"
+                - "name"
+                - "displayName"
+              properties:
+                id:
+                  type: "integer"
+                  format: "int64"
+                  description: "An id that MUST match the groups's being edited."
+                  example: 1
+                type:
+                  type: "string"
+                  description: "The entity sent MUST include this field to avoid carelessness problems"
+                  enum:
+                    - "ProductGroup"
+                name:
+                  type: "string"
+                  example: "Cold drinks"
+                displayName:
+                  type: "string"
+                  example: "Cold drinks (0,70€)"
+      responses:
+        "200":
+          description: "The group has been replaced"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Group"
+        "400": *400Error
+        "404": *Group404
+    patch:
+      tags:
+        - "Products"
+      summary: "Edit a group"
+      description: "Permissions: CAFET_ADMIN_MANAGE_PRODUCTS."
+      requestBody:
+        description: "properties to change"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                  example: "Cold drinks"
+                displayName:
+                  type: "string"
+                  example: "Cold drinks (0,70€)"
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "400": *400Error
+        "404": *Group404
+    delete:
+      tags:
+        - "Products"
+      summary: "Delete a group and all the products linked to it"
+      description: "Permissions: CAFET_ADMIN_MANAGE_PRODUCTS."
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "404": *Group404
+  "/cafet/groups/{groupId}/products":
+    parameters:
+      - <<: *pretty
+      - <<: *noimage
+      - name: "groupId"
+        in: "path"
+        required: true
+        description: "The id of the group wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Products"
+      summary: "Get a list of products present in the group"
+      description: "Permissions: CAFET_ADMIN_GET_PRODUCTS."
+      parameters:
+        - name: "hidden"
+          in: "query"
+          required: false
+          description: "If present, the response will include not availabe products."
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Product"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "products"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Product"
+        "404": *Group404
+  #Formulas
+  "/cafet/formulas":
+    parameters:
+      - <<: *pretty
+      - <<: *noimage
+    get:
+      tags:
+        - "Formulas"
+      summary: "Get a list of formulas"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      parameters:
+        - name: "hidden"
+          in: "query"
+          required: false
+          description: "If present, the response will include not availabe products."
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Formula"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "formulas"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Formula"
+    post:
+      tags:
+        - "Formulas"
+      summary: "Create a new formula."
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "The formula to add"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "name"
+                - "price"
+                - "viewable"
+              properties:
+                name:
+                  type: "string"
+                  example: "Breakfast"
+                price:
+                  type: "number"
+                  example: 3.2
+                viewable:
+                  type: "boolean"
+                  example: true
+      responses:
+        "204":
+          description: "The formula has been successfully added."
+        "409": *409Error
+  "/cafet/formulas/{formulaId}":
+    parameters:
+      - <<: *pretty
+      - name: "formulaId"
+        in: "path"
+        required: true
+        description: "The id of the formula wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      parameters:
+        - <<: *noimage
+      tags:
+        - "Formulas"
+      summary: "Get a formula"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      responses:
+        "200":
+          description: "The wanted formula."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Formula"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Formula"
+        "404": *Formula404
+    put:
+      tags:
+        - "Formulas"
+      summary: "Replace a formula"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "The formula to put instead of the actual"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "type"
+                - "id"
+                - "name"
+                - "price"
+                - "viewable"
+              properties:
+                id:
+                  type: "integer"
+                  format: "int64"
+                  description: "An id that MUST match the formula's being edited."
+                  example: 14
+                type:
+                  type: "string"
+                  description: "The entity sent MUST include this field to avoid carelessness problems"
+                  enum:
+                    - "Formula"
+                name:
+                  type: "string"
+                  example: "Breakfast"
+                price:
+                  type: "number"
+                  example: 3.2
+                viewable:
+                  type: "boolean"
+                  example: true
+      responses:
+        "200":
+          description: "The formula has been replaced"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Formula"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Formula"
+        "400": *400Error
+        "404": *Formula404
+        "409": *409Error
+    patch:
+      tags:
+        - "Formulas"
+      summary: "Edit a formula"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "properties to change"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                  example: "Breakfast"
+                price:
+                  type: "number"
+                  example: 3.2
+                viewable:
+                  type: "boolean"
+                  example: true
+                image:
+                  $ref: "#/components/schemas/image"
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "400": *400Error
+        "404": *Formula404
+        "409": *409Error
+    delete:
+      tags:
+        - "Formulas"
+      summary: "Delete a formula"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "404": *Formula404
+  "/cafet/formulas/{formulaId}/choices":
+    parameters:
+      - <<: *pretty
+      - <<: *noimage
+      - name: "formulaId"
+        in: "path"
+        required: true
+        description: "The id of the formula wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      tags:
+        - "Formulas"
+      summary: "Get the choices of a specifique formula"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "choices"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Choice"
+    post:
+      tags:
+        - "Formulas"
+      summary: "Create a new choice in a formula."
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "The choice to add"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "name"
+              properties:
+                name:
+                  type: "string"
+                  example: "Drink"
+      responses:
+        "204":
+          description: "The choice has been successfully added."
+        "409": *409Error
+  "/cafet/formulas/{formulaId}/choices/{choiceId}":
+    parameters:
+      - <<: *pretty
+      - name: "formulaId"
+        in: "path"
+        required: true
+        description: "The id of the formula wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+      - name: "choiceId"
+        in: "path"
+        required: true
+        description: "The id of the choice wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      parameters:
+        - <<: *noimage
+      tags:
+        - "Formulas"
+      summary: "Get a choice from a formula"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      responses:
+        "200":
+          description: "The wanted choice."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Choice"
+        "404": *Choice404
+    put:
+      tags:
+        - "Formulas"
+      summary: "Replace a choice in a formula"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "The choice to put instead of the actual"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "type"
+                - "id"
+                - "name"
+                - "choice"
+              properties:
+                id:
+                  type: "integer"
+                  format: "int64"
+                  description: "An id that MUST match the formula's being edited."
+                  example: 14
+                type:
+                  type: "string"
+                  description: "The entity sent MUST include this field to avoid carelessness problems"
+                  enum:
+                    - "Formula"
+                name:
+                  type: "string"
+                  example: "Breakfast"
+                choice:
+                  type: "array"
+                  items:
+                    type: "integer"
+                    format: "int64"
+                    example: 2
+                  example: [1, 2, 3]
+      responses:
+        "200":
+          description: "The choice has been replaced"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Choice"
+        "400": *400Error
+        "404": *Choice404
+        "409": *409Error
+    patch:
+      tags:
+        - "Formulas"
+      summary: "Edit a choice in a formula"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "properties to change"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                add:
+                  type: "array"
+                  description: "Ids of products to add to the current choice."
+                  example: [4, 5, 6]
+                remove:
+                  type: "array"
+                  description: "Ids of products that must be removed from the current choice."
+                  example: [1, 2, 3]
+                name:
+                  type: "string"
+                  example: "Drink"
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "400": *400Error
+        "404": *Choice404
+        "409": *409Error
+    delete:
+      tags:
+        - "Formulas"
+      summary: "Delete a choice from a formula"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "404": *Choice404
+  "/cafet/choices":
+    parameters:
+      - <<: *pretty
+      - <<: *noimage
+    get:
+      tags:
+        - "Formulas"
+      summary: "Get the list of all choices"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      responses:
+        "200":
+          description: "Success."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                type: "array"
+                xml:
+                  name: "choices"
+                  wrapped: true
+                items:
+                  $ref: "#/components/schemas/Choice"
+  "/cafet/choices/{choiceId}":
+    parameters:
+      - <<: *pretty
+      - name: "choiceId"
+        in: "path"
+        required: true
+        description: "The id of the choice wanted."
+        schema:
+          type: "integer"
+          format: "int64"
+    get:
+      parameters:
+        - <<: *noimage
+      tags:
+        - "Formulas"
+      summary: "Get a choice"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      responses:
+        "200":
+          description: "The wanted choice."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Choice"
+        "404": *Choice404
+    put:
+      tags:
+        - "Formulas"
+      summary: "Replace a choice"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "The choice to put instead of the actual"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "type"
+                - "id"
+                - "name"
+                - "choice"
+              properties:
+                id:
+                  type: "integer"
+                  format: "int64"
+                  description: "An id that MUST match the formula's being edited."
+                  example: 14
+                type:
+                  type: "string"
+                  description: "The entity sent MUST include this field to avoid carelessness problems"
+                  enum:
+                    - "Formula"
+                name:
+                  type: "string"
+                  example: "Breakfast"
+                choice:
+                  type: "array"
+                  items:
+                    type: "integer"
+                    format: "int64"
+                    example: 2
+                  example: [1, 2, 3]
+      responses:
+        "200":
+          description: "The choice has been replaced"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Choice"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/Choice"
+        "400": *400Error
+        "404": *Choice404
+        "409": *409Error
+    patch:
+      tags:
+        - "Formulas"
+      summary: "Edit a choice"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "properties to change"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                add:
+                  type: "array"
+                  description: "Ids of products to add to the current choice."
+                  example: [4, 5, 6]
+                remove:
+                  type: "array"
+                  description: "Ids of products that must be removed from the current choice."
+                  example: [1, 2, 3]
+                name:
+                  type: "string"
+                  example: "Drink"
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "400": *400Error
+        "404": *Choice404
+        "409": *409Error
+    delete:
+      tags:
+        - "Formulas"
+      summary: "Delete a choice"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "404": *Choice404
 
 components:
   securitySchemes:
@@ -175,26 +1848,20 @@ components:
   schemas:
     Client: 
       type: "object"
+      xml:
+        name: "client"
       properties:
         type:
           type: "string"
-          example: "Client"
+          enum:
+            - "Client"
         id:
           type: "integer"
           format: "int64"
           example: 4
-        email:
-          type: "string"
-          example: "scientist10@no.dom"
         alias:
           type: "string"
           example: "darwin"
-        familyNane:
-          type: "string"
-          example: "Darwin"
-        surname:
-          type: "string"
-          example: "Charles"
         member:
           type: "boolean"
           example: false
@@ -205,12 +1872,36 @@ components:
           type: "integer"
           format: "int64"
           example: 2019
+        email:
+          type: "string"
+          example: "scientist10@no.dom"
+        familyName:
+          type: "string"
+          example: "Darwin"
+        firstname:
+          type: "string"
+          example: "Charles"
+        mail_preferences:
+          type: "object"
+          properties:
+            payment_notice:
+              type: "boolean"
+              example: false
+            reload_notice:
+              type: "boolean"
+              example: false
+            reload_request:
+              type: "boolean"
+              example: true
     Reload:
       type: "object"
+      xml:
+        name: "reload"
       properties:
         type:
           type: "string"
-          example: "Reload"
+          enum:
+            - "Reload"
         id:
           type: "integer"
           format: "int64"
@@ -232,12 +1923,15 @@ components:
           type: "number"
           format: "float"
           example: 7.4
-    Expenses:
+    Expense:
       type: "object"
+      xml:
+        name: "expense"
       properties:
         type:
           type: "string"
-          example: "Expense"
+          enum:
+            - "Expense"
         id:
           type: "integer"
           format: "int64"
@@ -256,12 +1950,85 @@ components:
           type: "number"
           format: "float"
           example: 7.4
-    Calendar:
+    ExpenseDetail:
+      oneOf:
+        - $ref: "#/components/schemas/ProductBought"
+        - $ref: "#/components/schemas/FormulaBought"
+    ProductBought:
       type: "object"
+      xml:
+        name: "product_bought"
       properties:
         type:
           type: "string"
-          example: "Calendar"
+          enum:
+            - "ProductBought"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        product:
+          type: "integer"
+          format: "int64"
+          example: 4
+        name:
+          type: "string"
+          example: "Ice Tea"
+        client_id:
+          type: "integer"
+          format: "int64"
+          example: 39
+        price:
+          type: "number"
+          example: 0.7
+        quantity:
+          type: "integer"
+          format: "int64"
+          example: 1
+        date:
+          $ref: "#/components/schemas/Calendar"
+    FormulaBought:
+      type: "object"
+      xml:
+        name: "formula_bought"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "FormulaBought"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        formula:
+          type: "integer"
+          format: "int64"
+          example: 4
+        name:
+          type: "string"
+          example: "Breakfast"
+        client_id:
+          type: "integer"
+          format: "int64"
+          example: 39
+        price:
+          type: "number"
+          example: 0.7
+        quantity:
+          type: "integer"
+          format: "int64"
+          example: 1
+        date:
+          $ref: "#/components/schemas/Calendar"
+    Calendar:
+      type: "object"
+      xml:
+        name: "calendar"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "Calendar"
         year:
           type: "integer"
           format: "int32"
@@ -286,17 +2053,202 @@ components:
           type: "integer"
           format: "int32"
           example: "13"
+    Product:
+      type: "object"
+      xml:
+        name: "product"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "Product"
+        group:
+          type: "integer"
+          format: "int64"
+          example: 3
+        stock:
+          type: "integer"
+          format: "int64"
+          example: 100
+        id:
+          type: "integer"
+          format: "int64"
+          example: 14
+        name:
+          type: "string"
+          example: "Skittles"
+        image:
+          $ref: "#/components/schemas/image"
+        price:
+          type: "number"
+          example: 0.8
+        viewable:
+          type: "boolean"
+          example: true
+        edit:
+          $ref: "#/components/schemas/Calendar"
+    Group:
+      type: "object"
+      xml:
+        name: "product_group"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "ProductGroup"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        name:
+          type: "string"
+          example: "Cold drinks"
+        displayName:
+          type: "string"
+          example: "Cold drinks (0,70€)"
+    Formula:
+      type: "object"
+      xml:
+        name: "formula"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "Formula"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 3
+        name:
+          type: "string"
+          example: "Breakfast"
+        viewable:
+          type: "boolean"
+          example: true
+        image:
+          $ref: "#/components/schemas/image"
+        price:
+          type: "number"
+          example: 3.2
+        edit:
+          $ref: "#/components/schemas/Calendar"
+    Choice:
+      type: "object"
+      xml:
+        name: "choice"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "Choice"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        name:
+          type: "string"
+          example: "Drink"
+        formula:
+          type: "integer"
+          format: "int64"
+          example: 1
+        choice:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Product"
+    image:
+      type: "string"
+      format: "byte"
+      description: "A base64 encoded image"
+      example: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAILSURBVDjLrVM7ixNhFB2LFKJV+v0L24nabIogtmItin9ALBS3tXNt3CWgVlpMsAgrWRexkCSTd0KimYS8Q94vsnlrikAec7z34hSibON+cJjXPeee79xvFADK/0C5UIFyubxLUEulklooFNR8Pn+Sy+VOstmsmslk1HQ6raZSqd2/BCqVyh4RW/V6HePxGJPJRDCdTuU6Go0EZ2dnIFEkk8lWIpHYEwEi24lszGYzjHptfPvsgvbuEJ9ePMPH548Epwf70N4f4fuXY6rpYDgcIh6PG7FYzM62dSav12spfHXn2rk4fbmPxWIhIpFIRFfIzk+v1wvDMLAhka9vD+B88gCv79lxdPeG4M39W/jw9KF8q+oJzOdz2VIoFPqhOJ3O7mAwwHK5xGazketqtRKws3+Bto1arYZgMFhTHA6HC78XW6P0wYJmcAy2y+9arRYoPCHTpOD3+w8Vm8122xTgQhobqtUqms0mGo0GeDLckdOnESIcDqPdbnN3aJp2VbFarTfN7kxmUqfTkSLuyM8syB3pLMj7fr8Pn883kTFaLJbr1EHfbrdilwm9Xg/dblfABNMF3/NWisUiKPjHIkDrMou43e4CF+m6LkUMU4idcFc+WJwRkbU/TiKtS4QrgUDgmGZrcEcelXkKORsWJ9sGkV3n/kzRaHSHgtrQjEGCHJSAyBuPx7Nz4X/jL/ZqKRurPTy6AAAAAElFTkSuQmCC"
+    400Error:
+      type: "object"
+      xml:
+        name: "error"
+      properties:
+        details:
+          anyOf:
+            - type: "object"
+              properties:
+                type_expectation:
+                  type: "object"
+                  example:
+                    group: "integer"
+                    name: "string"
+            - type: "object"
+              properties:
+                missing:
+                  type: "array"
+                  items:
+                    type: "string"
+                  example: ["group", "name"]
+          example:
+            type_expectation:
+              group: "integer"
+              name: "string"
+        <<: *400
+        additional_message:
+          type: "string"
+          example: "Wrong types"
+    409Error:
+      type: "object"
+      xml:
+        name: "error"
+      properties:
+        conflicts:
+          type: "object"
+          properties:
+            on:
+              type: "string"
+              example: "whatever field"
+            problem:
+              type: "string"
+              enum:
+                - "not found"
+                - "duplicated"
+              example:
+                "not found"
+        <<: *409
+        additional_message:
+          type: "string"
+          example: "`whatever field` with id 456 not found"
       
 
 security:
   - BasicAuth: []
 
 tags:
-  - name: "cafet"
-    description: "Cafet operations"
-  - name: "user"
+  - name: "Clients"
+    description: "Cafet operations on clients"
+  - name: "Expenses"
+    description: "Cafet operations on expenses"
+  - name: "Reloads"
+    description: "Cafet operations on reloads"
+  - name: "Products"
+    description: "Cafet operations on products"
+  - name: "Formulas"
+    description: "Cafet operations on formulas"
+  - name: "User"
     description: "Current loged user operations"
-  - name: "server"
+  - name: "Server"
     description: "server operations"
-  - name: "stats"
+  - name: "Stats"
     description: "statistics operations"
+
+x-tagGroups:
+  - name: Cafet
+    tags:
+      - Clients
+      - Expenses
+      - Reloads
+      - Products
+      - Formulas
+  - name: Logged User Management
+    tags:
+      - User
+  - name: Server Management
+    tags:
+      - Server
+  - name: Statistics
+    tags:
+      - Stats

@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi\modules\rest\cafet;
 
+use cafetapi\io\ClientManager;
 use cafetapi\io\ReloadManager;
 use cafetapi\modules\rest\HttpCodes;
 use cafetapi\modules\rest\Rest;
@@ -50,7 +51,7 @@ class ReloadsNode implements RestNode
     {
         $request->needPermissions(Perm::CAFET_ADMIN_GET_RELOADS);
         
-        $reloads = array();
+        $reloads = [];
         foreach (ReloadManager::getInstance()->getReloads() as $reload) $reloads[] = $reload->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $reloads);
     }
@@ -60,14 +61,19 @@ class ReloadsNode implements RestNode
         $request->needPermissions(Perm::CAFET_ADMIN_RELOAD);
         
         //body checks
-        $request->checkBody(array(
-            'client_id' => Rest::PARAM_BOOL,
+        $request->checkBody([
+            'client_id' => Rest::PARAM_INT,
             'amount' => Rest::PARAM_SCALAR
-        ));
+        ]);
         
         $client_id = intval($request->getBody()['client_id'], 0);
         $amount = intval($request->getBody()['amount']);
         
+        if (!ClientManager::getInstance()->getClient($client_id)) return ClientError::conflict('Unknown client with id ' . $client_id, [
+            'on' => 'client_id', 
+            'problem' => 'not found'
+        ]);
+
         if ($amount < 0) $request->needPermissions(Perm::CAFET_ADMIN_NEGATIVERELOAD);
         
         $reload = ReloadManager::getInstance()->saveReload($client_id, $amount, 'by a registered capable user');

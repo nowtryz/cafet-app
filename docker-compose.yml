@@ -7,6 +7,9 @@ services:
       dockerfile: docker/php/Dockerfile
     image: cafet-php-server:dev
     container_name: cafet-server
+    environment:
+      SERVER_DOMAIN: localhost
+      MAILHUB: localhost
     ports:
       - "80:80"
     links:

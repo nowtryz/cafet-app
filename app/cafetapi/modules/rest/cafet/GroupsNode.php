@@ -60,7 +60,7 @@ class GroupsNode implements RestNode
     {
         $request->needPermissions(Perm::CAFET_ADMIN_GET_PRODUCTS);
         
-        $groups = array();
+        $groups = [];
         foreach (ProductManager::getInstance()->getProductGroups() as $group) $groups[] = $group->getProperties();
         return new RestResponse('200', HttpCodes::HTTP_200, $groups);
     }
@@ -70,9 +70,9 @@ class GroupsNode implements RestNode
         $request->needPermissions(Perm::CAFET_ADMIN_MANAGE_PRODUCTS);
         
         //body checks
-        $request->checkBody(array(
+        $request->checkBody([
             'name' => Rest::PARAM_STR
-        ));
+        ]);
 
         $name = $request->getBody()['name'];
         
@@ -129,12 +129,12 @@ class GroupsNode implements RestNode
         if (!$group) return ClientError::resourceNotFound('Unknown group with id ' . $id);
         
         //body checks
-        $request->checkBody(array(
+        $request->checkBody([
             'id' => Rest::PARAM_INT,
             'type' => Rest::PARAM_STR,
             'name' => Rest::PARAM_STR,
             'displayName' => Rest::PARAM_STR
-        ));
+        ]);
 
         if ($group->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($group) != $request->getBody()['type']) return ClientError::conflict('different type');

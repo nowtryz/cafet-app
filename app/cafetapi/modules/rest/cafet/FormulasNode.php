@@ -20,7 +20,6 @@ use cafetapi\user\Perm;
 class FormulasNode implements RestNode
 {
     const CHOICES = 'choices';
-    const CHOICE = 'choice';
 
     /**
      * (non-PHPdoc)
@@ -151,13 +150,13 @@ class FormulasNode implements RestNode
         if (!$formula) return ClientError::resourceNotFound('Unknown product with id ' . $id);
         
         //body checks
-        $request->checkBody(array(
+        $request->checkBody([
             'id' => Rest::PARAM_INT,
             'type' => Rest::PARAM_STR,
             'name' => Rest::PARAM_STR,
             'price' => Rest::PARAM_SCALAR,
             'viewable' => Rest::PARAM_BOOL
-        ));
+        ]);
 
         if ($formula->getId() != intval($request->getBody()['id']))        return ClientError::conflict('different id');
         if (get_simple_classname($formula) != $request->getBody()['type']) return ClientError::conflict('different type');
@@ -256,7 +255,6 @@ class FormulasNode implements RestNode
     
     
     
-    const ADD = 'add';
     
     private static function choices(Rest $request, int $formula_id) : RestResponse
     {
@@ -276,14 +274,19 @@ class FormulasNode implements RestNode
                 case 'DELETE': return self::deleteChoice($request, $formula_id, $choice_id);
             }
         }
-        elseif ($dir == self::ADD) return self::addChoice($request, $formula_id);
-        elseif (!$dir) return self::listChoices($request, $formula_id);
+        elseif (!$dir) {
+            $request->allowMethods('GET', 'POST');
+            switch ($request->getMethod())
+            {
+                case 'GET':  return self::listChoices($request, $formula_id);
+                case 'POST': return self::addChoice($request, $formula_id);
+            }
+        }
         else return ClientError::resourceNotFound('Unknown cafet/formula/' . $formula_id . '/choice/' . $dir . ' node');
     }
     
     private static function listChoices(Rest $request, int $id) : RestResponse
     {
-        $request->allowMethods('GET');
         $request->needPermissions(Perm::CAFET_ADMIN_GET_FORMULAS);
         
         $choices = array();
