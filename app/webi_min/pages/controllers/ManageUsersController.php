@@ -83,7 +83,7 @@ class ManageUsersController extends PageController
     private function updateUserCustomerAcount()
     {
         $clientManager = ClientManager::getInstance();
-        $client = $clientManager->getClient($this->user->getId());
+        $client = $clientManager->getClientWithUserId($this->user->getId());
 
         if ($client && ! $_REQUEST['client']) {
 
@@ -100,7 +100,7 @@ class ManageUsersController extends PageController
     private function updateUserMembership()
     {
         $clientManager = ClientManager::getInstance();
-        if ($client = $clientManager->getClient($this->user->getId())) {
+        if ($client = $clientManager->getClientWithUserId($this->user->getId())) {
             $clientManager->setMember($client->getId(), boolval($_REQUEST['member']));
             $this->view->setMessage($this->user->getPseudo() . ' a été mis à jour.');
         } else

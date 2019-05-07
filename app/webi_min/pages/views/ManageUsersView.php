@@ -199,7 +199,7 @@ tr:not(.table-head ):hover {
     			</a>
 			</td>
 			<?php endforeach;?>
-			<?php $client = ClientManager::getInstance()->getClient($user->getId()) ?>
+			<?php $client = ClientManager::getInstance()->getClientWithUserId($user->getId()) ?>
 			<td style="text-align: center">
     			<a class="validate-checkbox tooltip" href="<?=$this->set_client_link($user, $client)?>">
 					<input class="change-user-info"
