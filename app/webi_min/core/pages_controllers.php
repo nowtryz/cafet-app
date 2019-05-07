@@ -137,7 +137,7 @@ function controller_account_reset() {
                 'A votre demande, votre mot de passe a été modifié, ' . 
                 "votre nouveau mot de passe est désormais <strong>$pass</strong>, " .
                 'notez bien ce mot de passe, il vous sera demandé lors de votre prochaine connexion.</p>' .
-                '<p>Cliquez <a href="' . Defaults::url . 'webi/signin">ici</a> pour vous connecter.</p>');
+                '<p>Cliquez <a href="' . Config::url . 'webi/signin">ici</a> pour vous connecter.</p>');
             $mail->setSubject('Réinirialisation de votre mot de pass');
             if (@$mail->send()) {
                 UserManager::getInstance()->setPassword($user->getId(), $pass);
