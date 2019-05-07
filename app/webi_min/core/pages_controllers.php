@@ -146,7 +146,7 @@ function controller_account_reset() {
                echo '<article>Nous n\'avons pas pu réinitialiser votre mot de passe.</article>'; 
             });
         } else $b->build(__NAMESPACE__ . '\account_reset', 'Nous ne connaissons aucun compte lié à l\'adresse email entrée.');
-    } else $b->build(__NAMESPACE__ . '\need_signin');
+    } else $b->build(__NAMESPACE__ . '\account_reset');
 }
 
 function controller_members_reset() {
