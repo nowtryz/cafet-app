@@ -141,7 +141,7 @@ function controller_account_reset() {
             $mail->setSubject('Réinirialisation de votre mot de pass');
             if (@$mail->send()) {
                 UserManager::getInstance()->setPassword($user->getId(), $pass);
-                $b->build(__NAMESPACE__ . '\account_reset', 'Votre mot de passe a été modifié, vous allez recevoir un mail avec votre nouveau mot de passe.' . " <strong>$pass</strong>");
+                $b->build(__NAMESPACE__ . '\account_reset', 'Votre mot de passe a été modifié, vous allez recevoir un mail avec votre nouveau mot de passe.');
             } else $b->build(function() {
                echo '<article>Nous n\'avons pas pu réinitialiser votre mot de passe.</article>'; 
             });
