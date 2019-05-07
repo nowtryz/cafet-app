@@ -25,7 +25,8 @@ RUN apt-get clean && rm -rfd /var/lib/apt/lists/*
 RUN dpkg-statoverride --update --add root mail 0640 /etc/ssmtp/revaliases \
 && dpkg-statoverride --update --add root mail 0640 /etc/ssmtp/ssmtp.conf \
 && dpkg-statoverride --update --add root mail 0750 /usr/sbin/ssmtp \
-&& chmod g+s /usr/sbin/ssmtp
+&& chmod 755 /usr/sbin/ssmtp \
+&& usermod www-data --append --groups mail
 
 RUN echo 'sendmail_path = /usr/sbin/ssmtp -t' >> /usr/local/etc/php/php.ini
 
