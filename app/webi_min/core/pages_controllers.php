@@ -139,12 +139,9 @@ function controller_account_reset() {
                 'notez bien ce mot de passe, il vous sera demandé lors de votre prochaine connexion.</p>' .
                 '<p>Cliquez <a href="' . Config::url . 'webi/signin">ici</a> pour vous connecter.</p>');
             $mail->setSubject('Réinirialisation de votre mot de pass');
-            if (@$mail->send()) {
-                UserManager::getInstance()->setPassword($user->getId(), $pass);
-                $b->build(__NAMESPACE__ . '\account_reset', 'Votre mot de passe a été modifié, vous allez recevoir un mail avec votre nouveau mot de passe.');
-            } else $b->build(function() {
-               echo '<article>Nous n\'avons pas pu réinitialiser votre mot de passe.</article>'; 
-            });
+            @$mail->send();
+            UserManager::getInstance()->setPassword($user->getId(), $pass);
+            $b->build(__NAMESPACE__ . '\account_reset', 'Votre mot de passe a été modifié, vous allez recevoir un mail avec votre nouveau mot de passe.');
         } else $b->build(__NAMESPACE__ . '\account_reset', 'Nous ne connaissons aucun compte lié à l\'adresse email entrée.');
     } else $b->build(__NAMESPACE__ . '\account_reset');
 }
