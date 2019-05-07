@@ -17,4 +17,9 @@ hostname=${SERVER_DOMAIN}
 FromLineOverride=YES
 EOL
 
+# Enble php to use error.log
+touch /var/www/html/cafetapi_content/error.log
+chown www-data /var/www/html/cafetapi_content/error.log
+ln /var/www/html/cafetapi_content/error.log /var/www/html/error.log
+
 exec "$@"
