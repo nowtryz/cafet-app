@@ -79,12 +79,22 @@ class Config
 {
     
     /**
-     * Si le serveur serveur doit se comporter en mode debug
-     *
+     * Si le serveur serveur doit se comporter en mode debug.
+     * 
+     * Cela signifie afficher les erreurs, autoriser l'accès aux
+     * pages de debug et aux phpinfo pour les environements docker
      * @var boolean
      * @since API 0.1.0 (2018)
      */
     const debug = true;
+
+    /**
+     * Defini si le serveur doit se comporter comme en production
+     * ou en développement
+     * @var boolean
+     * @since API 0.3.0 (2019)
+     */
+    const production = false;
 
     /**
      * Seuil en dessous duquel un mail pour inciter le rechargement est envoyé à chaque achat

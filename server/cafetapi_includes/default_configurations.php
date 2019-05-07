@@ -12,9 +12,10 @@ class Database
     const password = 'mecatro';
 }
 
-class Defaults
+class Config
 {
-    const debug = true;
+    const debug = false;
+    const production = true;
     const balance_warning = 2.0;
     const balance_limit = 0.0;
     const organisation = 'Organisation name';
@@ -29,8 +30,13 @@ class Defaults
     const email_sender = 'cafet@exemple.com';
     const email_noreply = 'noreply@exemple.com';
     const email_contact = 'contact@exemple.com';
-    const email_name = 'Cafet\' Essaim';
+    const email_name = 'Cafet\'';
     // const email_default_subject = '';
     const session_name = '_cafetapp_' . self::organisation . '_session';
+    const mail_preferences = [
+        'payment_notice' => false,
+        'reload_notice' => false,
+        'reload_request' => true,
+    ];
     const logout_message = 'see you later ;)';
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "api:doc": "redoc-cli bundle openapi.yml -o doc/index.html",
     "prod:build": "rimraf server/dist && cross-env NODE_ENV=production webpack -p --progress",
-    "dev:build": "rimraf app/dist && cross-env NODE_ENV=development webpack --watch -p --progress && rimraf app/dist",
+    "dev:start": "rimraf server/dist && cross-env NODE_ENV=development webpack-dev-server --hotOnly -p --progress",
     "lint": "eslint src webpack.config.babel.js --ext .js,.jsx"
   },
   "repository": {
@@ -33,9 +33,13 @@
     "rimraf": "^2.6.3",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.1",
-    "webpack-livereload-plugin": "^2.2.0"
+    "webpack-dev-server": "^3.3.1",
+    "webpack-manifest-plugin": "^2.0.4"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.3"
+    "@babel/polyfill": "^7.4.3",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-hot-loader": "^4.5.3"
   }
 }

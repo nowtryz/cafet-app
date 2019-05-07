@@ -5,7 +5,6 @@
   </head>
   <body>
     <div class="app"></div>
-    <script src="/dist/bundle.js"></script>
-    <script src="http://localhost:8080/livereload.js"></script>
+    <script src="<?=@json_decode(file_get_contents(CAFET_DIR . 'dist/manifest.json'),true)['main.js']?>"></script>
   </body>
 </html>

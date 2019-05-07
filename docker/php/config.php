@@ -14,7 +14,8 @@ class Database
 
 class Config
 {
-    const debug = true;
+    const debug = false;
+    const production = true;
     const balance_warning = 2.0;
     const balance_limit = 0.0;
     const organisation = 'Essaim';
