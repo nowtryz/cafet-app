@@ -183,7 +183,7 @@ class ReloadManager extends Updater
         $client = ClientManager::getInstance()->getClient($client_id);
         if (!$client) throw new RequestFailureException('Unexisting client');
         
-        $stmt = $this->connection->prepare('INSERT INTO ' . self::RELOADS . '(' . self::FIELD_CUSTOMER_ID . ', ' . self::FIELD_AMOUNT . ', ' . self::FIELD_AMOUNT . ') VALUES (:client,:amount,:details)');
+        $stmt = $this->connection->prepare('INSERT INTO ' . self::RELOADS . '(' . self::FIELD_CUSTOMER_ID . ', ' . self::FIELD_AMOUNT . ', ' . self::FIELD_DETAILS . ') VALUES (:client,:amount,:details)');
         $stmt->execute([
             'client' => $client_id,
             'amount' => $amount,
