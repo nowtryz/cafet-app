@@ -15,7 +15,14 @@ use cafetapi\Logger;
  */
 class ReloadManager extends Updater
 {
-    const FIELD_USER_ID = 'user_id';
+    const TABLE_NAME = self::RELOADS;
+    
+    const FIELD_CUSTOMER_ID = 'customer_id';
+    /**
+     * @deprecated field name change, constant keeped for backwards-compatible
+     * FIELD_CUSTOMER_ID SOULD BE USED INSTED
+     */
+    const FIELD_USER_ID = 'customer_id';
     const FIELD_AMOUNT = 'amount';
     const FIELD_USER_BALANCE = 'user_balance';
     const FIELD_DETAILS = 'details';
@@ -36,18 +43,18 @@ class ReloadManager extends Updater
     public final function getClientReloads(int $client_id): array
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'id id, '
-            . 'user_balance balance, '
-            . 'amount amount, '
-            . 'details details, '
-            . 'DATE_FORMAT(date, "%H") hour, '
-            . 'DATE_FORMAT(date, "%i") mins, '
-            . 'DATE_FORMAT(date, "%s") secs, '
-            . 'DATE_FORMAT(date, "%d") day, '
-            . 'DATE_FORMAT(date, "%c") month, '
-            . 'DATE_FORMAT(date, "%Y") year '
+            . self::FIELD_ID . ' id, '
+            . self::FIELD_USER_BALANCE . ' balance, '
+            . self::FIELD_AMOUNT . ' amount, '
+            . self::FIELD_DETAILS . ' details, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%H") hour, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%i") mins, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%s") secs, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%d") day, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%c") month, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%Y") year '
             . 'FROM ' . self::RELOADS . ' '
-            . 'WHERE user_id = :id '
+            . 'WHERE ' . self::FIELD_CUSTOMER_ID . ' = :id '
             . 'ORDER BY date DESC');
         
         $id = $hour = $mins = $secs = $day = $month = $year = 0;
@@ -79,17 +86,17 @@ class ReloadManager extends Updater
     public final function getReload(int $reload_id): ?Reload
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'id id, '
-            . 'user_id client_id, '
-            . 'user_balance balance, '
-            . 'amount amount, '
-            . 'details details, '
-            . 'DATE_FORMAT(date, "%H") hour, '
-            . 'DATE_FORMAT(date, "%i") mins, '
-            . 'DATE_FORMAT(date, "%s") secs, '
-            . 'DATE_FORMAT(date, "%d") day, '
-            . 'DATE_FORMAT(date, "%c") month, '
-            . 'DATE_FORMAT(date, "%Y") year '
+            . self::FIELD_ID . ' id, '
+            . self::FIELD_CUSTOMER_ID . ' client_id, '
+            . self::FIELD_USER_BALANCE . ' balance, '
+            . self::FIELD_AMOUNT . ' amount, '
+            . self::FIELD_DETAILS . ' details, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%H") hour, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%i") mins, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%s") secs, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%d") day, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%c") month, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%Y") year '
             . 'FROM ' . self::RELOADS . ' '
             . 'WHERE id = :id '
             . 'ORDER BY date DESC');
@@ -121,17 +128,17 @@ class ReloadManager extends Updater
     public final function getReloads(): array
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'id id, '
-            . 'user_id client_id, '
-            . 'user_balance balance, '
-            . 'amount amount, '
-            . 'details details, '
-            . 'DATE_FORMAT(date, "%H") hour, '
-            . 'DATE_FORMAT(date, "%i") mins, '
-            . 'DATE_FORMAT(date, "%s") secs, '
-            . 'DATE_FORMAT(date, "%d") day, '
-            . 'DATE_FORMAT(date, "%c") month, '
-            . 'DATE_FORMAT(date, "%Y") year '
+            . self::FIELD_ID . ' id, '
+            . self::FIELD_CUSTOMER_ID . ' client_id, '
+            . self::FIELD_USER_BALANCE . ' balance, '
+            . self::FIELD_AMOUNT . ' amount, '
+            . self::FIELD_DETAILS . ' details, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%H") hour, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%i") mins, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%s") secs, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%d") day, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%c") month, '
+            . 'DATE_FORMAT(' . self::FIELD_DATE . ', "%Y") year '
             . 'FROM ' . self::RELOADS . ' '
             . 'ORDER BY date DESC');
         
@@ -176,7 +183,7 @@ class ReloadManager extends Updater
         $client = ClientManager::getInstance()->getClient($client_id);
         if (!$client) throw new RequestFailureException('Unexisting client');
         
-        $stmt = $this->connection->prepare('INSERT INTO ' . self::RELOADS . '(user_id, amount, details) VALUES (:client,:amount,:details)');
+        $stmt = $this->connection->prepare('INSERT INTO ' . self::RELOADS . '(' . self::FIELD_CUSTOMER_ID . ', ' . self::FIELD_AMOUNT . ', ' . self::FIELD_DETAILS . ') VALUES (:client,:amount,:details)');
         $stmt->execute([
             'client' => $client_id,
             'amount' => $amount,
