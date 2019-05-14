@@ -4,13 +4,16 @@ import { resolve } from 'path'
 import webpack from 'webpack'
 
 import ManifestPlugin  from 'webpack-manifest-plugin'
+import isProd from './web-client/util'
 
-const isProd = process.env.NODE_ENV === 'production'
 const WDS_PORT = 7000
 
 export default {
   mode: process.env.NODE_ENV,
   devtool:  isProd ? false : 'source-map',
+  performance: {
+    hints: false
+  },
   entry: [
     'react-hot-loader/patch',
     './web-client',
