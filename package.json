@@ -5,9 +5,10 @@
   "private": true,
   "scripts": {
     "api:doc": "redoc-cli bundle openapi.yml -o doc/index.html",
-    "prod:build": "rimraf server/dist && cross-env NODE_ENV=production webpack -p --progress",
-    "dev:start": "rimraf server/dist && cross-env NODE_ENV=development webpack-dev-server --hotOnly -p --progress",
-    "lint": "eslint src webpack.config.babel.js --ext .js,.jsx"
+    "prod:build": "rimraf server/dist && webpack -p --progress",
+    "dev:start": "rimraf server/dist && cross-env NODE_ENV=development yarn wds",
+    "lint": "eslint src webpack.config.babel.js --ext .js,.jsx",
+    "wds": "echo %NODE_ENV% && webpack-dev-server --hotOnly --progress"
   },
   "repository": {
     "type": "git",
@@ -38,11 +39,13 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.3",
+    "axios": "^0.18.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.5.3",
     "react-redux": "^7.0.3",
     "redux": "^4.0.1",
-    "redux-actions": "^2.6.5"
+    "redux-actions": "^2.6.5",
+    "redux-thunk": "^2.3.0"
   }
 }

@@ -2,11 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux'
 
-import { doSomething } from '../action/doSomething'
+import { doSomething } from '../actions'
+
+const handleClick = clickHandler => () => clickHandler('Hello')
 
 
-const Button = ({ label, handleClick }) =>
-  <button onClick={handleClick}>{label}</button>
+const Button = ({ label, clickHandler }) =>
+  <button onClick={handleClick(clickHandler)}>{label}</button>
 
 Button.prototype = {
     label: PropTypes.string,
@@ -18,7 +20,7 @@ const mapStateToProps = () => ({
 })
 
 const mapDispatchToProps = {
-  handleClick: doSomething('Hello!'),
+  clickHandler: doSomething,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Button)

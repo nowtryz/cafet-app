@@ -10,6 +10,9 @@
   </head>
   <body>
     <div class="app"></div>
+    <script>
+      var SERVER_URL = "<?=cafetapi\config\Config::url?>";
+    </script>
     <script src="<?=@json_decode(file_get_contents(CAFET_DIR . 'dist/manifest.json'),true)['main.js']?>"></script>
   </body>
 </html>

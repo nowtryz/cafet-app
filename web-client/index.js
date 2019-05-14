@@ -4,15 +4,17 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import { Provider } from 'react-redux'
-import { createStore, combineReducers } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
+import thunk from "redux-thunk";
 
 import App from './app'
-import sampleReducer from './reducer/sample'
+import appReducer from './reducers'
 import { isProd } from './util'
 
-const store = createStore(combineReducers({ sample: sampleReducer }),
-  // eslint-disable-next-line no-underscore-dangle
-  isProd ? undefined : window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__())
+// eslint-disable-next-line no-underscore-dangle
+const composeEnhancers = (isProd ? null : window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
+
+const store = createStore(appReducer, composeEnhancers(applyMiddleware(thunk)))
 
 const rootEl = document.querySelector('.app')
 

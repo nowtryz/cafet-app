@@ -1,13 +1,12 @@
-import { DO_SOMETHING } from '../action/doSomething'
+import { DO_SOMETHING } from '../actions'
 
 const initialState = {
   message: 'Initial reducer message',
 }
 
-const sampleReducer = (state = initialState, { type, payload }) => {
+const sampleReducer = (state = initialState, { type, payload = null }) => {
   switch (type) {
     case DO_SOMETHING:
-      state.message = payload
       return {
         ...state,
         message: payload
