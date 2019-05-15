@@ -6,6 +6,7 @@ use cafetapi\modules\rest\errors\ServerError;
 use cafetapi\user\User;
 use SimpleXMLElement;
 use cafetapi\config\Config;
+use cafetapi\Logger;
 
 /**
  *
@@ -26,7 +27,11 @@ class Rest
     const CONFLICT_DUPLICATED = 'duplicated';
     const CONFLICT_NOT_VALID = 'not valid';
     const CONFLICT_DIFFERENT = 'different';
+
+    //headers
+    const SKIP_HEADERS = 'Skip-Headers';
     
+    //api
     private const VERSION_FIELD = 'version';
     private const PATH_FIELD = 'path';
     private const RETURN_TYPE_FIELD = 'return_type';
@@ -104,6 +109,15 @@ class Rest
         header_remove('Expires');
         foreach ($response->getRemoveHeader() as $header) header_remove($header);
         foreach ($response->getHeaders() as $name => $content) header("$name: $content");
+
+        if (isset($this->headers[self::SKIP_HEADERS])) {
+            $matches = [];
+            preg_match_all('/"([^"]*)"/', trim($this->headers[self::SKIP_HEADERS]), $matches);
+            
+            if (isset($matches[1])) foreach ($matches[1] as $header_to_skip) {
+                header_remove($header_to_skip);
+            }
+        }
 
         if ($response->getBody() !== null) {
             switch ($this->contentType) {

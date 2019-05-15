@@ -8,7 +8,7 @@
     "prod:build": "rimraf server/dist && webpack -p --progress",
     "dev:start": "rimraf server/dist && cross-env NODE_ENV=development yarn wds",
     "lint": "eslint src webpack.config.babel.js --ext .js,.jsx",
-    "wds": "echo %NODE_ENV% && webpack-dev-server --hotOnly --progress"
+    "wds": "webpack-dev-server --hotOnly --progress"
   },
   "repository": {
     "type": "git",

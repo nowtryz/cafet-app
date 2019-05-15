@@ -6,10 +6,15 @@ import { AppContainer } from 'react-hot-loader'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from "redux-thunk";
+import { interceptors } from 'axios'
 
 import App from './app'
 import appReducer from './reducers'
 import { isProd } from './util'
+import { responseInterceptor, errorInterceptor } from './interceptors'
+
+
+interceptors.response.use(responseInterceptor, errorInterceptor);
 
 // eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = (isProd ? null : window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose

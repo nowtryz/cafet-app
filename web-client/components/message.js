@@ -11,7 +11,7 @@ Message.prototype = {
 }
 
 const mapStateToProps = state => ({
-  message: state.sample.message,
+  message: state.user.message,
 })
 
 export default connect(mapStateToProps)(Message)
