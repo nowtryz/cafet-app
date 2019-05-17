@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { API_URL } from '../config'
+import store from '../reducers'
 
 export const USER_IS_LOGGING = 'user_is_loging'
 export const USER_LOGGED = 'user_logged'
@@ -19,13 +20,10 @@ export const login = (username, password) => async dispatch => {
             auth: {
                 username,
                 password
-            },
-            headers: {
-                'Skip-Headers': '"WWW-Authenticate"'
             }
         })
 
-        const { message, session, user } = response.data;
+        const { message, session, user } = response.data
 
         dispatch({
         type: USER_LOGGED,
@@ -50,6 +48,15 @@ export const login = (username, password) => async dispatch => {
  * Disconnect a user
  */
 export const logout = () => async dispatch => {
+    if (!store.getState().user.user) {
+        dispatch({
+            type: USER_LOGOUT,
+            payload: 'already logged out'
+        })
+
+        return
+    }
+
     try {
 
         const response = await axios.post( `${API_URL}/user/logout`)
@@ -59,9 +66,12 @@ export const logout = () => async dispatch => {
         dispatch({
         type: USER_LOGOUT,
         payload: message
-        });
+        })
 
     } catch (err) {
-        console.error(err)
+        dispatch({
+        type: USER_LOGOUT,
+        payload: err.message
+        })
     }
-};
+}
