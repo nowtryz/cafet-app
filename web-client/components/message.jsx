@@ -4,14 +4,14 @@ import { connect } from 'react-redux'
 
 
 const Message = ({ message }) =>
-  <p>{message}</p>
+    <p>{message}</p>
 
-Message.prototype = {
-    message: PropTypes.string
+Message.propTypes = {
+    message: PropTypes.string.isRequired
 }
 
 const mapStateToProps = state => ({
-  message: state.user.message,
+    message: state.user.message,
 })
 
 export default connect(mapStateToProps)(Message)

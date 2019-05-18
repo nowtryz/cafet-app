@@ -1,18 +1,19 @@
 import axios from 'axios'
 
+import {
+    USER_IS_LOGGING,
+    USER_LOGGED,
+    USER_LOGGING_FAILED,
+    USER_LOGOUT
+} from 'constants'
 import { API_URL } from '../config'
 import store from '../reducers'
-
-export const USER_IS_LOGGING = 'user_is_loging'
-export const USER_LOGGED = 'user_logged'
-export const USER_LOGGING_FAILED = 'user_logging_failed'
-export const USER_LOGOUT = 'user_logout'
 
 export const login = (username, password) => async dispatch => {
     try {
         dispatch({
-        type: USER_IS_LOGGING,
-        payload: `logging in as ${username}`
+            type: USER_IS_LOGGING,
+            payload: `logging in as ${username}`
         })
 
         const response = await axios.post( `${API_URL}/user/login`, {
@@ -26,22 +27,21 @@ export const login = (username, password) => async dispatch => {
         const { message, session, user } = response.data
 
         dispatch({
-        type: USER_LOGGED,
-        payload: {
-            user,
-            session,
-            message
-        }
-        });
+            type: USER_LOGGED,
+            payload: {
+                user,
+                session,
+                message
+            }
+        })
 
     } catch (err) {
-        console.log(err.response)
         dispatch({
             type: USER_LOGGING_FAILED,
             payload: err.response && err.response.data ? err.response.data.additional_message : null || 'logging failed' 
-        });
+        })
     }
-};
+}
 
 
 /**
@@ -61,17 +61,17 @@ export const logout = () => async dispatch => {
 
         const response = await axios.post( `${API_URL}/user/logout`)
 
-        const { message } = response.data;
+        const { message } = response.data
 
         dispatch({
-        type: USER_LOGOUT,
-        payload: message
+            type: USER_LOGOUT,
+            payload: message
         })
 
     } catch (err) {
         dispatch({
-        type: USER_LOGOUT,
-        payload: err.message
+            type: USER_LOGOUT,
+            payload: err.message
         })
     }
 }

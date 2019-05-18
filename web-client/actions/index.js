@@ -1,2 +1,2 @@
-export * from './doSomething'
 export * from './user'
+export * from './lang'

@@ -1,20 +1,20 @@
-import { combineReducers } from 'redux'
-import { createStore, applyMiddleware, compose } from 'redux'
-import thunk from "redux-thunk";
+import { combineReducers , createStore, applyMiddleware, compose } from 'redux'
 
-import { isProd } from '../util'
+import thunk from 'redux-thunk'
 
-import sample from './sample'
+import { isProd } from '../config'
+
 import user from './user'
+import lang from './lang'
 
 export const reducer = combineReducers({
-    sample,
-    user
+    user,
+    lang
 })
 
 // eslint-disable-next-line no-underscore-dangle
 const composeEnhancers = (isProd ? null : window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose
 
-export const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)))
+const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk)))
 
 export default store

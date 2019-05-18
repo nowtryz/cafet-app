@@ -1,14 +1,19 @@
-import { USER_IS_LOGGING, USER_LOGGED, USER_LOGGING_FAILED, USER_LOGOUT } from '../actions'
+import {
+    USER_IS_LOGGING,
+    USER_LOGGED,
+    USER_LOGGING_FAILED,
+    USER_LOGOUT
+} from 'constants'
 
 const initialState = {
-  user: null,
-  isLogging: false,
-  session: null,
-  message: 'not logged'
+    user: null,
+    isLogging: false,
+    session: null,
+    message: 'not logged'
 }
 
-const sampleReducer = (state = initialState, { type, payload = null }) => {
-  switch (type) {
+const userReducer = (state = initialState, { type, payload = null }) => {
+    switch (type) {
     case USER_IS_LOGGING: return {
         ...state,
         isLogging: true,
@@ -30,14 +35,14 @@ const sampleReducer = (state = initialState, { type, payload = null }) => {
     }
 
     case USER_LOGOUT: return {
-      ...state,
-      user: null,
-      message: payload
+        ...state,
+        user: null,
+        message: payload
     }
 
     default:
         return state
-  }
+    }
 }
 
-export default sampleReducer
+export default userReducer

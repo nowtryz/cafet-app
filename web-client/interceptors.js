@@ -1,7 +1,6 @@
 import { API_URL } from './config'
 
 export const responseInterceptor = response => {
-    console.log(response)
     return response
 }
   
@@ -10,5 +9,7 @@ export const errorInterceptor = error => {
         // handle redirection to login page
     }
 
+    // This be supported as with polyfill
+    // eslint-disable-next-line compat/compat
     return Promise.reject(error)
 }

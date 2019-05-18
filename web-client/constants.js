@@ -1,0 +1,5 @@
+export const USER_IS_LOGGING = 'user_is_loging'
+export const USER_LOGGED = 'user_logged'
+export const USER_LOGGING_FAILED = 'user_logging_failed'
+export const USER_LOGOUT = 'user_logout'
+export const CHANGE_LANG = 'change_lang'

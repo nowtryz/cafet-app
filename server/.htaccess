@@ -13,11 +13,19 @@
     RewriteRule ^ - [L]
 
 
+    # Rest API
 	RewriteRule ^api\/v([^\s\/]+)\/([^\.]*)(?:\.(.*))?$ api.php?version=$1&path=$2&return_type=$3 [L,QSA]
 	RewriteRule ^api\/v([^\s\/]+)\/ api.php?version=$1&path&return_type [L,QSA]
 	RewriteRule ^api\/ api.php?version&path&return_type [L,QSA]
+
+    # Imaga API
 	RewriteRule ^image\/(product|formula)(?:\/([0-9]+))?(?:\/size/([^\/\s\.]))? image.php?item=$1&id=$2&size=$3 [QSA,L]
+
+    # Debug
 	RewriteRule ^debug(?:/([^\.]+))? index.php?module=debug&path=$1 [L,QSA]
+
+    # Dashboard
+    RewriteRule ^(login|logout|register|dashboard|admin) index.php [L,QSA]
 
     ErrorDocument 404 /error.php
 </IfModule>

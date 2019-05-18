@@ -31,9 +31,11 @@ documentation:
   image: node
   stage: build
   script:
-    - npm install
-    - npm run api:doc
+    - yarn install
+    - yarn api:doc
     - cp openapi.yml doc/
+  only:
+    - master
 
 ## ##
 ## Deploy

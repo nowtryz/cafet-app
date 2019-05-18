@@ -1,20 +1,23 @@
 {
     "extends": [
         "airbnb",
-        "eslint:recommended",
-        "plugin:prettier/recommended"
+        "eslint:recommended"
     ],
     "plugins": [
         "compat",
-        "react"
+        "react",
+        "babel"
     ],
     "rules": {
         "semi": [2, "never"],
         "no-unexpected-multiline": 2,
+        "indent": [2, 4],
+        "quotes": [2, "single"],
         "compat/compat": 2,
         "react/jsx-one-expression-per-line": 0,
-        "function-paren-newline": 0,
-        "indent": [2, 4]
+        "react/jsx-indent": [2, 4],
+        "react/jsx-indent-props": [2, 4],
+        "function-paren-newline": 0
     },
     "env": {
         "es6": true,
@@ -22,7 +25,10 @@
         "browser": true
     },
     "settings": {
-        "polyfills": ["fetch"]
+        "polyfills": ["fetch", "promises"],
+        "import/resolver": {
+            "babel-module": {}
+        }
     },
     "parser": "babel-eslint",
     "parserOptions": {
