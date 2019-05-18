@@ -1,9 +1,12 @@
 {
     "extends": [
-        "airbnb"
+        "airbnb",
+        "eslint:recommended",
+        "plugin:prettier/recommended"
     ],
     "plugins": [
-        "compat"
+        "compat",
+        "react"
     ],
     "rules": {
         "semi": [2, "never"],
@@ -14,9 +17,18 @@
         "indent": [2, 4]
     },
     "env": {
+        "es6": true,
+        "node": true,
         "browser": true
     },
     "settings": {
         "polyfills": ["fetch"]
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "ecmaFeatures": {
+        "jsx": true
+        }
     }
 }
