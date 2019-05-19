@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 // core components
-import Footer from 'components/Footer/Footer'
+import Footer from '../Footer'
 
 import pagesStyle from 'assets/jss/material-dashboard-pro-react/layouts/authStyle'
 
