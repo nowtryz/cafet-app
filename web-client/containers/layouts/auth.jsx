@@ -40,8 +40,11 @@ Layout.defaultProps = {
 }
 
 Layout.propTypes = {
-    classes: PropTypes.PropTypes.objectOf(PropTypes.object()).isRequired,
-    children: PropTypes.element.isRequired,
+    classes: PropTypes.objectOf(PropTypes.string).isRequired,
+    children: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.element),
+        PropTypes.element
+    ]).isRequired,
     title: PropTypes.string.isRequired,
     bgImage: PropTypes.string
 }

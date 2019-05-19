@@ -9,10 +9,10 @@ import AuthLayout from 'layouts/Auth'
 import RtlLayout from 'layouts/RTL'
 import AdminLayout from 'layouts/Admin'
 
+import '../material-dashboard/assets/scss/material-dashboard-pro-react.scss?v=1.5.0'
+
 import Login from 'containers/pages/login'
 import { APP_NAME } from '../config'
-
-import 'assets/scss/material-dashboard-pro-react.scss?v=1.5.0'
 
 const hist = createBrowserHistory()
 

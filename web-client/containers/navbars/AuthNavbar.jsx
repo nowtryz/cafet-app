@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import mergeClasses from 'classnames'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
+import RouterProps from 'react-router-prop-types';
 
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -27,6 +28,19 @@ import links from 'routes/auth'
 import authNavbarStyle from 'assets/jss/material-dashboard-pro-react/components/authNavbarStyle'
 
 class AuthNavbar extends React.Component {
+    static defaultProps = {
+        color: null,
+        brandText: ''
+    }
+    
+    static propTypes = {
+        classes: PropTypes.objectOf(PropTypes.any).isRequired,
+        lang: PropTypes.objectOf(PropTypes.string).isRequired,
+        color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
+        brandText: PropTypes.string,
+        location: RouterProps.location.isRequired
+    }
+
     state = {
         open: false
     }
@@ -63,12 +77,11 @@ class AuthNavbar extends React.Component {
         return (Object.keys(links).map(key => {
             const link = links[key]
             return (
-                <ListItem className={classes.listItem} key={link}>
+                <ListItem className={classes.listItem} key={link.path}>
                     <NavLink
                         to={link.path}
-                        className={mergeClasses(classes.navLink, {
-                            [classes.navLinkActive]: this.activeRoute(link.path)
-                        })}
+                        className={classes.navLink}
+                        activeClassName={classes.navLinkActive}
                     >
                         <link.icon className={classes.listItemIcon} />
                         <ListItemText
@@ -144,21 +157,6 @@ class AuthNavbar extends React.Component {
             </AppBar>
         )
     }
-}
-
-AuthNavbar.defaultProps = {
-    color: 'primary',
-    brandText: ''
-}
-
-AuthNavbar.propTypes = {
-    classes: PropTypes.PropTypes.objectOf(PropTypes.object()).isRequired,
-    lang: PropTypes.PropTypes.objectOf(PropTypes.string).isRequired,
-    color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
-    brandText: PropTypes.string,
-    location: PropTypes.shape({
-        pathname: PropTypes.string.isRequired,
-    }).isRequired
 }
 
 const mapStateToProps = state => ({

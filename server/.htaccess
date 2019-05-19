@@ -25,7 +25,7 @@
 	RewriteRule ^debug(?:/([^\.]+))? index.php?module=debug&path=$1 [L,QSA]
 
     # Dashboard
-    RewriteRule ^(login|logout|register|dashboard|admin) index.php [L,QSA]
+    RewriteRule ^(login|logout|register|lock|dashboard|admin) index.php [L,QSA]
 
     ErrorDocument 404 /error.php
 </IfModule>
