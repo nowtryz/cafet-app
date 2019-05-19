@@ -30,7 +30,7 @@ const userReducer = (state = initialState, { type, payload = null }) => {
         ...state,
         isLogging: false,
         user: payload.user,
-        session: payload.sessions,
+        session: payload.session,
         message: payload.message
     }
 

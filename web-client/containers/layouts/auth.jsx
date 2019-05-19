@@ -5,11 +5,11 @@ import PropTypes from 'prop-types'
 import withStyles from '@material-ui/core/styles/withStyles'
 
 // core components
-import Footer from '../Footer'
 
 import pagesStyle from 'assets/jss/material-dashboard-pro-react/layouts/authStyle'
 
 import error from 'assets/img/clint-mckoy.jpg'
+import Footer from '../Footer'
 import AuthNavbar from '../navbars/AuthNavbar'
 
 class Layout extends React.Component {

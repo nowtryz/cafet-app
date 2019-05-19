@@ -1,5 +1,5 @@
 import { CHANGE_LANG } from 'constants'
-import * as fr from '../lang/fr_FR'
+import fr from '../lang/fr_FR'
 import * as en from '../lang/en_US'
 
 const initialState = fr

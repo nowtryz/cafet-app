@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import mergeClasses from 'classnames'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
-import RouterProps from 'react-router-prop-types';
+import RouterProps from 'react-router-prop-types'
 
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'

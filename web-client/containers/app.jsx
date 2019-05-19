@@ -12,6 +12,7 @@ import AdminLayout from 'layouts/Admin'
 import '../material-dashboard/assets/scss/material-dashboard-pro-react.scss?v=1.5.0'
 
 import Login from 'containers/pages/login'
+import Register from 'containers/pages/register'
 import { APP_NAME } from '../config'
 
 const hist = createBrowserHistory()
@@ -30,7 +31,7 @@ const App = ({lang}) => (
                 <Route 
                     path='/register' 
                     component={(routeProps) => (
-                        <Login {...routeProps} lang={lang} />
+                        <Register {...routeProps} lang={lang} />
                     )}
                 />
                 <Route 
@@ -49,7 +50,7 @@ const App = ({lang}) => (
 )
 
 App.propTypes = {
-    lang: PropTypes.PropTypes.objectOf(PropTypes.string).isRequired
+    lang: PropTypes.PropTypes.objectOf(PropTypes.any).isRequired
 }
 
 const mapStateToProps = state => ({

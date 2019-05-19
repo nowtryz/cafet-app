@@ -45,7 +45,7 @@ class Footer extends React.Component {
                     </List>
                 </div>
                 <p className={classes.right}>
-                    &copy 2018 - {1900 + new Date().getYear()} made with love by{' '}
+                    &copy; 2018 - {1900 + new Date().getYear()} made with love by{' '}
                     <a href='https://nowtryz.net' className={anchor}>
                         Damien Djomby
                     </a>

@@ -4,9 +4,6 @@ import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
 import { Redirect } from 'react-router-dom'
 
-import background from 'assets/img/login.jpeg'
-import links from 'routes/auth'
-
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -30,8 +27,10 @@ import CardHeader from '@dashboard/components/Card/CardHeader'
 import CardFooter from '@dashboard/components/Card/CardFooter'
 
 import loginPageStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/loginPageStyle'
-import AuthLayout from '../layouts/auth'
+import background from 'assets/img/login.jpeg'
+import links from 'routes/auth'
 import { login as loginAction } from 'actions'
+import AuthLayout from '../layouts/auth'
 
 
 class LoginPage extends React.Component {
@@ -47,13 +46,6 @@ class LoginPage extends React.Component {
         cardAnimaton: 'cardHidden',
         email: '',
         password: ''
-    }
-
-    constructor(props) {
-        super(props)
-
-        this.validate = this.validate.bind(this)
-        this.keyPressed = this.keyPressed.bind(this)
     }
 
     componentDidMount() {
@@ -73,20 +65,20 @@ class LoginPage extends React.Component {
 
     changeValue(e, field) {
         const { value } = e.target
-        this.setState({
-            ...this.state,
+        this.setState(prevState => ({
+            prevState,
             [field]: value
-        })
+        }))
     }
 
-    validate(e) {
+    validate = () => {
         const { login } = this.props
         const { email, password } = this.state
 
         login(email, password)
     }
 
-    keyPressed(e) {
+    keyPressed = (e) => {
         // Number 13 is the "Enter" key on the keyboard
         if (event.keyCode === 13) {
             this.validate(e)
@@ -112,21 +104,21 @@ class LoginPage extends React.Component {
                     open={isLogging}
                     PaperProps={{
                         style: {
-                          backgroundColor: 'transparent',
-                          boxShadow: 'none',
-                          width: 150,
-                          height: 150,
-                          textAlign: 'center',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center'
+                            backgroundColor: 'transparent',
+                            boxShadow: 'none',
+                            width: 150,
+                            height: 150,
+                            textAlign: 'center',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
                         }
                     }}
                 >
                     <CircularProgress size={100} />
                 </Dialog>
-                <div className={classes.container} onKeyPress={this.keyPressed}>
-                    <GridContainer justify="center">
+                <div className={classes.container}>
+                    <GridContainer justify="center" onKeyPress={this.keyPressed}>
                         <GridItem xs={12} sm={6} md={4}>
                             <form>
                                 <Card login className={classes[cardAnimaton]}>
