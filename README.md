@@ -123,6 +123,7 @@ Demo user is `Nowtryz <damien.djmb@gmail.com>` with password `admin`. Easy to ke
 ### Apache
 - Tested with Apache 2.4.33
 - Extension mod_rewrite enabled
+- A virtual host pointing to the `server` folder
 
 ### PHP 7.2 or upper with PDO, tested with:
 - Tested versions:
