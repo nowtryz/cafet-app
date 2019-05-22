@@ -46,5 +46,6 @@ export default {
     Notifications: 'Notifications',
     'Admin Panel': 'panneau d\'administration',
     Profile:'Profil',
-    Language: 'Langue'
+    Language: 'Langue',
+    Logout: 'Déconnexion'
 }
