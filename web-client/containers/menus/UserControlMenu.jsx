@@ -16,6 +16,7 @@ import Divider from '@material-ui/core/Divider'
 import adminNavbarLinksStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/adminNavbarLinksStyle'
 
 import { logout as logoutAction } from 'actions'
+import Locale from '../Locale'
 
 
 const styles = theme => ({
@@ -96,10 +97,10 @@ class UserControlMenu extends React.Component {
                             <Paper>
                                 <ClickAwayListener onClickAway={this.handleClose}>
                                     <MenuList>
-                                        <MenuItem className={classes.menuItem} component={Link} to='/dashboard/profile'>Profile</MenuItem>
-                                        <MenuItem className={classes.menuItem} component={Link} to='/dashboard/settings'>Settings</MenuItem>
+                                        <MenuItem className={classes.menuItem} component={Link} to='/dashboard/profile'><Locale>Profile</Locale></MenuItem>
+                                        <MenuItem className={classes.menuItem} component={Link} to='/dashboard/settings'><Locale>Settings</Locale></MenuItem>
                                         <Divider />
-                                        <MenuItem className={classes.menuItem} onClick={logout}>Logout</MenuItem>
+                                        <MenuItem className={classes.menuItem} onClick={logout}><Locale>Logout</Locale></MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
                             </Paper>

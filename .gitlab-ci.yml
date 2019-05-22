@@ -101,6 +101,8 @@ pages:
   dependencies:
     - documentation
   script: mv doc public
+  only:
+    - master
   artifacts:
     paths:
       - public

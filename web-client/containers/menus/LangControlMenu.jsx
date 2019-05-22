@@ -29,7 +29,7 @@ const styles = theme => ({
     }
 })
 
-class UserControlMenu extends React.Component {
+class LangControlMenu extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
         children: PropTypes.oneOfType([
@@ -67,7 +67,7 @@ class UserControlMenu extends React.Component {
     }
 
     render() {
-        const { classes, children, logout, buttonProps, ...rest } = this.props
+        const { classes, children, logout, buttonProps, changeLocale, ...rest } = this.props
         const { open } = this.state
 
         return (
@@ -128,4 +128,4 @@ class UserControlMenu extends React.Component {
 
 export default withStyles(styles)(connect(null, {
     changeLocale: changeLocaleAction
-})(UserControlMenu))
+})(LangControlMenu))

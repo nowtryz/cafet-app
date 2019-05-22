@@ -20,7 +20,7 @@ class SidebarUserWrapper extends React.Component {
         openAvatar: false
     }
 
-    openAvatar () {
+    openAvatar = () => {
         this.setState(state => ({openAvatar: !state.openAvatar}))
     }
 
@@ -38,7 +38,7 @@ class SidebarUserWrapper extends React.Component {
                         <NavLink
                             to="#"
                             className={classNames(classes.itemLink, classes.userCollapseButton)}
-                            onClick={() => this.openCollapse('openAvatar')}
+                            onClick={this.openAvatar}
                         >
                             <ListItemText
                                 primary='Tania Andrew'
