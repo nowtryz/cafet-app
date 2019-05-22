@@ -126,7 +126,7 @@ class Sidebar extends React.Component {
                     >
                         {brand}
                         <SidebarWrapper className={classes.sidebarWrapper}>
-                            <SidebarUserWrapper classes={classes} />
+                            <SidebarUserWrapper classes={classes} color={color} />
                             <AdminNavbarLinks />
                             <SidebarRoutes
                                 classes={classes}
@@ -157,10 +157,8 @@ class Sidebar extends React.Component {
                         }}
                     >
                         {brand}
-                        <SidebarWrapper
-                            className={classes.sidebarWrapper}
-                        >
-                            <SidebarUserWrapper classes={classes} />
+                        <SidebarWrapper className={classes.sidebarWrapper}>
+                            <SidebarUserWrapper classes={classes} color={color} />
                             <SidebarRoutes
                                 classes={classes}
                                 miniActive={miniActive && miniState}

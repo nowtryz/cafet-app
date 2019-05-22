@@ -9,13 +9,22 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-
-import avatar from 'assets/img/faces/avatar.jpg'
+import Person from '@material-ui/icons/Person'
 
 class SidebarUserWrapper extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
-        lang: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])).isRequired
+        lang: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])).isRequired,
+        userDisplay: PropTypes.string.isRequired,
+        color: PropTypes.oneOf([
+            'white',
+            'red',
+            'orange',
+            'green',
+            'blue',
+            'purple',
+            'rose'
+        ]).isRequired,
     }
     
     state = {
@@ -27,13 +36,20 @@ class SidebarUserWrapper extends React.Component {
     }
 
     render() {
-        const { classes, lang } = this.props
+        const { classes, lang, userDisplay, color } = this.props
         const { openAvatar } = this.state
 
         return (
             <div className={classes.userWrapperClass}>
-                <div className={classes.photo}>
-                    <img src={avatar} className={classes.avatarImg} alt="..." />
+                <div
+                    className={classNames(classes.photo, classes[color])}
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Person />
                 </div>
                 <List className={classes.list}>
                     <ListItem className={classNames(classes.item,classes.userItem)}>
@@ -43,7 +59,7 @@ class SidebarUserWrapper extends React.Component {
                             onClick={this.openAvatar}
                         >
                             <ListItemText
-                                primary='Tania Andrew'
+                                primary={userDisplay}
                                 secondary={(<b className={classNames(classes.caret, classes.userCaret, {[classes.caretActive]: openAvatar})} />)}
                                 disableTypography
                                 className={classNames(classes.itemText, classes.userItemText)}
@@ -72,7 +88,7 @@ class SidebarUserWrapper extends React.Component {
                                         className={classNames(classes.itemLink, classes.userCollapseLinks)}
                                     >
                                         <span className={classes.collapseItemMini}>
-                                            EP
+                                            C
                                         </span>
                                         <ListItemText
                                             primary={lang['Change Password']}
@@ -106,7 +122,8 @@ class SidebarUserWrapper extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    lang: state.lang
+    lang: state.lang,
+    userDisplay: `${state.user.user.firstname} ${state.user.user.familyName}`
 })
 
 export default connect(mapStateToProps)(SidebarUserWrapper)
