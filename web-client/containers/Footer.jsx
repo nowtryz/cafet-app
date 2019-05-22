@@ -9,15 +9,21 @@ import ListItem from '@material-ui/core/ListItem'
 
 import footerStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/footerStyle'
 
+// eslint-disable-next-line react/prefer-stateless-function
 class Footer extends React.Component {
     static propTypes = {
-        classes: PropTypes.object.isRequired,
+        classes: PropTypes.objectOf(PropTypes.string).isRequired,
         fluid: PropTypes.bool,
         white: PropTypes.bool,
-      }
+    }
+
+    static defaultProps = {
+        fluid: false,
+        white: false
+    }
 
     render() {
-        const { classes, fluid, white, rtlActive } = this.props
+        const { classes, fluid, white } = this.props
         const container = classNames({
             [classes.container]: !fluid,
             [classes.containerFluid]: fluid,
@@ -26,7 +32,7 @@ class Footer extends React.Component {
         const anchor = classNames({
             [classes.a]: true,
             [classes.whiteColor]: white
-            })
+        })
         const block = classNames({
             [classes.block]: true,
             [classes.whiteColor]: white
@@ -34,23 +40,23 @@ class Footer extends React.Component {
 
         return (
             <footer className={classes.footer}>
-            <div className={container}>
-                <div className={classes.left}>
-                    <List className={classes.list}>
-                        <ListItem className={classes.inlineBlock}>
-                            <a href='#home' className={block}>
+                <div className={container}>
+                    <div className={classes.left}>
+                        <List className={classes.list}>
+                            <ListItem className={classes.inlineBlock}>
+                                <a href='#home' className={block}>
                                 Home
-                            </a>
-                        </ListItem>
-                    </List>
-                </div>
-                <p className={classes.right}>
+                                </a>
+                            </ListItem>
+                        </List>
+                    </div>
+                    <p className={classes.right}>
                     &copy; 2018 - {1900 + new Date().getYear()} made with love by{' '}
-                    <a href='https://nowtryz.net' className={anchor}>
+                        <a href='https://nowtryz.net' className={anchor}>
                         Damien Djomby
-                    </a>
-                </p>
-            </div>
+                        </a>
+                    </p>
+                </div>
             </footer>
         )
     }

@@ -35,7 +35,7 @@ class AuthNavbar extends React.Component {
     
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.any).isRequired,
-        lang: PropTypes.objectOf(PropTypes.string).isRequired,
+        lang: PropTypes.objectOf(PropTypes.any).isRequired,
         color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
         brandText: PropTypes.string,
         location: RouterProps.location.isRequired

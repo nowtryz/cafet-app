@@ -11,7 +11,6 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Icon from '@material-ui/core/Icon'
 import Dialog from '@material-ui/core/Dialog'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import FormHelperText from '@material-ui/core/FormHelperText'
 
 // @material-ui/icons
 import Timeline from '@material-ui/icons/Timeline'
@@ -41,8 +40,7 @@ import AuthLayout from '../layouts/auth'
 class RegisterPage extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
-        lang: PropTypes.objectOf(PropTypes.string).isRequired,
-        isLogged: PropTypes.bool.isRequired,
+        lang: PropTypes.objectOf(PropTypes.any).isRequired,
         login: PropTypes.func.isRequired
     }
 
@@ -103,37 +101,40 @@ class RegisterPage extends React.Component {
         ])
     }
 
-    renderInput(field) {
-        const { classes } = this.props
-        
-        return (
-            <React.Fragment key={field.name}>
-                <CustomInput
-                    formControlProps={{
-                        fullWidth: true,
-                        required: true,
-                        className: classes.customFormControlClasses
-                    }}
-                    inputProps={{
-                        onChange: e => this.changeValue(e, field.id),
-                        startAdornment: (
-                            <InputAdornment
-                                position='start'
-                                className={classes.inputAdornment}
-                            >
-                                <field.icone className={classes.inputAdornmentIcon} >
-                                    {field.iconeName}
-                                </field.icone>
-                            </InputAdornment>
-                        ),
-                        placeholder: `${field.name}...`,
-                        ...field.inputProps
-                    }}
-                    helpText={field.helperText}
-                    {...field.inputProps}
-                />
-            </React.Fragment>
-        )
+    keyPressed = (e) => {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            this.validate(e)
+        }
+    }
+
+    validate = async () => {
+        const { login, lang } = this.props
+        const { email, familyName, firstname, password, isValidating } = this.state
+
+        if (isValidating) return
+        this.setState({isValidating: true})
+
+        const emailValidation = email ? undefined : lang.required
+        const familyNameValidation = familyName ? undefined : lang.required
+        const firstnameValidation =  firstname ? undefined : lang.required
+        const passwordValidation =  password ? undefined : lang.required
+        this.setState({ emailValidation, familyNameValidation, firstnameValidation, passwordValidation })
+        if ( emailValidation || familyNameValidation || firstnameValidation || passwordValidation ) {
+            this.setState({isValidating: false})
+            return
+        }
+
+        try {
+            await registerUser(email, familyName, firstname, password)
+            login(email, password)
+        } catch (err) {
+            if (err.response !== undefined && err.response.data.conflicts !== undefined) {
+                this.handleConflicts(err.response.data.conflicts)
+            }
+        }
+
+        this.setState({isValidating: false})
     }
 
     handleToggle(value) {
@@ -172,50 +173,43 @@ class RegisterPage extends React.Component {
         }
     }
 
-    validate = async () => {
-        const { login, lang } = this.props
-        const { email, familyName, firstname, password, isValidating } = this.state
-
-        if (isValidating) return
-        this.setState({isValidating: true})
-
-        const emailValidation = email ? undefined : lang.required
-        const familyNameValidation = familyName ? undefined : lang.required
-        const firstnameValidation =  firstname ? undefined : lang.required
-        const passwordValidation =  password ? undefined : lang.required
-        this.setState({ emailValidation, familyNameValidation, firstnameValidation, passwordValidation })
-        if ( emailValidation || familyNameValidation || firstnameValidation || passwordValidation ) {
-            this.setState({isValidating: false})
-            return
-        }
-
-        try {
-            await registerUser(email, familyName, firstname, password)
-            login(email, password)
-        } catch (err) {
-            if (err.response !== undefined && err.response.data.conflicts !== undefined) {
-                this.handleConflicts(err.response.data.conflicts)
-            }
-        }
-
-        this.setState({isValidating: false})
-    }
-
-    keyPressed = (e) => {
-        // Number 13 is the "Enter" key on the keyboard
-        if (event.keyCode === 13) {
-            this.validate(e)
-        }
+    renderInput(field) {
+        const { classes } = this.props
+        
+        return (
+            <React.Fragment key={field.name}>
+                <CustomInput
+                    formControlProps={{
+                        fullWidth: true,
+                        required: true,
+                        className: classes.customFormControlClasses
+                    }}
+                    inputProps={{
+                        onChange: e => this.changeValue(e, field.id),
+                        startAdornment: (
+                            <InputAdornment
+                                position='start'
+                                className={classes.inputAdornment}
+                            >
+                                <field.icone className={classes.inputAdornmentIcon}>
+                                    {field.iconeName}
+                                </field.icone>
+                            </InputAdornment>
+                        ),
+                        placeholder: `${field.name}...`,
+                        ...field.inputProps
+                    }}
+                    helpText={field.helperText}
+                    {...field.inputProps}
+                />
+            </React.Fragment>
+        )
     }
 
     render() {
-        const { classes, lang, isLogged, ...rest } = this.props
+        const { classes, lang, ...rest } = this.props
         const title = lang[links.register.title]
         const { termsAccepted, isValidating } = this.state
-
-        if (isLogged) return (
-            <Redirect to='/' />
-        )
 
         return (
             <AuthLayout title={title} bgImage={background} {...rest}>
@@ -244,7 +238,7 @@ class RegisterPage extends React.Component {
                         <GridItem xs={12} sm={12} md={10}>
                             <Card className={classes.cardSignup}>
                                 <h2 className={classes.cardTitle}>{lang.register}</h2>
-                                <CardBody>
+                                <CardBody onKeyPress={this.keyPressed}>
                                     <GridContainer justify='center'>
                                         <GridItem xs={12} sm={12} md={5}>
                                             <InfoArea
@@ -278,7 +272,7 @@ class RegisterPage extends React.Component {
                                                 {' '}
                                                 <h4 className={classes.socialTitle}>{lang['or be casual']}</h4>
                                             </div>
-                                            <form className={classes.form} onKeyPress={this.keyPressed}>
+                                            <form className={classes.form}>
                                                 {this.getFields().map(field => this.renderInput(field))}
                                                 <FormControlLabel
                                                     classes={{
@@ -324,10 +318,6 @@ class RegisterPage extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    isLogged: state.user.user !== null
-})
-
-export default withStyles(registerPageStyle)(connect(mapStateToProps, {
+export default withStyles(registerPageStyle)(connect(null, {
     login: loginAction
 })(RegisterPage))

@@ -26,6 +26,8 @@
 
     # Dashboard
     RewriteRule ^(login|logout|register|lock|dashboard|admin) index.php [L,QSA]
+    # Dashboard demo (for dev)
+    RewriteRule ^demo index.php [L,QSA]
 
     ErrorDocument 404 /error.php
 </IfModule>

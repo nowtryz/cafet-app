@@ -28,7 +28,7 @@ class Pages extends React.Component {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
       }
-      if (prop.layout === "/auth") {
+      if (prop.layout === "/demo/auth") {
         return (
           <Route
             path={prop.layout + prop.path}

@@ -102,7 +102,7 @@ class RTL extends React.Component {
       if (prop.collapse) {
         return this.getRoutes(prop.views);
       }
-      if (prop.layout === "/rtl") {
+      if (prop.layout === "/demo/rtl") {
         return (
           <Route
             path={prop.layout + prop.path}

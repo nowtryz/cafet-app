@@ -5,17 +5,43 @@ import { connect } from 'react-redux'
 import { createBrowserHistory } from 'history'
 import { Router, Route, Switch, Redirect } from 'react-router-dom'
 
-import AuthLayout from 'layouts/Auth'
-import RtlLayout from 'layouts/RTL'
-import AdminLayout from 'layouts/Admin'
+import AuthLayout from '@dashboard/layouts/Auth'
+import RtlLayout from '@dashboard/layouts/RTL'
+import DemoAdminLayout from '@dashboard/layouts/Admin'
 
 import '../material-dashboard/assets/scss/material-dashboard-pro-react.scss?v=1.5.0'
 
-import Login from 'containers/pages/login'
-import Register from 'containers/pages/register'
+import Login from 'containers/auth/login'
+import Register from 'containers/auth/register'
 import { APP_NAME } from '../config'
 
+import DashboardLayout from './layouts/dashboard'
+import AdminLayout from './layouts/admin'
+
+import adminRoutes from '../routes/admin'
+import routes from '../routes/dashboard'
+
 const hist = createBrowserHistory()
+
+const renderRoutes = (routes, lang, Layout) => {
+    return routes.reverse().map(route => {
+        if (route.items) return renderRoutes(route.items, lang, Layout)
+        else {
+            return (
+                <Route
+                    exact
+                    key={route.path}
+                    path={route.path}
+                    render={routeProps => (
+                        <Layout {...routeProps} {...route.layoutProps} title={route.title} lang={lang}>
+                            <route.component {...routeProps} {...route.componentProps} />
+                        </Layout>
+                    )}
+                />
+            )
+        }
+    })
+}
 
 const App = ({lang}) => (
     <React.Fragment>
@@ -24,26 +50,29 @@ const App = ({lang}) => (
             <Switch>
                 <Route 
                     path='/login' 
-                    component={(routeProps) => (
+                    render={(routeProps) => (
                         <Login {...routeProps} lang={lang} />
                     )}
                 />
                 <Route 
                     path='/register' 
-                    component={(routeProps) => (
+                    render={(routeProps) => (
                         <Register {...routeProps} lang={lang} />
                     )}
                 />
                 <Route 
                     path='/lock' 
-                    component={(routeProps) => (
+                    render={(routeProps) => (
                         <Login {...routeProps} lang={lang} />
                     )}
                 />
-                <Route path='/rtl' component={RtlLayout} />
-                <Route path='/auth' component={AuthLayout} />
-                <Route path='/admin' component={AdminLayout} />
-                <Redirect from='/' to='/admin/dashboard' />
+                {renderRoutes(routes, lang, DashboardLayout)}
+                {renderRoutes(adminRoutes, lang, AdminLayout)}
+                <Route path="/demo/rtl" render={RtlLayout} />
+                <Route path="/demo/auth" render={AuthLayout} />
+                <Route path="/demo/admin" render={DemoAdminLayout} />
+                <Redirect from="/demo/" to="/demo/admin/dashboard" />
+                <Redirect from='/' to='/admin' />
             </Switch>
         </Router>
     </React.Fragment>

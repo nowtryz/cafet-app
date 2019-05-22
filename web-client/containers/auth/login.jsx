@@ -1,8 +1,6 @@
 import React from 'react'
-import Helmet from 'react-helmet'
 import { connect } from 'react-redux'
 import { PropTypes } from 'prop-types'
-import { Redirect } from 'react-router-dom'
 
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -36,10 +34,9 @@ import AuthLayout from '../layouts/auth'
 class LoginPage extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.any).isRequired,
-        lang: PropTypes.objectOf(PropTypes.string).isRequired,
+        lang: PropTypes.objectOf(PropTypes.any).isRequired,
         login: PropTypes.func.isRequired,
-        isLogging: PropTypes.bool.isRequired,
-        isLogged: PropTypes.bool.isRequired
+        isLogging: PropTypes.bool.isRequired
     }
 
     state = {
@@ -63,14 +60,6 @@ class LoginPage extends React.Component {
         this.timeOutFunction = null
     }
 
-    changeValue(e, field) {
-        const { value } = e.target
-        this.setState(prevState => ({
-            prevState,
-            [field]: value
-        }))
-    }
-
     validate = () => {
         const { login } = this.props
         const { email, password } = this.state
@@ -85,19 +74,21 @@ class LoginPage extends React.Component {
         }
     }
 
+    changeValue(e, field) {
+        const { value } = e.target
+        this.setState(prevState => ({
+            prevState,
+            [field]: value
+        }))
+    }
+
     render() {
-        const { classes, lang, isLogged, isLogging, ...rest } = this.props
+        const { classes, lang, isLogging, ...rest } = this.props
         const { cardAnimaton, email, password } = this.state
         const title = lang[links.login.title]
 
-        
-        if (isLogged) return (
-            <Redirect to='/' />
-        )
-
         return (
             <AuthLayout title={title} bgImage={background} {...rest}>
-                <Helmet title={title} />
                 <Dialog
                     disableBackdropClick
                     disableEscapeKeyDown
@@ -200,8 +191,7 @@ class LoginPage extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    isLogging: state.user.isLogging,
-    isLogged: state.user.user !== null
+    isLogging: state.user.isLogging
 })
 
 export default withStyles(loginPageStyle)(connect(mapStateToProps, {
