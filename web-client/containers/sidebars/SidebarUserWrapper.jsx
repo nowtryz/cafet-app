@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 
 // @material-ui/core components
@@ -13,7 +14,8 @@ import avatar from 'assets/img/faces/avatar.jpg'
 
 class SidebarUserWrapper extends React.Component {
     static propTypes = {
-        classes: PropTypes.objectOf(PropTypes.string).isRequired
+        classes: PropTypes.objectOf(PropTypes.string).isRequired,
+        lang: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])).isRequired
     }
     
     state = {
@@ -25,7 +27,7 @@ class SidebarUserWrapper extends React.Component {
     }
 
     render() {
-        const { classes } = this.props
+        const { classes, lang } = this.props
         const { openAvatar } = this.state
 
         return (
@@ -44,23 +46,21 @@ class SidebarUserWrapper extends React.Component {
                                 primary='Tania Andrew'
                                 secondary={(<b className={classNames(classes.caret, classes.userCaret, {[classes.caretActive]: openAvatar})} />)}
                                 disableTypography
-                                className={classes.itemText + ' ' + classes.userItemText}
+                                className={classNames(classes.itemText, classes.userItemText)}
                             />
                         </NavLink>
                         <Collapse in={openAvatar} unmountOnExit>
-                            <List className={classes.list + ' ' + classes.collapseList}>
+                            <List className={classNames(classes.list, classes.collapseList)}>
                                 <ListItem className={classes.collapseItem}>
                                     <NavLink
-                                        to="#"
-                                        className={
-                                            classes.itemLink + ' ' + classes.userCollapseLinks
-                                        }
+                                        to="/dashboard/profile"
+                                        className={classNames(classes.itemLink, classes.userCollapseLinks)}
                                     >
                                         <span className={classes.collapseItemMini}>
                                             MP
                                         </span>
                                         <ListItemText
-                                            primary='My Profile'
+                                            primary={lang['My Profile']}
                                             disableTypography
                                             className={classes.collapseItemText}
                                         />
@@ -68,16 +68,14 @@ class SidebarUserWrapper extends React.Component {
                                 </ListItem>
                                 <ListItem className={classes.collapseItem}>
                                     <NavLink
-                                        to="#"
-                                        className={
-                                            classes.itemLink + ' ' + classes.userCollapseLinks
-                                        }
+                                        to="/dashboard/password"
+                                        className={classNames(classes.itemLink, classes.userCollapseLinks)}
                                     >
                                         <span className={classes.collapseItemMini}>
                                             EP
                                         </span>
                                         <ListItemText
-                                            primary='Edit Profile'
+                                            primary={lang['Change Password']}
                                             disableTypography
                                             className={classes.collapseItemText}
                                         />
@@ -85,16 +83,14 @@ class SidebarUserWrapper extends React.Component {
                                 </ListItem>
                                 <ListItem className={classes.collapseItem}>
                                     <NavLink
-                                        to="#"
-                                        className={
-                                            classes.itemLink + ' ' + classes.userCollapseLinks
-                                        }
+                                        to="/dashboard/settings"
+                                        className={classNames(classes.itemLink, classes.userCollapseLinks)}
                                     >
                                         <span className={classes.collapseItemMini}>
                                         S
                                         </span>
                                         <ListItemText
-                                            primary='Settings'
+                                            primary={lang.Settings}
                                             disableTypography
                                             className={classes.collapseItemText}
                                         />
@@ -109,4 +105,8 @@ class SidebarUserWrapper extends React.Component {
     }
 }
 
-export default SidebarUserWrapper
+const mapStateToProps = state => ({
+    lang: state.lang
+})
+
+export default connect(mapStateToProps)(SidebarUserWrapper)

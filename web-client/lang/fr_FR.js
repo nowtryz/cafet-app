@@ -47,5 +47,7 @@ export default {
     'Admin Panel': 'panneau d\'administration',
     Profile:'Profil',
     Language: 'Langue',
-    Logout: 'Déconnexion'
+    Logout: 'Déconnexion',
+    'My Profile': 'Mon Profil',
+    'Change Password': 'Changer de mot de passe',
 }

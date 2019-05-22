@@ -134,6 +134,7 @@ class SidebarRoutes extends React.Component {
             <ListItem key={route.path} className={isCollapseItem ? classes.collapseItem : classes.item}>
                 <NavLink
                     to={route.path}
+                    exact
                     className={isCollapseItem ? classes.collapseItemLink: classes.itemLink}
                     activeClassName={classes[color]}
                 >
@@ -162,7 +163,7 @@ class SidebarRoutes extends React.Component {
 
     renderLinks(routes, classes) {
         return routes.map(route => {
-            if (route.redirect) {
+            if (route.redirect || route.hidden) {
                 return null
             }
             if (route.items !== undefined) {

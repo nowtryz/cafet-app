@@ -47,5 +47,7 @@ export default {
     'Admin Panel': 'Admin Panel',
     Profile:'Profile',
     Language: 'Language',
-    Logout: 'Logout'
+    Logout: 'Logout',
+    'My Profile': 'My Profile',
+    'Change Password': 'Change Password',
 }

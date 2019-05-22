@@ -72,7 +72,7 @@ const App = ({lang}) => (
                 <Route path="/demo/auth" component={AuthLayout} />
                 <Route path="/demo/admin" component={DemoAdminLayout} />
                 <Redirect from="/demo/" to="/demo/admin/dashboard" />
-                <Redirect from='/' to='/admin' />
+                <Redirect from='/' to='/dashboard' />
             </Switch>
         </Router>
     </React.Fragment>

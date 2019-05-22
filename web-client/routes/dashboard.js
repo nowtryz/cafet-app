@@ -1,4 +1,4 @@
-import Dashboard from '@dashboard/views/Dashboard/Dashboard'
+
 
 // @material-ui/icons
 import DashboardIcon from '@material-ui/icons/Dashboard'
@@ -20,7 +20,28 @@ export default [
         title: 'Dashboard',
         id: 'dashboard',
         icon: DashboardIcon,
-        component: Dashboard,
+        component: BlankPage,
+    },
+    {
+        path: '/dashboard/profile',
+        title: 'Profile',
+        id: 'profile',
+        hidden: true,
+        component: BlankPage,
+    },
+    {
+        path: '/dashboard/password',
+        title: 'password',
+        id: 'password',
+        hidden: true,
+        component: BlankPage,
+    },
+    {
+        path: '/dashboard/settings',
+        title: 'Preferences',
+        id: 'preferences',
+        hidden: true,
+        component: BlankPage,
     },
     {
         title: 'My Account',
