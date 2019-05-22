@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 const Locale = ({children, lang}) => {
     return (
         <React.Fragment>
-            {lang[children]}
+            {lang[children] || children}
         </React.Fragment>
     )
 }

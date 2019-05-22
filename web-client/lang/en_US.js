@@ -1,3 +1,50 @@
-export const lang = 'en_US'
+export default {
+    lang: 'en_US',
 
-export const login = 'Login'
+    texts: {
+        registerPage: {
+            statistics: 'An account to follow your expenses, your favorite products, and so much more statistics.',
+            balance: 'Your account comes with a balance to wich you can add money at any moment. What better way to avoid always taking out your money to pay for the cafet\'?',
+            'easy to use': 'With an intuitive web applicaton, it has never been such easy to manage your account',
+            agreements: 'I agree to the ',
+            terms: 'terms and conditions'
+        }
+    },
+
+    login: 'Login',
+    register: 'Sign up',
+    lock: 'Resume',
+    email: 'Email',
+    password: 'Password',
+    'or be casual': 'Or be casual',
+    firstName: 'First Name',
+    name: 'Family Name',
+    emailDuplicated: 'This email address does not exists',
+    emailInvalid: 'This email address is not valid',
+    required: 'This field is required',
+    statistics: 'Statistics',
+    balance: 'Banlance',
+    'easy to use': 'Easy to use',
+    getStarted: 'Get started!',
+    Dashboard: 'Dashboard',
+    'System info': 'System info',
+    Routines: 'Routines',
+    Overview: 'Overview',
+    Users: 'Users',
+    Statistics: 'Statistics',
+    'Product Stocks': 'Product Stocks',
+    Reports: 'Reports',
+    Settings: 'Settings',
+    Preferences: 'Preferences',
+    Payment: 'Payment',
+    Monitoring: 'Monitoring',
+    'My Account': 'My Account',
+    Expenses: 'Expenses',
+    'My balance': 'My balance',
+    History: 'History',
+    Reloads: 'Reloads',
+    Notifications: 'Notifications',
+    'Admin Panel': 'Admin Panel',
+    Profile:'Profile',
+    Language: 'Language'
+}

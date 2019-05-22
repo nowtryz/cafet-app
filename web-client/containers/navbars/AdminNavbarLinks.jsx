@@ -21,6 +21,7 @@ import Notifications from '@material-ui/icons/Notifications'
 import Dashboard from '@material-ui/icons/Dashboard'
 import Search from '@material-ui/icons/Search'
 import Build from '@material-ui/icons/Build'
+import Language from '@material-ui/icons/Language'
 
 // core components
 import CustomInput from '@dashboard/components/CustomInput/CustomInput'
@@ -28,6 +29,7 @@ import Button from '@dashboard/components/CustomButtons/Button'
 
 import adminNavbarLinksStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/adminNavbarLinksStyle'
 
+import LangControlMenu from '../menus/LangControlMenu'
 import UserControlMenu from '../menus/UserControlMenu'
 import Locale from '../Locale'
 
@@ -81,6 +83,22 @@ class HeaderLinks extends React.Component {
                         className={classes.headerLinksSvg + ' ' + classes.searchIcon}
                     />
                 </Button>
+                <LangControlMenu
+                    className={classes.managerClasses}
+                    buttonProps={{
+                        color:'transparent',
+                        'aria-label':'Person',
+                        justIcon: true,
+                        className:classes.buttonLink
+                    }}
+                >
+                    <Language className={classNames(classes.headerLinksSvg, classes.links)} />
+                    <Hidden mdUp implementation="css">
+                        <span className={classes.linkText}>
+                            <Locale>Language</Locale>
+                        </span>
+                    </Hidden>
+                </LangControlMenu>
                 {isAdmin ? (
                     <div className={classes.managerClasses}>
                         <Button

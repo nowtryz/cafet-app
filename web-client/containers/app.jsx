@@ -24,7 +24,7 @@ import routes from '../routes/dashboard'
 const hist = createBrowserHistory()
 
 const renderRoutes = (routes, lang, Layout) => {
-    return routes.reverse().map(route => {
+    return routes.slice(0).reverse().map(route => {
         if (route.items) return renderRoutes(route.items, lang, Layout)
         else {
             return (
@@ -68,9 +68,9 @@ const App = ({lang}) => (
                 />
                 {renderRoutes(routes, lang, DashboardLayout)}
                 {renderRoutes(adminRoutes, lang, AdminLayout)}
-                <Route path="/demo/rtl" render={RtlLayout} />
-                <Route path="/demo/auth" render={AuthLayout} />
-                <Route path="/demo/admin" render={DemoAdminLayout} />
+                <Route path="/demo/rtl" component={RtlLayout} />
+                <Route path="/demo/auth" component={AuthLayout} />
+                <Route path="/demo/admin" component={DemoAdminLayout} />
                 <Redirect from="/demo/" to="/demo/admin/dashboard" />
                 <Redirect from='/' to='/admin' />
             </Switch>

@@ -1,31 +1,31 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import PropTypes from 'prop-types'
 import Button from '@dashboard/components/CustomButtons/Button'
+import { withStyles } from '@material-ui/core/styles'
+
+// core components
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 import Grow from '@material-ui/core/Grow'
 import Paper from '@material-ui/core/Paper'
 import Popper from '@material-ui/core/Popper'
 import MenuItem from '@material-ui/core/MenuItem'
 import MenuList from '@material-ui/core/MenuList'
-import { withStyles } from '@material-ui/core/styles'
-import Divider from '@material-ui/core/Divider'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
+import ListItemText from '@material-ui/core/ListItemText'
 
 import adminNavbarLinksStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/adminNavbarLinksStyle'
 
-import { logout as logoutAction } from 'actions'
-
+import { changeLocale as changeLocaleAction } from 'actions'
+import USFlagIcon from '../flags/USFlagIcon'
+import FranceFlagIcon from '../flags/FranceFlagIcon'
 
 const styles = theme => ({
     ...adminNavbarLinksStyle(theme),
     menuItem: {
         paddingRight: '30px',
         paddingLeft: '30px',
-        '&:hover': {
-            color: 'inherit'
-        },
     }
 })
 
@@ -36,7 +36,8 @@ class UserControlMenu extends React.Component {
             PropTypes.arrayOf(PropTypes.element),
             PropTypes.element
         ]).isRequired,
-        buttonProps: PropTypes.objectOf(PropTypes.any)
+        buttonProps: PropTypes.objectOf(PropTypes.any),
+        changeLocale: PropTypes.func.isRequired
     }
 
     static defaultProps = {
@@ -57,6 +58,12 @@ class UserControlMenu extends React.Component {
         }
 
         this.setState({ open: false })
+    }
+
+    changeLocale(locale) {
+        const { changeLocale } = this.props
+        this.setState({ open: false })
+        changeLocale(locale)
     }
 
     render() {
@@ -96,10 +103,18 @@ class UserControlMenu extends React.Component {
                             <Paper>
                                 <ClickAwayListener onClickAway={this.handleClose}>
                                     <MenuList>
-                                        <MenuItem className={classes.menuItem} component={Link} to='/dashboard/profile'>Profile</MenuItem>
-                                        <MenuItem className={classes.menuItem} component={Link} to='/dashboard/settings'>Settings</MenuItem>
-                                        <Divider />
-                                        <MenuItem className={classes.menuItem} onClick={logout}>Logout</MenuItem>
+                                        <MenuItem className={classes.menuItem} onClick={() => this.changeLocale('fr_FR')}>
+                                            <ListItemIcon className={classes.icon}>
+                                                <FranceFlagIcon />
+                                            </ListItemIcon>
+                                            <ListItemText classes={{ primary: classes.primary }} inset primary="Français (FR)" />
+                                        </MenuItem>
+                                        <MenuItem className={classes.menuItem} onClick={() => this.changeLocale('en_US')}>
+                                            <ListItemIcon className={classes.icon}>
+                                                <USFlagIcon />
+                                            </ListItemIcon>
+                                            <ListItemText classes={{ primary: classes.primary }} inset primary="Englis (US)" />
+                                        </MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>
                             </Paper>
@@ -112,5 +127,5 @@ class UserControlMenu extends React.Component {
 }
 
 export default withStyles(styles)(connect(null, {
-    logout: logoutAction
+    changeLocale: changeLocaleAction
 })(UserControlMenu))

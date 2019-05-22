@@ -1,7 +1,7 @@
-import { CHANGE_LANG } from 'constants'
+import { LOCALE_CHANGED } from 'constants'
 
 // eslint-disable-next-line import/prefer-default-export
-export const changeLang = lang => dispach => dispach({
-    type: CHANGE_LANG,
+export const changeLocale = lang => dispach => dispach({
+    type: LOCALE_CHANGED,
     payload: lang
 })
