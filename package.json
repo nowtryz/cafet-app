@@ -6,10 +6,11 @@
   "scripts": {
     "api:doc": "redoc-cli bundle openapi.yml -o doc/index.html",
     "prod:build": "rimraf server/dist && cross-env NODE_ENV=production webpack -p --progress",
+    "dev:build": "rimraf server/dist && cross-env NODE_ENV=development webpack -d --progress",
     "dev:start": "rimraf server/dist && cross-env NODE_ENV=development yarn wds",
     "lint:check": "eslint web-client webpack.config.babel.js --ext .js,.jsx",
     "lint:fix": "eslint web-client webpack.config.babel.js --ext .js,.jsx --fix",
-    "wds": "webpack-dev-server --progress",
+    "wds": "webpack-dev-server -d --progress",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",

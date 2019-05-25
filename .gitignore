@@ -1,7 +1,7 @@
 #app
 doc/
 
-# Eclypse
+# Eclipse
 .settings/
 .buildpath
 .project

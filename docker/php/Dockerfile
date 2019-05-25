@@ -1,4 +1,5 @@
-FROM php:7.2.9-apache-stretch AS cafet-php-server
+## Base configuration of the php image
+FROM php:7.2.9-apache-stretch AS base-php
 
 
 # Install required extentions
@@ -39,18 +40,36 @@ RUN { \
 COPY docker/php/phpinfo.php /var/www/html/
 
 
-# Copy server
-COPY server/ /var/www/html/
-COPY docker/php/config.php /var/www/html/cafetapi_content/
-
-
-# Prepare volumes
-RUN cp -r /var/www/html/cafetapi_content /var/cafetapi_content_defaults
-RUN mkdir -p /var/tmp && mkdir -p /var/log
-
-
 # Copy entrypoint
 COPY docker/php/docker-php-entrypoint.sh /usr/local/bin/docker-php-entrypoint
 RUN chmod 775 /usr/local/bin/docker-php-entrypoint
 
-VOLUME ["/var/log", "/var/www/html/cafetapi_content"]
+# Prepare volumes
+RUN mkdir -p /var/tmp && mkdir -p /var/log && mkdir -p /var/cafetapi_content_defaults
+
+
+VOLUME ["/var/log", "/var/cafetapi_content_defaults"]
+
+
+## Js build
+FROM node:stretch-slim AS js-build 
+
+# copy project descrition and install it
+COPY ./package.json yarn.lock /var/app/
+RUN cd /var/app/ && yarn install
+
+# copy application and compile it
+COPY server/ /var/app/server/
+COPY web-client/ /var/app/web-client/
+COPY webpack.config.babel.js .babelrc /var/app/
+RUN cd /var/app/ && yarn prod:build
+
+
+## Final image
+FROM base-php AS cafet-php-server
+
+# Copy built server
+COPY --chown=www-data:www-data --from=js-build /var/app/server/ /var/www/html/
+COPY docker/php/config.php /var/www/html/cafetapi_content/
+RUN cp -r /var/www/html/cafetapi_content /var/cafetapi_content_defaults
+

@@ -153,7 +153,7 @@ class Layout extends React.Component {
                 <Helmet title={lang[title] || title} />
                 <Sidebar
                     routes={routes}
-                    logoText="Creative Tim"
+                    logoText="Cafet'"
                     logo={logo}
                     image={image}
                     handleDrawerToggle={this.handleDrawerToggle}

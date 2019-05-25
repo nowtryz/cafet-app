@@ -4,7 +4,7 @@ import { resolve } from 'path'
 import webpack from 'webpack'
 
 import ManifestPlugin  from 'webpack-manifest-plugin'
-import isProd from './web-client/config'
+import { isProd } from './web-client/config'
 
 const WDS_PORT = 7000
 
