@@ -10,12 +10,12 @@ import withStyles from '@material-ui/core/styles/withStyles'
 // core components
 
 import pagesStyle from '@dashboard/assets/jss/material-dashboard-pro-react/layouts/authStyle'
+import error from '@dashboard/assets/img/clint-mckoy.jpg'
 
-import error from 'assets/img/clint-mckoy.jpg'
 import Footer from '../Footer'
 import AuthNavbar from '../navbars/AuthNavbar'
 
-class Layout extends React.Component {
+class AuthLayout extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
         children: PropTypes.oneOfType([
@@ -37,7 +37,7 @@ class Layout extends React.Component {
     render() {
         const { classes, children, title, bgImage, isLogged, ...rest } = this.props
 
-        if (isLogged) return <Redirect to='/' />
+        if (isLogged) return <Redirect to='/' />    
 
         return (
             <div>
@@ -58,7 +58,7 @@ class Layout extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    isLogged: state.user.user !== null
+    isLogged: state.user.user != null
 })
 
-export default withStyles(pagesStyle)(connect(mapStateToProps)(Layout))
+export default withStyles(pagesStyle)(connect(mapStateToProps)(AuthLayout))

@@ -12,7 +12,9 @@ import AttachMoney from '@material-ui/icons/AttachMoney'
 
 import React from 'react'
 // eslint-disable-next-line react/jsx-filename-extension
-const BlankPage = () => (<p>blank page</p>)
+const BlankPage = () => (<p>this is a placeholder page</p>)
+// eslint-disable-next-line react/jsx-filename-extension
+const Test = () => (<p>this is a test page</p>)
 
 export default [
     {
@@ -83,7 +85,7 @@ export default [
                 title: 'Reloads',
                 id: 'reloads',
                 //icon: Timer,
-                mini: 'R',
+                mini: 'RE',
                 component: BlankPage,
             },
         ],

@@ -9,14 +9,21 @@ import wrapper from './containers/wrapper'
 import store from './reducers'
 import { responseInterceptor, errorInterceptor } from './interceptors'
 
+import {
+    loadServerConfig as loadServerConfigAction,
+    grabUserInfo as grabUserInfoAction
+} from './actions'
+
 axios.interceptors.response.use(responseInterceptor, errorInterceptor)
 axios.defaults.headers.common['Skip-Headers'] = '"WWW-Authenticate"'
 
 const rootEl = document.querySelector('.app')
 
-
-
-ReactDOM.render(wrapper(App, store), rootEl)
+store.dispatch(loadServerConfigAction())
+    .then(() => store.dispatch(grabUserInfoAction()))
+    .then(() => {
+        ReactDOM.render(wrapper(App, store), rootEl)
+    })
 
 if (module.hot) {
     module.hot.accept('./containers/app', () => {

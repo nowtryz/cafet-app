@@ -12,32 +12,33 @@ const initialState = {
     message: 'not logged'
 }
 
-const userReducer = (state = initialState, { type, payload = null }) => {
-    switch (type) {
+const userReducer = (state = initialState, action) => {
+    switch (action.type) {
     case USER_IS_LOGGING: return {
         ...state,
         isLogging: true,
-        message: payload
+        message: action.message
     }
 
     case USER_LOGGING_FAILED: return {
         ...state,
         isLogging: false,
-        message: payload
+        message: action.message
     }
 
     case USER_LOGGED: return {
         ...state,
         isLogging: false,
-        user: payload.user,
-        session: payload.session,
-        message: payload.message
+        user: action.user,
+        session: action.session,
+        message: action.message
     }
 
     case USER_LOGOUT: return {
         ...state,
         user: null,
-        message: payload
+        session: null,
+        message: action.message
     }
 
     default:

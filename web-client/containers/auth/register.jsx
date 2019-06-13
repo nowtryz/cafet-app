@@ -30,11 +30,14 @@ import InfoArea from '@dashboard/components/InfoArea/InfoArea'
 import Card from '@dashboard/components/Card/Card'
 import CardBody from '@dashboard/components/Card/CardBody'
 
-import registerPageStyle from 'assets/jss/material-dashboard-pro-react/views/registerPageStyle'
-import background from 'assets/img/register.jpeg'
+import registerPageStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/registerPageStyle'
+import background from '@dashboard/assets/img/register.jpeg'
+
 import links from 'routes/auth'
 import { registerUser } from 'api'
 import { login as loginAction } from 'actions'
+import _ from 'lang'
+
 import AuthLayout from '../layouts/auth'
 
 class RegisterPage extends React.Component {
@@ -59,12 +62,11 @@ class RegisterPage extends React.Component {
     }
 
     getFields() {
-        const { lang } = this.props
         const { emailValidation, familyNameValidation, firstnameValidation, passwordValidation } = this.state
 
         return ([
             {
-                name: lang.firstName,
+                name: _('firstName'),
                 icone: Face,
                 id: 'firstname',
                 inputProps: {
@@ -72,7 +74,7 @@ class RegisterPage extends React.Component {
                 },
                 helperText: firstnameValidation
             }, {
-                name: lang.name,
+                name: _('name'),
                 icone: Face,
                 id: 'familyName',
                 inputProps: {
@@ -80,7 +82,7 @@ class RegisterPage extends React.Component {
                 },
                 helperText: familyNameValidation
             }, {
-                name: lang.email,
+                name: _('email'),
                 icone: Email,
                 id: 'email',
                 inputProps: {
@@ -88,7 +90,7 @@ class RegisterPage extends React.Component {
                 },
                 helperText: emailValidation
             }, {
-                name: lang.password,
+                name: _('password'),
                 icone: Icon,
                 iconeName: 'lock_outline',
                 id: 'password',
@@ -109,16 +111,16 @@ class RegisterPage extends React.Component {
     }
 
     validate = async () => {
-        const { login, lang } = this.props
+        const {login } = this.props
         const { email, familyName, firstname, password, isValidating } = this.state
 
         if (isValidating) return
         this.setState({isValidating: true})
 
-        const emailValidation = email ? undefined : lang.required
-        const familyNameValidation = familyName ? undefined : lang.required
-        const firstnameValidation =  firstname ? undefined : lang.required
-        const passwordValidation =  password ? undefined : lang.required
+        const emailValidation = email ? undefined : _('required')
+        const familyNameValidation = familyName ? undefined : _('required')
+        const firstnameValidation =  firstname ? undefined : _('required')
+        const passwordValidation =  password ? undefined : _('required')
         this.setState({ emailValidation, familyNameValidation, firstnameValidation, passwordValidation })
         if ( emailValidation || familyNameValidation || firstnameValidation || passwordValidation ) {
             this.setState({isValidating: false})
@@ -162,13 +164,12 @@ class RegisterPage extends React.Component {
     }
 
     handleConflicts(conflicts) {
-        const { lang } = this.props
 
         if (conflicts.email !== undefined ) {
             if ( conflicts.email === 'duplicated' ) {
-                this.setState({emailValidation: lang.emailDuplicated})
+                this.setState({emailValidation: _('emailDuplicated')})
             } else if ( conflicts.email === 'not valid' ) {
-                this.setState({emailValidation: lang.emailInvalid})
+                this.setState({emailValidation: _('emailInvalid')})
             }
         }
     }
@@ -207,8 +208,8 @@ class RegisterPage extends React.Component {
     }
 
     render() {
-        const { classes, lang, ...rest } = this.props
-        const title = lang[links.register.title]
+        const { classes, ...rest } = this.props
+        const title = _(links.register.title)
         const { termsAccepted, isValidating } = this.state
 
         return (
@@ -237,25 +238,25 @@ class RegisterPage extends React.Component {
                     <GridContainer justify='center'>
                         <GridItem xs={12} sm={12} md={10}>
                             <Card className={classes.cardSignup}>
-                                <h2 className={classes.cardTitle}>{lang.register}</h2>
+                                <h2 className={classes.cardTitle}>{_('register')}</h2>
                                 <CardBody onKeyPress={this.keyPressed}>
                                     <GridContainer justify='center'>
                                         <GridItem xs={12} sm={12} md={5}>
                                             <InfoArea
-                                                title={lang.statistics}
-                                                description={lang.texts.registerPage.statistics}
+                                                title={_('statistics')}
+                                                description={_('statistics', 'register_page')}
                                                 icon={Timeline}
                                                 iconColor='rose'
                                             />
                                             <InfoArea
-                                                title={lang.balance}
-                                                description={lang.texts.registerPage.balance}
+                                                title={_('balance')}
+                                                description={_('balance', 'register_page')}
                                                 icon={MonetizationOn}
                                                 iconColor='primary'
                                             />
                                             <InfoArea
-                                                title={lang['easy to use']}
-                                                description={lang.texts.registerPage['easy to use']}
+                                                title={_('easy to use')}
+                                                description={_('easy to use', 'register_page')}
                                                 icon={TouchApp}
                                                 iconColor='info'
                                             />
@@ -270,7 +271,7 @@ class RegisterPage extends React.Component {
                                                     <i className='fab fa-facebook-f' />
                                                 </Button>
                                                 {' '}
-                                                <h4 className={classes.socialTitle}>{lang['or be casual']}</h4>
+                                                <h4 className={classes.socialTitle}>{_('or be casual')}</h4>
                                             </div>
                                             <form className={classes.form}>
                                                 {this.getFields().map(field => this.renderInput(field))}
@@ -295,14 +296,14 @@ class RegisterPage extends React.Component {
                                                     )}
                                                     label={(
                                                         <span>
-                                                            {lang.texts.registerPage.agreements}
-                                                            <a href='#pablo'>{lang.texts.registerPage.terms}</a>.
+                                                            {_('agreements', 'register_page')}
+                                                            <a href='#pablo'>{_('terms', 'register_page')}</a>.
                                                         </span>
                                                     )}
                                                 />
                                                 <div className={classes.center}>
                                                     <Button disabled={!termsAccepted || isValidating} round color='primary' onClick={this.validate}>
-                                                        {lang.getStarted}
+                                                        {_('getStarted')}
                                                     </Button>
                                                 </div>
                                             </form>

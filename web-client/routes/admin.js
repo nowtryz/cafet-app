@@ -1,4 +1,4 @@
-import Dashboard from '@dashboard/views/Dashboard/Dashboard'
+import Dashboard from 'containers/admin/Dashboard'
 
 // @material-ui/icons
 import DashboardIcon from '@material-ui/icons/Dashboard'
@@ -13,11 +13,12 @@ import Store from '@material-ui/icons/Store'
 import Timeline from '@material-ui/icons/Timeline'
 import Explore from '@material-ui/icons/Explore'
 import SettingsApplications from '@material-ui/icons/SettingsApplications'
+import FolderOpen from '@material-ui/icons/FolderOpen'
 
 
 import React from 'react'
 // eslint-disable-next-line react/jsx-filename-extension
-const BlankPage = () => (<p>blank page</p>)
+const BlankPage = () => (<p>this is a placeholder page</p>)
 
 export default [
     {
@@ -46,6 +47,13 @@ export default [
                 title: 'Routines',
                 id: 'routines',
                 icon: Timer,
+                component: BlankPage,
+            },
+            {
+                path: '/admin/storage',
+                title: 'Storage and Backups',
+                id: 'used_space',
+                icon: FolderOpen,
                 component: BlankPage,
             },
         ],

@@ -12,7 +12,6 @@ import Hidden from '@material-ui/core/Hidden'
 import Menu from '@material-ui/icons/Menu'
 import MoreVert from '@material-ui/icons/MoreVert'
 import ViewList from '@material-ui/icons/ViewList'
-import Person from '@material-ui/icons/Person'
 
 // core components
 import Button from '@dashboard/components/CustomButtons/Button'

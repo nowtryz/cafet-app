@@ -9,14 +9,42 @@ import {
 import { API_URL } from '../config'
 import store from '../reducers'
 
+export const grabUserInfo = () => async dispatch => {
+    const session_name = store.getState().server.session_name
+    const session = document.cookie.replace(new RegExp(`(?:(?:^|.*;\\s*)${session_name}\\s*=\\s*([^;]*).*$)|^.*$`, 'g'), '$1') || null
+
+    if (!session) return
+
+    try {
+        dispatch({
+            type: USER_IS_LOGGING,
+            message: 'checking session'
+        })
+
+        const response = await axios.get(`${API_URL}/user/current`)
+
+        dispatch({
+            type: USER_LOGGED,
+            user: response.data,
+            session,
+            message: 'logged from session'
+        })
+    } catch (err) {
+        dispatch({
+            type: USER_LOGGING_FAILED,
+            message: (err.response && err.response.data ? err.response.data.additional_message : null) || 'logging from session failed'
+        })
+    }
+}
+
 export const login = (username, password) => async dispatch => {
     try {
         dispatch({
             type: USER_IS_LOGGING,
-            payload: `logging in as ${username}`
+            message: `logging in as ${username}`
         })
 
-        const response = await axios.post( `${API_URL}/user/login`, {
+        const response = await axios.post(`${API_URL}/user/login`, {
         }, {
             auth: {
                 username,
@@ -28,17 +56,15 @@ export const login = (username, password) => async dispatch => {
 
         dispatch({
             type: USER_LOGGED,
-            payload: {
-                user,
-                session,
-                message
-            }
+            user,
+            session,
+            message
         })
 
     } catch (err) {
         dispatch({
             type: USER_LOGGING_FAILED,
-            payload: err.response && err.response.data ? err.response.data.additional_message : null || 'logging failed' 
+            message: (err.response && err.response.data ? err.response.data.additional_message : null) || 'logging failed'
         })
     }
 }
@@ -51,7 +77,7 @@ export const logout = () => async dispatch => {
     if (!store.getState().user.user) {
         dispatch({
             type: USER_LOGOUT,
-            payload: 'already logged out'
+            message: 'already logged out'
         })
 
         return
@@ -65,13 +91,18 @@ export const logout = () => async dispatch => {
 
         dispatch({
             type: USER_LOGOUT,
-            payload: message
+            message: message
         })
 
     } catch (err) {
         dispatch({
             type: USER_LOGOUT,
-            payload: err.message
+            message: err.message
         })
     }
 }
+
+export const clearUser = () => ({
+    type: USER_LOGOUT,
+    message: 'disconnected from the server'
+})

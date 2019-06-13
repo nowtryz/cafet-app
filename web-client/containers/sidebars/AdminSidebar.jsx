@@ -9,7 +9,7 @@ import Hidden from '@material-ui/core/Hidden'
 
 // core components
 
-import sidebarStyle from 'assets/jss/material-dashboard-pro-react/components/sidebarStyle'
+import sidebarStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/sidebarStyle'
 
 import SidebarWrapper from './SidebarWrapper'
 import SidebarUserWrapper from './SidebarUserWrapper'
@@ -100,10 +100,10 @@ class Sidebar extends React.Component {
 
         var brand = (
             <div className={classes.logo}>
-                <a href="#isty" className={classes.logoMini}>
+                <a href="#nowtryz" className={classes.logoMini}>
                     <img src={logo} alt="logo" className={classes.img} />
                 </a>
-                <a href="#isty" className={classes.logoNormal}>
+                <a href="#nowtryz" className={classes.logoNormal}>
                     {logoText}
                 </a>
             </div>

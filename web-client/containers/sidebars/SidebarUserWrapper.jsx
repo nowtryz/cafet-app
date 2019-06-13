@@ -11,10 +11,11 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import Person from '@material-ui/icons/Person'
 
+import _ from 'lang'
+
 class SidebarUserWrapper extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
-        lang: PropTypes.objectOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])).isRequired,
         userDisplay: PropTypes.string.isRequired,
         color: PropTypes.oneOf([
             'white',
@@ -36,7 +37,7 @@ class SidebarUserWrapper extends React.Component {
     }
 
     render() {
-        const { classes, lang, userDisplay, color } = this.props
+        const { classes, userDisplay, color } = this.props
         const { openAvatar } = this.state
 
         return (
@@ -76,7 +77,7 @@ class SidebarUserWrapper extends React.Component {
                                             MP
                                         </span>
                                         <ListItemText
-                                            primary={lang['My Profile']}
+                                            primary={_('My Profile')}
                                             disableTypography
                                             className={classes.collapseItemText}
                                         />
@@ -91,7 +92,7 @@ class SidebarUserWrapper extends React.Component {
                                             C
                                         </span>
                                         <ListItemText
-                                            primary={lang['Change Password']}
+                                            primary={_('Change Password')}
                                             disableTypography
                                             className={classes.collapseItemText}
                                         />
@@ -106,7 +107,7 @@ class SidebarUserWrapper extends React.Component {
                                         S
                                         </span>
                                         <ListItemText
-                                            primary={lang.Settings}
+                                            primary={_('Settings')}
                                             disableTypography
                                             className={classes.collapseItemText}
                                         />
@@ -122,7 +123,6 @@ class SidebarUserWrapper extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    lang: state.lang,
     userDisplay: `${state.user.user.firstname} ${state.user.user.familyName}`
 })
 

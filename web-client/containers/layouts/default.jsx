@@ -3,7 +3,7 @@ import Helmet from 'react-helmet'
 import { connect } from 'react-redux'
 import cx from 'classnames'
 import PropTypes from 'prop-types'
-import { Redirect } from 'react-router-dom'
+import ReactRouterPropTypes from 'react-router-prop-types'
 // creates a beautiful scrollbar
 import PerfectScrollbar from 'perfect-scrollbar'
 import 'perfect-scrollbar/css/perfect-scrollbar.css'
@@ -11,30 +11,31 @@ import 'perfect-scrollbar/css/perfect-scrollbar.css'
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'
 
-import appStyle from 'assets/jss/material-dashboard-pro-react/layouts/adminStyle'
+import appStyle from '@dashboard/assets/jss/material-dashboard-pro-react/layouts/adminStyle'
 
-import image from 'assets/img/sidebar-2.jpg'
-import logo from 'assets/img/logo-white.svg'
+import image from '@dashboard/assets/img/sidebar-2.jpg'
+import logo from '@dashboard/assets/img/logo-white.svg'
 
+import {
+    classes as classesPropType,
+    children as childrenPropType
+} from 'app-proptypes'
+import _ from 'lang'
 import Footer from '../Footer'
 
-var ps
-
-class Layout extends React.Component {
+class DefaultLayout extends React.Component {
     static propTypes = {
-        children: PropTypes.oneOfType([
-            PropTypes.arrayOf(PropTypes.element),
-            PropTypes.element
-        ]).isRequired,
-        classes: PropTypes.objectOf(PropTypes.string).isRequired,
+        children: childrenPropType.isRequired,
+        classes: classesPropType.isRequired,
         fullScreenMaps: PropTypes.bool,
         displayFooter: PropTypes.bool,
         title: PropTypes.string.isRequired,
-        isLogged: PropTypes.bool.isRequired,
         Sidebar: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(React.Component)]).isRequired,
         Navbar: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(React.Component)]).isRequired,
         routes: PropTypes.arrayOf(PropTypes.object).isRequired,
-        lang: PropTypes.objectOf(PropTypes.any).isRequired
+        organisation: PropTypes.string.isRequired,
+        match: ReactRouterPropTypes.match.isRequired,
+        location: ReactRouterPropTypes.location.isRequired,
     }
 
     static defaultProps = {
@@ -53,12 +54,12 @@ class Layout extends React.Component {
     }
 
     mainPanel = React.createRef()
+    ps = null
 
     componentDidMount = () => {
-        const { isLogged } = this.props
         // if no user is logged, the layout won't be mounted as expected
-        if (isLogged && navigator.platform.indexOf('Win') > -1) {
-            ps = new PerfectScrollbar(this.mainPanel.current, {
+        if (navigator.platform.indexOf('Win') > -1) {
+            this.ps = new PerfectScrollbar(this.mainPanel.current, {
                 suppressScrollX: true,
                 suppressScrollY: false
             })
@@ -69,9 +70,8 @@ class Layout extends React.Component {
 
     componentDidUpdate(prevProps) {
         const { mobileOpen } = this.state
-        const { isLogged } = this.props
 
-        if (isLogged && prevProps.history.location.pathname !== prevProps.location.pathname) {
+        if (prevProps.history.location.pathname !== prevProps.location.pathname) {
             this.mainPanel.current.scrollTop = 0
             if (mobileOpen) {
                 this.setState({ mobileOpen: false })
@@ -80,12 +80,29 @@ class Layout extends React.Component {
     }
 
     componentWillUnmount() {
-        const { isLogged } = this.props
-        // if no user is logged, the layout haven't been mounted as expected
-        if (isLogged && navigator.platform.indexOf('Win') > -1) {
-            ps.destroy()
+        if (this.ps && navigator.platform.indexOf('Win') > -1) {
+            this.ps.destroy()
         }
         window.removeEventListener('resize', this.resizeFunction)
+    }
+    
+    getPageTitle(routes) {
+        const { location } = this.props
+        const path = location.pathname
+        return _(this.getTitleFromRoutes(routes, path))
+    }
+
+    getTitleFromRoutes(routes, path) {
+        for (let i = 0; i < routes.length; i++) {
+            const route = routes[i]
+            if(route.path && path.match(new RegExp(route.path.replace(/:[^/?#]+/, '[^/?#]+') + '$'))) {
+                return route.title
+            }
+            else if(route.items !== undefined) {
+                const title = this.getTitleFromRoutes(route.items, path)
+                if (title) return title
+            }
+        }
     }
 
     sidebarMinimize = () => {
@@ -133,10 +150,9 @@ class Layout extends React.Component {
             displayFooter,
             children,
             title,
-            isLogged,
             Sidebar,
             Navbar,
-            lang,
+            organisation,
             routes,
             ...rest } = this.props
         const { miniActive, image, mobileOpen, color, bgColor } = this.state
@@ -146,14 +162,12 @@ class Layout extends React.Component {
             [classes.mainPanelWithPerfectScrollbar]: navigator.platform.indexOf('Win') > -1
         })
 
-        if (!isLogged) return <Redirect to='/login' />
-
         return (
             <div className={classes.wrapper}>
-                <Helmet title={lang[title] || title} />
+                <Helmet title={_(title)} />
                 <Sidebar
                     routes={routes}
-                    logoText="Cafet'"
+                    logoText={organisation}
                     logo={logo}
                     image={image}
                     handleDrawerToggle={this.handleDrawerToggle}
@@ -167,7 +181,7 @@ class Layout extends React.Component {
                     <Navbar
                         sidebarMinimize={this.sidebarMinimize}
                         miniActive={miniActive}
-                        brandText={lang[title] || title}
+                        brandText={this.getPageTitle(routes)}
                         handleDrawerToggle={this.handleDrawerToggle}
                         {...rest}
                     />
@@ -191,7 +205,7 @@ class Layout extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    isLogged: state.user.user !== null
+    organisation: state.server.organisation
 })
 
-export default withStyles(appStyle)(connect(mapStateToProps)(Layout))
+export default withStyles(appStyle)(connect(mapStateToProps)(DefaultLayout))

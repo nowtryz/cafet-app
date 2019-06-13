@@ -4,7 +4,7 @@ import en from '../lang/en_US'
 
 const initialState = fr
 
-const sampleReducer = (state = initialState, { type, payload = null }) => {
+const langReducer = (state = initialState, { type, payload = null }) => {
     switch (type) {
     case LOCALE_CHANGED:
         switch (payload) {
@@ -25,4 +25,4 @@ const sampleReducer = (state = initialState, { type, payload = null }) => {
     }
 }
 
-export default sampleReducer
+export default langReducer

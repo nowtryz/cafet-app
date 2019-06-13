@@ -18,8 +18,9 @@ import ListItemText from '@material-ui/core/ListItemText'
 import adminNavbarLinksStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/adminNavbarLinksStyle'
 
 import { changeLocale as changeLocaleAction } from 'actions'
-import USFlagIcon from '../flags/USFlagIcon'
-import FranceFlagIcon from '../flags/FranceFlagIcon'
+
+import USFlagIcon from '@dashboard/assets/img/flags/US.png'
+import FranceFlagIcon from '@dashboard/assets/img/flags/FR.png'
 
 const styles = theme => ({
     ...adminNavbarLinksStyle(theme),
@@ -105,15 +106,15 @@ class LangControlMenu extends React.Component {
                                     <MenuList>
                                         <MenuItem className={classes.menuItem} onClick={() => this.changeLocale('fr_FR')}>
                                             <ListItemIcon className={classes.icon}>
-                                                <FranceFlagIcon />
+                                                <img src={FranceFlagIcon} alt="FR" />
                                             </ListItemIcon>
                                             <ListItemText classes={{ primary: classes.primary }} inset primary="Français (FR)" />
                                         </MenuItem>
                                         <MenuItem className={classes.menuItem} onClick={() => this.changeLocale('en_US')}>
                                             <ListItemIcon className={classes.icon}>
-                                                <USFlagIcon />
+                                                <img src={USFlagIcon} alt="US" />
                                             </ListItemIcon>
-                                            <ListItemText classes={{ primary: classes.primary }} inset primary="Englis (US)" />
+                                            <ListItemText classes={{ primary: classes.primary }} inset primary="English (US)" />
                                         </MenuItem>
                                     </MenuList>
                                 </ClickAwayListener>

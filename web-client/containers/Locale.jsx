@@ -2,17 +2,26 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 
-const Locale = ({children, lang}) => {
+import { lang as langPropType } from 'app-proptypes'
+import { getLocalizedText as _ } from 'lang'
+
+const Locale = ({children, lang, ns}) => {
+    lang // used to subscribe to lang change
     return (
         <React.Fragment>
-            {lang[children] || children}
+            {_(children, ns) || children}
         </React.Fragment>
     )
 }
 
 Locale.propTypes = {
-    lang: PropTypes.objectOf(PropTypes.any).isRequired,
-    children: PropTypes.string.isRequired
+    lang: langPropType.isRequired,
+    children: PropTypes.string.isRequired,
+    ns: PropTypes.string
+}
+
+Locale.defaultProps = {
+    ns: null
 }
 
 const mapStateToProps = state => ({

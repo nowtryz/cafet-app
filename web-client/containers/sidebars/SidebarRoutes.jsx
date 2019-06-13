@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import cx from 'classnames'
 
@@ -10,6 +9,8 @@ import Collapse from '@material-ui/core/Collapse'
 import Icon from '@material-ui/core/Icon'
 import BlurOn from '@material-ui/icons/BlurOn'
 import { NavLink } from 'react-router-dom'
+
+import _ from 'lang'
 
 class SidebarRoutes extends React.Component {
     static propTypes = {
@@ -24,8 +25,7 @@ class SidebarRoutes extends React.Component {
             'blue',
             'purple',
             'rose'
-        ]).isRequired,
-        lang: PropTypes.objectOf(PropTypes.any).isRequired
+        ]).isRequired
     }
 
     static defaultProps = {
@@ -41,7 +41,7 @@ class SidebarRoutes extends React.Component {
     static getCollapseStates = (routes, state) => {
         routes.forEach(route => {
             if (route.items !== undefined) {
-                state[route.id] = SidebarRoutes.souldBeOpen(route.items) || state[route.id]
+                state[route.id] = state[route.id] ||SidebarRoutes.souldBeOpen(route.items)
                 this.getCollapseStates(route.items, state)
             }
         })
@@ -50,8 +50,6 @@ class SidebarRoutes extends React.Component {
     }
 
     // this verifies if any of the collapses should be default opened on a rerender of this component
-    // for example, on the refresh of the page,
-    // while on the src/views/forms/RegularForms.jsx - route /admin/regular-forms
     static souldBeOpen(routes) {
         for (let i = 0; i < routes.length; i++) {
             if (routes[i].items !== undefined && SidebarRoutes.souldBeOpen(routes[i].items)) {
@@ -72,6 +70,14 @@ class SidebarRoutes extends React.Component {
 
     }
 
+    collapseAll() {
+        this.setState(state => {
+            const newState = {}
+            Object.keys(state).forEach(v => newState[v] = false)
+            return newState
+        })
+    }
+
     processClasses() {
         const { classes, miniActive } = this.props
 
@@ -86,10 +92,23 @@ class SidebarRoutes extends React.Component {
         })
     }
 
+    renderLinks(routes, classes) {
+        return routes.map(route => {
+            if (route.redirect || route.hidden) {
+                return null
+            }
+            if (route.items !== undefined) {
+                return this.renderGroup(route, classes)
+            }
+            else {
+                return this.renderLink(route, classes)
+            }
+        })
+    }
+
     renderGroup(route, classes) {
         const isCollapseItem = route.items === undefined
         const { [route.id]:collapseState } = this.state
-        const { lang } = this.props
 
         const navLinkClasses= cx(classes.itemLink, {
             [classes.collapseActive]: SidebarRoutes.souldBeOpen(route.items)
@@ -110,7 +129,7 @@ class SidebarRoutes extends React.Component {
                 >
                     {this.renderIcon(route, classes)}
                     <ListItemText
-                        primary={lang[route.title] || route.title}
+                        primary={_(route.title)}
                         secondary={<b className={cx(classes.caret, {[classes.caretActive]: collapseState})} />}
                         disableTypography
                         className={isCollapseItem ? classes.collapseItemText : classes.itemText}
@@ -127,7 +146,7 @@ class SidebarRoutes extends React.Component {
     }
 
     renderLink(route, classes) {
-        const { color, lang } = this.props
+        const { color } = this.props
         const isCollapseItem = route.items !== undefined
 
         return (
@@ -135,12 +154,13 @@ class SidebarRoutes extends React.Component {
                 <NavLink
                     to={route.path}
                     exact
+                    onClick={() => this.collapseAll()}
                     className={isCollapseItem ? classes.collapseItemLink: classes.itemLink}
                     activeClassName={classes[color]}
                 >
                     {this.renderIcon(route, classes)}
                     <ListItemText
-                        primary={lang[route.title] || route.title}
+                        primary={_(route.title)}
                         disableTypography
                         className={isCollapseItem ? classes.collapseItemText : classes.itemText}
                     />
@@ -161,20 +181,6 @@ class SidebarRoutes extends React.Component {
         }
     }
 
-    renderLinks(routes, classes) {
-        return routes.map(route => {
-            if (route.redirect || route.hidden) {
-                return null
-            }
-            if (route.items !== undefined) {
-                return this.renderGroup(route, classes)
-            }
-            else {
-                return this.renderLink(route, classes)
-            }
-        })
-    }
-
     render() {
         const { routes, classes } = this.props
         return (
@@ -185,8 +191,4 @@ class SidebarRoutes extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    lang: state.lang
-})
-
-export default connect(mapStateToProps)(SidebarRoutes)
+export default SidebarRoutes

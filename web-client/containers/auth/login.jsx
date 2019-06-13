@@ -25,7 +25,9 @@ import CardHeader from '@dashboard/components/Card/CardHeader'
 import CardFooter from '@dashboard/components/Card/CardFooter'
 
 import loginPageStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/loginPageStyle'
-import background from 'assets/img/login.jpeg'
+import background from '@dashboard/assets/img/login.jpeg'
+
+import _ from 'lang'
 import links from 'routes/auth'
 import { login as loginAction } from 'actions'
 import AuthLayout from '../layouts/auth'
@@ -34,7 +36,6 @@ import AuthLayout from '../layouts/auth'
 class LoginPage extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.any).isRequired,
-        lang: PropTypes.objectOf(PropTypes.any).isRequired,
         login: PropTypes.func.isRequired,
         isLogging: PropTypes.bool.isRequired
     }
@@ -83,9 +84,9 @@ class LoginPage extends React.Component {
     }
 
     render() {
-        const { classes, lang, isLogging, ...rest } = this.props
+        const { classes, isLogging, ...rest } = this.props
         const { cardAnimaton, email, password } = this.state
-        const title = lang[links.login.title]
+        const title = _(links.login.title)
 
         return (
             <AuthLayout title={title} bgImage={background} {...rest}>
@@ -117,7 +118,7 @@ class LoginPage extends React.Component {
                                         className={`${classes.cardHeader} ${classes.textCenter}`}
                                         color="rose"
                                     >
-                                        <h4 className={classes.cardTitle}>{lang.login}</h4>
+                                        <h4 className={classes.cardTitle}>{_('login')}</h4>
                                         <div className={classes.socialLine}>
                                             {/**[
                                                 'fab fa-facebook-square',
@@ -139,7 +140,7 @@ class LoginPage extends React.Component {
                                     </CardHeader>
                                     <CardBody>
                                         <CustomInput
-                                            labelText={`${lang.email}...`}
+                                            labelText={`${_('email')}...`}
                                             id="email"
                                             formControlProps={{
                                                 fullWidth: true
@@ -156,7 +157,7 @@ class LoginPage extends React.Component {
                                             }}
                                         />
                                         <CustomInput
-                                            labelText={`${lang.password}...`}
+                                            labelText={`${_('password')}...`}
                                             id="password"
                                             formControlProps={{
                                                 fullWidth: true

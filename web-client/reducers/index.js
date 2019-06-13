@@ -6,10 +6,12 @@ import { isProd } from '../config'
 
 import user from './user'
 import lang from './lang'
+import server from './server'
 
 export const reducer = combineReducers({
     user,
-    lang
+    lang,
+    server
 })
 
 // eslint-disable-next-line no-underscore-dangle
