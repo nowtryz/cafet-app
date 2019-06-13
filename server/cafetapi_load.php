@@ -14,6 +14,7 @@ use cafetapi\io\DatabaseConnection;
 use cafetapi\Kernel;
 use cafetapi\config\Config;
 use cafetapi\Autoloader;
+use cafetapi\Logger;
 
 /*
  * Definition of the needed base constants
@@ -57,17 +58,11 @@ if (file_exists(CONTENT_DIR . 'config.php')) require_once CONTENT_DIR . 'config.
 else require_once INCLUDES_DIR . 'default_configurations.php';
 
 /*
- *  Reports all errors
+ * Error managing
  */
-error_reporting(E_ALL);
-/*
- *  Do not display errors for the end-users for security issue purposes
- */
-ini_set('display_errors', Config::debug ? 'On' : 'Off');
-/*
- *  Set the logging file
- */
-ini_set('error_log', CAFET_DIR . 'error.log');
+error_reporting(E_ALL); // Reports all errors
+ini_set('display_errors', Config::debug ? 'On' : 'Off'); // Do not display errors for the end-users for security issue purposes
+ini_set('error_log', CAFET_DIR . 'error.log'); // Set the logging file
 
 /*
  * Configure header check
@@ -76,9 +71,7 @@ if (function_exists('cafet_headers_check')) {
     header_register_callback('cafet_headers_check');
 }
 
-/*
- * Register cafet class loader
- */
+// Register cafet class loader
 require CLASS_DIR . 'Autoloader.php';
 $loader = new Autoloader();
 $loader->addNamespace('cafetapi\modules\rest', CLASS_DIR . 'modules' . DIRECTORY_SEPARATOR . 'rest');
@@ -92,17 +85,11 @@ $loader->addNamespace('cafetapi', CLASS_DIR);
 $loader->register();
 Kernel::setAutoloader($loader);
 
-/*
- * Init kernel
- */
+// Init kernel
 Kernel::init();
 
-/*
- * Handle error for debug
+/**
+ * Error handlers
  */
-// TODO cafet_configure_error_handling();
-
-/*
- * initialise database conection
- */
-DatabaseConnection::getDatabaseConnectionInstance();
+set_error_handler([Logger::class, 'errorHandler']);
+set_exception_handler([Logger::class, 'exceptionHandler']);

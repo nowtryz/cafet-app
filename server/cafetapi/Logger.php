@@ -1,6 +1,7 @@
 <?php
 namespace cafetapi;
 
+use cafetapi\ErrorPageBuilder;
 use cafetapi\exceptions\CafetAPIException;
 use cafetapi\modules\cafet_app\ReturnStatement;
 use Throwable;
@@ -124,7 +125,8 @@ class Logger
         $msg .= 'entry in ' . $e->getFile();
         $msg .= ' on line ' . $e->getLine();
         
-        Logger::throwError('01-500', $msg);
+        Logger::log($msg);
+        (new ErrorPageBuilder(500))->print();
     }
 }
 
