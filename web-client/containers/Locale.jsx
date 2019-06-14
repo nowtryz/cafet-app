@@ -21,7 +21,7 @@ Locale.propTypes = {
 }
 
 Locale.defaultProps = {
-    ns: null
+    ns: undefined
 }
 
 const mapStateToProps = state => ({

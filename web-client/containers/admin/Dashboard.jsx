@@ -230,6 +230,78 @@ class Dashboard extends React.Component {
         )
     }
 
+
+    renderLastMonthlySubscription() {
+        const { classes } = this.props
+        const { monthly_subscription } = this.state
+        const variation = (monthly_subscription[11]/monthly_subscription[10] - 1) * 100 | 0
+        const min = Math.min(...monthly_subscription)
+        const data = {
+            labels: rotate(_('monthsOfYear').split(' '), new Date().getMonth() + 1),
+            series: [monthly_subscription]
+        }
+        const options = {
+            ...straightLinesChart.options,
+            high: Math.max(...monthly_subscription.map(v => (v - min) * 4/3 + min), 10),
+            low: min
+        }
+
+        return (
+            <Card chart className={classes.cardHover}>
+                <CardHeader color='danger' className={classes.cardHeaderHover}>
+                    <ChartistGraph
+                        className='ct-chart-white-colors'
+                        data={data}
+                        type='Line'
+                        options={options}
+                        listener={straightLinesChart.animation}
+                    />
+                </CardHeader>
+                <CardBody>
+                    <div className={classes.cardHoverUnder}>
+                        <Tooltip
+                            id='tooltip-top'
+                            title={_('Refresh')}
+                            placement='bottom'
+                            classes={{ tooltip: classes.tooltip }}
+                        >
+                            <Button simple color='info' justIcon onClick={this.refresh}>
+                                <Refresh className={classes.underChartIcons} />
+                            </Button>
+                        </Tooltip>
+                    </div>
+                    <h4 className={classes.cardTitle}>
+                        <Locale>Monthly Subscriptions</Locale>
+                    </h4>
+                    <p className={classes.cardCategory}>
+                        {variation >= 0 ? (
+                            <React.Fragment>
+                                <span style={{color: successColor[0]}}>
+                                    <ArrowUpward className={classes.upArrowCardCategory} /> {variation}%
+                                </span>
+                                {' '}
+                                <Locale>of increase this month.</Locale>
+                            </React.Fragment>
+                        ):(
+                            <React.Fragment>
+                                <span style={{color: dangerColor[0]}}>
+                                    <ArrowDownward className={classes.upArrowCardCategory} /> {-variation}%
+                                </span>
+                                {' '}
+                                <Locale>of decrease this month.</Locale>
+                            </React.Fragment>
+                        )}
+                    </p>
+                </CardBody>
+                <CardFooter chart>
+                    <div className={classes.stats}>
+                        <DateRange />
+                        <Locale>Last 12 months</Locale>
+                    </div>
+                </CardFooter>
+            </Card>
+        )
+    }
     render() {
         const { classes, currency } = this.props
         const {
@@ -237,8 +309,7 @@ class Dashboard extends React.Component {
             used_storage,
             weekly_revenue,
             montly_sales,
-            user_count,
-            monthly_subscription
+            user_count
         } = this.state
 
         return (
@@ -335,50 +406,7 @@ class Dashboard extends React.Component {
                         {this.renderLastMonthlySalesCount()}
                     </GridItem>
                     <GridItem xs={12} sm={12} md={12} lg={4}>
-                        <Card chart className={classes.cardHover}>
-                            <CardHeader color='danger' className={classes.cardHeaderHover}>
-                                <ChartistGraph
-                                    className='ct-chart-white-colors'
-                                    data={completedTasksChart.data}
-                                    type='Line'
-                                    options={completedTasksChart.options}
-                                    listener={completedTasksChart.animation}
-                                />
-                            </CardHeader>
-                            <CardBody>
-                                <div className={classes.cardHoverUnder}>
-                                    <Tooltip
-                                        id='tooltip-top'
-                                        title='Refresh'
-                                        placement='bottom'
-                                        classes={{ tooltip: classes.tooltip }}
-                                    >
-                                        <Button simple color='info' justIcon>
-                                            <Refresh className={classes.underChartIcons} />
-                                        </Button>
-                                    </Tooltip>
-                                    <Tooltip
-                                        id='tooltip-top'
-                                        title='Change Date'
-                                        placement='bottom'
-                                        classes={{ tooltip: classes.tooltip }}
-                                    >
-                                        <Button color='transparent' simple justIcon>
-                                            <Edit className={classes.underChartIcons} />
-                                        </Button>
-                                    </Tooltip>
-                                </div>
-                                <h4 className={classes.cardTitle}>Completed Tasks</h4>
-                                <p className={classes.cardCategory}>
-                    Last Campaign Performance
-                                </p>
-                            </CardBody>
-                            <CardFooter chart>
-                                <div className={classes.stats}>
-                                    <AccessTime /> campaign sent 2 days ago
-                                </div>
-                            </CardFooter>
-                        </Card>
+                        {this.renderLastMonthlySubscription()}
                     </GridItem>
                 </GridContainer>
             </div>

@@ -29,7 +29,6 @@ class DefaultLayout extends React.Component {
         classes: classesPropType.isRequired,
         fullScreenMaps: PropTypes.bool,
         displayFooter: PropTypes.bool,
-        title: PropTypes.string.isRequired,
         Sidebar: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(React.Component)]).isRequired,
         Navbar: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(React.Component)]).isRequired,
         routes: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -149,7 +148,6 @@ class DefaultLayout extends React.Component {
             fullScreenMaps,
             displayFooter,
             children,
-            title,
             Sidebar,
             Navbar,
             organisation,
@@ -162,9 +160,11 @@ class DefaultLayout extends React.Component {
             [classes.mainPanelWithPerfectScrollbar]: navigator.platform.indexOf('Win') > -1
         })
 
+        const title = this.getPageTitle(routes)
+
         return (
             <div className={classes.wrapper}>
-                <Helmet title={_(title)} />
+                <Helmet title={title} />
                 <Sidebar
                     routes={routes}
                     logoText={organisation}
@@ -181,7 +181,7 @@ class DefaultLayout extends React.Component {
                     <Navbar
                         sidebarMinimize={this.sidebarMinimize}
                         miniActive={miniActive}
-                        brandText={this.getPageTitle(routes)}
+                        brandText={title}
                         handleDrawerToggle={this.handleDrawerToggle}
                         {...rest}
                     />
