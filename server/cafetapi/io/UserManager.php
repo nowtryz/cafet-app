@@ -5,6 +5,7 @@ use cafetapi\exceptions\EmailFormatException;
 use cafetapi\user\Group;
 use cafetapi\user\User;
 use PDO;
+use cafetapi\Logger;
 
 /**
  *
@@ -117,23 +118,26 @@ class UserManager extends Updater
     public final function getUser(string $mail_or_pseudo): ?User
     {
         $statement = $this->connection->prepare('SELECT '
-            . self::FIELD_ID . ' id, '
-            . self::FIELD_USERNAME . ' username, '
-            . self::FIELD_EMAIL . ' mail, '
-            . self::FIELD_PASSWORD . ' hash, '
-            . self::FIELD_FIRSTNAME . ' firstname, '
-            . self::FIELD_FAMILYNAME . ' name, '
-            . self::FIELD_PHONE . ' phone, '
-            . self::FIELD_GROUP_ID . ' group_id, '
-            . self::FIELD_REGISTRATION . ' registration, '
-            . self::FIELD_LAST_SIGNIN . ' last_signin, '
-            . self::FIELD_SIGNIN_COUNT . ' signin_count, '
-            . self::FIELD_PERMISSIONS . ' permissions '
-            . 'FROM ' . self::USERS . ' '
-            . 'WHERE ' . self::FIELD_USERNAME . ' = :param1 '
-            . 'OR ' . self::FIELD_EMAIL . ' = :param2');
+            . 'u.' . self::FIELD_ID . ' id, '
+            . 'u.' . self::FIELD_USERNAME . ' username, '
+            . 'u.' . self::FIELD_EMAIL . ' mail, '
+            . 'u.' . self::FIELD_PASSWORD . ' hash, '
+            . 'u.' . self::FIELD_FIRSTNAME . ' firstname, '
+            . 'u.' . self::FIELD_FAMILYNAME . ' name, '
+            . 'u.' . self::FIELD_PHONE . ' phone, '
+            . 'u.' . self::FIELD_GROUP_ID . ' group_id, '
+            . 'u.' . self::FIELD_REGISTRATION . ' registration, '
+            . 'u.' . self::FIELD_LAST_SIGNIN . ' last_signin, '
+            . 'u.' . self::FIELD_SIGNIN_COUNT . ' signin_count, '
+            . 'u.' . self::FIELD_PERMISSIONS . ' permissions, '
+            . 'c.' . ClientManager::FIELD_ID . ' customer_id '
+            . 'FROM ' . self::USERS . ' u '
+            . 'LEFT JOIN ' . ClientManager::CLIENTS . ' c '
+            . 'ON u.' . self::FIELD_ID . ' = c.' . ClientManager::FIELD_USER_ID . ' '
+            . 'WHERE u.' . self::FIELD_USERNAME . ' = :param1 '
+            . 'OR u.' . self::FIELD_EMAIL . ' = :param2');
         
-        $id = $_group = $signin_count = 0;
+        $id = $_group = $signin_count = $customer_id = 0;
         $username = $mail = $hash = $firstname = $name = $phone = '';
         $_last_signin = $_registration = '2018-01-01 00:00:00';
         $_permissions = 'a:0:{}';
@@ -150,6 +154,7 @@ class UserManager extends Updater
         $statement->bindColumn('registration', $_registration, PDO::PARAM_STR);
         $statement->bindColumn('signin_count', $signin_count, PDO::PARAM_INT);
         $statement->bindColumn('permissions', $_permissions, PDO::PARAM_STR);
+        $statement->bindColumn('customer_id', $customer_id, PDO::PARAM_INT);
         
         $statement->execute([
             'param1' => $mail_or_pseudo,
@@ -168,7 +173,7 @@ class UserManager extends Updater
         
         $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group], $_group) : cafet_get_guest_group();
 
-        $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
+        $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $customer_id, $permissions);
         $statement->closeCursor();
 
         return $user;
@@ -177,22 +182,25 @@ class UserManager extends Updater
     public final function getUserById(int $user_id): ?User
     {
         $statement = $this->connection->prepare('SELECT '
-            . self::FIELD_ID . ' id, '
-            . self::FIELD_USERNAME . ' username, '
-            . self::FIELD_EMAIL . ' mail, '
-            . self::FIELD_PASSWORD . ' hash, '
-            . self::FIELD_FIRSTNAME . ' firstname, '
-            . self::FIELD_FAMILYNAME . ' name, '
-            . self::FIELD_PHONE . ' phone, '
-            . self::FIELD_GROUP_ID . ' group_id, '
-            . self::FIELD_REGISTRATION . ' registration, '
-            . self::FIELD_LAST_SIGNIN . ' last_signin, '
-            . self::FIELD_SIGNIN_COUNT . ' signin_count, '
-            . self::FIELD_PERMISSIONS . ' permissions '
-            . 'FROM ' . self::USERS . ' '
-            . 'WHERE ' . self::FIELD_ID . ' = :id');
+            . 'u.' . self::FIELD_ID . ' id, '
+            . 'u.' . self::FIELD_USERNAME . ' username, '
+            . 'u.' . self::FIELD_EMAIL . ' mail, '
+            . 'u.' . self::FIELD_PASSWORD . ' hash, '
+            . 'u.' . self::FIELD_FIRSTNAME . ' firstname, '
+            . 'u.' . self::FIELD_FAMILYNAME . ' name, '
+            . 'u.' . self::FIELD_PHONE . ' phone, '
+            . 'u.' . self::FIELD_GROUP_ID . ' group_id, '
+            . 'u.' . self::FIELD_REGISTRATION . ' registration, '
+            . 'u.' . self::FIELD_LAST_SIGNIN . ' last_signin, '
+            . 'u.' . self::FIELD_SIGNIN_COUNT . ' signin_count, '
+            . 'u.' . self::FIELD_PERMISSIONS . ' permissions, '
+            . 'c.' . ClientManager::FIELD_ID . ' customer_id '
+            . 'FROM ' . self::USERS . ' u '
+            . 'LEFT JOIN ' . ClientManager::CLIENTS . ' c '
+            . 'ON u.' . self::FIELD_ID . ' = c.' . ClientManager::FIELD_USER_ID . ' '
+            . 'WHERE u.' . self::FIELD_ID . ' = :id');
         
-        $id = $_group = $signin_count = 0;
+        $id = $_group = $signin_count = $customer_id = 0;
         $username = $mail = $hash = $firstname = $name = $phone = '';
         $_last_signin = $_registration = '2018-01-01 00:00:00';
         $_permissions = 'a:0:{}';
@@ -209,6 +217,7 @@ class UserManager extends Updater
         $statement->bindColumn('registration', $_registration, PDO::PARAM_STR);
         $statement->bindColumn('signin_count', $signin_count, PDO::PARAM_INT);
         $statement->bindColumn('permissions', $_permissions, PDO::PARAM_STR);
+        $statement->bindColumn('customer_id', $customer_id, PDO::PARAM_INT);
         
         $statement->execute([
             'id' => $user_id
@@ -222,11 +231,11 @@ class UserManager extends Updater
         
         $last_signin = get_calendar_from_datetime($_last_signin);
         $registration = get_calendar_from_datetime($_registration);
-        $permissions = @unserialize($_permissions) ?: [];
+        $permissions = @unserialize($_permissions) ?? [];
         
         $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group], $_group) : cafet_get_guest_group();
         
-        $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
+        $user = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $customer_id, $permissions);
         $statement->closeCursor();
         
         return $user;
@@ -235,21 +244,24 @@ class UserManager extends Updater
     public final function getUsers(): array
     {
         $statement = $this->connection->prepare('SELECT '
-            . self::FIELD_ID . ' id, '
-            . self::FIELD_USERNAME . ' username, '
-            . self::FIELD_EMAIL . ' mail, '
-            . self::FIELD_PASSWORD . ' hash, '
-            . self::FIELD_FIRSTNAME . ' firstname, '
-            . self::FIELD_FAMILYNAME . ' name, '
-            . self::FIELD_PHONE . ' phone, '
-            . self::FIELD_GROUP_ID . ' group_id, '
-            . self::FIELD_REGISTRATION . ' registration, '
-            . self::FIELD_LAST_SIGNIN . ' last_signin, '
-            . self::FIELD_SIGNIN_COUNT . ' signin_count, '
-            . self::FIELD_PERMISSIONS . ' permissions '
-            . 'FROM ' . self::USERS);
+            . 'u.' . self::FIELD_ID . ' id, '
+            . 'u.' . self::FIELD_USERNAME . ' username, '
+            . 'u.' . self::FIELD_EMAIL . ' mail, '
+            . 'u.' . self::FIELD_PASSWORD . ' hash, '
+            . 'u.' . self::FIELD_FIRSTNAME . ' firstname, '
+            . 'u.' . self::FIELD_FAMILYNAME . ' name, '
+            . 'u.' . self::FIELD_PHONE . ' phone, '
+            . 'u.' . self::FIELD_GROUP_ID . ' group_id, '
+            . 'u.' . self::FIELD_REGISTRATION . ' registration, '
+            . 'u.' . self::FIELD_LAST_SIGNIN . ' last_signin, '
+            . 'u.' . self::FIELD_SIGNIN_COUNT . ' signin_count, '
+            . 'u.' . self::FIELD_PERMISSIONS . ' permissions, '
+            . 'c.' . ClientManager::FIELD_ID . ' customer_id '
+            . 'FROM ' . self::USERS . ' u '
+            . 'LEFT JOIN ' . ClientManager::CLIENTS . ' c '
+            . 'ON u.' . self::FIELD_ID . ' = c.' . ClientManager::FIELD_USER_ID);
         
-        $id = $_group = $signin_count = 0;
+        $id = $_group = $signin_count = $customer_id = 0;
         $username = $mail = $hash = $firstname = $name = $phone = '';
         $_last_signin = $_registration = '2018-01-01 00:00:00';
         $_permissions = 'a:0:{}';
@@ -266,6 +278,7 @@ class UserManager extends Updater
         $statement->bindColumn('registration', $_registration, PDO::PARAM_STR);
         $statement->bindColumn('signin_count', $signin_count, PDO::PARAM_INT);
         $statement->bindColumn('permissions', $_permissions, PDO::PARAM_STR);
+        $statement->bindColumn('customer_id', $customer_id, PDO::PARAM_INT);
         
         $statement->execute();
         $this->check_fetch_errors($statement);
@@ -279,7 +292,7 @@ class UserManager extends Updater
             
             $group = isset(Group::GROUPS[$_group]) ? new Group($_group, Group::GROUPS[$_group], $_group) : cafet_get_guest_group();
             
-            $result[] = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $permissions);
+            $result[] = new User($id, $username, $firstname, $name, $hash, $mail, $phone, $last_signin, $registration, $signin_count, $group, $customer_id, $permissions);
         }
         
         $statement->closeCursor();

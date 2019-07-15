@@ -83,11 +83,11 @@ abstract class Updater extends DatabaseConnection
         }
     }
     
-    protected final function updateValue($field, $id, $value, int $value_type = PDO::PARAM_STR)
+    protected final function updateValue($field, $id, $value, int $value_type = PDO::PARAM_STR, string $key = null)
     {
         if (!$this->inTransaction) $this->connection->beginTransaction();
         
-        $statement = $this->connection->prepare('UPDATE ' . static::TABLE_NAME . ' SET `' . $field . '` = :value WHERE ' . static::FIELD_ID . ' = :id');
+        $statement = $this->connection->prepare('UPDATE ' . static::TABLE_NAME . ' SET `' . $field . '` = :value WHERE ' . ($key ?? static::FIELD_ID) . ' = :id');
         $statement->bindValue(':id', $id);
         $statement->bindValue(':value', $value, $value_type);
         $statement->execute();

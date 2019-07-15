@@ -20,9 +20,7 @@ import DateRange from '@material-ui/icons/DateRange'
 import Group from '@material-ui/icons/Group'
 import ArrowUpward from '@material-ui/icons/ArrowUpward'
 import ArrowDownward from '@material-ui/icons/ArrowDownward'
-import AccessTime from '@material-ui/icons/AccessTime'
 import Refresh from '@material-ui/icons/Refresh'
-import Edit from '@material-ui/icons/Edit'
 import Person from '@material-ui/icons/Person'
 import ShoppingCart from '@material-ui/icons/ShoppingCart'
 import Timeline from '@material-ui/icons/Timeline'
@@ -43,8 +41,7 @@ import {
 } from '@dashboard/assets/jss/material-dashboard-pro-react'
 import {
     straightLinesChart,
-    simpleBarChart,
-    completedTasksChart
+    simpleBarChart
 } from '@dashboard/variables/charts'
 
 import dashboardStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/dashboardStyle'

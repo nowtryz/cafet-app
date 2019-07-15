@@ -1,7 +1,6 @@
 import '@babel/polyfill'
 
 import React from 'react'
-import { connect } from 'react-redux'
 import mergeClasses from 'classnames'
 import PropTypes from 'prop-types'
 import { NavLink } from 'react-router-dom'
@@ -21,11 +20,13 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Menu from '@material-ui/icons/Menu'
 
 // core components
-import Button from 'components/CustomButtons/Button'
+import Button from '@dashboard/components/CustomButtons/Button'
+
+import authNavbarStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/authNavbarStyle'
 
 import links from 'routes/auth'
+import _ from 'lang'
 
-import authNavbarStyle from 'assets/jss/material-dashboard-pro-react/components/authNavbarStyle'
 
 class AuthNavbar extends React.Component {
     static defaultProps = {
@@ -35,7 +36,6 @@ class AuthNavbar extends React.Component {
     
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.any).isRequired,
-        lang: PropTypes.objectOf(PropTypes.any).isRequired,
         color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
         brandText: PropTypes.string,
         location: RouterProps.location.isRequired
@@ -72,7 +72,7 @@ class AuthNavbar extends React.Component {
     }
 
     renderLinks() {
-        const { classes, lang } = this.props
+        const { classes } = this.props
 
         return (Object.keys(links).map(key => {
             const link = links[key]
@@ -85,7 +85,7 @@ class AuthNavbar extends React.Component {
                     >
                         <link.icon className={classes.listItemIcon} />
                         <ListItemText
-                            primary={lang[link.title]}
+                            primary={_(link.title)}
                             disableTypography
                             className={classes.listItemText}
                         />
@@ -159,8 +159,4 @@ class AuthNavbar extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    lang: state.lang
-})
-
-export default withStyles(authNavbarStyle)(connect(mapStateToProps)(AuthNavbar))
+export default withStyles(authNavbarStyle)(AuthNavbar)

@@ -10,11 +10,10 @@
  * @version 0.2.3
  */
 
-use cafetapi\io\DatabaseConnection;
-use cafetapi\Kernel;
-use cafetapi\config\Config;
 use cafetapi\Autoloader;
+use cafetapi\Kernel;
 use cafetapi\Logger;
+use cafetapi\config\Config;
 
 /*
  * Definition of the needed base constants

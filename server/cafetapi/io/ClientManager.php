@@ -33,7 +33,7 @@ class ClientManager extends Updater
     public final function getClients(): array
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'u.'. UserManager::FIELD_ID . ' id, '
+            . 'c.'. self::FIELD_ID . ' id, '
             . 'u.'. UserManager::FIELD_EMAIL . ' email, '
             . 'u.'. UserManager::FIELD_USERNAME . ' alias, '
             . 'u.'. UserManager::FIELD_FAMILYNAME . ' fname, '
@@ -73,7 +73,7 @@ class ClientManager extends Updater
     public final function getClient(int $id): ?Client
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'u.'. UserManager::FIELD_ID . ' id, '
+            . 'c.'. self::FIELD_ID . ' id, '
             . 'u.'. UserManager::FIELD_EMAIL . ' email, '
             . 'u.'. UserManager::FIELD_USERNAME . ' alias, '
             . 'u.'. UserManager::FIELD_FAMILYNAME . ' fname, '
@@ -84,7 +84,7 @@ class ClientManager extends Updater
             . 'FROM ' . parent::CLIENTS . ' c '
             . 'INNER JOIN ' . parent::USERS . ' u '
             . 'ON c.' . self::FIELD_USER_ID . ' = u.' . UserManager::FIELD_ID . ' '
-            . 'WHERE u.' . UserManager::FIELD_ID . ' = :id ');
+            . 'WHERE c.' . self::FIELD_ID . ' = :id ');
         
         $member = false;
         $registrationYear = 0;
@@ -112,7 +112,7 @@ class ClientManager extends Updater
     public final function searchClient(string $expression): array
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'u.'. UserManager::FIELD_ID . ' id, '
+            . 'c.'. self::FIELD_ID . ' id, '
             . 'u.'. UserManager::FIELD_EMAIL . ' email, '
             . 'u.'. UserManager::FIELD_USERNAME . ' alias, '
             . 'u.'. UserManager::FIELD_FAMILYNAME . ' fname, '
@@ -169,6 +169,11 @@ class ClientManager extends Updater
         $statement->closeCursor();
         $this->commit();
         return true;
+    }
+    
+    public final function dissociate(int $client_id)
+    {
+        return $this->updateValue(self::FIELD_USER_ID, $client_id, null);
     }
 }
 

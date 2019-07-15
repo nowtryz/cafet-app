@@ -24,10 +24,12 @@ class User extends People implements Permissible, Data, \Serializable
     private $last_signin;
     private $registration;
 
+    private $customer_id;
+
     /**
      */
     public function __construct(int $id, string $pseudo, string $surname, string $familyName, string $password, string $email, $phone, 
-        Calendar $last_signin, Calendar $registration, int $signin_count, Group $group, array $additional_permissions = null)
+        Calendar $last_signin, Calendar $registration, int $signin_count, Group $group, int $customer_id = null, array $additional_permissions = null)
     {
         parent::__construct($email, $familyName, $surname);
         $this->id = $id;
@@ -42,10 +44,13 @@ class User extends People implements Permissible, Data, \Serializable
 
         $this->permissions = $group->getPermissions();
 
-        if (isset($additional_permissions))
+        if (isset($additional_permissions)) {
             foreach ($additional_permissions as $name => $permission) {
                 $this->permissions[$name] = $permission;
             }
+        }
+
+        $this->customer_id = $customer_id;
     }
 
     /**

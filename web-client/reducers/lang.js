@@ -8,12 +8,12 @@ const langReducer = (state = initialState, { type, payload = null }) => {
     switch (type) {
     case LOCALE_CHANGED:
         switch (payload) {
-        case fr.lang: return {
+        case fr.lang_code: return {
             ...state,
             ...fr
         }
 
-        case en.lang: return {
+        case en.lang_code: return {
             ...state,
             ...en
         }

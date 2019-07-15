@@ -1,4 +1,6 @@
 import Dashboard from 'containers/admin/Dashboard'
+import Users from 'containers/admin/Users'
+import UserPage from 'containers/admin/UserPage'
 
 // @material-ui/icons
 import DashboardIcon from '@material-ui/icons/Dashboard'
@@ -69,7 +71,14 @@ export default [
                 title: 'Users',
                 id: 'users',
                 icon: Group,
-                component: BlankPage,
+                component: Users,
+            },
+            {
+                hidden: true,
+                path: '/admin/users/:id',
+                title: 'User Page',
+                id: 'user page',
+                component: UserPage,
             },
             {
                 path: '/admin/stats',

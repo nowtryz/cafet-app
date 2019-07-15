@@ -9,7 +9,7 @@ import AuthLayout from '@dashboard/layouts/Auth'
 import RtlLayout from '@dashboard/layouts/RTL'
 import DemoAdminLayout from '@dashboard/layouts/Admin'
 
-import '../material-dashboard/assets/scss/material-dashboard-pro-react.scss?v=1.5.0'
+import '@dashboard/assets/scss/material-dashboard-pro-react.scss?v=1.5.0'
 
 import {
     loadServerConfig as loadServerConfigAction,
@@ -84,7 +84,11 @@ class App extends React.Component {
         const { lang, isLogged } = this.props
         return (
             <React.Fragment>
-                <Helmet titleTemplate={`%s | ${APP_NAME}`} defaultTitle={APP_NAME} />
+                <Helmet
+                    titleTemplate={`%s \xB7 ${APP_NAME}`}
+                    defaultTitle={APP_NAME}
+                    htmlAttributes={{ lang : lang.html_lang }}
+                />
                 <Router history={hist}>
                     <Switch>
                         <Route 

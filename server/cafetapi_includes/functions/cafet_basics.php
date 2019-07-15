@@ -7,6 +7,7 @@
  */
 
 use cafetapi\Mail;
+use cafetapi\ErrorPageBuilder;
 use cafetapi\io\ClientManager;
 use cafetapi\io\DatabaseConnection;
 use cafetapi\io\FormulaManager;
@@ -55,6 +56,7 @@ if (! defined('basics_functions_loaded') ) {
         $product = ProductManager::getInstance()->getProduct($product_id);
 
         if (! $product) return false;
+        if (!$product->getImage()) (new ErrorPageBuilder(404))->print();
 
         header('content-type: ' . guess_image_mime($product->getImage()));
 
@@ -70,6 +72,7 @@ if (! defined('basics_functions_loaded') ) {
         $formula = FormulaManager::getInstance()->getFormula($formula_id);
 
         if (! $formula) return false;
+        if (!$formula->getImage()) (new ErrorPageBuilder(404))->print();
 
         header('content-type: ' . guess_image_mime($formula->getImage()));
 

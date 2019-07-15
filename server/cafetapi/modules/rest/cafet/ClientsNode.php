@@ -31,6 +31,7 @@ class ClientsNode implements RestNode
     const EXPENSES = 'expenses';
     const LAST_EXPENSES = 'last_expenses';
     const ORDER = 'order';
+    const DISSOCIATE = 'dissociate';
     
     
 
@@ -57,13 +58,14 @@ class ClientsNode implements RestNode
                             case self::EXPENSES:      return self::clientExpenses($request, intval($dir, 0));
                             case self::LAST_EXPENSES: return self::clientLastExpenses($request, intval($dir, 0));
                             case self::ORDER:         return self::clientOrder($request, intval($dir, 0));
+                            case self::DISSOCIATE:    return self::dissociate($request, intval($dir, 0));
                             
                             default: return ClientError::resourceNotFound('Unknown ' . $subdir . ' node for a client');
                         }
                     }
                 }
                 
-                else return ClientError::resourceNotFound('Unknown cafet/client/' . $dir . ' node');
+                else return ClientError::resourceNotFound('Unknown cafet/clients/' . $dir . ' node');
         }
     }
     
@@ -234,6 +236,19 @@ class ClientsNode implements RestNode
         }
 
         return new RestResponse(201, HttpCodes::HTTP_201, null);
+    }
+    
+    private static function dissociate(Rest $request, int $client_id) : RestResponse
+    {
+        $request->allowMethods('POST');
+        $request->needPermissions(Perm::CAFET_ADMIN);// TODO appropriate permission
+        
+        
+        $manager = ClientManager::getInstance();
+        if(!$manager->getClient($client_id)) return ClientError::resourceNotFound('Unknown client with id ' . $client_id);
+        $manager->dissociate($client_id);
+        
+        return new RestResponse(204, HttpCodes::HTTP_204, null);
     }
 }
 

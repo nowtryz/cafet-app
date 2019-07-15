@@ -1,5 +1,4 @@
 <?php
-
 use cafetapi\ErrorPageBuilder;
 use cafetapi\config\Config;
 

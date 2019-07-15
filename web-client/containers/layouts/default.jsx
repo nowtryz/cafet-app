@@ -164,7 +164,9 @@ class DefaultLayout extends React.Component {
 
         return (
             <div className={classes.wrapper}>
-                <Helmet title={title} />
+                <Helmet>
+                    <title>{title}</title>
+                </Helmet>
                 <Sidebar
                     routes={routes}
                     logoText={organisation}

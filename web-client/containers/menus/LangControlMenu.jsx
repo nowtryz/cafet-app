@@ -104,13 +104,13 @@ class LangControlMenu extends React.Component {
                             <Paper>
                                 <ClickAwayListener onClickAway={this.handleClose}>
                                     <MenuList>
-                                        <MenuItem className={classes.menuItem} onClick={() => this.changeLocale('fr_FR')}>
+                                        <MenuItem className={classes.menuItem} onClick={() => this.changeLocale('fr-FR')}>
                                             <ListItemIcon className={classes.icon}>
                                                 <img src={FranceFlagIcon} alt="FR" />
                                             </ListItemIcon>
                                             <ListItemText classes={{ primary: classes.primary }} inset primary="Français (FR)" />
                                         </MenuItem>
-                                        <MenuItem className={classes.menuItem} onClick={() => this.changeLocale('en_US')}>
+                                        <MenuItem className={classes.menuItem} onClick={() => this.changeLocale('en-US')}>
                                             <ListItemIcon className={classes.icon}>
                                                 <img src={USFlagIcon} alt="US" />
                                             </ListItemIcon>
