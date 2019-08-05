@@ -2,10 +2,13 @@ image: alpine
 
 stages:
   - build
+  - test
   - deploy
 
 variables:
-  TAR_NAME: CafetApp-server-${CI_COMMIT_REF_SLUG}.tar.gz
+  SERVER_IMAGE: $CI_REGISTRY_IMAGE/server
+  DATABASE_IMAGE: $CI_REGISTRY_IMAGE/database
+  IMAGE_TAG: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}
 
 # Cache policy
 cache:
@@ -16,17 +19,43 @@ cache:
     # Node JS
     - ./node_modules
 
+# Jobs that does not require git to pull code
+.no-pull: &no-pull
+  variables:
+      GIT_STRATEGY: none
+
 # Linux docker container runner
 .linux-docker-runner-template: &linux-docker-runner
   tags:
     - linux
     - docker
 
+# Jobs that require login
+.docker_job: &docker
+  <<: *linux-docker-runner
+  image: docker:19
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    # fetches the latest image (not failing if image is not found)
+    - docker pull $SERVER_RELEASE_IMAGEt || true
+
+
 ## ##
 ## Build
 ## ##
 
-documentation:
+build:docker:
+  <<: *docker
+  stage: build
+  script:
+    - docker build --pull --cache-from $SERVER_IMAGE:latest -t $SERVER_IMAGE:$IMAGE_TAG -f docker/php/Dockerfile .
+    - docker build --pull --cache-from $DATABASE_IMAGE:latest -t $DATABASE_IMAGE:$IMAGE_TAG -f docker/mysql/Dockerfile .
+    - docker push $SERVER_IMAGE:$IMAGE_TAG
+    - docker push $DATABASE_IMAGE:$IMAGE_TAG
+
+build:documentation:
   <<: *linux-docker-runner
   image: node
   stage: build
@@ -35,22 +64,75 @@ documentation:
     - npm run api:doc
     - cp openapi.yml doc/
 
+
 ## ##
 ## Deploy
 ## ##
 
+## Docker tags
+
+deploy:tags:
+  <<: *docker
+  <<: *no-pull
+  stage: deploy
+  script:
+    - docker pull $SERVER_IMAGE:$IMAGE_TAG
+    - docker pull $DATABASE_IMAGE:$IMAGE_TAG
+    - docker tag $SERVER_IMAGE:$IMAGE_TAG $SERVER_IMAGE:$CI_COMMIT_REF_NAME
+    - docker tag $DATABASE_IMAGE:$IMAGE_TAG $DATABASE_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $SERVER_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $DATABASE_IMAGE:$CI_COMMIT_REF_NAME
+  only:
+    - tags
+  dependencies:
+    - build:docker
+
+deploy:release:
+  <<: *docker
+  <<: *no-pull
+  stage: deploy
+  script:
+    - docker pull $SERVER_IMAGE:$IMAGE_TAG
+    - docker pull $DATABASE_IMAGE:$IMAGE_TAG
+    - docker tag $SERVER_IMAGE:$IMAGE_TAG $SERVER_IMAGE:latest
+    - docker tag $DATABASE_IMAGE:$IMAGE_TAG $DATABASE_IMAGE:latest
+    - docker push $SERVER_IMAGE:latest
+    - docker push $DATABASE_IMAGE:latest
+  only:
+    - master
+  dependencies:
+    - build:docker
+
+deploy:develop:
+  <<: *docker
+  <<: *no-pull
+  stage: deploy
+  script:
+    - docker pull $SERVER_IMAGE:$IMAGE_TAG
+    - docker pull $DATABASE_IMAGE:$IMAGE_TAG
+    - docker tag $SERVER_IMAGE:$IMAGE_TAG $SERVER_IMAGE:dev
+    - docker tag $DATABASE_IMAGE:$IMAGE_TAG $DATABASE_IMAGE:dev
+    - docker push $SERVER_IMAGE:dev
+    - docker push $DATABASE_IMAGE:dev
+  only:
+    - develop
+  dependencies:
+    - build:docker
+
+## Artifacts
+
 # Artifact publish templates
 .publish-artifact-template: &publish-artifact
-    name: application
-    paths:
-      - app/
+  name: application
+  paths:
+    - app/
 .publish-template: &publish
   <<: *linux-docker-runner
   stage: deploy
   script: date
 
 # Artifact publish
-non tag application:
+deploy:dev app:
   <<: *publish
   except:
     - tags
@@ -58,7 +140,7 @@ non tag application:
     <<: *publish-artifact
     expire_in: 1 day
 
-application:
+deploy:app:
   <<: *publish
   only:
     - tags
@@ -67,9 +149,9 @@ application:
 
 # db structure templates
 .db-struct-artifact-template: &db-struct-artifact
-    name: database structure
-    paths:
-      - ./*.sql
+  name: database structure
+  paths:
+    - ./*.sql
 .db-struct-template: &db-struct
   <<: *linux-docker-runner
   stage: deploy
@@ -78,7 +160,7 @@ application:
     - cp docker/mysql/demo.sql .
 
 # Artifact publish
-non tag database structure:
+deploy:dev database structure:
   <<: *db-struct
   except:
     - tags
@@ -86,7 +168,7 @@ non tag database structure:
     <<: *db-struct-artifact
     expire_in: 1 day
 
-database structure:
+deploy:database structure:
   <<: *db-struct
   only:
     - tags
@@ -97,7 +179,7 @@ pages:
   <<: *linux-docker-runner
   stage: deploy
   dependencies:
-    - documentation
+    - build:documentation
   script: mv doc public
   artifacts:
     paths:
