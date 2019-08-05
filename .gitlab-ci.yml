@@ -19,6 +19,8 @@ cache:
 
 default:
   image: alpine
+  before_script:
+    - date
 
 # Jobs that does not require git to pull code
 .no-pull: &no-pull
@@ -38,6 +40,7 @@ default:
   services:
     - docker:dind
   before_script:
+    - date
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # fetches the latest image (not failing if image is not found)
     - docker pull $SERVER_IMAGE:latest || true
@@ -64,6 +67,7 @@ build:documentation:
     - npm install
     - npm run api:doc
     - cp openapi.yml doc/
+    - ls -l doc
 
 
 ## ##
@@ -181,7 +185,11 @@ pages:
   stage: deploy
   dependencies:
     - build:documentation
-  script: mv doc public
+  script: 
+    - pwd
+    - ls -l
+    - ls -l doc
+    - mv doc public
   artifacts:
     paths:
       - public
