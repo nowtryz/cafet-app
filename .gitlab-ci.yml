@@ -1,5 +1,3 @@
-image: alpine
-
 stages:
   - build
   - test
@@ -18,6 +16,9 @@ cache:
     - ./doc
     # Node JS
     - ./node_modules
+
+default:
+  image: alpine
 
 # Jobs that does not require git to pull code
 .no-pull: &no-pull
@@ -39,7 +40,7 @@ cache:
   before_script:
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
     # fetches the latest image (not failing if image is not found)
-    - docker pull $SERVER_RELEASE_IMAGEt || true
+    - docker pull $SERVER_IMAGE:latest || true
 
 
 ## ##
@@ -132,7 +133,7 @@ deploy:develop:
   script: date
 
 # Artifact publish
-deploy:dev app:
+deploy:dev_app:
   <<: *publish
   except:
     - tags
@@ -160,7 +161,7 @@ deploy:app:
     - cp docker/mysql/demo.sql .
 
 # Artifact publish
-deploy:dev database structure:
+deploy:dev_database_structure:
   <<: *db-struct
   except:
     - tags
@@ -168,7 +169,7 @@ deploy:dev database structure:
     <<: *db-struct-artifact
     expire_in: 1 day
 
-deploy:database structure:
+deploy:database_structure:
   <<: *db-struct
   only:
     - tags
