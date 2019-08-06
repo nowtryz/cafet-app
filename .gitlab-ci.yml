@@ -8,14 +8,6 @@ variables:
   DATABASE_IMAGE: $CI_REGISTRY_IMAGE/database
   IMAGE_TAG: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}
 
-# Cache policy
-cache:
-  key: "$CI_COMMIT_REF_SLUG"
-  paths:
-    # Actual build
-    - ./doc
-    # Node JS
-    - ./node_modules
 
 default:
   image: alpine
@@ -63,12 +55,20 @@ build:documentation:
   <<: *linux-docker-runner
   image: node
   stage: build
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      # Node JS
+      - ./node_modules
   script:
     - npm install
     - npm run api:doc
     - cp openapi.yml doc/
-    - ls -l doc
-
+  artifacts:
+    untracked: true
+    paths:
+      # Built documentation
+      - ./doc
 
 ## ##
 ## Deploy
@@ -188,7 +188,6 @@ pages:
   script: 
     - pwd
     - ls -l
-    - ls -l doc
     - mv doc public
   artifacts:
     paths:
