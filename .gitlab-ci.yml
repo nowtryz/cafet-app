@@ -19,7 +19,7 @@ default:
   variables:
       GIT_STRATEGY: none
 
-.with-cache: &with-cache:
+.with-cache: &with-cache
   cache:
     key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
     paths:
