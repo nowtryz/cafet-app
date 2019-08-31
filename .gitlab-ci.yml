@@ -79,21 +79,43 @@ build:documentation:
 ## ##
 
 ## Docker tags
+.docker_tagging: &docker-tagging
+    after_script:
+        - docker pull $SERVER_IMAGE:$IMAGE_TAG
+        - docker pull $DATABASE_IMAGE:$IMAGE_TAG
+        - docker tag $SERVER_IMAGE:$IMAGE_TAG $SERVER_IMAGE:$VERSION
+        - docker tag $DATABASE_IMAGE:$IMAGE_TAG $DATABASE_IMAGE:$VERSION
+        - docker push $SERVER_IMAGE:$VERSION
+        - docker push $DATABASE_IMAGE:$VERSION
+
+
+deploy:branches:
+  <<: *docker
+  <<: *no-pull
+  <<: *docker-tagging
+  stage: deploy
+  script:
+    - VERSION=$CI_COMMIT_REF_NAME
+  only:
+    - branches
+  except:
+    - master
+    - develop
+  dependencies:
+    - build:docker    
 
 deploy:tags:
   <<: *docker
   <<: *no-pull
+  <<: *docker-tagging
   stage: deploy
   script:
-    - docker pull $SERVER_IMAGE:$IMAGE_TAG
-    - docker pull $DATABASE_IMAGE:$IMAGE_TAG
-    - docker tag $SERVER_IMAGE:$IMAGE_TAG $SERVER_IMAGE:$CI_COMMIT_REF_NAME
-    - docker tag $DATABASE_IMAGE:$IMAGE_TAG $DATABASE_IMAGE:$CI_COMMIT_REF_NAME
-    - docker push $SERVER_IMAGE:$CI_COMMIT_REF_NAME
-    - docker push $DATABASE_IMAGE:$CI_COMMIT_REF_NAME
+    - VERSION=$(echo $CI_COMMIT_REF_NAME | sed -E "s/^v//")
   only:
-    - tags
-    - branches
+    refs:
+      - tags
+    variables:
+        - $CI_COMMIT_REF_NAME =~ /^v/
   except:
     - master
     - develop
@@ -103,14 +125,10 @@ deploy:tags:
 deploy:release:
   <<: *docker
   <<: *no-pull
+  <<: *docker-tagging
   stage: deploy
   script:
-    - docker pull $SERVER_IMAGE:$IMAGE_TAG
-    - docker pull $DATABASE_IMAGE:$IMAGE_TAG
-    - docker tag $SERVER_IMAGE:$IMAGE_TAG $SERVER_IMAGE:latest
-    - docker tag $DATABASE_IMAGE:$IMAGE_TAG $DATABASE_IMAGE:latest
-    - docker push $SERVER_IMAGE:latest
-    - docker push $DATABASE_IMAGE:latest
+    - VERSION=latest
   only:
     - master
   except:
@@ -121,14 +139,10 @@ deploy:release:
 deploy:develop:
   <<: *docker
   <<: *no-pull
+  <<: *docker-tagging
   stage: deploy
   script:
-    - docker pull $SERVER_IMAGE:$IMAGE_TAG
-    - docker pull $DATABASE_IMAGE:$IMAGE_TAG
-    - docker tag $SERVER_IMAGE:$IMAGE_TAG $SERVER_IMAGE:dev
-    - docker tag $DATABASE_IMAGE:$IMAGE_TAG $DATABASE_IMAGE:dev
-    - docker push $SERVER_IMAGE:dev
-    - docker push $DATABASE_IMAGE:dev
+    - VERSION=dev
   only:
     - develop
   except:
