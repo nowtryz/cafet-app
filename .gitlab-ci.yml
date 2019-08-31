@@ -41,8 +41,6 @@ default:
   before_script:
     - date
     - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    # fetches the latest image (not failing if image is not found)
-    - docker pull $SERVER_IMAGE:latest || true
 
 
 ## ##
@@ -53,6 +51,8 @@ build:docker:
   <<: *docker
   stage: build
   script:
+    # fetches the latest image (not failing if image is not found)
+    - docker pull $SERVER_IMAGE:latest || true
     - docker build --pull --cache-from $SERVER_IMAGE:latest -t $SERVER_IMAGE:$IMAGE_TAG -f docker/php/Dockerfile .
     - docker build --pull --cache-from $DATABASE_IMAGE:latest -t $DATABASE_IMAGE:$IMAGE_TAG -f docker/mysql/Dockerfile .
     - docker push $SERVER_IMAGE:$IMAGE_TAG
@@ -98,9 +98,13 @@ deploy:branches:
     - VERSION=$CI_COMMIT_REF_NAME
   only:
     - branches
+    - tags
   except:
-    - master
-    - develop
+    refs:
+      - master
+      - develop
+    variables:
+      - $CI_COMMIT_TAG =~ /^v/
   dependencies:
     - build:docker    
 
@@ -110,15 +114,12 @@ deploy:tags:
   <<: *docker-tagging
   stage: deploy
   script:
-    - VERSION=$(echo $CI_COMMIT_REF_NAME | sed -E "s/^v//")
+    - VERSION=$(echo $CI_COMMIT_TAG | sed -E "s/^v//")
   only:
     refs:
       - tags
     variables:
-        - $CI_COMMIT_REF_NAME =~ /^v/
-  except:
-    - master
-    - develop
+      - $CI_COMMIT_TAG =~ /^v/
   dependencies:
     - build:docker
 
