@@ -45,16 +45,16 @@ default:
     - >
       # Push functions
       function push_image_to_gitlab() {
-        local image="$1" sha="$2" tag="$3"
-        docker pull $image:$sha
-        docker tag $image:$sha $image:$tag
-        docker push $image:$tag
+        # push_image_to_gitlab IMAGE SHA TAG
+        docker pull $1:$2
+        docker tag $1:$2 $1:$3
+        docker push $1:$3
       }
 
       function tag_images() {
-        local tag=$1
-        push_image_to_gitlab $DATABASE_IMAGE $IMAGE_ID $tag
-        push_image_to_gitlab $SERVER_IMAGE $IMAGE_ID $tag
+        # tag_images TAG
+        push_image_to_gitlab $DATABASE_IMAGE $IMAGE_ID $1
+        push_image_to_gitlab $SERVER_IMAGE $IMAGE_ID $1
       }
 
 
