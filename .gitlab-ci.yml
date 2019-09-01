@@ -117,6 +117,7 @@ build:docker 2 2:
   <<: *docker
   stage: docker
   script:
+    - echo $IMAGE
     - docker pull $IMAGE:$IMAGE_ID
     - docker tag $IMAGE:$IMAGE_ID $IMAGE:$NEW_TAG
     - docker push $IMAGE:$NEW_TAG
