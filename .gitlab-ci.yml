@@ -158,7 +158,7 @@ docker:tags 2 2:
   variables:
     GIT_STRATEGY: none
     IMAGE: "$DATABASE_IMAGE"
-    NEW_TAG: "$(echo $CI_COMMIT_TAG | sed -E "s/^v//")"
+    NEW_TAG: $(echo $CI_COMMIT_TAG | sed -E "s/^v//")
   dependencies:
     - build:docker 2 2
 
