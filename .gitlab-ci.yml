@@ -15,11 +15,6 @@ default:
   before_script:
     - date
 
-# Jobs that does not require git to pull code
-.no-pull: &no-pull
-  variables:
-      GIT_STRATEGY: none
-
 .with-cache: &with-cache
   cache:
     key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
@@ -45,6 +40,7 @@ default:
 
 # Tag docker images
 .docker_tagging: &docker-tagging
+  <<: *docker
   script:
     - >
       function push_image_to_gitlab() {
@@ -95,11 +91,10 @@ build:docker:
 
 ## Docker tags
 docker:branches:
-  <<: *docker
-  <<: *no-pull
   <<: *docker-tagging
   stage: docker
   variables:
+    GIT_STRATEGY: none
     NEW_TAG: $CI_COMMIT_REF_NAME
   only:
     - branches
@@ -107,18 +102,18 @@ docker:branches:
   except:
     refs:
       - master
-      - develop
+      # - develop
     variables:
       - $CI_COMMIT_TAG =~ /^v/
   dependencies:
     - build:docker
 
 docker:tags:
-  <<: *docker
-  <<: *no-pull
+  <<: *docker-tagging
   stage: docker
-  script:
-    - tag_images $(echo $CI_COMMIT_TAG | sed -E "s/^v//")
+  variables:
+    GIT_STRATEGY: none
+    NEW_TAG: $(echo $CI_COMMIT_TAG | sed -E "s/^v//")
   only:
     refs:
       - tags
@@ -128,11 +123,10 @@ docker:tags:
     - build:docker
 
 docker:release:
-  <<: *docker
-  <<: *no-pull
   <<: *docker-tagging
   stage: docker
   variables:
+    GIT_STRATEGY: none
     NEW_TAG: latest
   only:
     - master
@@ -142,11 +136,10 @@ docker:release:
     - build:docker
 
 docker:develop:
-  <<: *docker
-  <<: *no-pull
   <<: *docker-tagging
   stage: docker
   variables:
+    GIT_STRATEGY: none
     NEW_TAG: dev
   only:
     - develop
