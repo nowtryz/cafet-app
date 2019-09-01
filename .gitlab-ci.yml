@@ -61,7 +61,7 @@ default:
 build:documentation:
   <<: *linux-docker-runner
   <<: *with-cache
-  image: node
+  image: node:10
   stage: build
   script:
     - npm install
@@ -72,7 +72,7 @@ build:documentation:
     paths:
       # Built documentation
       - ./doc
-    expire_in: 5 min
+    expire_in: 1 hour
 
 build:docker:
   <<: *docker
@@ -102,7 +102,7 @@ docker:branches:
   except:
     refs:
       - master
-      # - develop
+      - develop
     variables:
       - $CI_COMMIT_TAG =~ /^v/
   dependencies:
@@ -214,9 +214,7 @@ pages:
   stage: deploy
   dependencies:
     - build:documentation
-  script: 
-    - pwd
-    - ls -l
+  script:
     - mv doc public
   artifacts:
     paths:
