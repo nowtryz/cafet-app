@@ -5,8 +5,8 @@ stages:
   - deploy
 
 variables:
-  SERVER_IMAGE: $CI_REGISTRY_IMAGE/server
-  DATABASE_IMAGE: $CI_REGISTRY_IMAGE/database
+  SERVER_IMAGE: ${CI_REGISTRY_IMAGE}/server
+  DATABASE_IMAGE: ${CI_REGISTRY_IMAGE}/database
   IMAGE_ID: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}
 
 
@@ -117,7 +117,7 @@ build:docker 2 2:
   <<: *docker
   stage: docker
   script:
-    - echo $IMAGE
+    - echo $IMAGE:$IMAGE_ID
     - docker pull $IMAGE:$IMAGE_ID
     - docker tag $IMAGE:$IMAGE_ID $IMAGE:$NEW_TAG
     - docker push $IMAGE:$NEW_TAG
