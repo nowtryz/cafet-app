@@ -104,9 +104,9 @@ build:docker 2 2:
   stage: build
   script:
     # fetches the latest image (not failing if image is not found)
-    - docker pull "$DATABASE_IMAGE:latest" || true
-    - docker build --pull --cache-from "$DATABASE_IMAGE:latest" -t "$DATABASE_IMAGE:$IMAGE_ID" -f docker/mysql/Dockerfile .
-    - docker push "$DATABASE_IMAGE:$IMAGE_ID"
+    - docker pull $DATABASE_IMAGE:latest || true
+    - docker build --pull --cache-from $DATABASE_IMAGE:latest -t $DATABASE_IMAGE:$IMAGE_ID -f docker/mysql/Dockerfile .
+    - docker push $DATABASE_IMAGE:$IMAGE_ID
 
 ## ##
 ## Docker
@@ -117,10 +117,11 @@ build:docker 2 2:
   <<: *docker
   stage: docker
   script:
-    - echo "$IMAGE:$IMAGE_ID"
-    - docker pull "$IMAGE:$IMAGE_ID"
-    - docker tag "$IMAGE:$IMAGE_ID" "$IMAGE:$NEW_TAG"
-    - docker push "$IMAGE:$NEW_TAG"
+    - alias ee="eval echo"
+    - echo $(ee $IMAGE:$IMAGE_ID)
+    - docker pull $(ee $IMAGE:$IMAGE_ID)
+    - docker tag $(ee $IMAGE:$IMAGE_ID) $(ee $IMAGE:$NEW_TAG)
+    - docker push $(ee $IMAGE:$NEW_TAG)
 
 docker:branches 1 2:
   <<: *docker-tagging
