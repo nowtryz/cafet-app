@@ -1,4 +1,90 @@
 # Change Log
+
+## [1.8.0] 2019-08-26
+### Warning
+- Wizard and Wizard Steps were not changed to hooks since we need to be able to call the isValidated function (this can only be achieved with classes - withStyles function is still being used)
+- Sidebar Component could not be changed to hooks due to the dynamic nature of this component (the collapses states are done dynamically, and you do not have anyway of knowing the amount of collapses this component will have to create static states - withStyles function is still being used)
+### Bug fixing
+- Rewrote the ISSUE_TEMPLATE
+- Deleted the copyright comments from all files, we only need to keep them inside our index.js and index.html
+- Added script that adds copyrights to the built app
+- Renamed all the files from `.jsx` to `.js`
+- Changed the `withStyles` function from Material-UI with the `makeStyles` function (integration with other frameworks should now be easy)
+- React Hooks is now supported (Please read the above warnings)
+### Major style changes
+- `src/assets/jss/material-dashboard-pro-react/components/customDropdownStyle.js`
+- `src/assets/jss/material-kit-pro-react/components/cardBodyStyle.js`
+- `src/assets/scss/plugins/_plugin-nouislider.scss`
+### Deleted components
+
+### Added components
+
+### Deleted dependencies
+
+### Added dependencies
++ gulp@4.0.2
++ gulp-append-prepend@1.0.8
+### Updated dependencies
+```
+@material-ui/core         4.1.0   →    4.3.2
+@material-ui/icons        4.1.0   →    4.2.1
+nouislider               13.1.5   →   14.0.2
+react                    16.8.6   →   16.9.0
+react-big-calendar       0.21.0   →   0.22.0
+react-dom                16.8.6   →   16.9.0
+react-scripts             3.0.1   →    3.1.0
+eslint-config-prettier    4.3.0   →    6.0.0
+@types/googlemaps        3.36.4   →   3.37.3
+ajv                      6.10.0   →   6.10.2
+typescript                3.5.1   →    3.5.3
+```
+
+## [1.7.0] 2019-06-19
+### Warning
+**We've skipped version 1.6.0 so that all React Material products would be on the same version.**
+### Bug fixing
+- Bugs from updated dependencies
+- Removed `.env` file, and replaced it with the `jsconfig.json` file
+- Changes caused by running [the prettier command](https://prettier.io/docs/en/install.html) for *.jsx*, *.js*, *.html* and *.css* files
+- Changed all string refs to `React.createRef()`
+- Added types validation in each component
+- Solved linting issues
+- Solved https://github.com/creativetimofficial/ct-material-dashboard-pro-react/issues/149
+- Solved https://github.com/creativetimofficial/ct-material-dashboard-pro-react/issues/161
+- Solved https://github.com/creativetimofficial/ct-material-dashboard-pro-react/issues/171
+- Solved https://github.com/creativetimofficial/ct-material-dashboard-pro-react/issues/172
+- Solved https://github.com/creativetimofficial/ct-material-dashboard-pro-react/issues/176
+- Solved https://github.com/creativetimofficial/ct-material-dashboard-pro-react/issues/177
+### Major style changes
+### Deleted components
+### Added components
+### Deleted dependencies
+### Added dependencies
+- typescript@3.5.1  (To stop console warnings on install)
+- eslint-plugin-react@7.13.0
+- eslint@5.16.0
+### Updated dependencies
+```
+@material-ui/core          3.9.2   →    4.1.0
+@material-ui/icons         3.0.2   →    4.1.0
+history                    4.7.2   →    4.9.0
+node-sass                 4.11.0   →   4.12.0
+nouislider                13.1.0   →   13.1.5
+react                     16.8.1   →   16.8.6
+react-big-calendar        0.20.3   →   0.21.0
+react-dom                 16.8.1   →   16.8.6
+react-jvectormap           0.0.6   →   0.0.12
+react-router-dom           4.3.1   →    5.0.1
+react-scripts              2.1.5   →    3.0.1
+react-swipeable-views     0.13.1   →   0.13.3
+react-table                6.9.2   →   6.10.0
+eslint-config-prettier     4.0.0   →    4.3.0
+eslint-plugin-prettier     3.0.1   →    3.1.0
+@types/googlemaps        3.30.16   →   3.36.4
+ajv                        6.9.1   →   6.10.0
+prettier                  1.16.4   →   1.18.2
+```
+
 ## [1.5.0] 2019-02-13
 ### Bug Fixing
 - Deleted some unnecessary scripts (See available scripts here: https://demos.creative-tim.com/material-dashboard-pro-react/#/documentation/build-tools)
