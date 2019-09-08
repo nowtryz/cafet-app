@@ -14,6 +14,7 @@ services:
       - db
     volumes:
       - php-logs:/var/log
+      - content:/var/www/html/cafetapi_content
 
   db:
     image: registry.gitlab.com/cafet-app/cafet-app/database:latest
@@ -21,6 +22,10 @@ services:
     restart: always
     ports:
       - '3306:3306'
+    volumes:
+      - database:/var/lib/mysql
 
 volumes:
   php-logs:
+  database:
+  content:
