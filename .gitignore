@@ -2,6 +2,7 @@
 doc/
 
 # Eclipse
+.tern-project
 .settings/
 .buildpath
 .project
