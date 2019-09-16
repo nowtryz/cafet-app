@@ -7,9 +7,9 @@ export default {
         balance: 'Votre compte dispose d\'un solde que vous pouvez recharger à tout moment. Quoi de mieux pour eviter de toujours sortir son argent pour payer la Cafet\' ?',
         'easy to use': 'Avec une une application web intuitive, il très facile de gérer votre compte.',
         agreements: 'J\'accepte les ',
-        terms: 'termes et conditions d\'utilisation'
+        terms: 'termes et conditions d\'utilisation',
     },
-    
+
     admin_user_page: {
         '%(name)s\'s information': 'Informations sur %(name)s',
         'Are you sure?': 'Vous êtes sûr ?',
@@ -23,12 +23,12 @@ export default {
         create_customer_account_text: '%(name)s ne possède pas encore de compte client.',
         'Customer account': 'Compte client',
         'Dissociate customer account': 'Dissocier le compte client',
-        'Firstname': 'Prénom',
+        Firstname: 'Prénom',
         'Family name': 'Nom de famille',
-        'Username': 'Nom d\'utilisateur',
+        Username: 'Nom d\'utilisateur',
         'Email address': 'Adresse E-mail',
         'Phone number': 'Numéro de téléphone',
-        'ID': 'ID',
+        ID: 'ID',
         'Member since': 'Membre depuis le',
         'Last sign-in at': 'Dernière connexion le',
         'Sign-in count': 'Nombre de connexions',
@@ -36,8 +36,8 @@ export default {
         'Payment notice': 'Reçu des dépenses',
         'Reload notice': 'Notification de rechargement',
         'Low sold warning': 'Avertissement solde faible',
-        'Balance': 'Solde',
-        'Member': 'Adhérent',
+        Balance: 'Solde',
+        Member: 'Adhérent',
     },
 
     default: {
@@ -77,7 +77,7 @@ export default {
         Reloads: 'Rechargements',
         Notifications: 'Notifications',
         'Admin Panel': 'panneau d\'administration',
-        Profile:'Profil',
+        Profile: 'Profil',
         'User Page': 'Page utilisateur',
         Language: 'Langue',
         Logout: 'Déconnexion',
@@ -85,10 +85,10 @@ export default {
         'Change Password': 'Changer de mot de passe',
         'Used Space': 'Espace Utilisé',
         'Check use history': 'Voir l\'historique d\'utilisation',
-        'Revenue': 'Revenu',
+        Revenue: 'Revenu',
         'Last 7 Days': 'Ces 7 derniers jours',
         'Last 12 months': 'Ces 12 derniers mois',
-        'Sales': 'Ventes',
+        Sales: 'Ventes',
         'This month': 'Ce mois',
         'User Count': 'Nombre d\'utilisateurs',
         'Manage Users': 'Gérer les utilisateurs',
@@ -100,7 +100,7 @@ export default {
         'decrease in today reloads.': 'de diminution des rechargements aujourd\'hui.',
         'of increase this month.': 'd\'augmentation ce mois.',
         'of decrease this month.': 'de diminution ce mois',
-        'Refresh': 'Rafraîchir',
+        Refresh: 'Rafraîchir',
         daysOfWeek: 'LMMJVSD',
         monthsOfYear: 'Jan Fév Mar Avr Mai Jui Jui Aoû Sep Oct Nov Déc',
         Guest: 'Invité',
@@ -121,5 +121,5 @@ export default {
         Dissociate: 'Dissocier',
         No: 'Non',
         Yes: 'Oui',
-    }
+    },
 }

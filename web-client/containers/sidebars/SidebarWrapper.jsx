@@ -12,25 +12,29 @@ class SidebarWrapper extends React.Component {
         className: PropTypes.string.isRequired,
         children: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.element),
-            PropTypes.element
-        ]).isRequired
+            PropTypes.element,
+        ]).isRequired,
     }
+
     sidebarWrapper = React.createRef()
+
     ps = null
 
     componentDidMount() {
         if (navigator.platform.indexOf('Win') > -1) {
             this.ps = new PerfectScrollbar(this.sidebarWrapper.current, {
                 suppressScrollX: true,
-                suppressScrollY: false
+                suppressScrollY: false,
             })
         }
     }
+
     componentWillUnmount() {
         if (navigator.platform.indexOf('Win') > -1) {
             this.ps.destroy()
         }
     }
+
     render() {
         const { className, children } = this.props
         return (

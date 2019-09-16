@@ -2,12 +2,10 @@ import store from 'reducers'
 import { clearUser } from 'actions'
 import { API_URL } from './config'
 
-export const responseInterceptor = response => {
-    return response
-}
-  
-export const errorInterceptor = error => {
-    if (401 === error.response.status && error.response.config.url != `${API_URL}/user/login` && !store.getState().user.isLogging) {
+export const responseInterceptor = (response) => response
+
+export const errorInterceptor = (error) => {
+    if (error.response.status === 401 && error.response.config.url != `${API_URL}/user/login` && !store.getState().user.isLogging) {
         store.dispatch(clearUser())
     }
 

@@ -37,11 +37,11 @@ import CardFooter from '@dashboard/components/Card/CardFooter'
 
 import {
     dangerColor,
-    successColor
+    successColor,
 } from '@dashboard/assets/jss/material-dashboard-pro-react'
 import {
     straightLinesChart,
-    simpleBarChart
+    simpleBarChart,
 } from '@dashboard/variables/charts'
 
 import dashboardStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/dashboardStyle'
@@ -55,7 +55,7 @@ import { rotate } from 'utils'
 class Dashboard extends React.Component {
     static propTypes = {
         classes: classesPropType.isRequired,
-        currency: PropTypes.string.isRequired
+        currency: PropTypes.string.isRequired,
     }
 
     state = {
@@ -64,9 +64,9 @@ class Dashboard extends React.Component {
         weekly_revenue: 0,
         montly_sales: 0,
         user_count: 0,
-        weekly_balance_reloads: [0,0,0,0,0,0,0],
-        last_monthly_sales_count: [0,0,0,0,0,0,0,0,0,0,0,0],
-        monthly_subscription: [0,0,0,0,0,0,0,0,0,0,0,0]
+        weekly_balance_reloads: [0, 0, 0, 0, 0, 0, 0],
+        last_monthly_sales_count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        monthly_subscription: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     }
 
     componentDidMount() {
@@ -79,31 +79,31 @@ class Dashboard extends React.Component {
 
     async loadStats() {
         const response = await axios.get(`${API_URL}/stats/overview`)
-        this.setState({...response.data})
+        this.setState({ ...response.data })
     }
 
     renderWeeklyBalanceReloads() {
         const { classes } = this.props
         const { weekly_balance_reloads } = this.state
-        const variation = (weekly_balance_reloads[6]/weekly_balance_reloads[5] - 1) * 100 | 0
+        const variation = (weekly_balance_reloads[6] / weekly_balance_reloads[5] - 1) * 100 | 0
         const min = Math.min(...weekly_balance_reloads)
         const data = {
             labels: rotate(_('daysOfWeek').split(''), new Date().getDay()),
-            series: [weekly_balance_reloads]
+            series: [weekly_balance_reloads],
         }
         const options = {
             ...straightLinesChart.options,
-            high: Math.max(...weekly_balance_reloads.map(v => (v - min) * 4/3 + min), 50),
-            low: min
+            high: Math.max(...weekly_balance_reloads.map((v) => (v - min) * 4 / 3 + min), 50),
+            low: min,
         }
 
         return (
             <Card chart className={classes.cardHover}>
-                <CardHeader color='info' className={classes.cardHeaderHover}>
+                <CardHeader color="info" className={classes.cardHeaderHover}>
                     <ChartistGraph
-                        className='ct-chart-white-colors'
+                        className="ct-chart-white-colors"
                         data={data}
-                        type='Line'
+                        type="Line"
                         options={options}
                         listener={straightLinesChart.animation}
                     />
@@ -111,12 +111,12 @@ class Dashboard extends React.Component {
                 <CardBody>
                     <div className={classes.cardHoverUnder}>
                         <Tooltip
-                            id='tooltip-top'
+                            id="tooltip-top"
                             title={_('Refresh')}
-                            placement='bottom'
+                            placement="bottom"
                             classes={{ tooltip: classes.tooltip }}
                         >
-                            <Button simple color='info' justIcon onClick={this.refresh}>
+                            <Button simple color="info" justIcon onClick={this.refresh}>
                                 <Refresh className={classes.underChartIcons} />
                             </Button>
                         </Tooltip>
@@ -126,21 +126,21 @@ class Dashboard extends React.Component {
                     </h4>
                     <p className={classes.cardCategory}>
                         {variation >= 0 ? (
-                            <React.Fragment>
-                                <span style={{color: successColor[0]}}>
+                            <>
+                                <span style={{ color: successColor[0] }}>
                                     <ArrowUpward className={classes.upArrowCardCategory} /> {variation}%
                                 </span>
                                 {' '}
                                 <Locale>increase in today reloads.</Locale>
-                            </React.Fragment>
-                        ):(
-                            <React.Fragment>
-                                <span style={{color: dangerColor[0]}}>
+                            </>
+                        ) : (
+                            <>
+                                <span style={{ color: dangerColor[0] }}>
                                     <ArrowDownward className={classes.upArrowCardCategory} /> {-variation}%
                                 </span>
                                 {' '}
                                 <Locale>decrease in today reloads.</Locale>
-                            </React.Fragment>
+                            </>
                         )}
                     </p>
                 </CardBody>
@@ -157,25 +157,25 @@ class Dashboard extends React.Component {
     renderLastMonthlySalesCount() {
         const { classes } = this.props
         const { last_monthly_sales_count } = this.state
-        const variation = (last_monthly_sales_count[11]/last_monthly_sales_count[10] - 1) * 100 | 0
+        const variation = (last_monthly_sales_count[11] / last_monthly_sales_count[10] - 1) * 100 | 0
         const min = Math.min(...last_monthly_sales_count)
         const data = {
             labels: rotate(_('monthsOfYear').split(' '), new Date().getMonth() + 1),
-            series: [last_monthly_sales_count]
+            series: [last_monthly_sales_count],
         }
         const options = {
             ...simpleBarChart.options,
-            high: Math.max(...last_monthly_sales_count.map(v => (v - min) * 4/3 + min), 50),
-            low: min
+            high: Math.max(...last_monthly_sales_count.map((v) => (v - min) * 4 / 3 + min), 50),
+            low: min,
         }
 
         return (
             <Card chart className={classes.cardHover}>
-                <CardHeader color='warning' className={classes.cardHeaderHover}>
+                <CardHeader color="warning" className={classes.cardHeaderHover}>
                     <ChartistGraph
-                        className='ct-chart-white-colors'
+                        className="ct-chart-white-colors"
                         data={data}
-                        type='Bar'
+                        type="Bar"
                         options={options}
                         responsiveOptions={simpleBarChart.responsiveOptions}
                         listener={simpleBarChart.animation}
@@ -184,12 +184,12 @@ class Dashboard extends React.Component {
                 <CardBody>
                     <div className={classes.cardHoverUnder}>
                         <Tooltip
-                            id='tooltip-top'
+                            id="tooltip-top"
                             title={_('Refresh')}
-                            placement='bottom'
+                            placement="bottom"
                             classes={{ tooltip: classes.tooltip }}
                         >
-                            <Button simple color='info' justIcon onClick={this.refresh}>
+                            <Button simple color="info" justIcon onClick={this.refresh}>
                                 <Refresh className={classes.underChartIcons} />
                             </Button>
                         </Tooltip>
@@ -199,21 +199,21 @@ class Dashboard extends React.Component {
                     </h4>
                     <p className={classes.cardCategory}>
                         {variation >= 0 ? (
-                            <React.Fragment>
-                                <span style={{color: successColor[0]}}>
+                            <>
+                                <span style={{ color: successColor[0] }}>
                                     <ArrowUpward className={classes.upArrowCardCategory} /> {variation}%
                                 </span>
                                 {' '}
                                 <Locale>of increase this month.</Locale>
-                            </React.Fragment>
-                        ):(
-                            <React.Fragment>
-                                <span style={{color: dangerColor[0]}}>
+                            </>
+                        ) : (
+                            <>
+                                <span style={{ color: dangerColor[0] }}>
                                     <ArrowDownward className={classes.upArrowCardCategory} /> {-variation}%
                                 </span>
                                 {' '}
                                 <Locale>of decrease this month.</Locale>
-                            </React.Fragment>
+                            </>
                         )}
                     </p>
                 </CardBody>
@@ -231,25 +231,25 @@ class Dashboard extends React.Component {
     renderLastMonthlySubscription() {
         const { classes } = this.props
         const { monthly_subscription } = this.state
-        const variation = (monthly_subscription[11]/monthly_subscription[10] - 1) * 100 | 0
+        const variation = (monthly_subscription[11] / monthly_subscription[10] - 1) * 100 | 0
         const min = Math.min(...monthly_subscription)
         const data = {
             labels: rotate(_('monthsOfYear').split(' '), new Date().getMonth() + 1),
-            series: [monthly_subscription]
+            series: [monthly_subscription],
         }
         const options = {
             ...straightLinesChart.options,
-            high: Math.max(...monthly_subscription.map(v => (v - min) * 4/3 + min), 10),
-            low: min
+            high: Math.max(...monthly_subscription.map((v) => (v - min) * 4 / 3 + min), 10),
+            low: min,
         }
 
         return (
             <Card chart className={classes.cardHover}>
-                <CardHeader color='danger' className={classes.cardHeaderHover}>
+                <CardHeader color="danger" className={classes.cardHeaderHover}>
                     <ChartistGraph
-                        className='ct-chart-white-colors'
+                        className="ct-chart-white-colors"
                         data={data}
-                        type='Line'
+                        type="Line"
                         options={options}
                         listener={straightLinesChart.animation}
                     />
@@ -257,12 +257,12 @@ class Dashboard extends React.Component {
                 <CardBody>
                     <div className={classes.cardHoverUnder}>
                         <Tooltip
-                            id='tooltip-top'
+                            id="tooltip-top"
                             title={_('Refresh')}
-                            placement='bottom'
+                            placement="bottom"
                             classes={{ tooltip: classes.tooltip }}
                         >
-                            <Button simple color='info' justIcon onClick={this.refresh}>
+                            <Button simple color="info" justIcon onClick={this.refresh}>
                                 <Refresh className={classes.underChartIcons} />
                             </Button>
                         </Tooltip>
@@ -272,21 +272,21 @@ class Dashboard extends React.Component {
                     </h4>
                     <p className={classes.cardCategory}>
                         {variation >= 0 ? (
-                            <React.Fragment>
-                                <span style={{color: successColor[0]}}>
+                            <>
+                                <span style={{ color: successColor[0] }}>
                                     <ArrowUpward className={classes.upArrowCardCategory} /> {variation}%
                                 </span>
                                 {' '}
                                 <Locale>of increase this month.</Locale>
-                            </React.Fragment>
-                        ):(
-                            <React.Fragment>
-                                <span style={{color: dangerColor[0]}}>
+                            </>
+                        ) : (
+                            <>
+                                <span style={{ color: dangerColor[0] }}>
                                     <ArrowDownward className={classes.upArrowCardCategory} /> {-variation}%
                                 </span>
                                 {' '}
                                 <Locale>of decrease this month.</Locale>
-                            </React.Fragment>
+                            </>
                         )}
                     </p>
                 </CardBody>
@@ -299,6 +299,7 @@ class Dashboard extends React.Component {
             </Card>
         )
     }
+
     render() {
         const { classes, currency } = this.props
         const {
@@ -306,7 +307,7 @@ class Dashboard extends React.Component {
             used_storage,
             weekly_revenue,
             montly_sales,
-            user_count
+            user_count,
         } = this.state
 
         return (
@@ -314,8 +315,8 @@ class Dashboard extends React.Component {
                 <GridContainer>
                     <GridItem xs={12} sm={6} md={6} lg={3}>
                         <Card>
-                            <CardHeader color='warning' stats icon>
-                                <CardIcon color='warning'>
+                            <CardHeader color="warning" stats icon>
+                                <CardIcon color="warning">
                                     <Icon>content_copy</Icon>
                                 </CardIcon>
                                 <p className={classes.cardCategory}>
@@ -328,7 +329,7 @@ class Dashboard extends React.Component {
                             <CardFooter stats>
                                 <div className={classes.stats}>
                                     <Timeline />
-                                    <NavLink to='admin/storage'>
+                                    <NavLink to="admin/storage">
                                         <Locale>Check use history</Locale>
                                     </NavLink>
                                 </div>
@@ -337,8 +338,8 @@ class Dashboard extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={6} md={6} lg={3}>
                         <Card>
-                            <CardHeader color='success' stats icon>
-                                <CardIcon color='success'>
+                            <CardHeader color="success" stats icon>
+                                <CardIcon color="success">
                                     <Store />
                                 </CardIcon>
                                 <p className={classes.cardCategory}>
@@ -356,8 +357,8 @@ class Dashboard extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={6} md={6} lg={3}>
                         <Card>
-                            <CardHeader color='danger' stats icon>
-                                <CardIcon color='danger'>
+                            <CardHeader color="danger" stats icon>
+                                <CardIcon color="danger">
                                     <ShoppingCart />
                                 </CardIcon>
                                 <p className={classes.cardCategory}>
@@ -375,8 +376,8 @@ class Dashboard extends React.Component {
                     </GridItem>
                     <GridItem xs={12} sm={6} md={6} lg={3}>
                         <Card>
-                            <CardHeader color='info' stats icon>
-                                <CardIcon color='info'>
+                            <CardHeader color="info" stats icon>
+                                <CardIcon color="info">
                                     <Person />
                                 </CardIcon>
                                 <p className={classes.cardCategory}>
@@ -387,7 +388,7 @@ class Dashboard extends React.Component {
                             <CardFooter stats>
                                 <div className={classes.stats}>
                                     <Group />
-                                    <NavLink to='admin/users'>
+                                    <NavLink to="admin/users">
                                         <Locale>Manage Users</Locale>
                                     </NavLink>
                                 </div>
@@ -411,8 +412,8 @@ class Dashboard extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    currency: state.server.currency
+const mapStateToProps = (state) => ({
+    currency: state.server.currency,
 })
 
 export default withStyles(dashboardStyle)(connect(mapStateToProps)(Dashboard))

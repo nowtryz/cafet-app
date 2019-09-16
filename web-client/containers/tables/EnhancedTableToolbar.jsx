@@ -16,9 +16,9 @@ import { classes as classesProptype } from 'app-proptypes'
 import _ from 'lang'
 import Locale from '../Locale'
 
-const toolbarStyles = theme => ({
+const toolbarStyles = (theme) => ({
     root: {
-        paddingRight: theme.spacing.unit,
+        paddingRight: theme.spacing(),
     },
     highlight:
     theme.palette.type === 'light'
@@ -41,51 +41,48 @@ const toolbarStyles = theme => ({
     },
 })
 
-const EnhancedTableToolbar = ({ numSelected, classes, title }) => {
-
-    return (
-        <Toolbar
-            className={classNames(classes.root, {
-                [classes.highlight]: numSelected > 0,
-            })}
-        >
-            <div className={classes.title}>
-                {numSelected > 0 ? (
-                    <Typography color="inherit" variant="subtitle1">
-                        <Locale variables={[numSelected]}>%d selected</Locale>
-                    </Typography>
-                ) : (
-                    <Typography variant="h6" id="tableTitle">
-                        <Locale>
-                            {title}
-                        </Locale>
-                    </Typography>
-                )}
-            </div>
-            <div className={classes.spacer} />
-            <div className={classes.actions}>
-                {numSelected > 0 ? (
-                    <Tooltip title={_('Delete')}>
-                        <IconButton aria-label={_('Delete')}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
-                ) : (
-                    <Tooltip title={_('Filter')}>
-                        <IconButton aria-label={_('Filter')}>
-                            <FilterListIcon />
-                        </IconButton>
-                    </Tooltip>
-                )}
-            </div>
-        </Toolbar>
-    )
-}
+const EnhancedTableToolbar = ({ numSelected, classes, title }) => (
+    <Toolbar
+        className={classNames(classes.root, {
+            [classes.highlight]: numSelected > 0,
+        })}
+    >
+        <div className={classes.title}>
+            {numSelected > 0 ? (
+                <Typography color="inherit" variant="subtitle1">
+                    <Locale variables={[numSelected]}>%d selected</Locale>
+                </Typography>
+            ) : (
+                <Typography variant="h6" id="tableTitle">
+                    <Locale>
+                        {title}
+                    </Locale>
+                </Typography>
+            )}
+        </div>
+        <div className={classes.spacer} />
+        <div className={classes.actions}>
+            {numSelected > 0 ? (
+                <Tooltip title={_('Delete')}>
+                    <IconButton aria-label={_('Delete')}>
+                        <DeleteIcon />
+                    </IconButton>
+                </Tooltip>
+            ) : (
+                <Tooltip title={_('Filter')}>
+                    <IconButton aria-label={_('Filter')}>
+                        <FilterListIcon />
+                    </IconButton>
+                </Tooltip>
+            )}
+        </div>
+    </Toolbar>
+)
 
 EnhancedTableToolbar.propTypes = {
     classes: classesProptype.isRequired,
     numSelected: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired
+    title: PropTypes.string.isRequired,
 }
 
 export default withStyles(toolbarStyles)(EnhancedTableToolbar)

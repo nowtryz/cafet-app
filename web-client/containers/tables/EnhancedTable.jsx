@@ -32,12 +32,10 @@ const stableSort = (array, cmp) => {
         if (order !== 0) return order
         return a[1] - b[1]
     })
-    return stabilizedThis.map(el => el[0])
+    return stabilizedThis.map((el) => el[0])
 }
 
-const getSorting = (order, orderBy) => {
-    return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy)
-}
+const getSorting = (order, orderBy) => (order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy))
 
 const styles = () => ({
     table: {
@@ -47,8 +45,8 @@ const styles = () => ({
         overflowX: 'auto',
     },
     tableRow: {
-        cursor: 'pointer'
-    }
+        cursor: 'pointer',
+    },
 })
 
 // eslint-disable-next-line react/no-multi-comp
@@ -59,12 +57,12 @@ class EnhancedTable extends React.Component {
         data: PropTypes.arrayOf(PropTypes.any).isRequired,
         title: PropTypes.string.isRequired,
         dataIndentifier: PropTypes.string,
-        onCellClick: PropTypes.func
+        onCellClick: PropTypes.func,
     }
 
     static defaultProps = {
         dataIndentifier: 'id',
-        onCellClick: null
+        onCellClick: null,
     }
 
     state = {
@@ -80,7 +78,7 @@ class EnhancedTable extends React.Component {
         let order = 'asc'
         const {
             orderBy: stateOrderBy,
-            order: stateOrder
+            order: stateOrder,
         } = this.state
 
         if (stateOrderBy === property && stateOrder === 'asc') {
@@ -90,10 +88,10 @@ class EnhancedTable extends React.Component {
         this.setState({ order, orderBy })
     }
 
-    handleSelectAllClick = event => {
+    handleSelectAllClick = (event) => {
         if (event.target.checked) {
             const { data, dataIndentifier } = this.props
-            this.setState({ selected: data.map(n => n[dataIndentifier]) })
+            this.setState({ selected: data.map((n) => n[dataIndentifier]) })
             return
         }
         this.setState({ selected: [] })
@@ -129,22 +127,26 @@ class EnhancedTable extends React.Component {
         this.setState({ page })
     }
 
-    handleChangeRowsPerPage = event => {
+    handleChangeRowsPerPage = (event) => {
         this.setState({ rowsPerPage: event.target.value })
     }
 
-    isSelected = id => {
-        const {selected} = this.state
+    isSelected = (id) => {
+        const { selected } = this.state
         return selected.indexOf(id) !== -1
     }
 
     render() {
-        const { classes, rows, data, dataIndentifier, title } = this.props
-        const { order, orderBy, selected, rowsPerPage, page } = this.state
+        const {
+            classes, rows, data, dataIndentifier, title,
+        } = this.props
+        const {
+            order, orderBy, selected, rowsPerPage, page,
+        } = this.state
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage)
 
         return (
-            <React.Fragment>
+            <>
                 <EnhancedTableToolbar numSelected={selected.length} title={title} />
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
@@ -160,7 +162,7 @@ class EnhancedTable extends React.Component {
                         <TableBody>
                             {stableSort(data, getSorting(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map(n => {
+                                .map((n) => {
                                     const isSelected = this.isSelected(n[dataIndentifier])
                                     return (
                                         <TableRow
@@ -175,14 +177,14 @@ class EnhancedTable extends React.Component {
                                             <TableCell padding="checkbox">
                                                 <Checkbox
                                                     checked={isSelected}
-                                                    onClick={event => this.handleClick(event, n[dataIndentifier])}
+                                                    onClick={(event) => this.handleClick(event, n[dataIndentifier])}
                                                 />
                                             </TableCell>
-                                            {rows.map(row => (
+                                            {rows.map((row) => (
                                                 <TableCell
                                                     key={row.id}
                                                     align={row.numeric ? 'right' : 'left'}
-                                                    onClick={event => this.handleCellClick(event, n[dataIndentifier])}
+                                                    onClick={(event) => this.handleCellClick(event, n[dataIndentifier])}
                                                     {...row.cellProps}
                                                 >
                                                     {row.render ? row.render(n) : (row.component ? (n[row.id]) : (
@@ -218,7 +220,7 @@ class EnhancedTable extends React.Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-            </React.Fragment>
+            </>
         )
     }
 }

@@ -4,9 +4,8 @@ import SvgIcon from '@material-ui/core/SvgIcon'
 // SVG source:
 // https://github.com/lipis/flag-icon-css/tree/master/flags/4x3
 
-export default function( props )
-{
-    return(
+export default function (props) {
+    return (
         <SvgIcon viewBox="0 0 640 480" {...props}>
             <defs id="defs155">
                 <clipPath id="clipPath4293" clipPathUnits="userSpaceOnUse">

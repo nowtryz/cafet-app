@@ -37,7 +37,7 @@
         "Reload notice": "Reload notice",
         "Low sold warning": "Low sold warning",
         "Balance": "Balance",
-        "Member": "Member",
+        "Member": "Member"
     },
 
     "default": {
@@ -120,6 +120,6 @@
         "Delete": "Delete",
         "Dissociate": "Dissociate",
         "No": "No",
-        "Yes": "Yes",
+        "Yes": "Yes"
     }
 }

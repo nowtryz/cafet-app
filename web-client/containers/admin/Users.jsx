@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
 
 // Material UI
@@ -13,26 +13,44 @@ import CardHeader from '@dashboard/components/Card/CardHeader'
 import CardIcon from '@dashboard/components/Card/CardIcon'
 
 import { API_URL } from 'config'
-import {formateCalendar} from 'utils'
+import { formateCalendar } from 'utils'
 
 import EnhancedTable from '../tables/EnhancedTable'
 
 class Users extends React.Component {
     static propTypes = {
-        history: ReactRouterPropTypes.history.isRequired
+        history: ReactRouterPropTypes.history.isRequired,
     }
 
     static rows = [
-        { id: 'pseudo', numeric: false, component: true, disablePadding: true, label: 'Username', render: Users.userLink, cellProps: {
-            component: 'th',
-            scope: 'row',
-            padding: 'none'
-        } },
-        { id: 'name', numeric: false, component: false, disablePadding: true, label: 'Name' },
-        { id: 'registration', numeric: false, component: false, disablePadding: true, label: 'Created on' },
-        { id: 'last_signin', numeric: false, component: false, disablePadding: true, label: 'Last activity' },
-        { id: 'email', numeric: false, component: false, disablePadding: true, label: 'E-mail' },
-        { id: 'group', numeric: false, component: false, disablePadding: true, label: 'Group' },
+        {
+            id: 'pseudo',
+            numeric: false,
+            component: true,
+            disablePadding: true,
+            label: 'Username',
+            render: Users.userLink,
+            cellProps: {
+                component: 'th',
+                scope: 'row',
+                padding: 'none',
+            },
+        },
+        {
+            id: 'name', numeric: false, component: false, disablePadding: true, label: 'Name',
+        },
+        {
+            id: 'registration', numeric: false, component: false, disablePadding: true, label: 'Created on',
+        },
+        {
+            id: 'last_signin', numeric: false, component: false, disablePadding: true, label: 'Last activity',
+        },
+        {
+            id: 'email', numeric: false, component: false, disablePadding: true, label: 'E-mail',
+        },
+        {
+            id: 'group', numeric: false, component: false, disablePadding: true, label: 'Group',
+        },
     ]
 
     static groups = [
@@ -41,19 +59,19 @@ class Users extends React.Component {
         'Cafet\' Manager',
         'Cafet\' Administrator',
         'Administrator',
-        'Super User'
+        'Super User',
     ]
 
     static userLink(user) {
         return (
-            <Link to={`/admin/users/${user.id}`} onClick={e => e.preventDefault()}>
+            <Link to={`/admin/users/${user.id}`} onClick={(e) => e.preventDefault()}>
                 {user.pseudo}
             </Link>
         )
     }
 
     state = {
-        users: []
+        users: [],
     }
 
     componentDidMount() {
@@ -70,13 +88,13 @@ class Users extends React.Component {
 
         if (response.data) {
             this.setState({
-                users: response.data.map(user => ({
+                users: response.data.map((user) => ({
                     ...user,
-                    name: user.firstname + ' ' + user.familyName,
+                    name: `${user.firstname} ${user.familyName}`,
                     registration: formateCalendar(user.registration).toLocaleDateString(),
                     last_signin: formateCalendar(user.last_signin).toLocaleDateString(),
-                    group: Users.groups[user.group.id]
-                }))
+                    group: Users.groups[user.group.id],
+                })),
             })
         }
     }

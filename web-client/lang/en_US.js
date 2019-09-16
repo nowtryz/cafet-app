@@ -7,7 +7,7 @@ export default {
         balance: 'Your account comes with a balance to wich you can add money at any moment. What better way to avoid always taking out your money to pay for the cafet\'?',
         'easy to use': 'With an intuitive web applicaton, it has never been such easy to manage your account.',
         agreements: 'I agree to the ',
-        terms: 'terms and conditions'
+        terms: 'terms and conditions',
     },
 
     admin_user_page: {
@@ -23,12 +23,12 @@ export default {
         create_customer_account_text: '%(name)s does not appear to have a customer account.',
         'Customer account': 'Customer account',
         'Dissociate customer account': 'Dissociate customer account',
-        'Firstname': 'Firstname',
+        Firstname: 'Firstname',
         'Family name': 'Family name',
-        'Username': 'Username',
+        Username: 'Username',
         'Email address': 'Email address',
         'Phone number': 'Phone number',
-        'ID': 'ID',
+        ID: 'ID',
         'Member since': 'Member since',
         'Last sign-in at': 'Last sign-in at',
         'Sign-in count': 'Sign-in count',
@@ -36,8 +36,8 @@ export default {
         'Payment notice': 'Payment notice',
         'Reload notice': 'Reload notice',
         'Low sold warning': 'Low sold warning',
-        'Balance': 'Balance',
-        'Member': 'Member',
+        Balance: 'Balance',
+        Member: 'Member',
     },
 
     default: {
@@ -77,7 +77,7 @@ export default {
         Reloads: 'Reloads',
         Notifications: 'Notifications',
         'Admin Panel': 'Admin Panel',
-        Profile:'Profile',
+        Profile: 'Profile',
         'User Page': 'User Page',
         Language: 'Language',
         Logout: 'Logout',
@@ -85,10 +85,10 @@ export default {
         'Change Password': 'Change Password',
         'Used Space': 'Used Space',
         'Check use history': 'Check use history',
-        'Revenue': 'Revenue',
+        Revenue: 'Revenue',
         'Last 7 Days': 'Last 7 Days',
         'Last 12 months': 'Last 12 months',
-        'Sales': 'Sales',
+        Sales: 'Sales',
         'This month': 'This month',
         'User Count': 'User Count',
         'Manage Users': 'Manage Users',
@@ -100,7 +100,7 @@ export default {
         'decrease in today reloads.': 'increase in today reloads.',
         'of increase this month.': 'of increase this month.',
         'of decrease this month.': 'of decrease this month.',
-        'Refresh': 'Refresh',
+        Refresh: 'Refresh',
         daysOfWeek: 'MTWTFSS',
         monthsOfYear: 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec',
         Guest: 'Guest',
@@ -121,5 +121,5 @@ export default {
         Dissociate: 'Dissociate',
         No: 'No',
         Yes: 'Yes',
-    }
+    },
 }

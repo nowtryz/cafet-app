@@ -6,15 +6,15 @@ const initialState = {
     organisation: 'Cafet',
     lang: 'fr_FR',
     currency: '€',
-    session_name: '_cafetapp_session'
+    session_name: '_cafetapp_session',
 }
 
-const serverReducer = (state = initialState, { type, payload = null}) => {
+const serverReducer = (state = initialState, { type, payload = null }) => {
     switch (type) {
     case SERVER_INFO_LOADED:
         return {
             ...state,
-            ...payload
+            ...payload,
         }
 
     default: return state

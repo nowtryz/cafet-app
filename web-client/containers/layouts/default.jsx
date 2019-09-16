@@ -18,7 +18,7 @@ import logo from '@dashboard/assets/img/logo-white.svg'
 
 import {
     classes as classesPropType,
-    children as childrenPropType
+    children as childrenPropType,
 } from 'app-proptypes'
 import _ from 'lang'
 import Footer from '../Footer'
@@ -29,8 +29,8 @@ class DefaultLayout extends React.Component {
         classes: classesPropType.isRequired,
         fullScreenMaps: PropTypes.bool,
         displayFooter: PropTypes.bool,
-        Sidebar: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(React.Component)]).isRequired,
-        Navbar: PropTypes.oneOfType([PropTypes.func, PropTypes.instanceOf(React.Component)]).isRequired,
+        Sidebar: PropTypes.elementType.isRequired,
+        Navbar: PropTypes.elementType.isRequired,
         routes: PropTypes.arrayOf(PropTypes.object).isRequired,
         organisation: PropTypes.string.isRequired,
         match: ReactRouterPropTypes.match.isRequired,
@@ -39,20 +39,21 @@ class DefaultLayout extends React.Component {
 
     static defaultProps = {
         fullScreenMaps: false,
-        displayFooter: true
+        displayFooter: true,
     }
 
     state = {
         mobileOpen: false,
         miniActive: false,
-        image: image,
+        image,
         color: 'blue',
         bgColor: 'black',
-        //hasImage: true,
-        fixedClasses: 'dropdown'
+        // hasImage: true,
+        fixedClasses: 'dropdown',
     }
 
     mainPanel = React.createRef()
+
     ps = null
 
     componentDidMount = () => {
@@ -60,7 +61,7 @@ class DefaultLayout extends React.Component {
         if (navigator.platform.indexOf('Win') > -1) {
             this.ps = new PerfectScrollbar(this.mainPanel.current, {
                 suppressScrollX: true,
-                suppressScrollY: false
+                suppressScrollY: false,
             })
             document.body.style.overflow = 'hidden'
         }
@@ -84,7 +85,7 @@ class DefaultLayout extends React.Component {
         }
         window.removeEventListener('resize', this.resizeFunction)
     }
-    
+
     getPageTitle(routes) {
         const { location } = this.props
         const path = location.pathname
@@ -94,10 +95,10 @@ class DefaultLayout extends React.Component {
     getTitleFromRoutes(routes, path) {
         for (let i = 0; i < routes.length; i++) {
             const route = routes[i]
-            if(route.path && path.match(new RegExp(route.path.replace(/:[^/?#]+/, '[^/?#]+') + '$'))) {
+            if (route.path && path.match(new RegExp(`${route.path.replace(/:[^/?#]+/, '[^/?#]+')}$`))) {
                 return route.title
             }
-            else if(route.items !== undefined) {
+            if (route.items !== undefined) {
                 const title = this.getTitleFromRoutes(route.items, path)
                 if (title) return title
             }
@@ -115,16 +116,16 @@ class DefaultLayout extends React.Component {
         }
     }
 
-    handleImageClick = image => {
-        this.setState({ image: image })
+    handleImageClick = (image) => {
+        this.setState({ image })
     }
 
-    handleColorClick = color => {
-        this.setState({ color: color })
+    handleColorClick = (color) => {
+        this.setState({ color })
     }
 
-    handleBgColorClick = bgColor => {
-        this.setState({ bgColor: bgColor })
+    handleBgColorClick = (bgColor) => {
+        this.setState({ bgColor })
     }
 
     handleFixedClick = () => {
@@ -152,12 +153,15 @@ class DefaultLayout extends React.Component {
             Navbar,
             organisation,
             routes,
-            ...rest } = this.props
-        const { miniActive, image, mobileOpen, color, bgColor } = this.state
+            ...rest
+        } = this.props
+        const {
+            miniActive, image, mobileOpen, color, bgColor,
+        } = this.state
 
         const mainPanel = cx(classes.mainPanel, {
             [classes.mainPanelSidebarMini]: miniActive,
-            [classes.mainPanelWithPerfectScrollbar]: navigator.platform.indexOf('Win') > -1
+            [classes.mainPanelWithPerfectScrollbar]: navigator.platform.indexOf('Win') > -1,
         })
 
         const title = this.getPageTitle(routes)
@@ -206,8 +210,8 @@ class DefaultLayout extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    organisation: state.server.organisation
+const mapStateToProps = (state) => ({
+    organisation: state.server.organisation,
 })
 
 export default withStyles(appStyle)(connect(mapStateToProps)(DefaultLayout))

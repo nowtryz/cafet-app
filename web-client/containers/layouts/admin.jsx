@@ -8,7 +8,9 @@ import DefaultLayout from './default'
 import AdminNavbar from '../navbars/AdminNavbar'
 import AdminSidebar from '../sidebars/AdminSidebar'
 
-const AdminLayout = ({ children, fullScreenMaps, displayFooter, ...rest}) => (
+const AdminLayout = ({
+    children, fullScreenMaps, displayFooter, ...rest
+}) => (
     <DefaultLayout
         fullScreenMaps={fullScreenMaps}
         displayFooter={displayFooter}
@@ -24,12 +26,12 @@ const AdminLayout = ({ children, fullScreenMaps, displayFooter, ...rest}) => (
 AdminLayout.propTypes = {
     children: childrenPropType.isRequired,
     fullScreenMaps: PropTypes.bool,
-    displayFooter: PropTypes.bool
+    displayFooter: PropTypes.bool,
 }
 
 AdminLayout.defaultProps = {
     fullScreenMaps: false,
-    displayFooter: true
+    displayFooter: true,
 }
 
 export default AdminLayout

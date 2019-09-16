@@ -37,22 +37,22 @@ class LoginPage extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.any).isRequired,
         login: PropTypes.func.isRequired,
-        isLogging: PropTypes.bool.isRequired
+        isLogging: PropTypes.bool.isRequired,
     }
 
     state = {
         cardAnimaton: 'cardHidden',
         email: '',
-        password: ''
+        password: '',
     }
 
     componentDidMount() {
     // we add a hidden class to the card and after 700 ms we delete it and the transition appears
         this.timeOutFunction = setTimeout(
-            function() {
+            () => {
                 this.setState({ cardAnimaton: '' })
-            }.bind(this),
-            700
+            },
+            700,
         )
     }
 
@@ -77,9 +77,9 @@ class LoginPage extends React.Component {
 
     changeValue(e, field) {
         const { value } = e.target
-        this.setState(prevState => ({
+        this.setState((prevState) => ({
             prevState,
-            [field]: value
+            [field]: value,
         }))
     }
 
@@ -103,8 +103,8 @@ class LoginPage extends React.Component {
                             textAlign: 'center',
                             display: 'flex',
                             justifyContent: 'center',
-                            alignItems: 'center'
-                        }
+                            alignItems: 'center',
+                        },
                     }}
                 >
                     <CircularProgress size={100} />
@@ -120,7 +120,7 @@ class LoginPage extends React.Component {
                                     >
                                         <h4 className={classes.cardTitle}>{_('login')}</h4>
                                         <div className={classes.socialLine}>
-                                            {/**[
+                                            {/** [
                                                 'fab fa-facebook-square',
                                                 'fab fa-twitter',
                                                 'fab fa-google-plus'
@@ -135,7 +135,7 @@ class LoginPage extends React.Component {
                                                         <i className={prop} />
                                                     </Button>
                                                 )
-                                            })*/}
+                                            }) */}
                                         </div>
                                     </CardHeader>
                                     <CardBody>
@@ -143,36 +143,36 @@ class LoginPage extends React.Component {
                                             labelText={`${_('email')}...`}
                                             id="email"
                                             formControlProps={{
-                                                fullWidth: true
+                                                fullWidth: true,
                                             }}
                                             inputProps={{
                                                 value: email,
                                                 autoFocus: true,
-                                                onChange: e => this.changeValue(e, 'email'),
+                                                onChange: (e) => this.changeValue(e, 'email'),
                                                 endAdornment: (
                                                     <InputAdornment position="end">
                                                         <Email className={classes.inputAdornmentIcon} />
                                                     </InputAdornment>
-                                                )
+                                                ),
                                             }}
                                         />
                                         <CustomInput
                                             labelText={`${_('password')}...`}
                                             id="password"
                                             formControlProps={{
-                                                fullWidth: true
+                                                fullWidth: true,
                                             }}
                                             inputProps={{
                                                 value: password,
-                                                onChange: e => this.changeValue(e, 'password'),
-                                                type:'password',
+                                                onChange: (e) => this.changeValue(e, 'password'),
+                                                type: 'password',
                                                 endAdornment: (
                                                     <InputAdornment position="end">
                                                         <Icon className={classes.inputAdornmentIcon}>
                                                             lock_outline
                                                         </Icon>
                                                     </InputAdornment>
-                                                )
+                                                ),
                                             }}
                                         />
                                     </CardBody>
@@ -191,10 +191,10 @@ class LoginPage extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    isLogging: state.user.isLogging
+const mapStateToProps = (state) => ({
+    isLogging: state.user.isLogging,
 })
 
 export default withStyles(loginPageStyle)(connect(mapStateToProps, {
-    login: loginAction
+    login: loginAction,
 })(LoginPage))

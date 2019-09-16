@@ -24,16 +24,16 @@ class SidebarUserWrapper extends React.Component {
             'green',
             'blue',
             'purple',
-            'rose'
+            'rose',
         ]).isRequired,
     }
-    
+
     state = {
-        openAvatar: false
+        openAvatar: false,
     }
 
     openAvatar = () => {
-        this.setState(state => ({openAvatar: !state.openAvatar}))
+        this.setState((state) => ({ openAvatar: !state.openAvatar }))
     }
 
     render() {
@@ -47,13 +47,13 @@ class SidebarUserWrapper extends React.Component {
                     style={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center'
+                        justifyContent: 'center',
                     }}
                 >
                     <Person />
                 </div>
                 <List className={classes.list}>
-                    <ListItem className={classNames(classes.item,classes.userItem)}>
+                    <ListItem className={classNames(classes.item, classes.userItem)}>
                         <NavLink
                             to="#"
                             className={classNames(classes.itemLink, classes.userCollapseButton)}
@@ -61,7 +61,7 @@ class SidebarUserWrapper extends React.Component {
                         >
                             <ListItemText
                                 primary={userDisplay}
-                                secondary={(<b className={classNames(classes.caret, classes.userCaret, {[classes.caretActive]: openAvatar})} />)}
+                                secondary={(<b className={classNames(classes.caret, classes.userCaret, { [classes.caretActive]: openAvatar })} />)}
                                 disableTypography
                                 className={classNames(classes.itemText, classes.userItemText)}
                             />
@@ -122,8 +122,8 @@ class SidebarUserWrapper extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    userDisplay: `${state.user.user.firstname} ${state.user.user.familyName}`
+const mapStateToProps = (state) => ({
+    userDisplay: `${state.user.user.firstname} ${state.user.user.familyName}`,
 })
 
 export default connect(mapStateToProps)(SidebarUserWrapper)

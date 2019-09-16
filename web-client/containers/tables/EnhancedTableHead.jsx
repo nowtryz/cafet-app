@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-//Material UI
+// Material UI
 import TableHead from '@material-ui/core/TableHead'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
@@ -20,7 +20,7 @@ class EnhancedTableHead extends React.Component {
         disablePadding: PropTypes.bool.isRequired,
         label: PropTypes.string.isRequired,
         render: PropTypes.func,
-        sorter: PropTypes.func
+        sorter: PropTypes.func,
     }))
 
     static propTypes = {
@@ -30,17 +30,19 @@ class EnhancedTableHead extends React.Component {
         order: PropTypes.string.isRequired,
         orderBy: PropTypes.string.isRequired,
         rowCount: PropTypes.number.isRequired,
-        rows: EnhancedTableHead.rowsPropType.isRequired
+        rows: EnhancedTableHead.rowsPropType.isRequired,
     }
 
-    createSortHandler = property => event => {
+    createSortHandler = (property) => (event) => {
         const { onRequestSort } = this.props
         onRequestSort(event, property)
     };
-  
+
     render() {
-        const { onSelectAllClick, order, orderBy, numSelected, rowCount, rows } = this.props
-  
+        const {
+            onSelectAllClick, order, orderBy, numSelected, rowCount, rows,
+        } = this.props
+
         return (
             <TableHead>
                 <TableRow>
@@ -52,7 +54,7 @@ class EnhancedTableHead extends React.Component {
                         />
                     </TableCell>
                     {rows.map(
-                        row => (
+                        (row) => (
                             <TableCell
                                 key={row.id}
                                 align={row.numeric ? 'right' : 'left'}

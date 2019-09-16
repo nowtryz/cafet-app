@@ -37,7 +37,7 @@
         "Reload notice": "Notification de rechargement",
         "Low sold warning": "Avertissement solde faible",
         "Balance": "Solde",
-        "Member": "Adhérent",
+        "Member": "Adhérent"
     },
 
     "default": {
@@ -120,6 +120,6 @@
         "Delete": "Supprimer",
         "Dissociate": "Dissocier",
         "No": "Non",
-        "Yes": "Oui",
+        "Yes": "Oui"
     }
 }

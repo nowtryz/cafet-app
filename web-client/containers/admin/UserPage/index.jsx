@@ -1,13 +1,13 @@
 import React from 'react'
 import Helmet from 'react-helmet'
-import {connect} from 'react-redux'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import axios from 'axios'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import cx from 'classnames'
 
-//Material UI
+// Material UI
 import { withStyles } from '@material-ui/core/styles'
 import People from '@material-ui/icons/People'
 import Check from '@material-ui/icons/Check'
@@ -30,27 +30,32 @@ import Button from '@dashboard/components/CustomButtons/Button'
 import userProfileStyles from '@dashboard/assets/jss/material-dashboard-pro-react/views/userProfileStyles'
 import sweetAlertStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/sweetAlertStyle'
 import typographyStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/typographyStyle'
-import customCheckboxRadioSwitchStyles from '@dashboard/assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch'
+import customCheckboxRadioSwitchStyle from '@dashboard/assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch'
 
 import { dangerColor, warningColor } from '@dashboard/assets/jss/material-dashboard-pro-react'
 
 import '@dashboard/assets/scss/material-dashboard-pro-react/plugins/_plugin-react-bootstrap-sweetalert.scss'
 
-import {classes as classesPropype} from 'app-proptypes'
+import { classes as classesPropype } from 'app-proptypes'
 import { API_URL } from 'config'
 import _ from 'lang'
-import {formateCalendar} from 'utils'
-import Locale from '../Locale'
+import { formateCalendar } from 'utils'
+import Locale from '../../Locale'
+import NavPills from './NavPills'
 
-const style = theme => ({
+const style = (theme) => ({
+    ...userProfileStyles,
+    ...sweetAlertStyle,
+    ...typographyStyle,
+    ...customCheckboxRadioSwitchStyle,
     dangerBorder: {
-        border: '2px solid ' + dangerColor[3]
+        border: `2px solid ${dangerColor[3]}`,
     },
     warningBorder: {
-        border: '2px solid ' + warningColor[3]
+        border: `2px solid ${warningColor[3]}`,
     },
     progress: {
-        margin: theme.spacing.unit * 2,
+        margin: theme.spacing(2),
     },
     inline: {
         display: 'inline',
@@ -60,11 +65,11 @@ const style = theme => ({
         paddingBottom: 0,
     },
     mailPreferencesControl: {
-        color: theme.palette.text.primary + ' !important',
+        color: `${theme.palette.text.primary} !important`,
     },
     mailPreferencesList: {
         padding: 0,
-    }
+    },
 })
 
 class UserPage extends React.Component {
@@ -73,27 +78,30 @@ class UserPage extends React.Component {
         match: ReactRouterPropTypes.match.isRequired,
         classes: classesPropype.isRequired,
         lang_code: PropTypes.string.isRequired,
-        currency: PropTypes.string.isRequired
+        currency: PropTypes.string.isRequired,
     }
 
     state = {
         alert: null,
         user: null,
-        customer: null
+        customer: null,
+        userTab: 0,
     }
+
     componentDidMount() {
         this.fetchUser()
     }
 
     confirmDeletetion = () => {
-        const {classes} = this.props
+        const { classes } = this.props
 
         return (
             <SweetAlert
                 warning
                 style={{
                     display: 'block',
-                    marginTop: '-100px' }}
+                    marginTop: '-100px',
+                }}
                 title={_('Are you sure?', 'admin_user_page')}
                 onConfirm={() => this.deleteUser()}
                 onCancel={() => this.hideAlert()}
@@ -111,7 +119,7 @@ class UserPage extends React.Component {
     }
 
     deleteConfirmed = () => {
-        const {classes} = this.props
+        const { classes } = this.props
 
         return (
             <SweetAlert
@@ -130,14 +138,15 @@ class UserPage extends React.Component {
     }
 
     confirmDissociation = () => {
-        const {classes} = this.props
+        const { classes } = this.props
 
         return (
             <SweetAlert
                 warning
                 style={{
                     display: 'block',
-                    marginTop: '-100px' }}
+                    marginTop: '-100px',
+                }}
                 title={_('Are you sure?', 'admin_user_page')}
                 onConfirm={() => this.dissociateCustomer()}
                 onCancel={() => this.hideAlert()}
@@ -155,7 +164,7 @@ class UserPage extends React.Component {
     }
 
     dissociationConfirmed = () => {
-        const {classes} = this.props
+        const { classes } = this.props
 
         return (
             <SweetAlert
@@ -174,7 +183,7 @@ class UserPage extends React.Component {
     }
 
     notFound = () => {
-        const {classes} = this.props
+        const { classes } = this.props
 
         return (
             <SweetAlert
@@ -195,17 +204,17 @@ class UserPage extends React.Component {
     async deleteUser() {
         const { match } = this.props
         await axios.delete(`${API_URL}/server/users/${match.params.id}`)
-        this.setState({alert: this.deleteConfirmed})
+        this.setState({ alert: this.deleteConfirmed })
     }
 
     async dissociateCustomer() {
-        const {customer} = this.state
+        const { customer } = this.state
         await axios.post(`${API_URL}/cafet/clients/${customer.id}/dissociate`)
-        this.setState({alert: this.dissociationConfirmed})
+        this.setState({ alert: this.dissociationConfirmed })
     }
 
     hideAlert() {
-        this.setState({alert: null})
+        this.setState({ alert: null })
     }
 
     async fetchUser() {
@@ -214,23 +223,22 @@ class UserPage extends React.Component {
         try {
             const userResponse = await axios.get(`${API_URL}/server/users/${match.params.id}`)
             const user = userResponse.data
-    
+
             if (!user) return
-            this.setState({user})
+            this.setState({ user })
 
             if (!user.customer_id) return
             const customerResponse = await axios.get(`${API_URL}/cafet/clients/${user.customer_id}`)
             const customer = customerResponse.data
 
-            if (customer) this.setState({customer})
-
-        } catch(err) {
-            if (err.response && err.response.status == 404) this.setState({alert: this.notFound})
+            if (customer) this.setState({ customer })
+        } catch (err) {
+            if (err.response && err.response.status == 404) this.setState({ alert: this.notFound })
         }
     }
 
     backToUserList() {
-        const {history} = this.props
+        const { history } = this.props
         history.push('/admin/users')
     }
 
@@ -245,24 +253,28 @@ class UserPage extends React.Component {
     }
 
     render() {
-        const {classes, lang_code, currency} = this.props
-        const {user, customer, alert} = this.state
+        const { classes, lang_code, currency } = this.props
+        const {
+            user, customer, alert, userTab,
+        } = this.state
 
-        if (!user) return (
-            <React.Fragment>
-                <CircularProgress className={classes.progress} />
-                {alert ? alert() : null}
-            </React.Fragment>
-        )
+        if (!user) {
+            return (
+                <>
+                    <CircularProgress className={classes.progress} />
+                    {alert ? alert() : null}
+                </>
+            )
+        }
 
         return (
-            <React.Fragment>
+            <>
                 <Helmet>
                     <title>{`${user.pseudo} \xB7 ${_('Users')}`}</title>
                 </Helmet>
                 {alert ? alert() : null}
                 <GridContainer>
-                    <GridItem xs={12} md={7}>
+                    <GridItem xs={12} md={7} lg={8}>
                         <Card>
                             <CardHeader color="primary" icon>
                                 <CardIcon color="primary">
@@ -275,140 +287,147 @@ class UserPage extends React.Component {
                                 </h4>
                             </CardHeader>
                             <CardBody>
-                                <List>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Firstname', 'admin_user_page')}
-                                            secondary={user.firstname}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Family name', 'admin_user_page')}
-                                            secondary={user.familyName}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Username', 'admin_user_page')}
-                                            secondary={user.pseudo}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Email address', 'admin_user_page')}
-                                            secondary={user.email}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Phone number', 'admin_user_page')}
-                                            secondary={user.phone}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('ID', 'admin_user_page')}
-                                            secondary={user.id}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Member since', 'admin_user_page')}
-                                            secondary={formateCalendar(user.registration).toLocaleString(lang_code)}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Last sign-in at', 'admin_user_page')}
-                                            secondary={formateCalendar(user.last_signin).toLocaleString(lang_code)}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Sign-in count', 'admin_user_page')}
-                                            secondary={user.signin_count}
-                                        />
-                                    </ListItem>
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Mail preferences', 'admin_user_page')}
-                                            secondaryTypographyProps={{
-                                                component: 'div'
-                                            }}
-                                            secondary={(
-                                                <List className={classes.mailPreferencesList}>
-                                                    <ListItem>
-                                                        <FormControlLabel
-                                                            control={(
-                                                                <Checkbox
-                                                                    disabled
-                                                                    tabIndex={-1}
-                                                                    checked={user.mail_preferences.payment_notice}
-                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                    icon={<Check className={classes.uncheckedIcon} />}
+                                <GridContainer direction="row-reverse">
+                                    <GridItem xs={12} md={5}>
+                                        <NavPills onChange={(e, userTab) => this.setState({ userTab })} />
+                                    </GridItem>
+                                    <GridItem xs={12} md={7}>
+                                        <List>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Firstname', 'admin_user_page')}
+                                                    secondary={user.firstname}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Family name', 'admin_user_page')}
+                                                    secondary={user.familyName}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Username', 'admin_user_page')}
+                                                    secondary={user.pseudo}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Email address', 'admin_user_page')}
+                                                    secondary={user.email}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Phone number', 'admin_user_page')}
+                                                    secondary={user.phone}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('ID', 'admin_user_page')}
+                                                    secondary={user.id}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Member since', 'admin_user_page')}
+                                                    secondary={formateCalendar(user.registration).toLocaleString(lang_code)}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Last sign-in at', 'admin_user_page')}
+                                                    secondary={formateCalendar(user.last_signin).toLocaleString(lang_code)}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Sign-in count', 'admin_user_page')}
+                                                    secondary={user.signin_count}
+                                                />
+                                            </ListItem>
+                                            <ListItem alignItems="flex-start">
+                                                <ListItemText
+                                                    primary={_('Mail preferences', 'admin_user_page')}
+                                                    secondaryTypographyProps={{
+                                                        component: 'div',
+                                                    }}
+                                                    secondary={(
+                                                        <List className={classes.mailPreferencesList}>
+                                                            <ListItem>
+                                                                <FormControlLabel
+                                                                    control={(
+                                                                        <Checkbox
+                                                                            disabled
+                                                                            tabIndex={-1}
+                                                                            checked={user.mail_preferences.payment_notice}
+                                                                            checkedIcon={<Check className={classes.checkedIcon} />}
+                                                                            icon={<Check className={classes.uncheckedIcon} />}
+                                                                            classes={{
+                                                                                checked: classes.checked,
+                                                                                root: classes.mailPreferences,
+                                                                            }}
+                                                                        />
+                                                                    )}
                                                                     classes={{
-                                                                        checked: classes.checked,
-                                                                        root: classes.mailPreferences
+                                                                        label: classes.label,
+                                                                        disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
                                                                     }}
+                                                                    label={_('Payment notice', 'admin_user_page')}
                                                                 />
-                                                            )}
-                                                            classes={{
-                                                                label: classes.label,
-                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                            }}
-                                                            label={_('Payment notice', 'admin_user_page')}
-                                                        />
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <FormControlLabel
-                                                            control={(
-                                                                <Checkbox
-                                                                    disabled
-                                                                    tabIndex={-1}
-                                                                    checked={user.mail_preferences.reload_notice}
-                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                    icon={<Check className={classes.uncheckedIcon} />}
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <FormControlLabel
+                                                                    control={(
+                                                                        <Checkbox
+                                                                            disabled
+                                                                            tabIndex={-1}
+                                                                            checked={user.mail_preferences.reload_notice}
+                                                                            checkedIcon={<Check className={classes.checkedIcon} />}
+                                                                            icon={<Check className={classes.uncheckedIcon} />}
+                                                                            classes={{
+                                                                                checked: classes.checked,
+                                                                                root: classes.mailPreferences,
+                                                                            }}
+                                                                        />
+                                                                    )}
                                                                     classes={{
-                                                                        checked: classes.checked,
-                                                                        root: classes.mailPreferences
+                                                                        label: classes.label,
+                                                                        disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
                                                                     }}
+                                                                    label={_('Reload notice', 'admin_user_page')}
                                                                 />
-                                                            )}
-                                                            classes={{
-                                                                label: classes.label,
-                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                            }}
-                                                            label={_('Reload notice', 'admin_user_page')}
-                                                        />
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <FormControlLabel
-                                                            control={(
-                                                                <Checkbox
-                                                                    disabled
-                                                                    tabIndex={-1}
-                                                                    checked={user.mail_preferences.reload_request}
-                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                    icon={<Check className={classes.uncheckedIcon} />}
+                                                            </ListItem>
+                                                            <ListItem>
+                                                                <FormControlLabel
+                                                                    control={(
+                                                                        <Checkbox
+                                                                            disabled
+                                                                            tabIndex={-1}
+                                                                            checked={user.mail_preferences.reload_request}
+                                                                            checkedIcon={<Check className={classes.checkedIcon} />}
+                                                                            icon={<Check className={classes.uncheckedIcon} />}
+                                                                            classes={{
+                                                                                checked: classes.checked,
+                                                                                root: classes.mailPreferences,
+                                                                            }}
+                                                                        />
+                                                                    )}
                                                                     classes={{
-                                                                        checked: classes.checked,
-                                                                        root: classes.mailPreferences
+                                                                        label: classes.label,
+                                                                        disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
                                                                     }}
+                                                                    label={_('Reload requests', 'admin_user_page')}
                                                                 />
-                                                            )}
-                                                            classes={{
-                                                                label: classes.label,
-                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                            }}
-                                                            label={_('Reload requests', 'admin_user_page')}
-                                                        />
-                                                    </ListItem>
-                                                </List>
-                                            )}
-                                        />
-                                    </ListItem>
-                                </List>
+                                                            </ListItem>
+                                                        </List>
+                                                    )}
+                                                />
+                                            </ListItem>
+                                        </List>
+                                    </GridItem>
+                                </GridContainer>
                             </CardBody>
                         </Card>
                         <Card>
@@ -444,8 +463,8 @@ class UserPage extends React.Component {
                                             />
                                         </ListItem>
                                     </List>
-                                ): (
-                                    <React.Fragment>
+                                ) : (
+                                    <>
                                         <p>
                                             <Locale ns="admin_user_page" name={user.pseudo}>
                                                 create_customer_account_text
@@ -456,12 +475,12 @@ class UserPage extends React.Component {
                                                 Create a customer account
                                             </Locale>
                                         </Button>
-                                    </React.Fragment>
+                                    </>
                                 )}
                             </CardBody>
                         </Card>
                     </GridItem>
-                    <GridItem xs={12} md={5}>
+                    <GridItem xs={12} md={5} lg={4}>
                         <Card className={classes.dangerBorder}>
                             <CardHeader color="danger" icon>
                                 <CardIcon color="danger">
@@ -483,7 +502,7 @@ class UserPage extends React.Component {
                                     vehicula vulputate. Nunc efficitur ultricies arcu, ut elementum libero viverra eu.
                                     Sed ultricies sollicitudin fermentum.
                                 </p>
-                                <Button color="danger" onClick={() => this.setState({alert: this.confirmDeletetion})}>
+                                <Button color="danger" onClick={() => this.setState({ alert: this.confirmDeletetion })}>
                                     <Locale>Delete</Locale>
                                 </Button>
                             </CardBody>
@@ -510,7 +529,7 @@ class UserPage extends React.Component {
                                         vehicula vulputate. Nunc efficitur ultricies arcu, ut elementum libero viverra eu.
                                         Sed ultricies sollicitudin fermentum.
                                     </p>
-                                    <Button color="warning" onClick={() => this.setState({alert: this.confirmDissociation})}>
+                                    <Button color="warning" onClick={() => this.setState({ alert: this.confirmDissociation })}>
                                         <Locale>Dissociate</Locale>
                                     </Button>
                                 </CardBody>
@@ -518,20 +537,14 @@ class UserPage extends React.Component {
                         ) : null}
                     </GridItem>
                 </GridContainer>
-            </React.Fragment>
+            </>
         )
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     lang_code: state.lang.lang_code,
-    currency: state.server.currency
+    currency: state.server.currency,
 })
 
-export default withStyles(theme => ({
-    ...userProfileStyles,
-    ...sweetAlertStyle,
-    ...typographyStyle,
-    ...customCheckboxRadioSwitchStyles,
-    ...style(theme)
-}))(connect(mapStateToProps)(UserPage))
+export default withStyles(style)(connect(mapStateToProps)(UserPage))

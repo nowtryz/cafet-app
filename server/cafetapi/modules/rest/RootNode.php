@@ -6,6 +6,7 @@ use cafetapi\modules\rest\user\UserNode;
 use cafetapi\modules\rest\server\ServerNode;
 use cafetapi\modules\rest\errors\ClientError;
 use cafetapi\modules\rest\stats\StatsNode;
+use cafetapi\modules\rest\locales\LocalesNode;
 
 /**
  *
@@ -18,6 +19,7 @@ class RootNode implements RestNode
     const USER   = 'user';
     const SERVER = 'server';
     const STATS = 'stats';
+    const LOCALES = 'locales';
 
     /**
      */
@@ -29,11 +31,12 @@ class RootNode implements RestNode
         $dir = $request->shiftPath();
         
         switch ($dir) {
-            case self::CAFET:  return CafetNode::handle($request);
-            case self::USER:   return UserNode::handle($request);
-            case self::SERVER: return ServerNode::handle($request);
-            case self::STATS:  return StatsNode::handle($request);
-            default:           return ClientError::resourceNotFound('Unknown ' . $dir . ' node');
+            case self::CAFET:   return CafetNode::handle($request);
+            case self::USER:    return UserNode::handle($request);
+            case self::SERVER:  return ServerNode::handle($request);
+            case self::STATS:   return StatsNode::handle($request);
+            case self::LOCALES: return LocalesNode::handle($request);
+            default:            return ClientError::resourceNotFound('Unknown ' . $dir . ' node');
         }
     }
 

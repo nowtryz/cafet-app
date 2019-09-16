@@ -44,7 +44,7 @@ class RegisterPage extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
         lang: PropTypes.objectOf(PropTypes.any).isRequired,
-        login: PropTypes.func.isRequired
+        login: PropTypes.func.isRequired,
     }
 
     state = {
@@ -62,7 +62,9 @@ class RegisterPage extends React.Component {
     }
 
     getFields() {
-        const { emailValidation, familyNameValidation, firstnameValidation, passwordValidation } = this.state
+        const {
+            emailValidation, familyNameValidation, firstnameValidation, passwordValidation,
+        } = this.state
 
         return ([
             {
@@ -70,25 +72,25 @@ class RegisterPage extends React.Component {
                 icone: Face,
                 id: 'firstname',
                 inputProps: {
-                    error: (firstnameValidation != null)
+                    error: (firstnameValidation != null),
                 },
-                helperText: firstnameValidation
+                helperText: firstnameValidation,
             }, {
                 name: _('name'),
                 icone: Face,
                 id: 'familyName',
                 inputProps: {
-                    error: (familyNameValidation != null)
+                    error: (familyNameValidation != null),
                 },
-                helperText: familyNameValidation
+                helperText: familyNameValidation,
             }, {
                 name: _('email'),
                 icone: Email,
                 id: 'email',
                 inputProps: {
-                    error: (emailValidation != null)
+                    error: (emailValidation != null),
                 },
-                helperText: emailValidation
+                helperText: emailValidation,
             }, {
                 name: _('password'),
                 icone: Icon,
@@ -96,10 +98,10 @@ class RegisterPage extends React.Component {
                 id: 'password',
                 inputProps: {
                     type: 'password',
-                    error: (passwordValidation != null)
+                    error: (passwordValidation != null),
                 },
-                helperText: passwordValidation
-            }
+                helperText: passwordValidation,
+            },
         ])
     }
 
@@ -111,19 +113,23 @@ class RegisterPage extends React.Component {
     }
 
     validate = async () => {
-        const {login } = this.props
-        const { email, familyName, firstname, password, isValidating } = this.state
+        const { login } = this.props
+        const {
+            email, familyName, firstname, password, isValidating,
+        } = this.state
 
         if (isValidating) return
-        this.setState({isValidating: true})
+        this.setState({ isValidating: true })
 
         const emailValidation = email ? undefined : _('required')
         const familyNameValidation = familyName ? undefined : _('required')
-        const firstnameValidation =  firstname ? undefined : _('required')
-        const passwordValidation =  password ? undefined : _('required')
-        this.setState({ emailValidation, familyNameValidation, firstnameValidation, passwordValidation })
-        if ( emailValidation || familyNameValidation || firstnameValidation || passwordValidation ) {
-            this.setState({isValidating: false})
+        const firstnameValidation = firstname ? undefined : _('required')
+        const passwordValidation = password ? undefined : _('required')
+        this.setState({
+            emailValidation, familyNameValidation, firstnameValidation, passwordValidation,
+        })
+        if (emailValidation || familyNameValidation || firstnameValidation || passwordValidation) {
+            this.setState({ isValidating: false })
             return
         }
 
@@ -136,7 +142,7 @@ class RegisterPage extends React.Component {
             }
         }
 
-        this.setState({isValidating: false})
+        this.setState({ isValidating: false })
     }
 
     handleToggle(value) {
@@ -152,44 +158,43 @@ class RegisterPage extends React.Component {
 
         this.setState({
             checked: newChecked,
-            termsAccepted: newChecked.includes(1)
+            termsAccepted: newChecked.includes(1),
         })
     }
 
     changeValue(e, field) {
         const { value } = e.target
         this.setState({
-            [field]: value
+            [field]: value,
         })
     }
 
     handleConflicts(conflicts) {
-
-        if (conflicts.email !== undefined ) {
-            if ( conflicts.email === 'duplicated' ) {
-                this.setState({emailValidation: _('emailDuplicated')})
-            } else if ( conflicts.email === 'not valid' ) {
-                this.setState({emailValidation: _('emailInvalid')})
+        if (conflicts.email !== undefined) {
+            if (conflicts.email === 'duplicated') {
+                this.setState({ emailValidation: _('emailDuplicated') })
+            } else if (conflicts.email === 'not valid') {
+                this.setState({ emailValidation: _('emailInvalid') })
             }
         }
     }
 
     renderInput(field) {
         const { classes } = this.props
-        
+
         return (
             <React.Fragment key={field.name}>
                 <CustomInput
                     formControlProps={{
                         fullWidth: true,
                         required: true,
-                        className: classes.customFormControlClasses
+                        className: classes.customFormControlClasses,
                     }}
                     inputProps={{
-                        onChange: e => this.changeValue(e, field.id),
+                        onChange: (e) => this.changeValue(e, field.id),
                         startAdornment: (
                             <InputAdornment
-                                position='start'
+                                position="start"
                                 className={classes.inputAdornment}
                             >
                                 <field.icone className={classes.inputAdornmentIcon}>
@@ -198,7 +203,7 @@ class RegisterPage extends React.Component {
                             </InputAdornment>
                         ),
                         placeholder: `${field.name}...`,
-                        ...field.inputProps
+                        ...field.inputProps,
                     }}
                     helpText={field.helperText}
                     {...field.inputProps}
@@ -228,57 +233,57 @@ class RegisterPage extends React.Component {
                             textAlign: 'center',
                             display: 'flex',
                             justifyContent: 'center',
-                            alignItems: 'center'
-                        }
+                            alignItems: 'center',
+                        },
                     }}
                 >
                     <CircularProgress size={100} />
                 </Dialog>
                 <div className={classes.container}>
-                    <GridContainer justify='center'>
+                    <GridContainer justify="center">
                         <GridItem xs={12} sm={12} md={10}>
                             <Card className={classes.cardSignup}>
                                 <h2 className={classes.cardTitle}>{_('register')}</h2>
                                 <CardBody onKeyPress={this.keyPressed}>
-                                    <GridContainer justify='center'>
+                                    <GridContainer justify="center">
                                         <GridItem xs={12} sm={12} md={5}>
                                             <InfoArea
                                                 title={_('statistics')}
                                                 description={_('statistics', 'register_page')}
                                                 icon={Timeline}
-                                                iconColor='rose'
+                                                iconColor="rose"
                                             />
                                             <InfoArea
                                                 title={_('balance')}
                                                 description={_('balance', 'register_page')}
                                                 icon={MonetizationOn}
-                                                iconColor='primary'
+                                                iconColor="primary"
                                             />
                                             <InfoArea
                                                 title={_('easy to use')}
                                                 description={_('easy to use', 'register_page')}
                                                 icon={TouchApp}
-                                                iconColor='info'
+                                                iconColor="info"
                                             />
                                         </GridItem>
                                         <GridItem xs={12} sm={8} md={5}>
                                             <div className={classes.center}>
-                                                <Button justIcon round color='twitter'>
-                                                    <i className='fab fa-twitter' />
+                                                <Button justIcon round color="twitter">
+                                                    <i className="fab fa-twitter" />
                                                 </Button>
                                                 {' '}
-                                                <Button justIcon round color='facebook'>
-                                                    <i className='fab fa-facebook-f' />
+                                                <Button justIcon round color="facebook">
+                                                    <i className="fab fa-facebook-f" />
                                                 </Button>
                                                 {' '}
                                                 <h4 className={classes.socialTitle}>{_('or be casual')}</h4>
                                             </div>
                                             <form className={classes.form}>
-                                                {this.getFields().map(field => this.renderInput(field))}
+                                                {this.getFields().map((field) => this.renderInput(field))}
                                                 <FormControlLabel
                                                     classes={{
                                                         root: classes.checkboxLabelControl,
-                                                        label: classes.checkboxLabel
+                                                        label: classes.checkboxLabel,
                                                     }}
                                                     control={(
                                                         <Checkbox
@@ -290,19 +295,19 @@ class RegisterPage extends React.Component {
                                                             icon={<Check className={classes.uncheckedIcon} />}
                                                             classes={{
                                                                 checked: classes.checked,
-                                                                root: classes.checkRoot
+                                                                root: classes.checkRoot,
                                                             }}
                                                         />
                                                     )}
                                                     label={(
                                                         <span>
                                                             {_('agreements', 'register_page')}
-                                                            <a href='#pablo'>{_('terms', 'register_page')}</a>.
+                                                            <a href="#pablo">{_('terms', 'register_page')}</a>.
                                                         </span>
                                                     )}
                                                 />
                                                 <div className={classes.center}>
-                                                    <Button disabled={!termsAccepted || isValidating} round color='primary' onClick={this.validate}>
+                                                    <Button disabled={!termsAccepted || isValidating} round color="primary" onClick={this.validate}>
                                                         {_('getStarted')}
                                                     </Button>
                                                 </div>
@@ -320,5 +325,5 @@ class RegisterPage extends React.Component {
 }
 
 export default withStyles(registerPageStyle)(connect(null, {
-    login: loginAction
+    login: loginAction,
 })(RegisterPage))

@@ -1,10 +1,9 @@
 
-
 // @material-ui/icons
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import History from '@material-ui/icons/History'
 import ShoppingCart from '@material-ui/icons/ShoppingCart'
-//import Timer from '@material-ui/icons/Timer'
+// import Timer from '@material-ui/icons/Timer'
 import Face from '@material-ui/icons/Face'
 import Timeline from '@material-ui/icons/Timeline'
 import AttachMoney from '@material-ui/icons/AttachMoney'
@@ -84,10 +83,10 @@ export default [
                 path: '/dashboard/reloads',
                 title: 'Reloads',
                 id: 'reloads',
-                //icon: Timer,
+                // icon: Timer,
                 mini: 'RE',
                 component: BlankPage,
             },
         ],
-    }
+    },
 ]

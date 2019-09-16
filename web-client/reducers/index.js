@@ -1,4 +1,6 @@
-import { combineReducers , createStore, applyMiddleware, compose } from 'redux'
+import {
+    combineReducers, createStore, applyMiddleware, compose,
+} from 'redux'
 
 import thunk from 'redux-thunk'
 
@@ -11,7 +13,7 @@ import server from './server'
 export const reducer = combineReducers({
     user,
     lang,
-    server
+    server,
 })
 
 // eslint-disable-next-line no-underscore-dangle

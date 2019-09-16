@@ -20,24 +20,27 @@ class AuthLayout extends React.Component {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
         children: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.element),
-            PropTypes.element
+            PropTypes.element,
         ]).isRequired,
         title: PropTypes.string.isRequired,
         bgImage: PropTypes.string,
-        isLogged: PropTypes.bool.isRequired
+        isLogged: PropTypes.bool.isRequired,
     }
 
     static defaultProps = {
-        bgImage: error
+        bgImage: error,
     }
 
     componentDidMount() {
         document.body.style.overflow = 'unset'
     }
-    render() {
-        const { classes, children, title, bgImage, isLogged, ...rest } = this.props
 
-        if (isLogged) return <Redirect to='/' />    
+    render() {
+        const {
+            classes, children, title, bgImage, isLogged, ...rest
+        } = this.props
+
+        if (isLogged) return <Redirect to="/" />
 
         return (
             <div>
@@ -46,7 +49,7 @@ class AuthLayout extends React.Component {
                 <div className={classes.wrapper}>
                     <div
                         className={classes.fullPage}
-                        style={{ backgroundImage: 'url(' + bgImage + ')' }}
+                        style={{ backgroundImage: `url(${bgImage})` }}
                     >
                         {children}
                         <Footer white />
@@ -57,8 +60,8 @@ class AuthLayout extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
-    isLogged: state.user.user != null
+const mapStateToProps = (state) => ({
+    isLogged: state.user.user != null,
 })
 
 export default withStyles(pagesStyle)(connect(mapStateToProps)(AuthLayout))

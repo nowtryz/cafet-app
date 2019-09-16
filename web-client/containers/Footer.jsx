@@ -19,7 +19,7 @@ class Footer extends React.Component {
 
     static defaultProps = {
         fluid: false,
-        white: false
+        white: false,
     }
 
     render() {
@@ -27,15 +27,15 @@ class Footer extends React.Component {
         const container = classNames({
             [classes.container]: !fluid,
             [classes.containerFluid]: fluid,
-            [classes.whiteColor]: white
+            [classes.whiteColor]: white,
         })
         const anchor = classNames({
             [classes.a]: true,
-            [classes.whiteColor]: white
+            [classes.whiteColor]: white,
         })
         const block = classNames({
             [classes.block]: true,
-            [classes.whiteColor]: white
+            [classes.whiteColor]: white,
         })
 
         return (
@@ -44,7 +44,7 @@ class Footer extends React.Component {
                     <div className={classes.left}>
                         <List className={classes.list}>
                             <ListItem className={classes.inlineBlock}>
-                                <a href='#home' className={block}>
+                                <a href="#home" className={block}>
                                 Home
                                 </a>
                             </ListItem>
@@ -52,7 +52,7 @@ class Footer extends React.Component {
                     </div>
                     <p className={classes.right}>
                     &copy; 2018 - {1900 + new Date().getYear()} made with love by{' '}
-                        <a href='https://nowtryz.net' className={anchor}>
+                        <a href="https://nowtryz.net" className={anchor}>
                         Damien Djomby
                         </a>
                     </p>

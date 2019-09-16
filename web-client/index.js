@@ -1,5 +1,5 @@
 import '@babel/polyfill'
-
+import 'react-hot-loader'
 
 import ReactDOM from 'react-dom'
 import axios from 'axios'
@@ -11,7 +11,7 @@ import { responseInterceptor, errorInterceptor } from './interceptors'
 
 import {
     loadServerConfig as loadServerConfigAction,
-    grabUserInfo as grabUserInfoAction
+    grabUserInfo as grabUserInfoAction,
 } from './actions'
 
 axios.interceptors.response.use(responseInterceptor, errorInterceptor)

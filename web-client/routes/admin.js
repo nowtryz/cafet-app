@@ -30,7 +30,7 @@ export default [
         icon: DashboardIcon,
         component: Dashboard,
         layoutProps: {},
-        componentProps: {}
+        componentProps: {},
     },
     {
         title: 'Monitoring',
@@ -113,14 +113,14 @@ export default [
                 title: 'Preferences',
                 id: 'preferences',
                 icon: Build,
-                component: BlankPage
+                component: BlankPage,
             },
             {
                 path: '/admin/payment-methods',
                 title: 'Payment',
                 icon: CreditCard,
-                component: BlankPage
-            }
-        ]
-    }
+                component: BlankPage,
+            },
+        ],
+    },
 ]

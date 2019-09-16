@@ -27,7 +27,7 @@ class Sidebar extends React.Component {
             'green',
             'blue',
             'purple',
-            'rose'
+            'rose',
         ]).isRequired,
         logo: PropTypes.string.isRequired,
         logoText: PropTypes.string.isRequired,
@@ -35,51 +35,51 @@ class Sidebar extends React.Component {
         routes: PropTypes.arrayOf(PropTypes.object).isRequired,
         miniActive: PropTypes.bool,
         handleDrawerToggle: PropTypes.func.isRequired,
-        open: PropTypes.bool.isRequired
+        open: PropTypes.bool.isRequired,
     }
 
     static defaultProps = {
         bgColor: 'blue',
-        miniActive: false
+        miniActive: false,
     }
 
     state = {
-        miniActive: true
+        miniActive: true,
     }
 
     processClasses() {
         const {
             classes,
             bgColor,
-            miniActive
+            miniActive,
         } = this.props
-        const { miniActive:miniState } = this.state
+        const { miniActive: miniState } = this.state
 
         return ({
             ...classes,
             itemText: cx(classes.itemText, {
-                [classes.itemTextMini]: miniActive && miniState
+                [classes.itemTextMini]: miniActive && miniState,
             }),
             collapseItemText: cx(classes.collapseItemText, {
-                [classes.collapseItemTextMini]: miniActive && miniState
+                [classes.collapseItemTextMini]: miniActive && miniState,
             }),
             userWrapperClass: cx(classes.user, {
-                [classes.whiteAfter]: bgColor === 'white'
+                [classes.whiteAfter]: bgColor === 'white',
             }),
             logoNormal: cx(classes.logoNormal, {
-                [classes.logoNormalSidebarMini]: miniActive && miniState
+                [classes.logoNormalSidebarMini]: miniActive && miniState,
             }),
             logoClasses: cx(classes.logo, {
-                [classes.whiteAfter]: bgColor === 'white'
+                [classes.whiteAfter]: bgColor === 'white',
             }),
             drawerPaper: cx(classes.drawerPaper, {
                 [classes.drawerPaperMini]:
-                miniActive && miniState
+                miniActive && miniState,
             }),
-            sidebarWrapper: cx (classes.sidebarWrapper, {
+            sidebarWrapper: cx(classes.sidebarWrapper, {
                 [classes.drawerPaperMini]: miniActive && miniState,
-                [classes.sidebarWrapperWithPerfectScrollbar]: navigator.platform.indexOf('Win') > -1
-            })
+                [classes.sidebarWrapperWithPerfectScrollbar]: navigator.platform.indexOf('Win') > -1,
+            }),
         })
     }
 
@@ -93,12 +93,12 @@ class Sidebar extends React.Component {
             color,
             handleDrawerToggle,
             open,
-            miniActive
+            miniActive,
         } = this.props
-        const { miniActive:miniState } = this.state
+        const { miniActive: miniState } = this.state
         const classes = this.processClasses()
 
-        var brand = (
+        const brand = (
             <div className={classes.logo}>
                 <a href="#nowtryz" className={classes.logoMini}>
                     <img src={logo} alt="logo" className={classes.img} />
@@ -114,14 +114,14 @@ class Sidebar extends React.Component {
                 <Hidden mdUp implementation="css">
                     <Drawer
                         variant="temporary"
-                        anchor='right'
+                        anchor="right"
                         open={open}
                         classes={{
-                            paper: cx(classes.drawerPaper, classes[bgColor + 'Background'])
+                            paper: cx(classes.drawerPaper, classes[`${bgColor}Background`]),
                         }}
                         onClose={handleDrawerToggle}
                         ModalProps={{
-                            keepMounted: true // Better open performance on mobile.
+                            keepMounted: true, // Better open performance on mobile.
                         }}
                     >
                         {brand}
@@ -138,7 +138,7 @@ class Sidebar extends React.Component {
                         {image !== undefined ? (
                             <div
                                 className={classes.background}
-                                style={{ backgroundImage: 'url(' + image + ')' }}
+                                style={{ backgroundImage: `url(${image})` }}
                             />
                         ) : null}
                     </Drawer>
@@ -149,11 +149,11 @@ class Sidebar extends React.Component {
                         onFocus={() => this.setState({ miniActive: false })}
                         onMouseOut={() => this.setState({ miniActive: true })}
                         onBlur={() => this.setState({ miniActive: true })}
-                        anchor='left'
+                        anchor="left"
                         variant="permanent"
                         open
                         classes={{
-                            paper: cx(classes.drawerPaper, classes[bgColor + 'Background'])
+                            paper: cx(classes.drawerPaper, classes[`${bgColor}Background`]),
                         }}
                     >
                         {brand}
@@ -169,7 +169,7 @@ class Sidebar extends React.Component {
                         {image !== undefined ? (
                             <div
                                 className={classes.background}
-                                style={{ backgroundImage: 'url(' + image + ')' }}
+                                style={{ backgroundImage: `url(${image})` }}
                             />
                         ) : null}
                     </Drawer>

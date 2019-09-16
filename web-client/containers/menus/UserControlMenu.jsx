@@ -19,15 +19,15 @@ import { logout as logoutAction } from 'actions'
 import Locale from '../Locale'
 
 
-const styles = theme => ({
+const styles = (theme) => ({
     ...adminNavbarLinksStyle(theme),
     menuItem: {
         paddingRight: '30px',
         paddingLeft: '30px',
         '&:hover': {
-            color: 'inherit'
+            color: 'inherit',
         },
-    }
+    },
 })
 
 class UserControlMenu extends React.Component {
@@ -35,13 +35,13 @@ class UserControlMenu extends React.Component {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
         children: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.element),
-            PropTypes.element
+            PropTypes.element,
         ]).isRequired,
-        buttonProps: PropTypes.objectOf(PropTypes.any)
+        buttonProps: PropTypes.objectOf(PropTypes.any),
     }
 
     static defaultProps = {
-        buttonProps: {}
+        buttonProps: {},
     }
 
     state = {
@@ -49,10 +49,10 @@ class UserControlMenu extends React.Component {
     }
 
     handleToggle = () => {
-        this.setState(state => ({ open: !state.open }))
+        this.setState((state) => ({ open: !state.open }))
     }
 
-    handleClose = event => {
+    handleClose = (event) => {
         if (this.anchorEl.contains(event.target)) {
             return
         }
@@ -61,17 +61,19 @@ class UserControlMenu extends React.Component {
     }
 
     render() {
-        const { classes, children, logout, buttonProps, ...rest } = this.props
+        const {
+            classes, children, logout, buttonProps, ...rest
+        } = this.props
         const { open } = this.state
 
         return (
             <div {...rest}>
                 <Button
-                    buttonRef={node => {
+                    buttonRef={(node) => {
                         this.anchorEl = node
                     }}
                     aria-owns={open ? 'menu-list-grow' : undefined}
-                    aria-haspopup='true'
+                    aria-haspopup="true"
                     onClick={this.handleToggle}
                     {...buttonProps}
                 >
@@ -82,23 +84,23 @@ class UserControlMenu extends React.Component {
                     anchorEl={this.anchorEl}
                     transition
                     disablePortal
-                    placement='bottom'
+                    placement="bottom"
                     className={classNames({
                         [classes.popperClose]: !open,
                         [classes.pooperResponsive]: true,
-                        [classes.pooperNav]: true
+                        [classes.pooperNav]: true,
                     })}
                 >
                     {({ TransitionProps }) => (
                         <Grow
                             {...TransitionProps}
-                            id='menu-list-grow'
+                            id="menu-list-grow"
                         >
                             <Paper>
                                 <ClickAwayListener onClickAway={this.handleClose}>
                                     <MenuList>
-                                        <MenuItem className={classes.menuItem} component={Link} to='/dashboard/profile'><Locale>Profile</Locale></MenuItem>
-                                        <MenuItem className={classes.menuItem} component={Link} to='/dashboard/settings'><Locale>Settings</Locale></MenuItem>
+                                        <MenuItem className={classes.menuItem} component={Link} to="/dashboard/profile"><Locale>Profile</Locale></MenuItem>
+                                        <MenuItem className={classes.menuItem} component={Link} to="/dashboard/settings"><Locale>Settings</Locale></MenuItem>
                                         <Divider />
                                         <MenuItem className={classes.menuItem} onClick={logout}><Locale>Logout</Locale></MenuItem>
                                     </MenuList>
@@ -113,5 +115,5 @@ class UserControlMenu extends React.Component {
 }
 
 export default withStyles(styles)(connect(null, {
-    logout: logoutAction
+    logout: logoutAction,
 })(UserControlMenu))

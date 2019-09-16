@@ -6,16 +6,16 @@ export default {
     register: {
         path: '/register',
         icon: PersonAdd,
-        title: 'register'
+        title: 'register',
     },
     login: {
         path: '/login',
         icon: Fingerprint,
-        title: 'login'
+        title: 'login',
     },
     lock: {
         path: '/lock',
         icon: LockOpen,
-        title: 'lock'
+        title: 'lock',
     },
 }

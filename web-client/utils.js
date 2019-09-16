@@ -4,4 +4,6 @@ export const rotate = (array, times) => {
     return array
 }
 
-export const formateCalendar = ({year, month, day, hour, mins, secs}) => new Date(year, month - 1, day, hour, mins, secs)
+export const formateCalendar = ({
+    year, month, day, hour, mins, secs,
+}) => new Date(year, month - 1, day, hour, mins, secs)

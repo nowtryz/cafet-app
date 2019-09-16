@@ -22,12 +22,12 @@ import { changeLocale as changeLocaleAction } from 'actions'
 import USFlagIcon from '@dashboard/assets/img/flags/US.png'
 import FranceFlagIcon from '@dashboard/assets/img/flags/FR.png'
 
-const styles = theme => ({
+const styles = (theme) => ({
     ...adminNavbarLinksStyle(theme),
     menuItem: {
         paddingRight: '30px',
         paddingLeft: '30px',
-    }
+    },
 })
 
 class LangControlMenu extends React.Component {
@@ -35,14 +35,14 @@ class LangControlMenu extends React.Component {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
         children: PropTypes.oneOfType([
             PropTypes.arrayOf(PropTypes.element),
-            PropTypes.element
+            PropTypes.element,
         ]).isRequired,
         buttonProps: PropTypes.objectOf(PropTypes.any),
-        changeLocale: PropTypes.func.isRequired
+        changeLocale: PropTypes.func.isRequired,
     }
 
     static defaultProps = {
-        buttonProps: {}
+        buttonProps: {},
     }
 
     state = {
@@ -50,10 +50,10 @@ class LangControlMenu extends React.Component {
     }
 
     handleToggle = () => {
-        this.setState(state => ({ open: !state.open }))
+        this.setState((state) => ({ open: !state.open }))
     }
 
-    handleClose = event => {
+    handleClose = (event) => {
         if (this.anchorEl.contains(event.target)) {
             return
         }
@@ -68,17 +68,19 @@ class LangControlMenu extends React.Component {
     }
 
     render() {
-        const { classes, children, logout, buttonProps, changeLocale, ...rest } = this.props
+        const {
+            classes, children, logout, buttonProps, changeLocale, ...rest
+        } = this.props
         const { open } = this.state
 
         return (
             <div {...rest}>
                 <Button
-                    buttonRef={node => {
+                    buttonRef={(node) => {
                         this.anchorEl = node
                     }}
                     aria-owns={open ? 'menu-list-grow' : undefined}
-                    aria-haspopup='true'
+                    aria-haspopup="true"
                     onClick={this.handleToggle}
                     {...buttonProps}
                 >
@@ -89,17 +91,17 @@ class LangControlMenu extends React.Component {
                     anchorEl={this.anchorEl}
                     transition
                     disablePortal
-                    placement='bottom'
+                    placement="bottom"
                     className={classNames({
                         [classes.popperClose]: !open,
                         [classes.pooperResponsive]: true,
-                        [classes.pooperNav]: true
+                        [classes.pooperNav]: true,
                     })}
                 >
                     {({ TransitionProps }) => (
                         <Grow
                             {...TransitionProps}
-                            id='menu-list-grow'
+                            id="menu-list-grow"
                         >
                             <Paper>
                                 <ClickAwayListener onClickAway={this.handleClose}>
@@ -128,5 +130,5 @@ class LangControlMenu extends React.Component {
 }
 
 export default withStyles(styles)(connect(null, {
-    changeLocale: changeLocaleAction
+    changeLocale: changeLocaleAction,
 })(LangControlMenu))

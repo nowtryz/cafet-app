@@ -36,15 +36,15 @@ import Locale from '../Locale'
 class HeaderLinks extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
-        isAdmin: PropTypes.bool.isRequired
+        isAdmin: PropTypes.bool.isRequired,
     }
 
     state = {
-        open: false
+        open: false,
     }
 
     handleClick = () => {
-        this.setState(state => ({ open: !state.open }))
+        this.setState((state) => ({ open: !state.open }))
     }
 
     handleClose = () => {
@@ -56,20 +56,20 @@ class HeaderLinks extends React.Component {
         const { open } = this.state
 
         const searchButton = classNames(classes.top, classes.searchButton)
-        const dropdownItem = classNames(classes.dropdownItem,  classes.primaryHover)
+        const dropdownItem = classNames(classes.dropdownItem, classes.primaryHover)
 
         return (
             <div>
                 <CustomInput
                     formControlProps={{
-                        className: classNames(classes.top,classes.search)
+                        className: classNames(classes.top, classes.search),
                     }}
                     inputProps={{
                         placeholder: 'Search',
                         inputProps: {
                             'aria-label': 'Search',
-                            className: classes.searchInput
-                        }
+                            className: classes.searchInput,
+                        },
                     }}
                 />
                 <Button
@@ -80,16 +80,16 @@ class HeaderLinks extends React.Component {
                     className={searchButton}
                 >
                     <Search
-                        className={classes.headerLinksSvg + ' ' + classes.searchIcon}
+                        className={`${classes.headerLinksSvg} ${classes.searchIcon}`}
                     />
                 </Button>
                 <LangControlMenu
                     className={classes.managerClasses}
                     buttonProps={{
-                        color:'transparent',
-                        'aria-label':'Person',
+                        color: 'transparent',
+                        'aria-label': 'Person',
                         justIcon: true,
-                        className:classes.buttonLink
+                        className: classes.buttonLink,
                     }}
                 >
                     <Language className={classNames(classes.headerLinksSvg, classes.links)} />
@@ -108,7 +108,7 @@ class HeaderLinks extends React.Component {
                             justIcon
                             className={classNames(classes.fixJustify, classes.buttonLink)}
                             component={Link}
-                            to='/admin'
+                            to="/admin"
                         >
                             <Build className={classNames(classes.headerLinksSvg, classes.links)} />
                             <Hidden mdUp implementation="css">
@@ -118,7 +118,7 @@ class HeaderLinks extends React.Component {
                             </Hidden>
                         </Button>
                     </div>
-                ):null}
+                ) : null}
                 <div className={classes.managerClasses}>
                     <Button
                         color="transparent"
@@ -127,7 +127,7 @@ class HeaderLinks extends React.Component {
                         justIcon
                         className={classNames(classes.fixJustify, classes.buttonLink)}
                         component={Link}
-                        to='/dashboard'
+                        to="/dashboard"
                     >
                         <Dashboard className={classNames(classes.headerLinksSvg, classes.links)} />
                         <Hidden mdUp implementation="css">
@@ -146,7 +146,7 @@ class HeaderLinks extends React.Component {
                         aria-haspopup="true"
                         onClick={this.handleClick}
                         className={classes.buttonLink}
-                        buttonRef={node => {
+                        buttonRef={(node) => {
                             this.anchorEl = node
                         }}
                     >
@@ -167,7 +167,7 @@ class HeaderLinks extends React.Component {
                         className={classNames({
                             [classes.popperClose]: !open,
                             [classes.pooperResponsive]: true,
-                            [classes.pooperNav]: true
+                            [classes.pooperNav]: true,
                         })}
                     >
                         {({ TransitionProps }) => (
@@ -219,10 +219,10 @@ class HeaderLinks extends React.Component {
                 <UserControlMenu
                     className={classes.managerClasses}
                     buttonProps={{
-                        color:'transparent',
-                        'aria-label':'Person',
+                        color: 'transparent',
+                        'aria-label': 'Person',
                         justIcon: true,
-                        className:classes.buttonLink
+                        className: classes.buttonLink,
                     }}
                 >
                     <Person className={classNames(classes.headerLinksSvg, classes.links)} />
@@ -237,16 +237,16 @@ class HeaderLinks extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     isAdmin: state.user.user !== undefined && state.user.user.group.id >= 4,
-    lang: state.lang
+    lang: state.lang,
 })
 
-const style = theme => ({
+const style = (theme) => ({
     ...adminNavbarLinksStyle(theme),
     fixJustify: {
-        justifyContent: 'flex-start'
-    }
+        justifyContent: 'flex-start',
+    },
 })
 
 export default withStyles(style)(connect(mapStateToProps)(HeaderLinks))

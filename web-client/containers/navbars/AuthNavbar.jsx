@@ -31,50 +31,48 @@ import _ from 'lang'
 class AuthNavbar extends React.Component {
     static defaultProps = {
         color: null,
-        brandText: ''
+        brandText: '',
     }
-    
+
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.any).isRequired,
         color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
         brandText: PropTypes.string,
-        location: RouterProps.location.isRequired
+        location: RouterProps.location.isRequired,
     }
 
     state = {
-        open: false
+        open: false,
     }
 
     static getDerivedStateFromProps(props, state) {
-        let open = state.open
+        let { open } = state
 
-        if ( state.previousPathname === undefined || props.location.pathname !== state.previousPathname ) {
+        if (state.previousPathname === undefined || props.location.pathname !== state.previousPathname) {
             open = false
         }
 
         return {
             ...state,
             previousPathname: props.location.pathname,
-            open
+            open,
         }
     }
 
     handleDrawerToggle = () => {
-        this.setState(prevState => {
-            return {open: !prevState.open}
-        })
+        this.setState((prevState) => ({ open: !prevState.open }))
     }
 
     // verifies if routeName is the one active (in browser input)
     activeRoute(routeName) {
         const { location } = this.props
-        return location.pathname.indexOf(routeName) > -1 ? true : false
+        return location.pathname.indexOf(routeName) > -1
     }
 
     renderLinks() {
         const { classes } = this.props
 
-        return (Object.keys(links).map(key => {
+        return (Object.keys(links).map((key) => {
             const link = links[key]
             return (
                 <ListItem className={classes.listItem} key={link.path}>
@@ -99,22 +97,22 @@ class AuthNavbar extends React.Component {
         const { classes, color, brandText } = this.props
         const { open } = this.state
         const appBarClasses = mergeClasses({
-            [' ' + classes[color]]: color
+            [` ${classes[color]}`]: color,
         })
 
         return (
-            <AppBar position='static' className={classes.appBar + appBarClasses}>
+            <AppBar position="static" className={classes.appBar + appBarClasses}>
                 <Toolbar className={classes.container}>
                     <Hidden smDown>
                         <div className={classes.flex}>
-                            <Button href='#' className={classes.title} color='transparent'>
+                            <Button href="#" className={classes.title} color="transparent">
                                 {brandText}
                             </Button>
                         </div>
                     </Hidden>
                     <Hidden mdUp>
                         <div className={classes.flex}>
-                            <Button href='#' className={classes.title} color='transparent'>
+                            <Button href="#" className={classes.title} color="transparent">
                     MD Pro React
                             </Button>
                         </div>
@@ -127,9 +125,9 @@ class AuthNavbar extends React.Component {
                     <Hidden mdUp>
                         <Button
                             className={classes.sidebarButton}
-                            color='transparent'
+                            color="transparent"
                             justIcon
-                            aria-label='open drawer'
+                            aria-label="open drawer"
                             onClick={this.handleDrawerToggle}
                         >
                             <Menu />
@@ -138,15 +136,15 @@ class AuthNavbar extends React.Component {
                     <Hidden mdUp>
                         <Hidden mdUp>
                             <Drawer
-                                variant='temporary'
+                                variant="temporary"
                                 anchor="right"
                                 open={open}
                                 classes={{
-                                    paper: classes.drawerPaper
+                                    paper: classes.drawerPaper,
                                 }}
                                 onClose={this.handleDrawerToggle}
                                 ModalProps={{
-                                    keepMounted: true // Better open performance on mobile.
+                                    keepMounted: true, // Better open performance on mobile.
                                 }}
                             >
                                 {this.renderLinks()}
