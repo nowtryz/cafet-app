@@ -17,6 +17,8 @@ import Explore from '@material-ui/icons/Explore'
 import SettingsApplications from '@material-ui/icons/SettingsApplications'
 import FolderOpen from '@material-ui/icons/FolderOpen'
 
+import { isProd } from 'config'
+
 
 import React from 'react'
 // eslint-disable-next-line react/jsx-filename-extension
@@ -49,6 +51,7 @@ export default [
                 title: 'Routines',
                 id: 'routines',
                 icon: Timer,
+                hidden: isProd,
                 component: BlankPage,
             },
             {
@@ -56,6 +59,7 @@ export default [
                 title: 'Storage and Backups',
                 id: 'used_space',
                 icon: FolderOpen,
+                hidden: isProd,
                 component: BlankPage,
             },
         ],
@@ -85,6 +89,7 @@ export default [
                 title: 'Statistics',
                 id: 'stats',
                 icon: Timeline,
+                hidden: isProd,
                 component: BlankPage,
             },
             {
@@ -99,6 +104,7 @@ export default [
                 title: 'Reports',
                 id: 'reports',
                 icon: Security,
+                hidden: isProd,
                 component: BlankPage,
             },
         ],
@@ -119,6 +125,7 @@ export default [
                 path: '/admin/payment-methods',
                 title: 'Payment',
                 icon: CreditCard,
+                hidden: isProd,
                 component: BlankPage,
             },
         ],

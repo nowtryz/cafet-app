@@ -8,6 +8,8 @@ import Face from '@material-ui/icons/Face'
 import Timeline from '@material-ui/icons/Timeline'
 import AttachMoney from '@material-ui/icons/AttachMoney'
 
+import { isProd } from 'config'
+
 
 import React from 'react'
 // eslint-disable-next-line react/jsx-filename-extension
@@ -61,6 +63,7 @@ export default [
                 title: 'Statistics',
                 id: 'statistics',
                 icon: Timeline,
+                hidden: isProd,
                 component: BlankPage,
             },
         ],
@@ -77,6 +80,7 @@ export default [
                 display: 'Historique du compte',
                 id: 'history',
                 icon: History,
+                hidden: isProd,
                 component: BlankPage,
             },
             {
