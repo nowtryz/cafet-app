@@ -7,7 +7,7 @@ stages:
 variables:
   SERVER_IMAGE: "$CI_REGISTRY_IMAGE/server"
   DATABASE_IMAGE: "$CI_REGISTRY_IMAGE/database"
-  IMAGE_ID: "${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}"
+  IMAGE_ID: ${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHORT_SHA}
 
 
 default:
@@ -96,8 +96,8 @@ build:docker 1 2:
   script:
     # fetches the latest image (not failing if image is not found)
     - docker pull "$SERVER_IMAGE:latest" || true
-    - docker build --pull --cache-from "$SERVER_IMAGE:latest" -t "$SERVER_IMAGE:$IMAGE_ID" -f docker/php/Dockerfile .
-    - docker push "$SERVER_IMAGE:$IMAGE_ID"
+    - docker build --pull --cache-from "$SERVER_IMAGE:latest" -t "$SERVER_IMAGE:${IMAGE_ID//\//-}" -f docker/php/Dockerfile .
+    - docker push "$SERVER_IMAGE:${IMAGE_ID//\//-}"
 
 build:docker 2 2:
   <<: *docker
@@ -105,8 +105,8 @@ build:docker 2 2:
   script:
     # fetches the latest image (not failing if image is not found)
     - docker pull $DATABASE_IMAGE:latest || true
-    - docker build --pull --cache-from $DATABASE_IMAGE:latest -t $DATABASE_IMAGE:$IMAGE_ID -f docker/mysql/Dockerfile .
-    - docker push $DATABASE_IMAGE:$IMAGE_ID
+    - docker build --pull --cache-from $DATABASE_IMAGE:latest -t $DATABASE_IMAGE:${IMAGE_ID//\//-} -f docker/mysql/Dockerfile .
+    - docker push $DATABASE_IMAGE:${IMAGE_ID//\//-}
 
 ## ##
 ## Docker
@@ -118,10 +118,10 @@ build:docker 2 2:
   stage: docker
   script:
     - alias ee="eval echo"
-    - echo $(ee $IMAGE:$IMAGE_ID)
-    - docker pull $(ee $IMAGE:$IMAGE_ID)
-    - docker tag $(ee $IMAGE:$IMAGE_ID) $(ee $IMAGE:$NEW_TAG)
-    - docker push $(ee $IMAGE:$NEW_TAG)
+    - echo $(ee $IMAGE:${IMAGE_ID//\//-})
+    - docker pull $(ee $IMAGE:${IMAGE_ID//\//-})
+    - docker tag $(ee $IMAGE:${IMAGE_ID//\//-}) $(ee $IMAGE:${NEW_TAG//\//-})
+    - docker push $(ee $IMAGE:${NEW_TAG//\//-})
 
 docker:branches 1 2:
   <<: *docker-tagging
@@ -129,7 +129,7 @@ docker:branches 1 2:
   variables:
     GIT_STRATEGY: none
     IMAGE: "$SERVER_IMAGE"
-    NEW_TAG: "$CI_COMMIT_REF_NAME"
+    NEW_TAG: $CI_COMMIT_REF_NAME
   dependencies:
     - build:docker 1 2
 
@@ -139,7 +139,7 @@ docker:branches 2 2:
   variables:
     GIT_STRATEGY: none
     IMAGE: "$DATABASE_IMAGE"
-    NEW_TAG: "$CI_COMMIT_REF_NAME"
+    NEW_TAG: $CI_COMMIT_REF_NAME
   dependencies:
     - build:docker 2 2
 
