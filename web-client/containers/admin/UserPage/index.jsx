@@ -19,8 +19,8 @@ import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 // Material Dashboard
-import GridContainer from 'components/Grid/GridContainer'
-import GridItem from 'components/Grid/GridItem'
+import GridContainer from '@dashboard/components/Grid/GridContainer'
+import GridItem from '@dashboard/components/Grid/GridItem'
 import Card from '@dashboard/components/Card/Card'
 import CardBody from '@dashboard/components/Card/CardBody'
 import CardHeader from '@dashboard/components/Card/CardHeader'
@@ -77,7 +77,7 @@ class UserPage extends React.Component {
         history: ReactRouterPropTypes.history.isRequired,
         match: ReactRouterPropTypes.match.isRequired,
         classes: classesPropype.isRequired,
-        lang_code: PropTypes.string.isRequired,
+        langCode: PropTypes.string.isRequired,
         currency: PropTypes.string.isRequired,
     }
 
@@ -253,7 +253,7 @@ class UserPage extends React.Component {
     }
 
     render() {
-        const { classes, lang_code, currency } = this.props
+        const { classes, langCode, currency } = this.props
         const {
             user, customer, alert, userTab,
         } = this.state
@@ -289,7 +289,9 @@ class UserPage extends React.Component {
                             <CardBody>
                                 <GridContainer direction="row-reverse">
                                     <GridItem xs={12} md={5}>
-                                        <NavPills onChange={(e, userTab) => this.setState({ userTab })} />
+                                        <NavPills
+                                            onChange={(e, tab) => this.setState({ userTab: tab })}
+                                        />
                                     </GridItem>
                                     <GridItem xs={12} md={7}>
                                         <List>
@@ -332,13 +334,13 @@ class UserPage extends React.Component {
                                             <ListItem alignItems="flex-start">
                                                 <ListItemText
                                                     primary={_('Member since', 'admin_user_page')}
-                                                    secondary={formateCalendar(user.registration).toLocaleString(lang_code)}
+                                                    secondary={formateCalendar(user.registration).toLocaleString(langCode)}
                                                 />
                                             </ListItem>
                                             <ListItem alignItems="flex-start">
                                                 <ListItemText
                                                     primary={_('Last sign-in at', 'admin_user_page')}
-                                                    secondary={formateCalendar(user.last_signin).toLocaleString(lang_code)}
+                                                    secondary={formateCalendar(user.last_signin).toLocaleString(langCode)}
                                                 />
                                             </ListItem>
                                             <ListItem alignItems="flex-start">
@@ -543,7 +545,7 @@ class UserPage extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    lang_code: state.lang.lang_code,
+    langCode: state.lang.lang_code,
     currency: state.server.currency,
 })
 

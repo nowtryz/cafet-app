@@ -3,12 +3,12 @@ import { AppContainer } from 'react-hot-loader'
 import { Provider } from 'react-redux'
 
 
-const wrapper = (AppComponent, reduxStore) => (
-    <Provider store={reduxStore}>
-        <AppContainer>
-            <AppComponent />
-        </AppContainer>
-    </Provider>
+const wrapper = (AppComponent, reduxStore, history) => (
+    <AppContainer>
+        <Provider store={reduxStore}>
+            <AppComponent history={history} />
+        </Provider>
+    </AppContainer>
 )
 
 export default wrapper

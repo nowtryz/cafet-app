@@ -3,7 +3,7 @@ import React from 'react'
 import Helmet from 'react-helmet'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { createBrowserHistory } from 'history'
+import { history as historyPropTypes } from 'react-router-prop-types'
 import {
     Router, Route, Switch, Redirect,
 } from 'react-router-dom'
@@ -25,39 +25,20 @@ import DashboardLayout from './layouts/dashboard'
 import AdminLayout from './layouts/admin'
 
 import adminRoutes from '../routes/admin'
-import routes from '../routes/dashboard'
-
-const hist = createBrowserHistory()
+import dashboardRoutes from '../routes/dashboard'
 
 class App extends React.Component {
     static propTypes = {
         lang: langPropType.isRequired,
         loadServerConfig: PropTypes.func.isRequired,
         grabUserInfo: PropTypes.func.isRequired,
+        isLogged: PropTypes.bool.isRequired,
+        history: historyPropTypes.isRequired,
     }
 
-    renderRoutes(routes, Layout, lang) {
+    renderRoutes(routes, lang) {
         return routes.slice(0).reverse().map((route) => {
-            if (route.items) return this.renderRoutes(route.items, Layout, lang)
-
-            return (
-                <Route
-                    exact
-                    key={route.path}
-                    path={route.path}
-                    render={(routeProps) => (
-                        <Layout {...routeProps} {...route.layoutProps} title={route.title} lang={lang}>
-                            <route.component {...routeProps} {...route.componentProps} />
-                        </Layout>
-                    )}
-                />
-            )
-        })
-    }
-
-    renderRoutesTemp(routes, lang) {
-        return routes.slice(0).reverse().map((route) => {
-            if (route.items) return this.renderRoutesTemp(route.items, lang)
+            if (route.items) return this.renderRoutes(route.items, lang)
 
             return (
                 <Route
@@ -73,7 +54,8 @@ class App extends React.Component {
     }
 
     render() {
-        const { lang, isLogged } = this.props
+        const { history, lang, isLogged } = this.props
+
         return (
             <>
                 <Helmet
@@ -81,7 +63,7 @@ class App extends React.Component {
                     defaultTitle={APP_NAME}
                     htmlAttributes={{ lang: lang.html_lang }}
                 />
-                <Router history={hist}>
+                <Router history={history}>
                     <Switch>
                         <Route
                             path="/login"
@@ -107,7 +89,7 @@ class App extends React.Component {
                             render={(routeProps) => (
                                 <DashboardLayout {...routeProps} lang={lang}>
                                     <Switch>
-                                        {this.renderRoutesTemp(routes, lang)}
+                                        {this.renderRoutes(dashboardRoutes, lang)}
                                     </Switch>
                                 </DashboardLayout>
                             )}
@@ -117,7 +99,7 @@ class App extends React.Component {
                             render={(routeProps) => (
                                 <AdminLayout {...routeProps} lang={lang}>
                                     <Switch>
-                                        {this.renderRoutesTemp(adminRoutes, lang)}
+                                        {this.renderRoutes(adminRoutes, lang)}
                                     </Switch>
                                 </AdminLayout>
                             )}
