@@ -1,6 +1,10 @@
 #app
 doc/
 
+# IntelliJ IDEA
+.idea
+.iml
+
 # Eclipse
 .tern-project
 .settings/
