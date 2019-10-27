@@ -19,7 +19,8 @@
         "react/jsx-indent-props": [2, 4],
         "react/static-property-placement": [2, "static public field"],
         "react/state-in-constructor": [1, "never"],
-        "function-paren-newline": 0
+        "function-paren-newline": 0,
+        "react/jsx-props-no-spreading": 0
     },
     "env": {
         "es6": true,
