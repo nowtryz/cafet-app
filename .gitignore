@@ -3,7 +3,7 @@ doc/
 
 # IntelliJ IDEA
 .idea
-.iml
+**/*.iml
 
 # Eclipse
 .tern-project
