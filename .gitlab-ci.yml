@@ -251,6 +251,7 @@ docker:develop 2 2:
   script:
     - date
     - cp -r server app
+    - mkdir sql_scripts
     - cp docker/mysql/structure.sql sql_scripts
     - cp docker/mysql/demo.sql sql_scripts
 
