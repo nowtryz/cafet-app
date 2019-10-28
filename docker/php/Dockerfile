@@ -68,6 +68,7 @@ FROM node:stretch-slim AS js-build
 
 # copy project descrition and install it
 COPY ./package.json yarn.lock /var/app/
+RUN yarn config set cache /var/yarn-cache
 RUN cd /var/app/ && yarn install
 
 # copy application and compile it

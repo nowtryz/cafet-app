@@ -1,5 +1,9 @@
 #app
 doc/
+*.md
+.eslint*
+openapi*
+.gitlab/
 
 # Eclipse
 .settings/
@@ -11,6 +15,7 @@ bin/
 # Docker
 /php-logs/
 /pma-sessions/
+/docker-*
 
 # tests
 server/test.php
