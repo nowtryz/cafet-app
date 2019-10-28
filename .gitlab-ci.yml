@@ -58,6 +58,16 @@ default:
     variables:
       - $CI_COMMIT_TAG =~ /^v/
 
+.only_nonstable: &only_nonstable
+  only:
+    - branches
+    - tags
+  except:
+    refs:
+      - develop
+    variables:
+      - $CI_COMMIT_TAG =~ /^v/
+
 .only_others: &only_others
   only:
     - branches
@@ -77,20 +87,39 @@ default:
 build:documentation:
   <<: *linux-docker-runner
   <<: *with-cache
+  <<: *only-master
   image: node:10
   stage: build
   script:
     - yarn install
     - yarn api:doc
     - cp openapi.yml doc/
-  only:
-    - master
   artifacts:
     untracked: true
     paths:
       # Built documentation
       - ./doc
     expire_in: 1 hour
+
+build:js:
+  <<: *linux-docker-runner
+  <<: *with-cache
+  image: node:10-stretch-slim
+  stage: build
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends python2.7 build-essential
+    - apt-get clean
+    - rm -rfd /var/lib/apt/lists/*
+  script:
+    - yarn install
+    - yarn prod:build
+  artifacts:
+    untracked: true
+    paths:
+      - ./server/dist
+    expire_in: 1 hour
+
 
 build:docker 1 2:
   <<: *docker
@@ -210,64 +239,43 @@ docker:develop 2 2:
 ## Deploy
 ## ##
 
-## Artifacts
-
 # Artifact publish templates
 .publish-artifact-template: &publish-artifact
   name: application
   paths:
     - app/
-.publish-template: &publish
+    - sql_scripts/
+.publish-app-template: &app
   <<: *linux-docker-runner
   stage: deploy
-  script: date
+  script:
+    - date
+    - cp -r server app
+    - cp docker/mysql/structure.sql sql_scripts
+    - cp docker/mysql/demo.sql sql_scripts
 
 # Artifact publish
 deploy:dev_app:
-  <<: *publish
-  except:
-    - tags
+  <<: *app
+  <<: *only_nonstable
   artifacts:
     <<: *publish-artifact
     expire_in: 1 day
 
-deploy:app:
-  <<: *publish
-  only:
-    - tags
+deploy:app_versions:
+  <<: *app
+  <<: *only-versions
   artifacts: *publish-artifact
 
+deploy:app:
+  <<: *app
+  <<: *only-master
+  artifacts: *publish-artifact
 
-# db structure templates
-.db-struct-artifact-template: &db-struct-artifact
-  name: database structure
-  paths:
-    - ./*.sql
-.db-struct-template: &db-struct
-  <<: *linux-docker-runner
-  stage: deploy
-  script:
-    - cp docker/mysql/structure.sql .
-    - cp docker/mysql/demo.sql .
-
-# Artifact publish
-deploy:dev_database_structure:
-  <<: *db-struct
-  except:
-    - tags
-  artifacts:
-    <<: *db-struct-artifact
-    expire_in: 1 day
-
-deploy:database_structure:
-  <<: *db-struct
-  only:
-    - tags
-  artifacts: *db-struct-artifact
-
-
+# pages
 pages:
   <<: *linux-docker-runner
+  <<: *only-master
   stage: deploy
   dependencies:
     - build:documentation
