@@ -65,6 +65,11 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
+    "@dashboard/assets": "file:./material-dashboard/assets",
+    "@dashboard/components": "file:./material-dashboard/components",
+    "@dashboard/layouts": "file:./material-dashboard/layouts",
+    "@dashboard/variables": "file:./material-dashboard/variables",
+    "@dashboard/views": "file:./material-dashboard/views",
     "@material-ui/core": "^4.3.2",
     "@material-ui/icons": "^4.2.1",
     "axios": "^0.19.0",

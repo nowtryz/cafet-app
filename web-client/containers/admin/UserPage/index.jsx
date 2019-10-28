@@ -21,8 +21,8 @@ import Typography from '@material-ui/core/Typography'
 import Input from '@material-ui/core/Input'
 
 // Material Dashboard
-import GridContainer from 'components/Grid/GridContainer'
-import GridItem from 'components/Grid/GridItem'
+import GridContainer from '@dashboard/components/Grid/GridContainer'
+import GridItem from '@dashboard/components/Grid/GridItem'
 import Card from '@dashboard/components/Card/Card'
 import CardBody from '@dashboard/components/Card/CardBody'
 import CardHeader from '@dashboard/components/Card/CardHeader'
@@ -33,17 +33,17 @@ import userProfileStyles from '@dashboard/assets/jss/material-dashboard-pro-reac
 import sweetAlertStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/sweetAlertStyle'
 import typographyStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/typographyStyle'
 import customCheckboxRadioSwitchStyle from '@dashboard/assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch'
-import customInputStyle from 'assets/jss/material-dashboard-pro-react/components/customInputStyle'
+import customInputStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/customInputStyle'
 
 import { dangerColor, warningColor } from '@dashboard/assets/jss/material-dashboard-pro-react'
 
 import '@dashboard/assets/scss/material-dashboard-pro-react/plugins/_plugin-react-bootstrap-sweetalert.scss'
 
-import { classes as classesPropype } from 'app-proptypes'
+import { classes as classesProptype } from 'app-proptypes'
 import { API_URL } from 'config'
 import _ from 'lang'
 import { formateCalendar } from 'utils'
-import Locale from '../Locale'
+import Locale from '../../Locale'
 
 const style = (theme) => ({
     ...userProfileStyles,
@@ -79,7 +79,7 @@ class UserPage extends React.Component {
     static propTypes = {
         history: ReactRouterPropTypes.history.isRequired,
         match: ReactRouterPropTypes.match.isRequired,
-        classes: classesPropype.isRequired,
+        classes: classesProptype.isRequired,
         langCode: PropTypes.string.isRequired,
         currency: PropTypes.string.isRequired,
     }
@@ -247,7 +247,7 @@ class UserPage extends React.Component {
 
             if (customer) this.setState({ customer })
         } catch (err) {
-            if (err.response && err.response.status == 404) this.setState({ alert: this.notFound })
+            if (err.response && err.response.status === 404) this.setState({ alert: this.notFound })
         }
     }
 

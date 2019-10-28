@@ -1,13 +1,15 @@
-import PropTypes from 'prop-types'
+import {
+    arrayOf, element, object, objectOf, oneOfType, string,
+} from 'prop-types'
 
-export const lang = PropTypes.objectOf(PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.object,
+export const lang = objectOf(oneOfType([
+    string,
+    object,
 ]))
 
-export const children = PropTypes.oneOfType([
-    PropTypes.arrayOf(PropTypes.element),
-    PropTypes.element,
+export const children = oneOfType([
+    arrayOf(element),
+    element,
 ])
 
-export const classes = PropTypes.objectOf(PropTypes.string)
+export const classes = objectOf(string)
