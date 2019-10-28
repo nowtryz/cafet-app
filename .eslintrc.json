@@ -20,7 +20,8 @@
         "react/static-property-placement": [2, "static public field"],
         "react/state-in-constructor": [1, "never"],
         "function-paren-newline": 0,
-        "react/jsx-props-no-spreading": 0
+        "react/jsx-props-no-spreading": 0,
+        "max-len": [1, 120]
     },
     "env": {
         "es6": true,
