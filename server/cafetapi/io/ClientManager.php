@@ -109,6 +109,45 @@ class ClientManager extends Updater
         else return NULL;
     }
     
+    public final function getClientWithUserId(int $user_id): ?Client
+    {
+        $stmt = $this->connection->prepare('SELECT '
+            . 'c.'. self::FIELD_ID . ' id, '
+            . 'u.'. UserManager::FIELD_EMAIL . ' email, '
+            . 'u.'. UserManager::FIELD_USERNAME . ' alias, '
+            . 'u.'. UserManager::FIELD_FAMILYNAME . ' fname, '
+            . 'u.'. UserManager::FIELD_FIRSTNAME . ' sname, '
+            . 'c.'. self::FIELD_MEMBER . ' member, '
+            . 'c.'. self::FIELD_BALANCE . ' balance, '
+            . 'DATE_FORMAT(u.'. UserManager::FIELD_REGISTRATION . ', "%Y") regyear '
+            . 'FROM ' . parent::CLIENTS . ' c '
+            . 'INNER JOIN ' . parent::USERS . ' u '
+            . 'ON c.' . self::FIELD_USER_ID . ' = u.' . UserManager::FIELD_ID . ' '
+            . 'WHERE u.' . UserManager::FIELD_ID . ' = :id ');
+        
+        $member = false;
+        $id = $registrationYear = 0;
+        $email = $alias = $familyNane = $surname = $balance = '';
+        
+        $stmt->bindColumn('id', $id, PDO::PARAM_INT);
+        $stmt->bindColumn('email', $email, PDO::PARAM_STR);
+        $stmt->bindColumn('alias', $alias, PDO::PARAM_STR);
+        $stmt->bindColumn('fname', $familyNane, PDO::PARAM_STR);
+        $stmt->bindColumn('sname', $surname, PDO::PARAM_STR);
+        $stmt->bindColumn('member', $member, PDO::PARAM_BOOL);
+        $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
+        $stmt->bindColumn('regyear', $registrationYear, PDO::PARAM_INT);
+        
+        $stmt->execute([
+            'id' => $user_id
+        ]);
+        $this->check_fetch_errors($stmt);
+        
+        if ($stmt->fetch()) return new Client($id, $email, $alias, $familyNane, $surname, $member, floatval($balance), $registrationYear);
+        
+        else return NULL;
+    }
+    
     public final function searchClient(string $expression): array
     {
         $stmt = $this->connection->prepare('SELECT '

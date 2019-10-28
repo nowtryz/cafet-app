@@ -14,6 +14,25 @@ use PDO;
  */
 class ProductManager extends Updater
 {
+    const FIELD_PRODUCT_GROUP = 'product_group';
+    const FIELD_IMAGE = 'image';
+    const FIELD_STOCK = 'stock';
+    const FIELD_VIEWABLE = 'viewable';
+    const FIELD_LAST_EDIT = 'last_edit';
+    
+    const EDIT_FIELD_ID = 'id';
+    const EDIT_FIELD_PRODUCT = 'product';
+    const EDIT_FIELD_NAME = 'name';
+    const EDIT_FIELD_PRICE = 'price';
+    const EDIT_FIELD_EDIT = 'edit';
+    
+    const GROUPS_FIELD_ID = 'id';
+    const GROUPS_FIELD_NAME = 'name';
+    const GROUPS_FIELD_DISPLAY_NAME = 'display_name';
+    const GROUPS_FIELD_EDIT = 'edit';
+    
+    const TABLE_NAME = self::PRODUCTS;
+    
     private static $instance;
     
     /**

@@ -1,5 +1,6 @@
 SET autocommit=0;
 SET foreign_key_checks=0;
+START TRANSACTION;
 
 
 
@@ -48,13 +49,13 @@ CREATE TABLE IF NOT EXISTS `cafet_customers` (
 -- Table
 CREATE TABLE IF NOT EXISTS `cafet_balance_reloads` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "reload\'s id",
-  `user_id` bigint(20) NOT NULL COMMENT "user\'s id",
+  `customer_id` bigint(20) NOT NULL COMMENT "customer\'s id",
   `amount` float(10,2) NOT NULL COMMENT "reload\'s amount",
   `user_balance` float(10,2) NOT NULL DEFAULT "0.00" COMMENT " user\'s balance after transaction",
   `details` varchar(255) NOT NULL DEFAULT "APP/UNKNOW" COMMENT "reload method",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction\'s date",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`)
+  FOREIGN KEY (`customer_id`)
     REFERENCES `cafet_customers`(`id`)
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
@@ -66,9 +67,9 @@ CREATE TRIGGER `cafet_new_balance_reload`
 BEFORE INSERT ON `cafet_balance_reloads` 
 FOR EACH ROW 
 BEGIN  	
-	SET @user = NEW.user_id;
-	UPDATE `cafet_customers` SET balance = balance + NEW.amount WHERE user_id = @user;
-	SET NEW.user_balance = (SELECT balance FROM `cafet_customers` WHERE user_id = @user); 
+	SET @customer = NEW.customer_id;
+	UPDATE `cafet_customers` c SET balance = balance + NEW.amount WHERE c.id = @customer;
+	SET NEW.user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = @customer); 
 END
 $$
 
@@ -96,11 +97,11 @@ CREATE TABLE IF NOT EXISTS `cafet_config` (
 -- Table
 CREATE TABLE IF NOT EXISTS `cafet_expenses` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT COMMENT "transaction\'s id",
-  `user_id` bigint(20) NOT NULL COMMENT "user\'s id",
+  `customer_id` bigint(20) NOT NULL COMMENT "user\'s id",
   `user_balance` float(10,2) NOT NULL DEFAULT "0.00" COMMENT "user\'s balance after transaction",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction\'s date",
   PRIMARY KEY (`id`),
-  FOREIGN KEY (`user_id`)
+  FOREIGN KEY (`customer_id`)
     REFERENCES `cafet_customers`(`id`)
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
@@ -206,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `cafet_products_bought` (
   `expense_id` bigint(11) NOT NULL COMMENT "expense id",
   `product_id` bigint(11) NOT NULL COMMENT "product bought id",
   `edit_id` bigint(20) NULL DEFAULT NULL COMMENT "product edit id at the transaction date",
-  `user_id` bigint(20) NOT NULL COMMENT "user id",
+  `customer_id` bigint(20) NOT NULL COMMENT "user id",
   `quantity` int(11) NOT NULL DEFAULT "1" COMMENT "product quantity",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction date",
   PRIMARY KEY (`id`),
@@ -217,7 +218,7 @@ CREATE TABLE IF NOT EXISTS `cafet_products_bought` (
   FOREIGN KEY (`edit_id`)
     REFERENCES `cafet_products_edits`(`id`)
     ON UPDATE CASCADE,
-  FOREIGN KEY (`user_id`)
+  FOREIGN KEY (`customer_id`)
     REFERENCES `cafet_customers`(`id`)
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
@@ -231,9 +232,9 @@ FOR EACH ROW
 BEGIN 
 	SET NEW.edit_id = (SELECT last_edit FROM `cafet_products` WHERE id = NEW.product_id);
 	SET @price = (SELECT price FROM `cafet_products_edits` WHERE id = NEW.edit_id);
-	UPDATE `cafet_products` SET stock = stock - NEW.quantity WHERE id = NEW.product_id;
-	UPDATE `cafet_customers` SET balance = balance-@price*NEW.quantity WHERE user_id = NEW.user_id;
-	UPDATE `cafet_expenses` SET user_balance = (SELECT balance FROM `cafet_customers` WHERE user_id = NEW.user_id) WHERE id = NEW.expense_id; 
+	UPDATE `cafet_products` p SET stock = stock - NEW.quantity WHERE p.id = NEW.product_id;
+	UPDATE `cafet_customers` c SET balance = balance-@price*NEW.quantity WHERE c.id = NEW.customer_id;
+	UPDATE `cafet_expenses` SET user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = NEW.customer_id) WHERE id = NEW.expense_id; 
 END
 $$
 
@@ -353,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_bought` (
   `expense_id` bigint(11) NOT NULL COMMENT "expense id",
   `formula_id` bigint(11) NOT NULL COMMENT "formula id",
   `edit_id` bigint(20) NULL DEFAULT NULL COMMENT "formula edit id at the transaction date",
-  `user_id` bigint(20) NOT NULL COMMENT "user id",
+  `customer_id` bigint(20) NOT NULL COMMENT "user id",
   `quantity` int(11) NOT NULL DEFAULT "1" COMMENT "quantity",
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT "transaction date",
   PRIMARY KEY (`id`),
@@ -364,7 +365,7 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_bought` (
   FOREIGN KEY (`edit_id`)
     REFERENCES `cafet_formulas_edits`(`id`)
     ON UPDATE CASCADE,
-  FOREIGN KEY (`user_id`)
+  FOREIGN KEY (`customer_id`)
     REFERENCES `cafet_customers`(`id`)
     ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=`utf8mb4` COLLATE `utf8mb4_unicode_ci`;
@@ -378,8 +379,8 @@ FOR EACH ROW
 BEGIN 
 	SET NEW.edit_id = (SELECT last_edit FROM `cafet_formulas` WHERE id = NEW.formula_id);
 	SET @price = (SELECT price FROM `cafet_formulas_edits` WHERE id = NEW.edit_id);
-	UPDATE `cafet_customers` SET balance = balance-@price*NEW.quantity WHERE user_id = NEW.user_id;
-	UPDATE `cafet_expenses` SET user_balance = (SELECT balance FROM `cafet_customers` WHERE user_id = NEW.user_id) WHERE id = NEW.expense_id; 
+	UPDATE `cafet_customers` c SET balance = balance-@price*NEW.quantity WHERE c.id = NEW.customer_id;
+	UPDATE `cafet_expenses` SET user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = NEW.customer_id) WHERE id = NEW.expense_id; 
 END
 $$
 

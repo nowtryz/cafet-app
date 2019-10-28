@@ -67,7 +67,7 @@ class ReloadsNode implements RestNode
         ]);
         
         $client_id = intval($request->getBody()['client_id'], 0);
-        $amount = intval($request->getBody()['amount']);
+        $amount = floatval($request->getBody()['amount']);
         
         if (!ClientManager::getInstance()->getClient($client_id)) return ClientError::conflict('Unknown client with id ' . $client_id, [
             'on' => 'client_id', 

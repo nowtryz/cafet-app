@@ -14,6 +14,28 @@ use PDO;
  */
 class FormulaManager extends Updater
 {
+    const FIELD_IMAGE = 'image';
+    const FIELD_VIEWABLE = 'viewable';
+    const FIELD_LAST_EDIT = 'last_edit';
+    
+    const EDIT_FIELD_ID = 'id';
+    const EDIT_FIELD_FORMULA = 'formula';
+    const EDIT_FIELD_NAME = 'name';
+    const EDIT_FIELD_PRICE = 'price';
+    const EDIT_FIELD_EDIT = 'edit';
+    
+    const CHOICES_FIELD_ID = 'id';
+    const CHOICES_FIELD_FORMULA = 'formula';
+    const CHOICES_FIELD_NAME = 'name';
+    const CHOICES_FIELD_EDIT = 'edit';
+    
+    const CHOICES_PRODUCT_FIELD_ID = 'id';
+    const CHOICES_PRODUCT_FIELD_CHOICE = 'choice';
+    const CHOICES_PRODUCT_FIELD_PRODUCT = 'product';
+    const CHOICES_PRODUCT_FIELD_EDIT = 'edit';
+    
+    const TABLE_NAME = self::FORMULAS;
+    
     private static $instance;
     
     /**

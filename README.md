@@ -5,94 +5,78 @@ Both REST API for http connections and PHP librairy. Manage Interactions between
 ## Rest API
 
 Documentation about the rest api can found [here](http://cafet-app.static.nowtryz.net/php-api-server/) or in [the openapi specifications file](./openapi.yml)
-## Old API Usage
 
-### API calls
-API call are made through the `{docker_host}:80/index.php` or even `{docker_host}:80/`. *Maybe `{docker_host}:80/api/` in future versions.*
+## Stand-alone installation
 
-### Queries
-Calls must be made with the following json POST *(or at least with all root objects as POST vars)*.
-```json
-{
-    "origin": "cafet_app",
-    "version": "1.0.0-beta",
-    "session_id": "some_id",
-    "action": "function_name",
-    "arguments": {
-        "1rst_arg": "1rst_value",
-        "2nd_arg": "2nd_value",
-        "3rd_arg": "3rd_value"
-    }
-}
-```
+### Docker
 
-Here is an example for the `login` call, **note that it's the only action which dosn't need a `session_id`**:
-```json
-{
-    "origin": "cafet_app",
-    "version": "1.0.0-beta",
-    "action": "login",
-    "arguments": {
-        "email": "test@localhost.loc",
-        "password": "pass"
-    }
-}
-```
+1. Make sure to have `docker` and `docker-compose` install on your server
+1. To run the server in a docker container, just create a `docker-compose.yml` with the content bellow
+    ```yaml
+    version: "3"
+    services:
+        php:
+            image: registry.gitlab.com/cafet-app/cafet-app/server:latest
+            container_name: cafet-server
+            environment:
+                SERVER_DOMAIN: localhost
+                MAILHUB: localhost
+            ports:
+                - "80:80"
+            links:
+                - db
+            depends_on:
+                - db
+            volumes:
+                - php-logs:/var/log
+            networks:
+                - cafet_net
 
-#### Save order
-The `save order` action has a very particular structure because its arguments must follow a specific structure too. So here is an example of a `save order` action:
-```json
-{
-    "origin": "cafet_app",
-    "version": "1.0",
-    "session_id": "some_id",
-    "action": "saveOrder",
-    "arguments": {
-        "client_id": 256,
-        "order": [
-            {
-                "type": "product",
-                "id": 65,
-                "amount": 4
-            },
-            {
-                "type": "formula",
-                "id": 2,
-                "amount": 1,
-                "products": [
-                    2,
-                    16,
-                    69
-                ]
-            }
-        ]
-    }
-}
-```
+        db:
+            image: registry.gitlab.com/cafet-app/cafet-app/database:latest
+            container_name: cafet-server-mysql
+            restart: always
+            ports:
+                - '3306:3306'
+            networks:
+                - cafet_net
 
-### Responses
-Responses are also json object following the structure as shown bellow.
-```json
-{
-"status": "ok|error",
-"result": "the_json_object",
-"computing": "the time to compute in milis as a float"
-}
-```
+    volumes:
+        php-logs:
 
-Here is an example for an error result:
-```json
-{
-    "status": "error",
-    "result": {
-        "error_code": "01-001",
-        "error_type": "the error type",
-        "error_message": "some message",
-        "additional_message": "additional_message"
-    },
-    "computing": 0.01244
-}
-```
+    networks:
+        cafet_net:
+    ```
+1. Then start `docker-compose`
+    ```shell
+    echo DGNvKHoDSYNLxxbZe2cr | docker login -u docker-token --password-stdin registry.gitlab.com
+    docker-compose up -d
+    ```
+
+### Binary Install
+
+#### Requierments
+- Apache
+    - Tested with Apache 2.4.33
+    - Extension mod_rewrite enabled
+- PHP 7.2 or upper with PDO, tested with:
+    - Tested versions:
+        - PHP 7.2.4
+        - PHP 7.2.9
+    - Extensions:
+        - PDO
+    - PDO_mysql
+- MySQL 5.7 or upper
+    - tested with MySQL 5.7.21
+
+#### Installation
+
+1. [Dowload the latest version](https://gitlab.com/cafet-app/cafet-app/-/jobs/artifacts/master/download?job=deploy:app) and unpack the `app` folder where you want.
+1. Create a virtual host pointing to this folder. e.g. `cofee.example.com`
+1. Create a database.
+1. Run SQL import scripts that you can find [here](https://gitlab.com/cafet-app/cafet-app/-/jobs/artifacts/master/download?job=deploy:database_structure) on your mysql server.
+1. Open and edit `path/to/app/cafetapi_content/config.php`.
+1. Access `http://cofee.example.com` and your installation is now up and ready
 
 ## Development environment installation
 
@@ -115,28 +99,6 @@ Without any other docker port binding:
 
 ### Loging in app
 Demo user is `Nowtryz <damien.djmb@gmail.com>` with password `admin`. Easy to keep in mind :wink:, let's enjoy!
-
-
-
-## Stand-alone installation requierments
-
-### Apache
-- Tested with Apache 2.4.33
-- Extension mod_rewrite enabled
-- A virtual host pointing to the `server` folder
-
-### PHP 7.2 or upper with PDO, tested with:
-- Tested versions:
-    - PHP 7.2.4
-    - PHP 7.2.9
-- Extensions:
-    - PDO
-    - PDO_mysql
-
-### MySQL 5.7 or upper
-- tested with MySQL 5.7.21
-
-
 
 ## Future updates
 

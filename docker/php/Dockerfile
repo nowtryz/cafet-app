@@ -4,20 +4,32 @@ FROM php:7.2.9-apache-stretch AS base-php
 
 # Install required extentions
 RUN a2enmod rewrite expires
+RUN apt-get purge --yes sendmail*
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
         libzip-dev \
         zip \
         libjpeg-dev \
-        libpng-dev
+        libpng-dev \
+        ssmtp
 
 RUN docker-php-ext-install \
         gd \
-        pdo \
+        #pdo \
         pdo_mysql \
         zip \
         opcache
 
-RUN rm -rfd /var/lib/apt/lists/*
+RUN apt-get clean && rm -rfd /var/lib/apt/lists/*
+
+# sSMTP configuration
+RUN dpkg-statoverride --update --add root mail 0640 /etc/ssmtp/revaliases \
+&& dpkg-statoverride --update --add root mail 0640 /etc/ssmtp/ssmtp.conf \
+&& dpkg-statoverride --update --add root mail 0750 /usr/sbin/ssmtp \
+&& chmod 755 /usr/sbin/ssmtp \
+&& usermod www-data --append --groups mail
+
+RUN echo 'sendmail_path = /usr/sbin/ssmtp -t' >> /usr/local/etc/php/php.ini
 
 
 # PHP configurations

@@ -21,6 +21,35 @@ use cafetapi\Logger;
  */
 class ExpenseManager extends Updater
 {
+    const TABLE_NAME = self::EXPENSES;
+    
+    const FIELD_CUSTOMER_ID = 'customer_id';
+    const FIELD_USER_BALANCE = 'user_balance';
+    const FIELD_DATE= 'date';
+    
+    
+    const PRODUCT_BOUGHT_FIELD_ID = 'id';
+    const PRODUCT_BOUGHT_FIELD_EXPENSE_ID = 'expense_id';
+    const PRODUCT_BOUGHT_FIELD_PRODUCT_ID = 'product_id';
+    const PRODUCT_BOUGHT_FIELD_EDIT_ID = 'edit_id';
+    const PRODUCT_BOUGHT_FIELD_CUSTOMER_ID = 'customer_id';
+    const PRODUCT_BOUGHT_FIELD_QUANTITY = 'quantity';
+    const PRODUCT_BOUGHT_FIELD_DATE = 'date';
+    
+    const FORMULA_BOUGHT_FIELD_ID = 'id';
+    const FORMULA_BOUGHT_FIELD_EXPENSE_ID = 'expense_id';
+    const FORMULA_BOUGHT_FIELD_FORMULA_ID = 'formula_id';
+    const FORMULA_BOUGHT_FIELD_EDIT_ID = 'edit_id';
+    const FORMULA_BOUGHT_FIELD_CUSTOMER_ID = 'customer_id';
+    const FORMULA_BOUGHT_FIELD_QUANTITY = 'quantity';
+    const FORMULA_BOUGHT_FIELD_DATE = 'date';
+    
+    const FORMULA_BOUGHT_PRODUCTS_FIELD_ID = 'id';
+    const FORMULA_BOUGHT_PRODUCTS_FIELD_TRANSACTION_ID = 'transaction_id';
+    const FORMULA_BOUGHT_PRODUCTS_FIELD_PRODUCT_ID = 'product_id';
+    const FORMULA_BOUGHT_PRODUCTS_FIELD_PRODUCT_EDIT = 'product_edit';
+    const FORMULA_BOUGHT_PRODUCTS_FIELD_DATE = 'date';
+    
     private static $instance;
     
     /**
@@ -36,8 +65,8 @@ class ExpenseManager extends Updater
     public final function getClientExpenses(int $client_id): array
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'e.id id, '
-            . 'e.user_balance balance, '
+            . 'e.' . self::FIELD_ID . ' id, '
+            . 'e.' . self::FIELD_USER_BALANCE . ' balance, '
             . '(SELECT SUM(edit.price * f.quantity) '
             . 'FROM ' . self::FORMULAS_BOUGHT . ' f '
             . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' edit '
@@ -57,7 +86,7 @@ class ExpenseManager extends Updater
             . 'DATE_FORMAT(e.date, "%c") month, '
             . 'DATE_FORMAT(e.date, "%Y") year '
             . 'FROM ' . self::EXPENSES . ' e '
-            . 'WHERE e.user_id = :id '
+            . 'WHERE e.' . self::FIELD_CUSTOMER_ID . ' = :id '
             . 'ORDER BY e.date DESC');
         
         $id = $hour = $mins = $secs = $day = $month = $year = 0;
@@ -110,8 +139,8 @@ class ExpenseManager extends Updater
             . 'DATE_FORMAT(e.date, "%c") month, '
             . 'DATE_FORMAT(e.date, "%Y") year '
             . 'FROM ' . self::EXPENSES . ' e '
-            . 'WHERE e.user_id = :id '
-            . 'AND e.date > (SELECT MAX(date) FROM ' . self::RELOADS . ' WHERE user_id = :id2) '
+            . 'WHERE e.' . self::FIELD_CUSTOMER_ID . ' = :id '
+            . 'AND e.date > (SELECT MAX(date) FROM ' . self::RELOADS . ' WHERE ' . ReloadManager::FIELD_CUSTOMER_ID . ' = :id2) '
             . 'ORDER BY e.date DESC');
         
         $id = $hour = $mins = $secs = $day = $month = $year = 0;
@@ -146,7 +175,7 @@ class ExpenseManager extends Updater
         $stmt = $this->connection->prepare('SELECT '
             . 'e.id id, '
             . 'e.user_balance balance, '
-            . 'e.user_id client_id, '
+            . 'e.' . self::FIELD_CUSTOMER_ID . ' client_id, '
             . '(SELECT SUM(edit.price * f.quantity) '
             . 'FROM ' . self::FORMULAS_BOUGHT . ' f '
             . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' edit '
@@ -198,7 +227,7 @@ class ExpenseManager extends Updater
         $stmt = $this->connection->prepare('SELECT '
             . 'e.id id, '
             . 'e.user_balance balance, '
-            . 'e.user_id client_id, '
+            . 'e.' . self::FIELD_CUSTOMER_ID . ' client_id, '
             . '(SELECT SUM(edit.price * f.quantity) '
             . 'FROM ' . self::FORMULAS_BOUGHT . ' f '
             . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' edit '
@@ -254,7 +283,7 @@ class ExpenseManager extends Updater
             . 'e.price price, '
             . 'b.formula_id fid, '
             . 'b.quantity quantity, '
-            . 'b.user_id client_id, '
+            . 'b.' . self::FORMULA_BOUGHT_FIELD_CUSTOMER_ID . ' client_id, '
             . 'DATE_FORMAT(b.date, "%H") hour, '
             . 'DATE_FORMAT(b.date, "%i") mins, '
             . 'DATE_FORMAT(b.date, "%s") secs, '
@@ -298,7 +327,7 @@ class ExpenseManager extends Updater
             . 'e.price price, '
             . 'b.product_id pid, '
             . 'b.quantity quantity, '
-            . 'b.user_id client_id, '
+            . 'b.' . self::PRODUCT_BOUGHT_FIELD_CUSTOMER_ID . ' client_id, '
             . 'DATE_FORMAT(b.date, "%H") hour, '
             . 'DATE_FORMAT(b.date, "%i") mins, '
             . 'DATE_FORMAT(b.date, "%s") secs, '
@@ -347,7 +376,7 @@ class ExpenseManager extends Updater
             . 'e.price price, '
             . 'b.product_id pid, '
             . 'b.quantity quantity, '
-            . 'b.user_id client_id, '
+            . 'b.' . self::PRODUCT_BOUGHT_FIELD_CUSTOMER_ID . ' client_id, '
             . 'DATE_FORMAT(b.date, "%H") hour, '
             . 'DATE_FORMAT(b.date, "%i") mins, '
             . 'DATE_FORMAT(b.date, "%s") secs, '
@@ -396,7 +425,7 @@ class ExpenseManager extends Updater
             . 'e.price price, '
             . 'b.product_id pid, '
             . 'b.quantity quantity, '
-            . 'b.user_id client_id, '
+            . 'b.' . self::PRODUCT_BOUGHT_FIELD_CUSTOMER_ID . ' client_id, '
             . 'DATE_FORMAT(b.date, "%H") hour, '
             . 'DATE_FORMAT(b.date, "%i") mins, '
             . 'DATE_FORMAT(b.date, "%s") secs, '
@@ -446,7 +475,7 @@ class ExpenseManager extends Updater
             . 'e.price price, '
             . 'b.formula_id fid, '
             . 'b.quantity quantity, '
-            . 'b.user_id client_id, '
+            . 'b.' . self::FORMULA_BOUGHT_FIELD_CUSTOMER_ID . ' client_id, '
             . 'DATE_FORMAT(b.date, "%H") hour, '
             . 'DATE_FORMAT(b.date, "%i") mins, '
             . 'DATE_FORMAT(b.date, "%s") secs, '
@@ -494,7 +523,7 @@ class ExpenseManager extends Updater
             . 'e.price price, '
             . 'b.formula_id fid, '
             . 'b.quantity quantity, '
-            . 'b.user_id client_id, '
+            . 'b.' . self::FORMULA_BOUGHT_FIELD_CUSTOMER_ID . ' client_id, '
             . 'DATE_FORMAT(b.date, "%H") hour, '
             . 'DATE_FORMAT(b.date, "%i") mins, '
             . 'DATE_FORMAT(b.date, "%s") secs, '
@@ -538,7 +567,7 @@ class ExpenseManager extends Updater
     public final function getFormulaBoughtProducts(int $formula_bought_id): array
     {
         $stmt = $this->connection->prepare('SELECT '
-            . 'user_id client_id '
+            . self::FORMULA_BOUGHT_FIELD_CUSTOMER_ID . ' client_id '
             . 'FROM ' . self::FORMULAS_BOUGHT . ' '
             . 'WHERE id = :id');
         
@@ -606,7 +635,7 @@ class ExpenseManager extends Updater
         if (!$client) throw new RequestFailureException('Unexisting client');
         
         // Save expense
-        $stmt = $this->connection->prepare('INSERT INTO ' . self::EXPENSES . ' (user_id) VALUES (:id)');
+        $stmt = $this->connection->prepare('INSERT INTO ' . self::EXPENSES . ' (' . self::FIELD_CUSTOMER_ID . ') VALUES (:id)');
         $stmt->execute([
             'id' => $client_id
         ]);
@@ -625,7 +654,7 @@ class ExpenseManager extends Updater
                     $stmt->closeCursor();
                     
                     $stmt = $this->connection->prepare('INSERT '
-                        . 'INTO ' . self::PRODUCTS_BOUGHT . '(expense_id, product_id, user_id, quantity) '
+                        . 'INTO ' . self::PRODUCTS_BOUGHT . '(expense_id, product_id, ' . self::PRODUCT_BOUGHT_FIELD_CUSTOMER_ID . ', quantity) '
                         . 'VALUES (:expense, :product, :client, :quantity)');
                     $stmt->execute([
                         'expense' => $expense_id,
@@ -645,7 +674,7 @@ class ExpenseManager extends Updater
                     $stmt->closeCursor();
                     
                     $stmt = $this->connection->prepare('INSERT '
-                        . 'INTO ' . self::FORMULAS_BOUGHT . '(expense_id, formula_id, user_id, quantity) '
+                        . 'INTO ' . self::FORMULAS_BOUGHT . '(expense_id, formula_id, ' . self::FORMULA_BOUGHT_FIELD_CUSTOMER_ID . ', quantity) '
                         . 'VALUES (:expense,:formula,:client,:quantity)');
                     $stmt->execute([
                         'expense' => $expense_id,
