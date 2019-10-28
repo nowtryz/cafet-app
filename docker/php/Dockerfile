@@ -70,7 +70,8 @@ FROM node:stretch-slim AS js-build
 RUN apt-get update && apt-get install -y --no-install-recommends \
         python2.7 \
         python-pip \
-        python3-pip
+        python3-pip \
+        build-essential
 
 RUN apt-get clean && rm -rfd /var/lib/apt/lists/*
 
