@@ -66,6 +66,14 @@ VOLUME ["/var/log", "/var/cafetapi_content_defaults"]
 ## Js build
 FROM node:stretch-slim AS js-build 
 
+# Install required packages
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python2.7 \
+        python-pip \
+        python3-pip
+
+RUN apt-get clean && rm -rfd /var/lib/apt/lists/*
+
 # copy project descrition and install it
 COPY ./package.json yarn.lock /var/app/
 RUN yarn config set cache /var/yarn-cache
