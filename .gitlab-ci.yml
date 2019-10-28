@@ -36,7 +36,7 @@ default:
     - docker:dind
   before_script:
     - date
-    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 
 # Only policies
 .only_master: &only-master
