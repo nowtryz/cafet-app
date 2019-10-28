@@ -17,10 +17,12 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Typography from '@material-ui/core/Typography'
+import Input from '@material-ui/core/Input'
 
 // Material Dashboard
-import GridContainer from '@dashboard/components/Grid/GridContainer'
-import GridItem from '@dashboard/components/Grid/GridItem'
+import GridContainer from 'components/Grid/GridContainer'
+import GridItem from 'components/Grid/GridItem'
 import Card from '@dashboard/components/Card/Card'
 import CardBody from '@dashboard/components/Card/CardBody'
 import CardHeader from '@dashboard/components/Card/CardHeader'
@@ -31,6 +33,7 @@ import userProfileStyles from '@dashboard/assets/jss/material-dashboard-pro-reac
 import sweetAlertStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/sweetAlertStyle'
 import typographyStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/typographyStyle'
 import customCheckboxRadioSwitchStyle from '@dashboard/assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch'
+import customInputStyle from 'assets/jss/material-dashboard-pro-react/components/customInputStyle'
 
 import { dangerColor, warningColor } from '@dashboard/assets/jss/material-dashboard-pro-react'
 
@@ -40,14 +43,14 @@ import { classes as classesPropype } from 'app-proptypes'
 import { API_URL } from 'config'
 import _ from 'lang'
 import { formateCalendar } from 'utils'
-import Locale from '../../Locale'
-import NavPills from './NavPills'
+import Locale from '../Locale'
 
 const style = (theme) => ({
     ...userProfileStyles,
     ...sweetAlertStyle,
     ...typographyStyle,
     ...customCheckboxRadioSwitchStyle,
+    ...customInputStyle,
     dangerBorder: {
         border: `2px solid ${dangerColor[3]}`,
     },
@@ -84,8 +87,8 @@ class UserPage extends React.Component {
     state = {
         alert: null,
         user: null,
+        userChanges: {},
         customer: null,
-        userTab: 0,
     }
 
     componentDidMount() {
@@ -112,7 +115,8 @@ class UserPage extends React.Component {
                 showCancel
             >
                 <Locale ns="admin_user_page">
-                    This action is irreversible and You won&apos;t be able to recover user&apos;s data.
+                    This action is irreversible and You won&apos;t
+                    be able to recover user&apos;s data.
                 </Locale>
             </SweetAlert>
         )
@@ -157,7 +161,8 @@ class UserPage extends React.Component {
                 showCancel
             >
                 <Locale ns="admin_user_page">
-                    This action is irreversible and You won&apos;t be able to reassociate the user&apos;s account with its customer account.
+                    This action is irreversible and You won&apos;t be able to
+                    reassociate the user&apos;s account with its customer account.
                 </Locale>
             </SweetAlert>
         )
@@ -217,6 +222,15 @@ class UserPage extends React.Component {
         this.setState({ alert: null })
     }
 
+    handleFormChange({ currentTarget }, field) {
+        this.setState(({ userChanges }) => ({
+            userChanges: {
+                [field]: currentTarget.value,
+                ...userChanges,
+            },
+        }))
+    }
+
     async fetchUser() {
         const { match } = this.props
 
@@ -255,7 +269,7 @@ class UserPage extends React.Component {
     render() {
         const { classes, langCode, currency } = this.props
         const {
-            user, customer, alert, userTab,
+            user, customer, alert, userChanges,
         } = this.state
 
         if (!user) {
@@ -287,149 +301,158 @@ class UserPage extends React.Component {
                                 </h4>
                             </CardHeader>
                             <CardBody>
-                                <GridContainer direction="row-reverse">
-                                    <GridItem xs={12} md={5}>
-                                        <NavPills
-                                            onChange={(e, tab) => this.setState({ userTab: tab })}
+                                <List>
+                                    {[
+                                        {
+                                            label: _('Firstname', 'admin_user_page'),
+                                            field: 'firstname',
+                                        },
+                                        {
+                                            label: _('Family name', 'admin_user_page'),
+                                            field: 'familyName',
+                                        },
+                                        {
+                                            label: _('Username', 'admin_user_page'),
+                                            field: 'pseudo',
+                                        },
+                                        {
+                                            label: _('Email address', 'admin_user_page'),
+                                            field: 'email',
+                                        },
+                                        {
+                                            label: _('Phone number', 'admin_user_page'),
+                                            field: 'phone',
+                                        },
+                                    ].map(({ label, field }) => (
+                                        <ListItem alignItems="flex-start" key={field}>
+                                            <ListItemText
+                                                disableTypography
+                                                primary={<Typography>{label}</Typography>}
+                                                secondary={(
+                                                    <Input
+                                                        inputProps={{
+                                                            defaultValue: user[field],
+                                                            'aria-label': label,
+                                                        }}
+                                                        onChange={(e) => this.handleFormChange(e, field)}
+                                                        classes={{
+                                                            input: classes.input,
+                                                            disabled: classes.disabled,
+                                                            underline: classes.underline,
+                                                        }}
+                                                    />
+                                                )}
+                                            />
+                                        </ListItem>
+                                    ))}
+                                    {[
+                                        {
+                                            label: _('ID', 'admin_user_page'),
+                                            value: user.id,
+                                        },
+                                        {
+                                            label: _('Member since', 'admin_user_page'),
+                                            value: formateCalendar(user.registration).toLocaleString(langCode),
+                                        },
+                                        {
+                                            label: _('Last sign-in at', 'admin_user_page'),
+                                            value: formateCalendar(user.last_signin).toLocaleString(langCode),
+                                        },
+                                        {
+                                            label: _('Sign-in count', 'admin_user_page'),
+                                            value: user.signin_count,
+                                        },
+                                    ].map(({ label, value }) => (
+                                        <ListItem alignItems="flex-start" key={label}>
+                                            <ListItemText primary={label} secondary={value} />
+                                        </ListItem>
+                                    ))}
+                                    <ListItem alignItems="flex-start">
+                                        <ListItemText
+                                            primary={_('Mail preferences', 'admin_user_page')}
+                                            secondaryTypographyProps={{
+                                                component: 'div',
+                                            }}
+                                            secondary={(
+                                                <List className={classes.mailPreferencesList}>
+                                                    <ListItem>
+                                                        <FormControlLabel
+                                                            control={(
+                                                                <Checkbox
+                                                                    disabled
+                                                                    tabIndex={-1}
+                                                                    checked={user.mail_preferences.payment_notice}
+                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
+                                                                    icon={<Check className={classes.uncheckedIcon} />}
+                                                                    classes={{
+                                                                        checked: classes.checked,
+                                                                        root: classes.mailPreferences,
+                                                                    }}
+                                                                />
+                                                            )}
+                                                            classes={{
+                                                                label: classes.label,
+                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
+                                                            }}
+                                                            label={_('Payment notice', 'admin_user_page')}
+                                                        />
+                                                    </ListItem>
+                                                    <ListItem>
+                                                        <FormControlLabel
+                                                            control={(
+                                                                <Checkbox
+                                                                    disabled
+                                                                    tabIndex={-1}
+                                                                    checked={user.mail_preferences.reload_notice}
+                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
+                                                                    icon={<Check className={classes.uncheckedIcon} />}
+                                                                    classes={{
+                                                                        checked: classes.checked,
+                                                                        root: classes.mailPreferences,
+                                                                    }}
+                                                                />
+                                                            )}
+                                                            classes={{
+                                                                label: classes.label,
+                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
+                                                            }}
+                                                            label={_('Reload notice', 'admin_user_page')}
+                                                        />
+                                                    </ListItem>
+                                                    <ListItem>
+                                                        <FormControlLabel
+                                                            control={(
+                                                                <Checkbox
+                                                                    disabled
+                                                                    tabIndex={-1}
+                                                                    checked={user.mail_preferences.reload_request}
+                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
+                                                                    icon={<Check className={classes.uncheckedIcon} />}
+                                                                    classes={{
+                                                                        checked: classes.checked,
+                                                                        root: classes.mailPreferences,
+                                                                    }}
+                                                                />
+                                                            )}
+                                                            classes={{
+                                                                label: classes.label,
+                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
+                                                            }}
+                                                            label={_('Reload requests', 'admin_user_page')}
+                                                        />
+                                                    </ListItem>
+                                                </List>
+                                            )}
                                         />
-                                    </GridItem>
-                                    <GridItem xs={12} md={7}>
-                                        <List>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Firstname', 'admin_user_page')}
-                                                    secondary={user.firstname}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Family name', 'admin_user_page')}
-                                                    secondary={user.familyName}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Username', 'admin_user_page')}
-                                                    secondary={user.pseudo}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Email address', 'admin_user_page')}
-                                                    secondary={user.email}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Phone number', 'admin_user_page')}
-                                                    secondary={user.phone}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('ID', 'admin_user_page')}
-                                                    secondary={user.id}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Member since', 'admin_user_page')}
-                                                    secondary={formateCalendar(user.registration).toLocaleString(langCode)}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Last sign-in at', 'admin_user_page')}
-                                                    secondary={formateCalendar(user.last_signin).toLocaleString(langCode)}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Sign-in count', 'admin_user_page')}
-                                                    secondary={user.signin_count}
-                                                />
-                                            </ListItem>
-                                            <ListItem alignItems="flex-start">
-                                                <ListItemText
-                                                    primary={_('Mail preferences', 'admin_user_page')}
-                                                    secondaryTypographyProps={{
-                                                        component: 'div',
-                                                    }}
-                                                    secondary={(
-                                                        <List className={classes.mailPreferencesList}>
-                                                            <ListItem>
-                                                                <FormControlLabel
-                                                                    control={(
-                                                                        <Checkbox
-                                                                            disabled
-                                                                            tabIndex={-1}
-                                                                            checked={user.mail_preferences.payment_notice}
-                                                                            checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                            icon={<Check className={classes.uncheckedIcon} />}
-                                                                            classes={{
-                                                                                checked: classes.checked,
-                                                                                root: classes.mailPreferences,
-                                                                            }}
-                                                                        />
-                                                                    )}
-                                                                    classes={{
-                                                                        label: classes.label,
-                                                                        disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                                    }}
-                                                                    label={_('Payment notice', 'admin_user_page')}
-                                                                />
-                                                            </ListItem>
-                                                            <ListItem>
-                                                                <FormControlLabel
-                                                                    control={(
-                                                                        <Checkbox
-                                                                            disabled
-                                                                            tabIndex={-1}
-                                                                            checked={user.mail_preferences.reload_notice}
-                                                                            checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                            icon={<Check className={classes.uncheckedIcon} />}
-                                                                            classes={{
-                                                                                checked: classes.checked,
-                                                                                root: classes.mailPreferences,
-                                                                            }}
-                                                                        />
-                                                                    )}
-                                                                    classes={{
-                                                                        label: classes.label,
-                                                                        disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                                    }}
-                                                                    label={_('Reload notice', 'admin_user_page')}
-                                                                />
-                                                            </ListItem>
-                                                            <ListItem>
-                                                                <FormControlLabel
-                                                                    control={(
-                                                                        <Checkbox
-                                                                            disabled
-                                                                            tabIndex={-1}
-                                                                            checked={user.mail_preferences.reload_request}
-                                                                            checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                            icon={<Check className={classes.uncheckedIcon} />}
-                                                                            classes={{
-                                                                                checked: classes.checked,
-                                                                                root: classes.mailPreferences,
-                                                                            }}
-                                                                        />
-                                                                    )}
-                                                                    classes={{
-                                                                        label: classes.label,
-                                                                        disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                                    }}
-                                                                    label={_('Reload requests', 'admin_user_page')}
-                                                                />
-                                                            </ListItem>
-                                                        </List>
-                                                    )}
-                                                />
-                                            </ListItem>
-                                        </List>
-                                    </GridItem>
-                                </GridContainer>
+                                    </ListItem>
+                                </List>
+                                <Button
+                                    disabled={Object.keys(userChanges).length === 0}
+                                    color="primary"
+                                    round
+                                >
+                                    Save
+                                </Button>
                             </CardBody>
                         </Card>
                         <Card>

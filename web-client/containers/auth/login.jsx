@@ -70,17 +70,16 @@ class LoginPage extends React.Component {
 
     keyPressed = (e) => {
         // Number 13 is the "Enter" key on the keyboard
-        if (event.keyCode === 13) {
+        if (e.nativeEvent.keyCode === 13) {
             this.validate(e)
         }
     }
 
     changeValue(e, field) {
         const { value } = e.target
-        this.setState((prevState) => ({
-            prevState,
+        this.setState({
             [field]: value,
-        }))
+        })
     }
 
     render() {
