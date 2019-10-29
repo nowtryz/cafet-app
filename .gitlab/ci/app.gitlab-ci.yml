@@ -53,11 +53,13 @@ deploy:dev_app:
     expire_in: 1 day
 
 deploy:app_versions:
+  extends:
     - .app
     - .only-versions
   artifacts: *publish-artifact
 
 deploy:app:
+  extends:
     - .app
     - .only-master
   artifacts: *publish-artifact
