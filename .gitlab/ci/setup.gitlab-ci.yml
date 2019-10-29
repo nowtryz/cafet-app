@@ -55,7 +55,7 @@
       - branches
     variables:
       - $CI_COMMIT_TAG =~ /^v/
-      - $CI_COMMIT_REF_NAME = master
+      - $CI_COMMIT_REF_NAME == master
 
 
 .only-nonstable: &only-nonstable
