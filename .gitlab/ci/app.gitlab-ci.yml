@@ -3,8 +3,7 @@
 ## ##
 
 build:js:
-  extends:
-    - .node
+  extends: .node
   stage: build
   before_script:
     - apt-get update
@@ -31,6 +30,7 @@ build:js:
     - app/
     - sql_scripts/
 .app: &app
+  extends: .default-runner
   stage: deploy
   dependencies:
     - build:js

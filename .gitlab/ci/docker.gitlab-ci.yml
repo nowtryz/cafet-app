@@ -1,8 +1,7 @@
 # build
 
 build:docker 1 2:
-  extends:
-    - .docker
+  extends: .docker
   stage: build
   script:
     # fetches the latest image (not failing if image is not found)
@@ -11,8 +10,7 @@ build:docker 1 2:
     - docker push "$SERVER_IMAGE:${IMAGE_ID//\//-}"
 
 build:docker 2 2:
-  extends:
-    - .docker
+  extends: .docker
   stage: build
   script:
     # fetches the latest image (not failing if image is not found)
@@ -22,8 +20,7 @@ build:docker 2 2:
 
 ## Docker tags
 .docker-tagging: &docker-tagging
-  extends:
-    - .docker
+  extends: .docker
   stage: docker
   script:
     - alias ee="eval echo"

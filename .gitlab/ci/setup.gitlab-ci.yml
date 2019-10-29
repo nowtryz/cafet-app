@@ -1,3 +1,9 @@
+.default-runner: &default-runner
+  # Linux docker container runner
+  tags:
+    - linux
+    - docker
+
 .with-cache: &with-cache
   cache:
     key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
@@ -8,11 +14,13 @@
 # Job running with node (12.13)
 .node: &node
   extends:
+    - .default-runner
     - .with-cache
   image: node:12.13-stretch-slim
 
 # Jobs that require login
 .docker: &docker
+  extends: .default-runner
   image: docker:19
   services:
     - docker:dind

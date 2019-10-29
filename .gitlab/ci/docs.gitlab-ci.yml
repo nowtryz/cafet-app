@@ -16,8 +16,7 @@ build:documentation:
 
 # pages
 pages:
-  extends:
-    - .only-master
+  extends: .only-master
   stage: deploy
   dependencies:
     - build:documentation

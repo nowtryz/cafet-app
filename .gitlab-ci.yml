@@ -12,10 +12,6 @@ variables:
 
 default:
   image: alpine
-  # Linux docker container runner
-  tags:
-    - linux
-    - docker
   before_script:
     - date
 
