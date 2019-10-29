@@ -88,7 +88,7 @@ build:documentation:
   <<: *linux-docker-runner
   <<: *with-cache
   <<: *only-master
-  image: node:10
+  image: node:10-stretch-slim
   stage: build
   script:
     - yarn install
