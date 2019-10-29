@@ -28,7 +28,10 @@ export default {
             {
                 test: /\.(js|jsx)$/,
                 use: 'babel-loader',
-                exclude: /node_modules/,
+                exclude: {
+                    test: resolve(__dirname, 'node_modules'),
+                    exclude: resolve(__dirname, 'node_modules/@dashboard'),
+                },
             }, {
                 test: /\.css$/,
                 use: [

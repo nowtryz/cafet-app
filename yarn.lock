@@ -858,19 +858,19 @@
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-9.0.1.tgz#c27b391d8457d1e893f1eddeaf5e5412d12ffbb5"
   integrity sha512-6It2EVfGskxZCQhuykrfnALg7oVeiI6KclWSmGDqB0AiInVrTGB9Jp9i4/Ad21u9Jde/voVQz6eFX/eSg/UsPA==
 
-"@dashboard/assets@file:./web-client/material-dashboard/assets":
+"@dashboard/assets@file:./material-dashboard/assets":
   version "0.0.0"
 
-"@dashboard/components@file:./web-client/material-dashboard/components":
+"@dashboard/components@file:./material-dashboard/components":
   version "0.0.0"
 
-"@dashboard/layouts@file:./web-client/material-dashboard/layouts":
+"@dashboard/layouts@file:./material-dashboard/layouts":
   version "0.0.0"
 
-"@dashboard/variables@file:./web-client/material-dashboard/variables":
+"@dashboard/variables@file:./material-dashboard/variables":
   version "0.0.0"
 
-"@dashboard/views@file:./web-client/material-dashboard/views":
+"@dashboard/views@file:./material-dashboard/views":
   version "0.0.0"
 
 "@emotion/hash@^0.7.1":
