@@ -40,7 +40,7 @@
     variables:
       - $CI_COMMIT_TAG =~ /^v/
 
-.only-satble: &only-stable
+.only-stable: &only-stable
   only:
     refs:
       - tags
