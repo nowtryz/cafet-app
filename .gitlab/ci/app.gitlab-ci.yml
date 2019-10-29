@@ -47,7 +47,7 @@ build:js:
 deploy:dev_app:
   extends:
     - .app
-    - .only_nonstable
+    - .only-nonstable
   artifacts:
     <<: *publish-artifact
     expire_in: 1 day

@@ -20,7 +20,7 @@ build:documentation:
 pages:
   extends:
     - .linux-docker-runner
-    - .only_master
+    - .only-master
   stage: deploy
   dependencies:
     - build:documentation

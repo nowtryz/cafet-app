@@ -41,7 +41,7 @@
     variables:
       - $CI_COMMIT_TAG =~ /^v/
 
-.only-nonstable: &only_nonstable
+.only-nonstable: &only-nonstable
   only:
     - branches
     - tags
