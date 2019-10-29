@@ -1,0 +1,63 @@
+## ##
+## Build
+## ##
+
+build:js:
+  extends:
+    - .linux-docker-runner
+    - .with-cache
+  image: node:10-stretch-slim
+  stage: build
+  before_script:
+    - apt-get update
+    - apt-get install -y --no-install-recommends python2.7 build-essential
+    - apt-get clean
+    - rm -rfd /var/lib/apt/lists/*
+  script:
+    - yarn install
+    - yarn prod:build
+  artifacts:
+    untracked: true
+    paths:
+      - ./server/dist
+    expire_in: 1 hour
+
+## ##
+## Deploy
+## ##
+
+# Artifact publish templates
+.publish-artifact-template: &publish-artifact
+  name: application
+  paths:
+    - app/
+    - sql_scripts/
+.app: &app
+  extends:
+    - .*linux-docker-runner
+  stage: deploy
+  script:
+    - date
+    - cp -r server app
+    - mkdir sql_scripts
+    - cp docker/mysql/structure.sql sql_scripts
+    - cp docker/mysql/demo.sql sql_scripts
+
+# Artifact publish
+deploy:dev_app:
+  extends:
+    - .app
+    - .only_nonstable
+  artifacts:
+    <<: *publish-artifact
+    expire_in: 1 day
+
+deploy:app_versions:
+    - .app
+    - .only-versions
+  artifacts: *publish-artifact
+
+deploy:app:
+    - .app
+    - .only-master
+  artifacts: *publish-artifact

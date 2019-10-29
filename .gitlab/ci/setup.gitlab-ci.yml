@@ -1,0 +1,63 @@
+.with-cache: &with-cache
+  cache:
+    key: "$CI_JOB_NAME-$CI_COMMIT_REF_SLUG"
+    paths:
+      # Node JS
+      - ./node_modules
+
+# Linux docker container runner
+.linux-docker-runner: &linux-docker-runner
+  tags:
+    - linux
+    - docker
+
+# Jobs that require login
+.docker: &docker
+  <<: *linux-docker-runner
+  image: docker:19
+  services:
+    - docker:dind
+  before_script:
+    - date
+    - echo $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+
+# Only policies
+.only-master: &only-master
+  only:
+    - master
+  except:
+    - tags
+
+.only-dev: &only-dev
+  only:
+    - develop
+  except:
+    - tags
+
+.only-versions: &only-versions
+  only:
+    refs:
+      - tags
+    variables:
+      - $CI_COMMIT_TAG =~ /^v/
+
+.only-nonstable: &only_nonstable
+  only:
+    - branches
+    - tags
+  except:
+    refs:
+      - develop
+    variables:
+      - $CI_COMMIT_TAG =~ /^v/
+
+.only-others: &only_others
+  only:
+    - branches
+    - tags
+  except:
+    refs:
+      - master
+      - develop
+    variables:
+      - $CI_COMMIT_TAG =~ /^v/

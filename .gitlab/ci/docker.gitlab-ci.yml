@@ -1,0 +1,122 @@
+# build
+
+build:docker 1 2:
+  extends:
+    - .docker
+  stage: build
+  script:
+    # fetches the latest image (not failing if image is not found)
+    - docker pull "$SERVER_IMAGE:latest" || true
+    - docker build --pull --cache-from "$SERVER_IMAGE:latest" -t "$SERVER_IMAGE:${IMAGE_ID//\//-}" -f docker/php/Dockerfile .
+    - docker push "$SERVER_IMAGE:${IMAGE_ID//\//-}"
+
+build:docker 2 2:
+  extends:
+    - .docker
+  stage: build
+  script:
+    # fetches the latest image (not failing if image is not found)
+    - docker pull $DATABASE_IMAGE:latest || true
+    - docker build --pull --cache-from $DATABASE_IMAGE:latest -t $DATABASE_IMAGE:${IMAGE_ID//\//-} -f docker/mysql/Dockerfile .
+    - docker push $DATABASE_IMAGE:${IMAGE_ID//\//-}
+
+## Docker tags
+.docker-tagging: &docker-tagging
+  extends:
+    - .docker
+  stage: docker
+  script:
+    - alias ee="eval echo"
+    - echo $(ee $IMAGE:${IMAGE_ID//\//-})
+    - docker pull $(ee $IMAGE:${IMAGE_ID//\//-})
+    - docker tag $(ee $IMAGE:${IMAGE_ID//\//-}) $(ee $IMAGE:${NEW_TAG//\//-})
+    - docker push $(ee $IMAGE:${NEW_TAG//\//-})
+
+docker:branches 1 2:
+  extends:
+    - .docker-tagging
+    - .only-others
+  variables:
+    GIT_STRATEGY: none
+    IMAGE: "$SERVER_IMAGE"
+    NEW_TAG: $CI_COMMIT_REF_NAME
+  dependencies:
+    - build:docker 1 2
+
+docker:branches 2 2:
+  extends:
+    - .docker-tagging
+    - .only-others
+  variables:
+    GIT_STRATEGY: none
+    IMAGE: "$DATABASE_IMAGE"
+    NEW_TAG: $CI_COMMIT_REF_NAME
+  dependencies:
+    - build:docker 2 2
+
+docker:tags 1 2:
+  extends:
+    - .docker-tagging
+    - .only-versions
+  variables:
+    GIT_STRATEGY: none
+    IMAGE: "$SERVER_IMAGE"
+    NEW_TAG: $(echo $CI_COMMIT_TAG | sed -E "s/^v//")
+  dependencies:
+    - build:docker 1 2
+
+docker:tags 2 2:
+  extends:
+    - .docker-tagging
+    - .only-versions
+  variables:
+    GIT_STRATEGY: none
+    IMAGE: "$DATABASE_IMAGE"
+    NEW_TAG: $(echo $CI_COMMIT_TAG | sed -E "s/^v//")
+  dependencies:
+    - build:docker 2 2
+
+docker:release 1 2:
+  extends:
+    - .docker-tagging
+    - .only-master
+  variables:
+    GIT_STRATEGY: none
+    IMAGE: "$SERVER_IMAGE"
+    NEW_TAG: "latest"
+  dependencies:
+    - build:docker 1 2
+
+docker:release 2 2:
+  extends:
+    - .docker-tagging
+    - .only-master
+  variables:
+    GIT_STRATEGY: none
+    IMAGE: "$DATABASE_IMAGE"
+    NEW_TAG: "latest"
+  dependencies:
+    - build:docker 2 2
+
+docker:develop 1 2:
+  extends:
+    - .docker-tagging
+    - .only-dev
+  variables:
+    GIT_STRATEGY: none
+    IMAGE: "$SERVER_IMAGE"
+    NEW_TAG: "dev"
+  dependencies:
+    - build:docker 1 2
+
+docker:develop 2 2:
+  extends:
+    - .docker-tagging
+    - .only-dev
+  variables:
+    GIT_STRATEGY: none
+    IMAGE: "$DATABASE_IMAGE"
+    NEW_TAG: "dev"
+  dependencies:
+    - build:docker 2 2
+
