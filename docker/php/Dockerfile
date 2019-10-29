@@ -64,7 +64,7 @@ VOLUME ["/var/log", "/var/cafetapi_content_defaults"]
 
 
 ## Js build
-FROM node:stretch-slim AS js-build
+FROM node:12.13-stretch-slim AS js-build
 
 # Install required packages
 RUN apt-get update && apt-get install -y --no-install-recommends \

@@ -1,9 +1,7 @@
 build:documentation:
   extends:
-    - .linux-docker-runner
-    - .with-cache
+    - .node
     - .only-master
-  image: node:10-stretch-slim
   stage: build
   script:
     - yarn install
@@ -19,7 +17,6 @@ build:documentation:
 # pages
 pages:
   extends:
-    - .linux-docker-runner
     - .only-master
   stage: deploy
   dependencies:

@@ -4,9 +4,7 @@
 
 build:js:
   extends:
-    - .linux-docker-runner
-    - .with-cache
-  image: node:10-stretch-slim
+    - .node
   stage: build
   before_script:
     - apt-get update
@@ -33,9 +31,9 @@ build:js:
     - app/
     - sql_scripts/
 .app: &app
-  extends:
-    - .linux-docker-runner
   stage: deploy
+  dependencies:
+    - build:js
   script:
     - date
     - cp -r server app
@@ -55,11 +53,5 @@ deploy:dev_app:
 deploy:app_versions:
   extends:
     - .app
-    - .only-versions
-  artifacts: *publish-artifact
-
-deploy:app:
-  extends:
-    - .app
-    - .only-master
+    - .only-stable
   artifacts: *publish-artifact
