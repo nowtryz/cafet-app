@@ -34,7 +34,7 @@ build:js:
     - sql_scripts/
 .app: &app
   extends:
-    - .*linux-docker-runner
+    - .linux-docker-runner
   stage: deploy
   script:
     - date
