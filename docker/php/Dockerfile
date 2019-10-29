@@ -83,7 +83,8 @@ RUN cd /var/app/ && yarn install
 # copy application and compile it
 COPY server/ /var/app/server/
 COPY web-client/ /var/app/web-client/
-COPY webpack.config.babel.js .babelrc /var/app/
+COPY material-dashboard/ /var/app/material-dashboard/
+COPY webpack.config.babel.js babel.config.js /var/app/
 RUN cd /var/app/ && yarn prod:build
 
 
