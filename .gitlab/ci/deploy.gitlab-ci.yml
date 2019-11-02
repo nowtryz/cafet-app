@@ -6,11 +6,12 @@ deploy:demo:
   script:
     - cd server
     - echo user $FTP_DEPLOY_USERNAME $FTP_DEPLOY_PASSWORD > /tmp/deploy.ftp
-    - for d in $(find . -type d)
-    - do
-    - echo cd $(realpath -m $FTP_DEPLOY_URI/$d) >> /tmp/deploy.ftp
-    - echo lcd $(realpath $CI_PROJECT_DIR/server/$d) >> /tmp/deploy.ftp
-    - echo mput \* >> /tmp/deploy.ftp
-    - done
+    - >
+      for d in $(find . -type d)
+      do
+        echo cd $(realpath -m $FTP_DEPLOY_URI/$d) >> /tmp/deploy.ftp
+        echo lcd $(realpath $CI_PROJECT_DIR/server/$d) >> /tmp/deploy.ftp
+        echo mput \* >> /tmp/deploy.ftp
+      done
     - echo bye >> /tmp/deploy.ftp
     - ftp -inv $FTP_DEPLOY_HOST </tmp/deploy.ftp
