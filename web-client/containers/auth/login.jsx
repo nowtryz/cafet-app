@@ -8,11 +8,9 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import Icon from '@material-ui/core/Icon'
 
 // @material-ui/icons
-// import Face from '@material-ui/icons/Face'
 import Email from '@material-ui/icons/Email'
 import Dialog from '@material-ui/core/Dialog'
 import CircularProgress from '@material-ui/core/CircularProgress'
-// import LockOutline from "@material-ui/icons/LockOutline";
 
 // core components
 import GridContainer from '@dashboard/components/Grid/GridContainer'
@@ -41,7 +39,7 @@ class LoginPage extends React.Component {
     }
 
     state = {
-        cardAnimaton: 'cardHidden',
+        cardAnimation: 'cardHidden',
         email: '',
         password: '',
     }
@@ -50,7 +48,7 @@ class LoginPage extends React.Component {
     // we add a hidden class to the card and after 700 ms we delete it and the transition appears
         this.timeOutFunction = setTimeout(
             () => {
-                this.setState({ cardAnimaton: '' })
+                this.setState({ cardAnimation: '' })
             },
             700,
         )
@@ -84,7 +82,7 @@ class LoginPage extends React.Component {
 
     render() {
         const { classes, isLogging, ...rest } = this.props
-        const { cardAnimaton, email, password } = this.state
+        const { cardAnimation, email, password } = this.state
         const title = _(links.login.title)
 
         return (
@@ -112,7 +110,7 @@ class LoginPage extends React.Component {
                     <GridContainer justify="center" onKeyPress={this.keyPressed}>
                         <GridItem xs={12} sm={6} md={4}>
                             <form>
-                                <Card login className={classes[cardAnimaton]}>
+                                <Card login className={classes[cardAnimation]}>
                                     <CardHeader
                                         className={`${classes.cardHeader} ${classes.textCenter}`}
                                         color="rose"

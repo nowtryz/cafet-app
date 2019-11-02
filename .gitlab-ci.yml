@@ -17,6 +17,7 @@ default:
 
 include:
   - /.gitlab/ci/app.gitlab-ci.yml
+  - /.gitlab/ci/deploy.gitlab-ci.yml
   - /.gitlab/ci/docker.gitlab-ci.yml
   - /.gitlab/ci/docs.gitlab-ci.yml
   - /.gitlab/ci/setup.gitlab-ci.yml
