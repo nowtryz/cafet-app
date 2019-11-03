@@ -23,7 +23,7 @@ class Logger
         foreach ($tmp as $tmp2) $logs = array_merge($logs, explode("\n", $tmp2));
         foreach ($logs as $line) error_log('[' . date("d-M-Y H:i:s e") . '] CAFET ' . $line . PHP_EOL, 3, CAFET_DIR . 'error.log');
     }
-    
+
     /**
      * build return statement when an error occured
      *
@@ -39,26 +39,26 @@ class Logger
             throw new CafetAPIException($additional_message, $code, null, $file, $line);
             exit();
         }
-        
+
         self::log($error . ($additional_message ? ': '. $additional_message : ''));
-        
+
         $result = new ReturnStatement("error", self::grabErrorInfos($error, $additional_message));
         $result->print();
-        
+
         exit();
     }
-    
-    
+
+
     /**
      * @param error
      * @param additional_message
      */
-    
+
     public static function grabErrorInfos($error, $additional_message = null)
     {
         $sub_error = explode('-', $error);
         $errors = Kernel::errorsInfo();
-        
+
         $info = empty($errors) ? [
             'error_code' => '01-500',
             'error_type' => '01 : server exception',
@@ -68,12 +68,12 @@ class Logger
             'error_type' => $errors[$sub_error[0]]['def'],
             'error_message' => $errors[$sub_error[0]][$sub_error[1]],
         ];
-        
+
         if (isset($additional_message)) $info['additional_message'] = $additional_message;
-        
+
         return $info;
     }
-    
+
     /**
      * Thow the cafet error corresponding to the http error
      * @param string|int $error
@@ -82,16 +82,16 @@ class Logger
     {
         // Avoid logging for random 403 and 404 errors
         if(in_array($error, ['403', '404']) && !isset($_SERVER['HTTP_REFERER'])) return;
-        
+
         $cafet_errors = Kernel::errorsInfo();
-        
+
         foreach ($cafet_errors as $cafet_error) if (in_array($error, array_keys($cafet_error))) {
             Logger::log($error . ' Error: ' . $cafet_error[$error] . ': for "' . $_SERVER['REQUEST_URI'] . '"');
         }
-        
+
         Logger::log('From: ' . $_SERVER['HTTP_REFERER']);
     }
-    
+
     public static function errorHandler($errno, $errmsg, $filename, $linenum, $errcontext)
     {
         static $errortype = [
@@ -109,22 +109,22 @@ class Logger
             E_STRICT             => 'Runtime Notice',
             E_RECOVERABLE_ERROR  => 'Catchable Fatal Error'
         ];
-        
+
         $msg  = $errortype[$errno] . ': ';
         $msg .= $errmsg . ': ';
         $msg .= 'entry in ' . $filename;
         $msg .= ' on line ' . $linenum;
-        
+
         Logger::throwError('01-500', $msg);
     }
-    
+
     public static function exceptionHandler(Throwable $e)
     {
         $msg  = get_class($e) . ' (' . $e->getCode() . '): ';
         $msg .= $e->getMessage() . ': ';
         $msg .= 'entry in ' . $e->getFile();
         $msg .= ' on line ' . $e->getLine();
-        
+
         Logger::log($msg);
         (new ErrorPageBuilder(500))->print();
     }

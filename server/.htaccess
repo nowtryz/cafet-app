@@ -2,7 +2,7 @@
 	Options +FollowSymlinks
 	RewriteEngine On
 	RewriteBase /
-	
+
     RewriteCond %{ENV:REDIRECT_STATUS} !^$
     RewriteRule ^ - [L]
     RewriteCond %{REQUEST_FILENAME} -f
@@ -58,3 +58,6 @@ ErrorDocument 505 /error.php
 
 Options -Indexes
 Options -MultiViews
+
+# Propagate Autorization header to fix issue in CGI mode
+SetEnvIf Authorization .+ HTTP_AUTHORIZATION=$0
