@@ -22,12 +22,6 @@ build:js:
 ## Deploy
 ## ##
 
-# Artifact publish templates
-.publish-artifact-template: &publish-artifact
-  name: application
-  paths:
-    - app/
-    - sql_scripts/
 .app: &app
   extends: .default-runner
   stage: deploy
@@ -39,18 +33,20 @@ build:js:
     - mkdir sql_scripts
     - cp docker/mysql/structure.sql sql_scripts
     - cp docker/mysql/demo.sql sql_scripts
+  artifacts:
+    name: application
+    paths:
+      - app/
+      - sql_scripts/
 
 # Artifact publish
 deploy:dev_app:
   extends:
     - .app
     - .only-nonstable
-  artifacts:
-    <<: *publish-artifact
-    expire_in: 1 day
+    - .artifact-one-day
 
-deploy:app_versions:
+deploy:app:
   extends:
     - .app
     - .only-stable
-  artifacts: *publish-artifact

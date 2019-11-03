@@ -68,7 +68,7 @@
     variables:
       - $CI_COMMIT_TAG =~ /^v/
 
-.only-others: &only_others
+.only-others: &only-others
   only:
     - branches
     - tags
@@ -78,3 +78,28 @@
       - develop
     variables:
       - $CI_COMMIT_TAG =~ /^v/
+
+.only-code-changes:
+  only:
+    changes:
+      - .gitlab/ci/**/*
+      - {server,web-clientmaterial-dashboard}/**/*
+      - .gitlab-ci.yml
+      - package.json
+      - yarn.lock
+      - {babel.config,webpack.config.babel}.js
+
+.only-docker-changes:
+  only:
+    changes:
+      - .gitlab/ci/**/*
+      - docker/**/*
+      - .dockerignore
+
+.artifact-one-day:
+  artifacts:
+    expire_in: 1 day
+
+.artifact-one-hour:
+  artifacts:
+    expire_in: 1 hour
