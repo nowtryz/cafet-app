@@ -16,7 +16,7 @@
   extends:
     - .default-runner
     - .with-cache
-  image: node:12.13-stretch-slim
+  image: node:12.13-stretch # no slim or alpine as we want to have different build tools
 
 # Jobs that require login
 .docker: &docker
