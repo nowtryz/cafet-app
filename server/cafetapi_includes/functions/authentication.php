@@ -120,6 +120,7 @@ if (!defined('authentication_functions_loaded')) {
      */
     function cafet_verify_password(string $password, string $hash, string $pseudo = null): bool
     {
+        Logger::log("PWD comparison: db=$hash; got=" . $hash));
         if($hash == '') return false;
 
         $hash_info = explode('.', $hash);
@@ -134,7 +135,7 @@ if (!defined('authentication_functions_loaded')) {
 
         [$algo, $salt, $hashed] = $hash_info;
 
-        Logger::log("PWD comparison: db=$hashed got=" . cafet_digest($algo, $salt, $password));
+        Logger::log("PWD comparison, hashes: db=$hashed; got=" . cafet_digest($algo, $salt, $password));
 
         return cafet_digest($algo, $salt, $password) === $hashed;
     }
