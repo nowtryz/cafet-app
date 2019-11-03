@@ -82,19 +82,19 @@
 .only-code-changes:
   only:
     changes:
-      - .gitlab/ci/**/*
-      - {server,web-clientmaterial-dashboard}/**/*
-      - .gitlab-ci.yml
-      - package.json
-      - yarn.lock
-      - {babel.config,webpack.config.babel}.js
+      - ".gitlab/ci/**/*"
+      - "{server,web-client,material-dashboard}/**/*"
+      - ".gitlab-ci.yml"
+      - "package.json"
+      - "yarn.lock"
+      - "{babel.config,webpack.config.babel}.js"
 
 .only-docker-changes:
   only:
     changes:
-      - .gitlab/ci/**/*
-      - docker/**/*
-      - .dockerignore
+      - ".gitlab/ci/**/*"
+      - "docker/**/*"
+      - ".dockerignore"
 
 .artifact-one-day:
   artifacts:
