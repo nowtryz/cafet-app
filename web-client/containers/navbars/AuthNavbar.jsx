@@ -113,7 +113,7 @@ class AuthNavbar extends React.Component {
                     <Hidden mdUp>
                         <div className={classes.flex}>
                             <Button href="#" className={classes.title} color="transparent">
-                    MD Pro React
+                                {brandText}
                             </Button>
                         </div>
                     </Hidden>
@@ -132,24 +132,20 @@ class AuthNavbar extends React.Component {
                         >
                             <Menu />
                         </Button>
-                    </Hidden>
-                    <Hidden mdUp>
-                        <Hidden mdUp>
-                            <Drawer
-                                variant="temporary"
-                                anchor="right"
-                                open={open}
-                                classes={{
-                                    paper: classes.drawerPaper,
-                                }}
-                                onClose={this.handleDrawerToggle}
-                                ModalProps={{
-                                    keepMounted: true, // Better open performance on mobile.
-                                }}
-                            >
-                                {this.renderLinks()}
-                            </Drawer>
-                        </Hidden>
+                        <Drawer
+                            variant="temporary"
+                            anchor="right"
+                            open={open}
+                            classes={{
+                                paper: classes.drawerPaper,
+                            }}
+                            onClose={this.handleDrawerToggle}
+                            ModalProps={{
+                                keepMounted: true, // Better open performance on mobile.
+                            }}
+                        >
+                            {this.renderLinks()}
+                        </Drawer>
                     </Hidden>
                 </Toolbar>
             </AppBar>
