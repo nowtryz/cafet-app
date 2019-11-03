@@ -11,7 +11,7 @@ deploy:demo:
     - >
       lftp ftp.nowtryz.net <<EOF
         user $FTP_DEPLOY_USERNAME $FTP_DEPLOY_PASSWORD
-        mirror -Rev $CI_PROJECT_DIR/server/ $FTP_DEPLOY_URI/
+        mirror -Revn -P=10 $CI_PROJECT_DIR/server/ $FTP_DEPLOY_URI/
         shell echo transferring config.php
         put -e -O $FTP_DEPLOY_URI/cafetapi_content/ $FTP_DEPLOY_CONFIG -o config.php
         bye
