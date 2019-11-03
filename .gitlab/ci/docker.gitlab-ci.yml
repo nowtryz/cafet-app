@@ -22,13 +22,13 @@ build:docker 1/2:
   extends: .build:docker-server
   only:
     variables:
-      - CI_COMMIT_REF_PROTECTED
+      - "$CI_COMMIT_REF_PROTECTED"
 
 build:docker 2/2:
   extends: .build:docker-database
   only:
     variables:
-      - CI_COMMIT_REF_PROTECTED
+      - "$CI_COMMIT_REF_PROTECTED"
 
 build:docker-test 1/2:
   extends:
@@ -36,7 +36,7 @@ build:docker-test 1/2:
     - .only-docker-changes
   except:
     variables:
-      - CI_COMMIT_REF_PROTECTED
+      - "$CI_COMMIT_REF_PROTECTED"
 
 build:docker-test 2/2:
   extends:
@@ -44,7 +44,7 @@ build:docker-test 2/2:
     - .only-docker-changes
   except:
     variables:
-      - CI_COMMIT_REF_PROTECTED
+      - "$CI_COMMIT_REF_PROTECTED"
 
 ## Docker tags
 .docker-tagging: &docker-tagging
