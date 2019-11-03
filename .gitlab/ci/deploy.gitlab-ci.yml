@@ -3,6 +3,7 @@ deploy:demo:
   extends:
     - .default-runner
   stage: deploy
+  image: bash:5.0
   script:
     - echo $SHELL
     - cd server
