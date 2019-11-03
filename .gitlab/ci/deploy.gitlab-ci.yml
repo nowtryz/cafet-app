@@ -4,11 +4,11 @@ deploy:demo:
     - .default-runner
   stage: deploy
   script:
+    - echo $SHELL
     - cd server
     - echo user $FTP_DEPLOY_USERNAME $FTP_DEPLOY_PASSWORD > /tmp/deploy.ftp
     - >
-      for d in $(find . -type d)
-      do
+      for d in $(find . -type d);do
         echo cd $(realpath -m $FTP_DEPLOY_URI/$d) >> /tmp/deploy.ftp
         echo lcd $(realpath $CI_PROJECT_DIR/server/$d) >> /tmp/deploy.ftp
         echo mput \* >> /tmp/deploy.ftp
