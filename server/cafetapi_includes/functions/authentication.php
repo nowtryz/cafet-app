@@ -120,7 +120,7 @@ if (!defined('authentication_functions_loaded')) {
      */
     function cafet_verify_password(string $password, string $hash, string $pseudo = null): bool
     {
-        Logger::log("PWD comparison: db=$hash; got=" . $hash));
+        Logger::log("PWD comparison: db=$hash; got=" . $hash);
         if($hash == '') return false;
 
         $hash_info = explode('.', $hash);
