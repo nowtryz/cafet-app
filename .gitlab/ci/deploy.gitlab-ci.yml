@@ -11,6 +11,6 @@ deploy:demo:
     - >
       lftp ftp.nowtryz.net <<EOF
         user $FTP_DEPLOY_USERNAME $FTP_DEPLOY_PASSWORD
-        mirror -Rev $CI_PROJECT_DIR}/server/ $FTP_DEPLOY_URI/
+        mirror -Rev $CI_PROJECT_DIR/server/ $FTP_DEPLOY_URI/
         bye
       EOF
