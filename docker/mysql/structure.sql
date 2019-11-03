@@ -10,10 +10,10 @@ START TRANSACTION;
 
 CREATE TABLE IF NOT EXISTS `cafet_users` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  `firstname` varchar(255) NOT NULL,
-  `familyname` varchar(255) NOT NULL,
+  `username` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `firstname` varchar(100) NOT NULL,
+  `familyname` varchar(100) NOT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `group_id` tinyint(11) NOT NULL DEFAULT '1',
   `registration` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -63,13 +63,13 @@ CREATE TABLE IF NOT EXISTS `cafet_balance_reloads` (
 -- Triggers
 DELIMITER $$
 
-CREATE TRIGGER `cafet_new_balance_reload` 
-BEFORE INSERT ON `cafet_balance_reloads` 
-FOR EACH ROW 
-BEGIN  	
+CREATE TRIGGER `cafet_new_balance_reload`
+BEFORE INSERT ON `cafet_balance_reloads`
+FOR EACH ROW
+BEGIN
 	SET @customer = NEW.customer_id;
 	UPDATE `cafet_customers` c SET balance = balance + NEW.amount WHERE c.id = @customer;
-	SET NEW.user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = @customer); 
+	SET NEW.user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = @customer);
 END
 $$
 
@@ -140,10 +140,10 @@ CREATE TABLE IF NOT EXISTS `cafet_products_edits` (
 -- Triggers
 DELIMITER $$
 
-CREATE TRIGGER `cafet_new_product_edition` 
-BEFORE INSERT ON `cafet_products_edits` 
-FOR EACH ROW 
-BEGIN 
+CREATE TRIGGER `cafet_new_product_edition`
+BEFORE INSERT ON `cafet_products_edits`
+FOR EACH ROW
+BEGIN
 	SET @count = (SELECT COUNT(*) FROM `cafet_products_edits` WHERE product = NEW.product);
 	IF NEW.price IS NULL THEN
 		IF @count <> 0 THEN
@@ -157,15 +157,15 @@ BEGIN
 		END IF;
 	IF NEW.name IS NULL AND @count <> 0 THEN
 		SET NEW.name = (SELECT name FROM `cafet_products_edits` WHERE product = NEW.product ORDER BY id DESC LIMIT 1);
-	END IF; 
+	END IF;
 END
 $$
 
-CREATE TRIGGER `cafet_save_product_edition` 
-AFTER INSERT ON `cafet_products_edits` 
-FOR EACH ROW 
-BEGIN 
-	UPDATE `cafet_products` SET last_edit = NEW.id WHERE id = NEW.product; 
+CREATE TRIGGER `cafet_save_product_edition`
+AFTER INSERT ON `cafet_products_edits`
+FOR EACH ROW
+BEGIN
+	UPDATE `cafet_products` SET last_edit = NEW.id WHERE id = NEW.product;
 END
 $$
 
@@ -226,15 +226,15 @@ CREATE TABLE IF NOT EXISTS `cafet_products_bought` (
 -- Triggers
 DELIMITER $$
 
-CREATE TRIGGER `cafet_new_product_bought` 
-BEFORE INSERT ON `cafet_products_bought` 
-FOR EACH ROW 
-BEGIN 
+CREATE TRIGGER `cafet_new_product_bought`
+BEFORE INSERT ON `cafet_products_bought`
+FOR EACH ROW
+BEGIN
 	SET NEW.edit_id = (SELECT last_edit FROM `cafet_products` WHERE id = NEW.product_id);
 	SET @price = (SELECT price FROM `cafet_products_edits` WHERE id = NEW.edit_id);
 	UPDATE `cafet_products` p SET stock = stock - NEW.quantity WHERE p.id = NEW.product_id;
 	UPDATE `cafet_customers` c SET balance = balance-@price*NEW.quantity WHERE c.id = NEW.customer_id;
-	UPDATE `cafet_expenses` SET user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = NEW.customer_id) WHERE id = NEW.expense_id; 
+	UPDATE `cafet_expenses` SET user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = NEW.customer_id) WHERE id = NEW.expense_id;
 END
 $$
 
@@ -262,13 +262,13 @@ CREATE TABLE IF NOT EXISTS `cafet_replenishments` (
 -- Triggers
 DELIMITER $$
 
-CREATE TRIGGER `cafet_new_replenishment` 
-AFTER INSERT ON `cafet_replenishments` 
-FOR EACH ROW 
-BEGIN 
+CREATE TRIGGER `cafet_new_replenishment`
+AFTER INSERT ON `cafet_replenishments`
+FOR EACH ROW
+BEGIN
 	SET @quantity = NEW.quantity;
 	SET @product = NEW.product_id;
-	UPDATE `cafet_products` SET stock = stock + @quantity WHERE id = @product; 
+	UPDATE `cafet_products` SET stock = stock + @quantity WHERE id = @product;
 END
 $$
 
@@ -293,10 +293,10 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_edits` (
 -- Triggers
 DELIMITER $$
 
-CREATE TRIGGER `cafet_new_formula_edition` 
-BEFORE INSERT ON `cafet_formulas_edits` 
-FOR EACH ROW 
-BEGIN 
+CREATE TRIGGER `cafet_new_formula_edition`
+BEFORE INSERT ON `cafet_formulas_edits`
+FOR EACH ROW
+BEGIN
 	SET @count = (SELECT COUNT(*) FROM `cafet_formulas_edits` WHERE formula = NEW.formula);
 	IF NEW.price IS NULL THEN
 		IF @count <> 0 THEN
@@ -310,15 +310,15 @@ BEGIN
 		END IF;
 	IF NEW.name IS NULL AND @count <> 0 THEN
 		SET NEW.name = (SELECT name FROM `cafet_formulas_edits` WHERE formula = NEW.formula ORDER BY id DESC LIMIT 1);
-	END IF; 
+	END IF;
 END
 $$
 
-CREATE TRIGGER `cafet_save_formula_edition` 
-AFTER INSERT ON `cafet_formulas_edits` 
-FOR EACH ROW 
-BEGIN 
-	UPDATE `cafet_formulas` SET last_edit = NEW.id WHERE id = NEW.formula; 
+CREATE TRIGGER `cafet_save_formula_edition`
+AFTER INSERT ON `cafet_formulas_edits`
+FOR EACH ROW
+BEGIN
+	UPDATE `cafet_formulas` SET last_edit = NEW.id WHERE id = NEW.formula;
 END
 $$
 
@@ -373,14 +373,14 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_bought` (
 -- Triggers
 DELIMITER $$
 
-CREATE TRIGGER `cafet_new_formula_bought` 
-BEFORE INSERT ON `cafet_formulas_bought` 
-FOR EACH ROW 
-BEGIN 
+CREATE TRIGGER `cafet_new_formula_bought`
+BEFORE INSERT ON `cafet_formulas_bought`
+FOR EACH ROW
+BEGIN
 	SET NEW.edit_id = (SELECT last_edit FROM `cafet_formulas` WHERE id = NEW.formula_id);
 	SET @price = (SELECT price FROM `cafet_formulas_edits` WHERE id = NEW.edit_id);
 	UPDATE `cafet_customers` c SET balance = balance-@price*NEW.quantity WHERE c.id = NEW.customer_id;
-	UPDATE `cafet_expenses` SET user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = NEW.customer_id) WHERE id = NEW.expense_id; 
+	UPDATE `cafet_expenses` SET user_balance = (SELECT balance FROM `cafet_customers` c WHERE c.id = NEW.customer_id) WHERE id = NEW.expense_id;
 END
 $$
 
@@ -412,19 +412,19 @@ CREATE TABLE IF NOT EXISTS `cafet_formulas_bought_products` (
 -- Triggers
 DELIMITER $$
 
-CREATE TRIGGER `cafet_new_formula_bought_product` 
-BEFORE INSERT ON `cafet_formulas_bought_products` 
-FOR EACH ROW 
-BEGIN 
+CREATE TRIGGER `cafet_new_formula_bought_product`
+BEFORE INSERT ON `cafet_formulas_bought_products`
+FOR EACH ROW
+BEGIN
 	SET NEW.product_edit = (SELECT last_edit FROM `cafet_products` WHERE id = NEW.product_id);
 END
 $$
 
-CREATE TRIGGER `cafet_save_formula_bought_product` 
-AFTER INSERT ON `cafet_formulas_bought_products` 
-FOR EACH ROW 
-BEGIN 
-	UPDATE `cafet_products` SET stock = stock - 1 WHERE id = NEW.product_id; 
+CREATE TRIGGER `cafet_save_formula_bought_product`
+AFTER INSERT ON `cafet_formulas_bought_products`
+FOR EACH ROW
+BEGIN
+	UPDATE `cafet_products` SET stock = stock - 1 WHERE id = NEW.product_id;
 END
 $$
 

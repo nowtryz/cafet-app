@@ -33,7 +33,7 @@ class DatabaseIntegrity extends DatabaseConnection
         $tables = [];
         while ($row = $stmt->fetch()) $tables[] = $row[0];
         $stmt->closeCursor();
-        
+
         $needed_tables = [
             self::USERS,
             self::CLIENTS,
@@ -53,20 +53,20 @@ class DatabaseIntegrity extends DatabaseConnection
             self::REPLENISHMENTS,
             self::USERS
         ];
-        
+
         if(count(array_intersect($tables, $needed_tables)) >= count($needed_tables)) return;
-        
+
         self::query('SET foreign_key_checks = 0');
-        
+
         if (! in_array($this->USERS, $tables)) {
             self::query(
                 <<<EOSQL
                 CREATE TABLE IF NOT EXISTS `$this->USERS` (
                     `id` bigint(20) NOT NULL AUTO_INCREMENT,
-                    `username` varchar(255) NOT NULL,
-                    `email` varchar(255) NOT NULL,
-                    `firstname` varchar(255) NOT NULL,
-                    `familyname` varchar(255) NOT NULL,
+                    `username` varchar(100) NOT NULL,
+                    `email` varchar(100) NOT NULL,
+                    `firstname` varchar(100) NOT NULL,
+                    `familyname` varchar(100) NOT NULL,
                     `phone` varchar(20) DEFAULT NULL,
                     `group_id` tinyint(11) NOT NULL DEFAULT '1',
                     `registration` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -81,7 +81,7 @@ class DatabaseIntegrity extends DatabaseConnection
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->CLIENTS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -99,7 +99,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->RELOADS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -118,7 +118,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->CONFIG, $tables)) {
             self::query(
                 <<<EOSQL
@@ -132,7 +132,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->EXPENSES, $tables)) {
             self::query(
                 <<<EOSQL
@@ -149,7 +149,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->PRODUCTS_GROUPS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -163,7 +163,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->PRODUCTS_EDITS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -178,7 +178,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->PRODUCTS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -201,7 +201,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->PRODUCTS_BOUGHT, $tables)) {
             self::query(
                 <<<EOSQL
@@ -228,7 +228,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->REPLENISHMENTS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -246,7 +246,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->FORMULAS_EDITS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -261,7 +261,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->FORMULAS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -278,7 +278,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->FORMULAS_BOUGHT, $tables)) {
             self::query(
                 <<<EOSQL
@@ -305,7 +305,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->FORMULAS_BOUGHT_PRODUCTS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -327,7 +327,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->FORMULAS_CHOICES, $tables)) {
             self::query(
                 <<<EOSQL
@@ -344,7 +344,7 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         if (! in_array($this->FORMULAS_CHOICES_PRODUCTS, $tables)) {
             self::query(
                 <<<EOSQL
@@ -364,10 +364,10 @@ EOSQL
 EOSQL
                 );
         }
-        
+
         self::query('SET foreign_key_checks=1;');
     }
-    
+
     /**
      * Check the existence of cafetapi triggers
      *
@@ -378,11 +378,11 @@ EOSQL
         $stmt = self::$globalConnection->prepare('SHOW TRIGGERS FROM `' . self::$database . '`');
         if (! $stmt->execute())
             self::registerErrorOccurence($stmt);
-            
+
             $triggers = array();
             while ($result = $stmt->fetch())
                 $triggers[] = $result['trigger'];
-                
+
                 if (! in_array('cafet_new_balance_reload', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -397,7 +397,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_new_product_edition', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -423,7 +423,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_save_product_edition', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -436,7 +436,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_new_product_bought', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -453,7 +453,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_new_replenishment', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -468,7 +468,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_new_formula_edition', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -494,7 +494,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_save_formula_edition', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -507,7 +507,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_new_formula_bought', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -523,7 +523,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_new_formula_bought_product', $triggers)) {
                     self::query(
                         <<<EOSQL
@@ -536,7 +536,7 @@ EOSQL
 EOSQL
                     );
                 }
-                
+
                 if (! in_array('cafet_save_formula_bought_product', $triggers)) {
                     self::query(
                         <<<EOSQL
