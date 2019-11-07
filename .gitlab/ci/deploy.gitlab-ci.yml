@@ -2,7 +2,7 @@
 deploy:demo:
   extends:
     - .default-runner
-    - .only-stable
+    - .only-master
   stage: deploy
   image: ubuntu:18.04
   before_script:
