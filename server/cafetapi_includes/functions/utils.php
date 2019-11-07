@@ -85,7 +85,7 @@ function array_to_xml(array $data, SimpleXMLElement &$xml ) {
         } elseif ($key == '*'){
             $key = 'all';
         }
-        
+
         if ( is_array($value) ) {
             $subnode = $xml->addChild($key);
             array_to_xml($value, $subnode);
@@ -106,36 +106,36 @@ function array_to_xml(array $data, SimpleXMLElement &$xml ) {
 function is_version_superior_to(string $version1, string $version2, bool $compare_pre_versions = true) {
     $temp_version1 = explode('-', array_shift(explode('+', $version1)));
     $temp_version2 = explode('-', array_shift(explode('+', $version2)));
-    
+
     $release1 = explode('.', $temp_version1[0]);
     $release2 = explode('.', $temp_version2[0]);
-    
+
     $pre_release1 = explode('.', @$temp_version1[1]);
     $pre_release2 = explode('.', @$temp_version2[1]);
-    
+
     unset($temp_version1);
     unset($temp_version2);
-    
+
     if($release1[0] > $release2[0]) return true;
     if($release1[0] < $release2[0]) return false;
-    
+
     if(!isset($release1[1]) || !isset($release2[1])) return null;
     if($release1[1] > $release2[1]) return true;
     if($release1[1] < $release2[1]) return false;
-    
+
     if(!isset($release1[2]) || !isset($release2[2])) return null;
     if($release1[2] > $release2[2]) return true;
     if($release1[2] < $release2[2]) return false;
-    
+
     if(!$compare_pre_versions) return null;
     if(!$pre_release1 || !$pre_release2) return null;
-    
+
     $max_comp = min(count($pre_release1), count($pre_release2));
     for($i = 0; $i < $max_comp; $i++) {
         if(strcmp($pre_release1, $pre_release2) > 0) return true;
         if(strcmp($pre_release1, $pre_release2) < 0) return false;
     }
-    
+
     return null;
 }
 
@@ -157,7 +157,7 @@ function get_simple_classname(object $object) : string
 function get_calendar_from_datetime(string $datetime) : Calendar
 {
     $_datetime = new DateTime($datetime);
-    
+
     return new Calendar(
         intval($_datetime->format('Y')),
         intval($_datetime->format('m')),
@@ -175,10 +175,15 @@ function get_calendar_from_datetime(string $datetime) : Calendar
  */
 function storage_info(&$used, &$total)
 {
-    $_total = disk_total_space(CAFET_DIR) / (1024**3);
-    $_free = disk_free_space(CAFET_DIR) / (1024**3);
-    $_used = $_total - $_free;
-    
-    $used = round($_used, 2);
-    $total = round($_total, 2);
+    try {
+        $_total = disk_total_space(CAFET_DIR) / (1024 ** 3);
+        $_free = disk_free_space(CAFET_DIR) / (1024 ** 3);
+        $_used = $_total - $_free;
+
+        $used = round($_used, 2);
+        $total = round($_total, 2);
+    } catch (Exception $e) {
+        // spaces are too big
+        $used = $total = 0;
+    }
 }
