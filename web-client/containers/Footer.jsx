@@ -52,7 +52,7 @@ class Footer extends React.Component {
                     </div>
                     <p className={classes.right}>
                     &copy; 2018 - {1900 + new Date().getYear()} made with love by{' '}
-                        <a href="https://nowtryz.net" className={anchor}>
+                        <a href="http://nowtryz.net" className={anchor}>
                         Damien Djomby
                         </a>
                     </p>

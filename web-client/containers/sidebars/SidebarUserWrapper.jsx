@@ -61,7 +61,15 @@ class SidebarUserWrapper extends React.Component {
                         >
                             <ListItemText
                                 primary={userDisplay}
-                                secondary={(<b className={classNames(classes.caret, classes.userCaret, { [classes.caretActive]: openAvatar })} />)}
+                                secondary={(
+                                    <b
+                                        className={classNames(
+                                            classes.caret,
+                                            classes.userCaret,
+                                            { [classes.caretActive]: openAvatar },
+                                        )}
+                                    />
+                                )}
                                 disableTypography
                                 className={classNames(classes.itemText, classes.userItemText)}
                             />
@@ -123,7 +131,7 @@ class SidebarUserWrapper extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    userDisplay: `${state.user.user.firstname} ${state.user.user.familyName}`,
+    userDisplay: `${state.user.user.firstName} ${state.user.user.familyName}`,
 })
 
 export default connect(mapStateToProps)(SidebarUserWrapper)

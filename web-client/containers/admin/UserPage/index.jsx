@@ -11,9 +11,6 @@ import cx from 'classnames'
 import { withStyles } from '@material-ui/core/styles'
 import People from '@material-ui/icons/People'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
 
 
 // Material Dashboard
@@ -35,8 +32,9 @@ import '@dashboard/assets/scss/material-dashboard-pro-react/plugins/_plugin-reac
 import { classes as classesProptype } from 'app-proptypes'
 import { API_URL } from 'config'
 import _ from 'lang'
-import UserInfoList from './UserInfoList'
+import UserInformation from './UserInformation'
 import Locale from '../../Locale'
+import ClientInformation from './ClientInformation'
 
 const style = (theme) => ({
     ...sweetAlertStyle,
@@ -61,13 +59,12 @@ class UserPage extends React.Component {
         match: ReactRouterPropTypes.match.isRequired,
         classes: classesProptype.isRequired,
         langCode: PropTypes.string.isRequired,
-        currency: PropTypes.string.isRequired,
     }
 
     state = {
         alert: null,
         user: null,
-        customer: null,
+        async: {},
     }
 
     componentDidMount() {
@@ -194,15 +191,16 @@ class UserPage extends React.Component {
     }
 
     async dissociateCustomer() {
-        const { customer } = this.state
+        const { user } = this.state
 
         try {
-            await axios.post(`${API_URL}/cafet/clients/${customer.id}/dissociate`)
+            await axios.post(`${API_URL}/cafet/clients/${user.customer_id}/dissociate`)
+            await this.fetchUser()
             this.setState({
                 alert: this.dissociationConfirmed,
-                customer: null,
             })
         } catch (e) {
+            console.error(e)
             // fixme
         }
     }
@@ -210,12 +208,8 @@ class UserPage extends React.Component {
     async patchUser(userChanges) {
         const { match } = this.props
 
-        try {
-            await axios.patch(`${API_URL}/server/users/${match.params.id}`, userChanges)
-            this.fetchUser()
-        } catch (e) {
-            // fixme
-        }
+        await axios.patch(`${API_URL}/server/users/${match.params.id}`, userChanges)
+        this.fetchUser()
     }
 
     hideAlert() {
@@ -231,14 +225,9 @@ class UserPage extends React.Component {
 
             if (!user) return
             this.setState({ user })
-
-            if (!user.customer_id) return
-            const customerResponse = await axios.get(`${API_URL}/cafet/clients/${user.customer_id}`)
-            const customer = customerResponse.data
-
-            if (customer) this.setState({ customer })
         } catch (err) {
             if (err.response && err.response.status === 404) this.setState({ alert: this.notFound })
+            else console.error(err)
         }
     }
 
@@ -247,20 +236,10 @@ class UserPage extends React.Component {
         history.push('/admin/users')
     }
 
-    async createCustomerAccount() {
-        const { match } = this.props
-        try {
-            await axios.post(`${API_URL}/server/users/${match.params.id}/create-customer`)
-            await this.fetchUser()
-        } catch (err) {
-            // fixme
-        }
-    }
-
     render() {
-        const { classes, langCode, currency } = this.props
+        const { classes, langCode } = this.props
         const {
-            user, customer, alert,
+            user, alert,
         } = this.state
 
         if (!user) {
@@ -280,60 +259,15 @@ class UserPage extends React.Component {
                 {alert ? alert() : null}
                 <GridContainer>
                     <GridItem xs={12} md={7} lg={8}>
-                        <UserInfoList
+                        <UserInformation
                             onSave={(userChanges) => this.patchUser(userChanges)}
                             langCode={langCode}
                             user={user}
                         />
-                        <Card>
-                            <CardHeader color="rose" icon>
-                                <CardIcon color="rose">
-                                    <People />
-                                </CardIcon>
-                                <h4 className={classes.cardIconTitle}>
-                                    <Locale ns="admin_user_page">
-                                        Customer account
-                                    </Locale>
-                                </h4>
-                            </CardHeader>
-                            <CardBody>
-                                {customer ? (
-                                    <List>
-                                        <ListItem alignItems="flex-start">
-                                            <ListItemText
-                                                primary={_('ID', 'admin_user_page')}
-                                                secondary={customer.id}
-                                            />
-                                        </ListItem>
-                                        <ListItem alignItems="flex-start">
-                                            <ListItemText
-                                                primary={_('Balance', 'admin_user_page')}
-                                                secondary={`${customer.balance.toFixed(2)} ${currency}`}
-                                            />
-                                        </ListItem>
-                                        <ListItem alignItems="flex-start">
-                                            <ListItemText
-                                                primary={_('Member', 'admin_user_page')}
-                                                secondary={(customer.member ? _('Yes') : _('No'))}
-                                            />
-                                        </ListItem>
-                                    </List>
-                                ) : (
-                                    <>
-                                        <p>
-                                            <Locale ns="admin_user_page" name={user.pseudo}>
-                                                create_customer_account_text
-                                            </Locale>
-                                        </p>
-                                        <Button color="rose" onClick={() => this.createCustomerAccount()}>
-                                            <Locale ns="admin_user_page">
-                                                Create a customer account
-                                            </Locale>
-                                        </Button>
-                                    </>
-                                )}
-                            </CardBody>
-                        </Card>
+                        <ClientInformation
+                            onUpdate={() => this.fetchUser()}
+                            user={user}
+                        />
                     </GridItem>
                     <GridItem xs={12} md={5} lg={4}>
                         <Card className={classes.dangerBorder}>
@@ -358,7 +292,7 @@ class UserPage extends React.Component {
                                 </Button>
                             </CardBody>
                         </Card>
-                        {customer ? (
+                        {user.customer_id ? (
                             <Card className={classes.warningBorder}>
                                 <CardHeader color="warning" icon>
                                     <CardIcon color="warning">
@@ -394,7 +328,6 @@ class UserPage extends React.Component {
 
 const mapStateToProps = (state) => ({
     langCode: state.lang.lang_code,
-    currency: state.server.currency,
 })
 
 export default withStyles(style)(connect(mapStateToProps)(UserPage))

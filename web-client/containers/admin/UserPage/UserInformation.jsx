@@ -68,7 +68,7 @@ const viewOnlyFields = (user, langCode) => ([
     },
 ])
 
-class UserInfoList extends React.Component {
+class UserInformation extends React.Component {
     static propTypes = {
         onSave: func.isRequired,
         classes: classesProptype.isRequired,
@@ -159,4 +159,4 @@ class UserInfoList extends React.Component {
 }
 
 
-export default withStyles(style)(UserInfoList)
+export default withStyles(style)(UserInformation)

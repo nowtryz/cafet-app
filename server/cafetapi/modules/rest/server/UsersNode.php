@@ -234,7 +234,7 @@ class UsersNode implements RestNode
                     break;
 
                 case 'group':
-                    if(!intval($value, 0))
+                    if(!is_int($value))
                     {
                         $manager->cancelTransaction();
                         return ClientError::badRequest('Expected `group` field to be an integer');

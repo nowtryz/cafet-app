@@ -40,6 +40,7 @@ export const user = shape({
     firstName: string.isRequired,
     permissions: permissions.isRequired,
     group: group.isRequired,
+    customer_id: number,
     signin_count: number.isRequired,
     last_signin: calendar.isRequired,
     registration: calendar.isRequired,

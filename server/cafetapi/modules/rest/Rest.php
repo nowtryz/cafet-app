@@ -232,7 +232,7 @@ class Rest
         $wrong_types = array();
         foreach ($fields as $key => $value) switch ($value) {
             case self::PARAM_INT:
-                if (!intval($this->body[$key], 0)) $wrong_types[$key] = 'integer';
+                if (!is_int($this->body[$key])) $wrong_types[$key] = 'integer';
                 break;
 
             case self::PARAM_SCALAR:
