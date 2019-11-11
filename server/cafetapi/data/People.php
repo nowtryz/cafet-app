@@ -8,18 +8,18 @@ abstract class People extends JSONParsable
 {
     protected $email;
     protected $familyName;
-    protected $firstname;
+    protected $firstName;
     protected $mail_preferences;
-    
-    
+
+
     public function __construct($email, $familyName, $firstname, $mail_preferences = [])
     {
         $this->email = $email;
         $this->familyName = $familyName;
-        $this->firstname = $firstname;
+        $this->firstName = $firstname;
         $this->mail_preferences = array_merge(Config::mail_preferences, $mail_preferences);
     }
-    
+
     /**
      * Return the email
      *
@@ -30,7 +30,7 @@ abstract class People extends JSONParsable
     {
         return $this->email;
     }
-    
+
     /**
      * Return the family name
      *
@@ -41,18 +41,18 @@ abstract class People extends JSONParsable
     {
         return $this->familyName;
     }
-    
+
     /**
      * Return the surname
      *
      * @return string the surname
      * @since API 0.1.0 (2018)
      */
-    public final function getFirstname(): string
+    public final function getFirstName(): string
     {
-        return $this->firstname;
+        return $this->firstName;
     }
-    
+
     /**
      * @return array
      * @since API 0.3.0 (2019)
@@ -65,11 +65,11 @@ abstract class People extends JSONParsable
     /**
      * @param string $surname
      */
-    public function setFirstname(string $firstname)
+    public function setFirstName(string $firstName)
     {
-        $this->firstname = $firstname;
+        $this->firstName = $firstName;
     }
-    
+
     /**
      * @param string $familyName
      */
@@ -77,7 +77,7 @@ abstract class People extends JSONParsable
     {
         $this->familyName = $familyName;
     }
-    
+
     /**
      * @param string $email
      */

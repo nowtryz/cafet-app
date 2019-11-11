@@ -10,15 +10,11 @@ import cx from 'classnames'
 // Material UI
 import { withStyles } from '@material-ui/core/styles'
 import People from '@material-ui/icons/People'
-import Check from '@material-ui/icons/Check'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Typography from '@material-ui/core/Typography'
-import Input from '@material-ui/core/Input'
+
 
 // Material Dashboard
 import GridContainer from '@dashboard/components/Grid/GridContainer'
@@ -29,11 +25,8 @@ import CardHeader from '@dashboard/components/Card/CardHeader'
 import CardIcon from '@dashboard/components/Card/CardIcon'
 import Button from '@dashboard/components/CustomButtons/Button'
 
-import userProfileStyles from '@dashboard/assets/jss/material-dashboard-pro-react/views/userProfileStyles'
 import sweetAlertStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/sweetAlertStyle'
 import typographyStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/typographyStyle'
-import customCheckboxRadioSwitchStyle from '@dashboard/assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch'
-import customInputStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/customInputStyle'
 
 import { dangerColor, warningColor } from '@dashboard/assets/jss/material-dashboard-pro-react'
 
@@ -42,15 +35,12 @@ import '@dashboard/assets/scss/material-dashboard-pro-react/plugins/_plugin-reac
 import { classes as classesProptype } from 'app-proptypes'
 import { API_URL } from 'config'
 import _ from 'lang'
-import { formateCalendar } from 'utils'
+import UserInfoList from './UserInfoList'
 import Locale from '../../Locale'
 
 const style = (theme) => ({
-    ...userProfileStyles,
     ...sweetAlertStyle,
     ...typographyStyle,
-    ...customCheckboxRadioSwitchStyle,
-    ...customInputStyle,
     dangerBorder: {
         border: `2px solid ${dangerColor[3]}`,
     },
@@ -62,16 +52,6 @@ const style = (theme) => ({
     },
     inline: {
         display: 'inline',
-    },
-    mailPreferences: {
-        paddingTop: 0,
-        paddingBottom: 0,
-    },
-    mailPreferencesControl: {
-        color: `${theme.palette.text.primary} !important`,
-    },
-    mailPreferencesList: {
-        padding: 0,
     },
 })
 
@@ -87,15 +67,16 @@ class UserPage extends React.Component {
     state = {
         alert: null,
         user: null,
-        userChanges: {},
         customer: null,
     }
 
     componentDidMount() {
-        this.fetchUser()
+        this.fetchUser().catch(() => {
+            // fixme
+        })
     }
 
-    confirmDeletetion = () => {
+    confirmDeletion = () => {
         const { classes } = this.props
 
         return (
@@ -214,21 +195,31 @@ class UserPage extends React.Component {
 
     async dissociateCustomer() {
         const { customer } = this.state
-        await axios.post(`${API_URL}/cafet/clients/${customer.id}/dissociate`)
-        this.setState({ alert: this.dissociationConfirmed })
+
+        try {
+            await axios.post(`${API_URL}/cafet/clients/${customer.id}/dissociate`)
+            this.setState({
+                alert: this.dissociationConfirmed,
+                customer: null,
+            })
+        } catch (e) {
+            // fixme
+        }
+    }
+
+    async patchUser(userChanges) {
+        const { match } = this.props
+
+        try {
+            await axios.patch(`${API_URL}/server/users/${match.params.id}`, userChanges)
+            this.fetchUser()
+        } catch (e) {
+            // fixme
+        }
     }
 
     hideAlert() {
         this.setState({ alert: null })
-    }
-
-    handleFormChange({ currentTarget }, field) {
-        this.setState(({ userChanges }) => ({
-            userChanges: {
-                [field]: currentTarget.value,
-                ...userChanges,
-            },
-        }))
     }
 
     async fetchUser() {
@@ -269,7 +260,7 @@ class UserPage extends React.Component {
     render() {
         const { classes, langCode, currency } = this.props
         const {
-            user, customer, alert, userChanges,
+            user, customer, alert,
         } = this.state
 
         if (!user) {
@@ -289,172 +280,11 @@ class UserPage extends React.Component {
                 {alert ? alert() : null}
                 <GridContainer>
                     <GridItem xs={12} md={7} lg={8}>
-                        <Card>
-                            <CardHeader color="primary" icon>
-                                <CardIcon color="primary">
-                                    <People />
-                                </CardIcon>
-                                <h4 className={classes.cardIconTitle}>
-                                    <Locale name={user.pseudo} ns="admin_user_page">
-                                        %(name)s&apos;s information
-                                    </Locale>
-                                </h4>
-                            </CardHeader>
-                            <CardBody>
-                                <List>
-                                    {[
-                                        {
-                                            label: _('Firstname', 'admin_user_page'),
-                                            field: 'firstname',
-                                        },
-                                        {
-                                            label: _('Family name', 'admin_user_page'),
-                                            field: 'familyName',
-                                        },
-                                        {
-                                            label: _('Username', 'admin_user_page'),
-                                            field: 'pseudo',
-                                        },
-                                        {
-                                            label: _('Email address', 'admin_user_page'),
-                                            field: 'email',
-                                        },
-                                        {
-                                            label: _('Phone number', 'admin_user_page'),
-                                            field: 'phone',
-                                        },
-                                    ].map(({ label, field }) => (
-                                        <ListItem alignItems="flex-start" key={field}>
-                                            <ListItemText
-                                                disableTypography
-                                                primary={<Typography>{label}</Typography>}
-                                                secondary={(
-                                                    <Input
-                                                        inputProps={{
-                                                            defaultValue: user[field],
-                                                            'aria-label': label,
-                                                        }}
-                                                        onChange={(e) => this.handleFormChange(e, field)}
-                                                        classes={{
-                                                            input: classes.input,
-                                                            disabled: classes.disabled,
-                                                            underline: classes.underline,
-                                                        }}
-                                                    />
-                                                )}
-                                            />
-                                        </ListItem>
-                                    ))}
-                                    {[
-                                        {
-                                            label: _('ID', 'admin_user_page'),
-                                            value: user.id,
-                                        },
-                                        {
-                                            label: _('Member since', 'admin_user_page'),
-                                            value: formateCalendar(user.registration).toLocaleString(langCode),
-                                        },
-                                        {
-                                            label: _('Last sign-in at', 'admin_user_page'),
-                                            value: formateCalendar(user.last_signin).toLocaleString(langCode),
-                                        },
-                                        {
-                                            label: _('Sign-in count', 'admin_user_page'),
-                                            value: user.signin_count,
-                                        },
-                                    ].map(({ label, value }) => (
-                                        <ListItem alignItems="flex-start" key={label}>
-                                            <ListItemText primary={label} secondary={value} />
-                                        </ListItem>
-                                    ))}
-                                    <ListItem alignItems="flex-start">
-                                        <ListItemText
-                                            primary={_('Mail preferences', 'admin_user_page')}
-                                            secondaryTypographyProps={{
-                                                component: 'div',
-                                            }}
-                                            secondary={(
-                                                <List className={classes.mailPreferencesList}>
-                                                    <ListItem>
-                                                        <FormControlLabel
-                                                            control={(
-                                                                <Checkbox
-                                                                    disabled
-                                                                    tabIndex={-1}
-                                                                    checked={user.mail_preferences.payment_notice}
-                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                    icon={<Check className={classes.uncheckedIcon} />}
-                                                                    classes={{
-                                                                        checked: classes.checked,
-                                                                        root: classes.mailPreferences,
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            classes={{
-                                                                label: classes.label,
-                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                            }}
-                                                            label={_('Payment notice', 'admin_user_page')}
-                                                        />
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <FormControlLabel
-                                                            control={(
-                                                                <Checkbox
-                                                                    disabled
-                                                                    tabIndex={-1}
-                                                                    checked={user.mail_preferences.reload_notice}
-                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                    icon={<Check className={classes.uncheckedIcon} />}
-                                                                    classes={{
-                                                                        checked: classes.checked,
-                                                                        root: classes.mailPreferences,
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            classes={{
-                                                                label: classes.label,
-                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                            }}
-                                                            label={_('Reload notice', 'admin_user_page')}
-                                                        />
-                                                    </ListItem>
-                                                    <ListItem>
-                                                        <FormControlLabel
-                                                            control={(
-                                                                <Checkbox
-                                                                    disabled
-                                                                    tabIndex={-1}
-                                                                    checked={user.mail_preferences.reload_request}
-                                                                    checkedIcon={<Check className={classes.checkedIcon} />}
-                                                                    icon={<Check className={classes.uncheckedIcon} />}
-                                                                    classes={{
-                                                                        checked: classes.checked,
-                                                                        root: classes.mailPreferences,
-                                                                    }}
-                                                                />
-                                                            )}
-                                                            classes={{
-                                                                label: classes.label,
-                                                                disabled: cx(classes.disabledCheckboxAndRadio, classes.mailPreferencesControl),
-                                                            }}
-                                                            label={_('Reload requests', 'admin_user_page')}
-                                                        />
-                                                    </ListItem>
-                                                </List>
-                                            )}
-                                        />
-                                    </ListItem>
-                                </List>
-                                <Button
-                                    disabled={Object.keys(userChanges).length === 0}
-                                    color="primary"
-                                    round
-                                >
-                                    Save
-                                </Button>
-                            </CardBody>
-                        </Card>
+                        <UserInfoList
+                            onSave={(userChanges) => this.patchUser(userChanges)}
+                            langCode={langCode}
+                            user={user}
+                        />
                         <Card>
                             <CardHeader color="rose" icon>
                                 <CardIcon color="rose">
@@ -519,15 +349,11 @@ class UserPage extends React.Component {
                             </CardHeader>
                             <CardBody>
                                 <p>
-                                    Suspendisse semper luctus bibendum. In pellentesque elit ligula, non hendrerit
-                                    massa facilisis blandit. Maecenas ultricies mollis elementum. Vestibulum non
-                                    venenatis nibh. Ut in nibh non arcu feugiat imperdiet. Phasellus at dui vel
-                                    ipsum ultrices sollicitudin. Fusce non pretium ipsum. Sed tristique lobortis
-                                    mauris venenatis ornare. Integer id justo metus. Maecenas ornare faucibus turpis
-                                    vehicula vulputate. Nunc efficitur ultricies arcu, ut elementum libero viverra eu.
-                                    Sed ultricies sollicitudin fermentum.
+                                    <Locale ns="admin_user_page">
+                                        msg_delete
+                                    </Locale>
                                 </p>
-                                <Button color="danger" onClick={() => this.setState({ alert: this.confirmDeletetion })}>
+                                <Button color="danger" onClick={() => this.setState({ alert: this.confirmDeletion })}>
                                     <Locale>Delete</Locale>
                                 </Button>
                             </CardBody>
@@ -546,15 +372,14 @@ class UserPage extends React.Component {
                                 </CardHeader>
                                 <CardBody>
                                     <p>
-                                        Suspendisse semper luctus bibendum. In pellentesque elit ligula, non hendrerit
-                                        massa facilisis blandit. Maecenas ultricies mollis elementum. Vestibulum non
-                                        venenatis nibh. Ut in nibh non arcu feugiat imperdiet. Phasellus at dui vel
-                                        ipsum ultrices sollicitudin. Fusce non pretium ipsum. Sed tristique lobortis
-                                        mauris venenatis ornare. Integer id justo metus. Maecenas ornare faucibus turpis
-                                        vehicula vulputate. Nunc efficitur ultricies arcu, ut elementum libero viverra eu.
-                                        Sed ultricies sollicitudin fermentum.
+                                        <Locale ns="admin_user_page">
+                                            msg_dissociate
+                                        </Locale>
                                     </p>
-                                    <Button color="warning" onClick={() => this.setState({ alert: this.confirmDissociation })}>
+                                    <Button
+                                        color="warning"
+                                        onClick={() => this.setState({ alert: this.confirmDissociation })}
+                                    >
                                         <Locale>Dissociate</Locale>
                                     </Button>
                                 </CardBody>

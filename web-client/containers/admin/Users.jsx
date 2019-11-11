@@ -15,6 +15,7 @@ import CardIcon from '@dashboard/components/Card/CardIcon'
 import { API_URL } from 'config'
 import { formateCalendar } from 'utils'
 
+import { GROUPS } from '../../constants'
 import EnhancedTable from '../tables/EnhancedTable'
 
 class Users extends React.Component {
@@ -53,15 +54,6 @@ class Users extends React.Component {
         },
     ]
 
-    static groups = [
-        'Guest',
-        'Consumer',
-        'Cafet\' Manager',
-        'Cafet\' Administrator',
-        'Administrator',
-        'Super User',
-    ]
-
     static userLink(user) {
         return (
             <Link to={`/admin/users/${user.id}`} onClick={(e) => e.preventDefault()}>
@@ -90,10 +82,10 @@ class Users extends React.Component {
             this.setState({
                 users: response.data.map((user) => ({
                     ...user,
-                    name: `${user.firstname} ${user.familyName}`,
+                    name: `${user.firstName} ${user.familyName}`,
                     registration: formateCalendar(user.registration).toLocaleDateString(),
                     last_signin: formateCalendar(user.last_signin).toLocaleDateString(),
-                    group: Users.groups[user.group.id],
+                    group: GROUPS[user.group.id],
                 })),
             })
         }

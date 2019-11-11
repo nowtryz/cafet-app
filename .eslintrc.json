@@ -21,7 +21,10 @@
         "react/state-in-constructor": [1, "never"],
         "function-paren-newline": 0,
         "react/jsx-props-no-spreading": 0,
-        "max-len": [1, 120]
+        "max-len": [1, {
+            "code": 120,
+            "ignoreStrings": true
+        }]
     },
     "env": {
         "es6": true,

@@ -38,6 +38,8 @@ export default {
         'Low sold warning': 'Avertissement solde faible',
         Balance: 'Solde',
         Member: 'Adhérent',
+        msg_delete: 'La suppression d\'un utilisateur est une action irréversible. Les comptes utilisateur et consommateur seronts dissocier pour conserver les statistiques associés avec ce consommateur.',
+        msg_dissociate: 'La dissociation permet d\'danonymiser  les données récoltées sur les consommation de cette utilisateur. Si un compte consommateur est recréé, sont solde sera ramené à 0.',
     },
 
     default: {

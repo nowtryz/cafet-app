@@ -152,16 +152,16 @@ class UserNode implements RestNode
                     }
                     break;
 
-                case 'firstname':
-                    if($value == $user->getFirstname()) break;
+                case 'firstName':
+                    if($value == $user->getFirstName()) break;
                     $updater->setFirstname($user->getId(), strval($value));
-                    $request->getUser()->setFirstname($value);
+                    $request->getUser()->setFirstName($value);
                     break;
 
-                case 'name':
+                case 'familyName':
                     if($value == $user->getFamilyName()) break;
                     $updater->setName($user->getId(), strval($value));
-                    $request->getUser()->setName($value);
+                    $request->getUser()->setFamilyName($value);
                     break;
 
                 case 'phone':

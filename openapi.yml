@@ -252,8 +252,8 @@ x-shemas:
     description: "If present, the output will be nicely formatted."
     schema:
       type: "string"
-    
-      
+
+
 
 paths:
   # Clients
@@ -302,10 +302,10 @@ paths:
       summary: "Get a list of clients matching the search"
       description: >
         The server will return every clients whose the firstname, the familyname or the username matched the pattern.
-        
-        
+
+
         Permissions: *CAFET_ADMIN_GET_CLIENTS*
-        
+
       responses:
         "200":
           description: "A list of Client objects"
@@ -357,7 +357,7 @@ paths:
       description: "Permissions: CAFET_ADMIN_MANAGE_CLIENTS"
       requestBody:
         description: "Modifications to apply"
-        content: 
+        content:
           'application/json':
             schema:
               type: "object"
@@ -487,7 +487,7 @@ paths:
       requestBody:
         description: "The order to perform"
         required: true
-        content: 
+        content:
           application/json:
             schema:
               type: "array"
@@ -1174,7 +1174,7 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Group"
+                  $ref: "#/components/schemas/ProductGroup"
             application/xml:
               schema:
                 type: "array"
@@ -1182,7 +1182,7 @@ paths:
                   name: "groups"
                   wrapped: true
                 items:
-                  $ref: "#/components/schemas/Group"
+                  $ref: "#/components/schemas/ProductGroup"
     post:
       tags:
         - "Products"
@@ -1227,10 +1227,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Group"
+                $ref: "#/components/schemas/ProductGroup"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Group"
+                $ref: "#/components/schemas/ProductGroup"
         "404": *Group404
     put:
       tags:
@@ -1272,10 +1272,10 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Group"
+                $ref: "#/components/schemas/ProductGroup"
             application/xml:
               schema:
-                $ref: "#/components/schemas/Group"
+                $ref: "#/components/schemas/ProductGroup"
         "400": *400Error
         "404": *Group404
     patch:
@@ -1980,14 +1980,14 @@ paths:
                   type: "string"
                   description: "New mail address of the user."
                   example: "somebody@example.com"
-                firstname:
+                firstName:
                   type: "string"
                   description: "New firstname of the user."
-                  example: "Nowtryz"
-                name:
+                  example: "John"
+                familyName:
                   type: "string"
                   description: "New name of the user."
-                  example: "Nowtryz"
+                  example: "Smith"
                 phone:
                   type: "string"
                   description: "New phone of the user."
@@ -2049,7 +2049,7 @@ components:
       type: http
       scheme: basic
   schemas:
-    Client: 
+    Client:
       type: "object"
       xml:
         name: "client"
@@ -2235,27 +2235,27 @@ components:
         year:
           type: "integer"
           format: "int32"
-          example: "2019"
+          example: 2019
         month:
           type: "integer"
           format: "int32"
-          example: "1"
+          example: 1
         day:
           type: "integer"
           format: "int32"
-          example: "1"
+          example: 1
         hour:
           type: "integer"
           format: "int32"
-          example: "19"
+          example: 19
         mins:
           type: "integer"
           format: "int32"
-          example: "12"
+          example: 12
         secs:
           type: "integer"
           format: "int32"
-          example: "13"
+          example: 13
     Product:
       type: "object"
       xml:
@@ -2290,7 +2290,7 @@ components:
           example: true
         edit:
           $ref: "#/components/schemas/Calendar"
-    Group:
+    ProductGroup:
       type: "object"
       xml:
         name: "product_group"
@@ -2359,6 +2359,28 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Product"
+    Group:
+      type: "object"
+      xml:
+        name: "user"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "Group"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        name:
+          type: "string"
+          example: "Administrator"
+        permissions:
+          type: "string"
+          example:
+            a: true
+            b_a: false
+            b_b: false
     User:
       type: "object"
       xml:
@@ -2384,6 +2406,8 @@ components:
             a: true
             b_a: false
             b_b: false
+        group:
+          $ref: "#/components/schemas/Group"
         signin_count:
           type: "number"
           format: "int64"
@@ -2469,7 +2493,7 @@ components:
         additional_message:
           type: "string"
           example: "`whatever field` with id 456 not found"
-      
+
 
 security:
   - BasicAuth: []

@@ -15,7 +15,8 @@ export default {
         'Are you sure?': 'Are you sure?',
         'Deleted!': 'Deleted!',
         'Yes, delete it!': 'Yes, delete it!',
-        'This action is irreversible and You won&apos;t be able to recover user&apos;s data.': 'This action is irreversible and You won&apos;t be able to recover user&apos;s data.',
+        'This action is irreversible and You won&apos;t be able to recover user&apos;s data.':
+            'This action is irreversible and You won&apos;t be able to recover user&apos;s data.',
         'The user has been successfully deleted.': 'The user has been successfully deleted.',
         'Not Found!': 'Not Found!',
         'The user cannot be found.': 'The user cannot be found.',
@@ -38,6 +39,8 @@ export default {
         'Low sold warning': 'Low sold warning',
         Balance: 'Balance',
         Member: 'Member',
+        msg_delete: 'Deleting a user is an irreversible action. The user and consumer accounts will be unlinked to keep the statistics associated with that consumer.',
+        msg_dissociate: 'The dissociation makes it possible to anonymize the data collected on this user\'s consumption. If a consumer account is recreated, its balance will be reset to 0.',
     },
 
     default: {
@@ -55,7 +58,7 @@ export default {
         emailInvalid: 'This email address is not valid',
         required: 'This field is required',
         statistics: 'Statistics',
-        balance: 'Banlance',
+        balance: 'Balance',
         'easy to use': 'Easy to use',
         getStarted: 'Get started!',
         Dashboard: 'Dashboard',

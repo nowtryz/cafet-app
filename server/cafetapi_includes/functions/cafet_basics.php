@@ -1,7 +1,7 @@
 <?php
 /**
  * Function file for basic functions
- * 
+ *
  * @package cafetapi
  * @since API 1.0
  */
@@ -18,7 +18,7 @@ use cafetapi\Logger;
 
 if (! defined('basics_functions_loaded') ) {
     define('basics_functions_loaded', true);
-    
+
     function cafet_is_app_request() {
         return isset($_POST['origin']) && $_POST['origin'] == 'cafet_app';
     }
@@ -34,7 +34,7 @@ if (! defined('basics_functions_loaded') ) {
             error_reporting(-1);
             set_error_handler([Logger::class, 'errorHandler']);
             set_exception_handler([Logger::class, 'exceptionHandler']);
-            
+
             try {
                 new CafetApp();
             } catch (Exception $e) {
@@ -43,7 +43,7 @@ if (! defined('basics_functions_loaded') ) {
             exit();
         }
     }
-    
+
     function cafet_get_guest_group() : Group
     {
         return new Group('Guest', Group::GUEST);
@@ -64,11 +64,11 @@ if (! defined('basics_functions_loaded') ) {
         echo base64_decode($product->getImage());
         exit();
     }
-    
+
     function cafet_render_formula_image(int $formula_id, bool $dwl = false)
     {
         if (headers_sent()) return false;
-        
+
         $formula = FormulaManager::getInstance()->getFormula($formula_id);
 
         if (! $formula) return false;
@@ -85,7 +85,7 @@ if (! defined('basics_functions_loaded') ) {
     {
         $c = ClientManager::getInstance()->getClient($client_id);
         $mail = new Mail('reload_request', $c->getEmail());
-        $mail->setVar('surname', $c->getFirstname());
+        $mail->setVar('surname', $c->getFirstName());
         $mail->setVar('name', $c->getFamilyNane());
         $mail->setVar('balance', number_format($c->getBalance(), 2, ',', ' '));
 
@@ -100,7 +100,7 @@ if (! defined('basics_functions_loaded') ) {
         $mail->send();
     }
 
-    
+
 
     /**
      * Checks headers before sending them to the client
@@ -150,7 +150,7 @@ if (! defined('basics_functions_loaded') ) {
 
         echo '<h2>$_COOKIE</h2>';
         var_dump($_COOKIE);
-        
+
         echo '<h2>$_GET</h2>';
         var_dump($_GET);
 
