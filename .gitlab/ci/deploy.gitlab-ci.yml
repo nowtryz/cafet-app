@@ -2,15 +2,19 @@
 deploy:demo:
   extends:
     - .default-runner
-    - .only-master
+    #- .only-master
   stage: deploy
   image: ubuntu:18.04
+  # < to remove
+  only:
+    - add/client
+  # to remove >
   before_script:
     - apt-get update -q
     - apt-get install -y lftp
   script:
     - >
-      lftp ftp.nowtryz.net <<EOF
+      lftp $FTP_DEPLOY_HOST <<EOF
         user $FTP_DEPLOY_USERNAME $FTP_DEPLOY_PASSWORD
         mirror -Rev $CI_PROJECT_DIR/server/ $FTP_DEPLOY_URI/
         shell echo transferring config.php
