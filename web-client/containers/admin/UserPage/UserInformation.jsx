@@ -111,8 +111,8 @@ class UserInformation extends React.Component {
 
         return (
             <Card>
-                <CardHeader color="primary" icon>
-                    <CardIcon color="primary">
+                <CardHeader color="info" icon>
+                    <CardIcon color="info">
                         <People />
                     </CardIcon>
                     <h4 className={classes.cardIconTitle}>
@@ -147,7 +147,7 @@ class UserInformation extends React.Component {
                     <Button
                         disabled={Object.keys(userChanges).length === 0}
                         onClick={() => this.save()}
-                        color="primary"
+                        color="info"
                         round
                     >
                         Save

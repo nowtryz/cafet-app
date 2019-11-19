@@ -35,6 +35,7 @@ import _ from 'lang'
 import UserInformation from './UserInformation'
 import Locale from '../../Locale'
 import ClientInformation from './ClientInformation'
+import UserPasswordEdition from './UserPasswordEdition'
 
 const style = (theme) => ({
     ...sweetAlertStyle,
@@ -64,7 +65,6 @@ class UserPage extends React.Component {
     state = {
         alert: null,
         user: null,
-        async: {},
     }
 
     componentDidMount() {
@@ -264,10 +264,8 @@ class UserPage extends React.Component {
                             langCode={langCode}
                             user={user}
                         />
-                        <ClientInformation
-                            onUpdate={() => this.fetchUser()}
-                            user={user}
-                        />
+                        <UserPasswordEdition user={user} />
+                        <ClientInformation onUpdate={() => this.fetchUser()} user={user} />
                     </GridItem>
                     <GridItem xs={12} md={5} lg={4}>
                         <Card className={classes.dangerBorder}>

@@ -30,6 +30,22 @@ import links from 'routes/auth'
 import { login as loginAction } from 'actions'
 import AuthLayout from '../layouts/auth'
 
+const style = (theme) => ({
+    ...loginPageStyle(theme),
+    loadingDialog: {
+        backgroundColor: 'transparent',
+        boxShadow: 'none',
+        width: 150,
+        height: 150,
+        textAlign: 'center',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    loadingBackdrop: {
+        backdropFilter: 'blur(2px)',
+    },
+})
 
 class LoginPage extends React.Component {
     static propTypes = {
@@ -91,17 +107,11 @@ class LoginPage extends React.Component {
                     disableBackdropClick
                     disableEscapeKeyDown
                     open={isLogging}
-                    PaperProps={{
-                        style: {
-                            backgroundColor: 'transparent',
-                            boxShadow: 'none',
-                            width: 150,
-                            height: 150,
-                            textAlign: 'center',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                        },
+                    classes={{
+                        paper: classes.loadingDialog,
+                    }}
+                    BackdropProps={{
+                        classes: { root: classes.loadingBackdrop },
                     }}
                 >
                     <CircularProgress size={100} />
@@ -192,6 +202,6 @@ const mapStateToProps = (state) => ({
     isLogging: state.user.isLogging,
 })
 
-export default withStyles(loginPageStyle)(connect(mapStateToProps, {
+export default withStyles(style)(connect(mapStateToProps, {
     login: loginAction,
 })(LoginPage))

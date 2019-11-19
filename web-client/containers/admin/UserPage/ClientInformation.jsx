@@ -8,19 +8,37 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
-import People from '@material-ui/icons/People'
+import AccountBalance from '@material-ui/icons/AccountBalance'
 import CardHeader from '@dashboard/components/Card/CardHeader'
 import CardIcon from '@dashboard/components/Card/CardIcon'
 import CardBody from '@dashboard/components/Card/CardBody'
 import Button from '@dashboard/components/CustomButtons/Button'
 import Card from '@dashboard/components/Card/Card'
+import Switch from '@material-ui/core/Switch'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 
-import style from '@dashboard/assets/jss/material-dashboard-pro-react/views/userProfileStyles'
+import userProfileStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/userProfileStyles'
+import switchStyle from '@dashboard/assets/jss/material-dashboard-pro-react/customCheckboxRadioSwitch'
+import { hexToRgb, grayColor } from '@dashboard/assets/jss/material-dashboard-pro-react'
 
 import Locale from '../../Locale'
 import _ from '../../../lang'
 import { classes as classesProptype, user as userProptype } from '../../../app-proptypes'
 import { API_URL } from '../../../config'
+
+
+const style = {
+    ...userProfileStyle,
+    ...switchStyle,
+    disabledSwitch: {
+        '& + $switchBar': {
+            backgroundColor: `rgba(${hexToRgb(grayColor[0])}, 1) !important`,
+        },
+        '& $switchIcon': {
+            borderColor: grayColor[0],
+        },
+    },
+}
 
 class ClientInformation extends React.Component {
     static propTypes = {
@@ -32,6 +50,7 @@ class ClientInformation extends React.Component {
 
     state = {
         customer: null,
+        membershipUpdate: false,
     }
 
     componentDidMount() {
@@ -81,15 +100,41 @@ class ClientInformation extends React.Component {
         }
     }
 
+    async changeMembership() {
+        const { customer } = this.state
+
+        try {
+            this.setState({
+                membershipUpdate: true,
+            })
+            await axios.patch(`${API_URL}/cafet/clients/${customer.id}`, {
+                member: !customer.member,
+            })
+            customer.member = !customer.member
+            this.setState({
+                customer,
+                membershipUpdate: false,
+            })
+        } catch (e) {
+            // fixme try/catch
+            console.error(e)
+            this.setState({
+                membershipUpdate: false,
+            })
+        }
+    }
+
     render() {
         const { classes, user, currency } = this.props
-        const { customer } = this.state
+        const { customer, membershipUpdate } = this.state
+
+        if (!user) return null
 
         return (
             <Card>
                 <CardHeader color="rose" icon>
                     <CardIcon color="rose">
-                        <People />
+                        <AccountBalance />
                     </CardIcon>
                     <h4 className={classes.cardIconTitle}>
                         <Locale ns="admin_user_page">
@@ -115,7 +160,30 @@ class ClientInformation extends React.Component {
                             <ListItem alignItems="flex-start">
                                 <ListItemText
                                     primary={_('Member', 'admin_user_page')}
-                                    secondary={(customer.member ? _('Yes') : _('No'))}
+                                    secondary={(
+                                        <FormControlLabel
+                                            disabled={membershipUpdate}
+                                            control={(
+                                                <Switch
+                                                    checked={membershipUpdate ? !customer.member : customer.member}
+                                                    onChange={() => this.changeMembership()}
+                                                    value="checkedA"
+                                                    color="primary"
+                                                    classes={{
+                                                        switchBase: classes.switchBase,
+                                                        checked: classes.switchChecked,
+                                                        thumb: classes.switchIcon,
+                                                        track: classes.switchBar,
+                                                        disabled: classes.disabledSwitch,
+                                                    }}
+                                                />
+                                            )}
+                                            classes={{
+                                                label: classes.label,
+                                            }}
+                                            label={customer.member ? _('Yes') : _('No')}
+                                        />
+                                    )}
                                 />
                             </ListItem>
                         </List>
