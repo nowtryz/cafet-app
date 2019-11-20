@@ -53,15 +53,15 @@ const styles = () => ({
 class EnhancedTable extends React.Component {
     static propTypes = {
         classes: classesProptype.isRequired,
-        rows: EnhancedTableHead.rowsPropType.isRequired,
+        columns: EnhancedTableHead.rowsPropType.isRequired,
         data: PropTypes.arrayOf(PropTypes.any).isRequired,
         title: PropTypes.string.isRequired,
-        dataIndentifier: PropTypes.string,
+        dataIdentifier: PropTypes.string,
         onCellClick: PropTypes.func,
     }
 
     static defaultProps = {
-        dataIndentifier: 'id',
+        dataIdentifier: 'id',
         onCellClick: null,
     }
 
@@ -90,8 +90,8 @@ class EnhancedTable extends React.Component {
 
     handleSelectAllClick = (event) => {
         if (event.target.checked) {
-            const { data, dataIndentifier } = this.props
-            this.setState({ selected: data.map((n) => n[dataIndentifier]) })
+            const { data, dataIdentifier } = this.props
+            this.setState({ selected: data.map((n) => n[dataIdentifier]) })
             return
         }
         this.setState({ selected: [] })
@@ -138,7 +138,7 @@ class EnhancedTable extends React.Component {
 
     render() {
         const {
-            classes, rows, data, dataIndentifier, title,
+            classes, columns, data, dataIdentifier, title,
         } = this.props
         const {
             order, orderBy, selected, rowsPerPage, page,
@@ -157,13 +157,13 @@ class EnhancedTable extends React.Component {
                             onSelectAllClick={this.handleSelectAllClick}
                             onRequestSort={this.handleRequestSort}
                             rowCount={data.length}
-                            rows={rows}
+                            rows={columns}
                         />
                         <TableBody>
                             {stableSort(data, getSorting(order, orderBy))
                                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                .map((n) => {
-                                    const isSelected = this.isSelected(n[dataIndentifier])
+                                .map((row) => {
+                                    const isSelected = this.isSelected(row[dataIdentifier])
                                     return (
                                         <TableRow
                                             hover
@@ -171,27 +171,25 @@ class EnhancedTable extends React.Component {
                                             role="checkbox"
                                             aria-checked={isSelected}
                                             tabIndex={-1}
-                                            key={n[dataIndentifier]}
+                                            key={row[dataIdentifier]}
                                             selected={isSelected}
                                         >
                                             <TableCell padding="checkbox">
                                                 <Checkbox
                                                     checked={isSelected}
-                                                    onClick={(event) => this.handleClick(event, n[dataIndentifier])}
+                                                    onClick={(event) => this.handleClick(event, row[dataIdentifier])}
                                                 />
                                             </TableCell>
-                                            {rows.map((row) => (
+                                            {columns.map((cell) => (
                                                 <TableCell
-                                                    key={row.id}
-                                                    align={row.numeric ? 'right' : 'left'}
-                                                    onClick={(event) => this.handleCellClick(event, n[dataIndentifier])}
-                                                    {...row.cellProps}
+                                                    key={cell.id}
+                                                    align={cell.numeric ? 'right' : 'left'}
+                                                    onClick={
+                                                        (event) => this.handleCellClick(event, row[dataIdentifier])
+                                                    }
+                                                    {...cell.cellProps}
                                                 >
-                                                    {row.render ? row.render(n) : (row.component ? (n[row.id]) : (
-                                                        <Locale>
-                                                            {n[row.id]}
-                                                        </Locale>
-                                                    ))}
+                                                    {cell.render ? cell.render(row) : row[cell.id]}
                                                 </TableCell>
                                             ))}
                                         </TableRow>
@@ -199,7 +197,7 @@ class EnhancedTable extends React.Component {
                                 })}
                             {emptyRows > 0 && (
                                 <TableRow style={{ height: 49 * emptyRows }}>
-                                    <TableCell colSpan={rows.length} />
+                                    <TableCell colSpan={columns.length} />
                                 </TableRow>
                             )}
                         </TableBody>

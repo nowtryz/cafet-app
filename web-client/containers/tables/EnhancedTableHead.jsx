@@ -15,8 +15,7 @@ import Locale from '../Locale'
 class EnhancedTableHead extends React.Component {
     static rowsPropType = PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.string.isRequired,
-        numeric: PropTypes.bool.isRequired,
-        component: PropTypes.bool.isRequired,
+        numeric: PropTypes.bool,
         disablePadding: PropTypes.bool.isRequired,
         label: PropTypes.string.isRequired,
         render: PropTypes.func,

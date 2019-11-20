@@ -2,6 +2,8 @@ import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { connect } from 'react-redux'
+import PropTypes from 'prop-types'
 
 // Material UI
 import Group from '@material-ui/icons/Group'
@@ -17,17 +19,33 @@ import { formateCalendar } from 'utils'
 
 import { GROUPS } from '../../constants'
 import EnhancedTable from '../tables/EnhancedTable'
+import Locale from '../Locale'
 
 class Users extends React.Component {
     static propTypes = {
         history: ReactRouterPropTypes.history.isRequired,
+        langCode: PropTypes.string.isRequired,
     }
 
-    static rows = [
+    static group(user) {
+        return (
+            <Locale>
+                {user.group}
+            </Locale>
+        )
+    }
+
+    static userLink(user) {
+        return (
+            <Link to={`/admin/users/${user.id}`} onClick={(e) => e.preventDefault()}>
+                {user.pseudo}
+            </Link>
+        )
+    }
+
+    columns = [
         {
             id: 'pseudo',
-            numeric: false,
-            component: true,
             disablePadding: true,
             label: 'Username',
             render: Users.userLink,
@@ -41,26 +59,24 @@ class Users extends React.Component {
             id: 'name', numeric: false, component: false, disablePadding: true, label: 'Name',
         },
         {
-            id: 'registration', numeric: false, component: false, disablePadding: true, label: 'Created on',
+            id: 'registration',
+            disablePadding: true,
+            label: 'Created on',
+            render: (user) => this.date(user, 'registration'),
         },
         {
-            id: 'last_signin', numeric: false, component: false, disablePadding: true, label: 'Last activity',
+            id: 'last_signin',
+            disablePadding: true,
+            label: 'Last activity',
+            render: (user) => this.date(user, 'last_signin'),
         },
         {
             id: 'email', numeric: false, component: false, disablePadding: true, label: 'E-mail',
         },
         {
-            id: 'group', numeric: false, component: false, disablePadding: true, label: 'Group',
+            id: 'group', numeric: false, component: false, disablePadding: true, label: 'Group', render: Users.group,
         },
     ]
-
-    static userLink(user) {
-        return (
-            <Link to={`/admin/users/${user.id}`} onClick={(e) => e.preventDefault()}>
-                {user.pseudo}
-            </Link>
-        )
-    }
 
     state = {
         users: [],
@@ -75,6 +91,11 @@ class Users extends React.Component {
         history.push(`/admin/users/${id}`)
     }
 
+    date(user, field) {
+        const { langCode } = this.props
+        return formateCalendar(user[field]).toLocaleDateString(langCode)
+    }
+
     async fetchUsers() {
         const response = await axios.get(`${API_URL}/server/users`)
 
@@ -83,8 +104,6 @@ class Users extends React.Component {
                 users: response.data.map((user) => ({
                     ...user,
                     name: `${user.firstName} ${user.familyName}`,
-                    registration: formateCalendar(user.registration).toLocaleDateString(),
-                    last_signin: formateCalendar(user.last_signin).toLocaleDateString(),
                     group: GROUPS[user.group.id],
                 })),
             })
@@ -102,11 +121,15 @@ class Users extends React.Component {
                     </CardIcon>
                 </CardHeader>
                 <CardBody>
-                    <EnhancedTable rows={Users.rows} data={users} title="Users" onCellClick={this.onCellClick} />
+                    <EnhancedTable columns={this.columns} data={users} title="Users" onCellClick={this.onCellClick} />
                 </CardBody>
             </Card>
         )
     }
 }
 
-export default Users
+const mapStateToProps = (state) => ({
+    langCode: state.lang.lang_code,
+})
+
+export default connect(mapStateToProps)(Users)
