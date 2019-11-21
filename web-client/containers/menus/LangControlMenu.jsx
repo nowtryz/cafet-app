@@ -30,7 +30,7 @@ const LangControlMenu = ({
     }
 
     return (
-        <div {...rest}>
+        <div className={classes.managerClasses} {...rest}>
             <Button
                 buttonRef={setAnchorEl}
                 aria-owns={open ? 'menu-list-grow' : undefined}
