@@ -16,7 +16,7 @@ import SidebarUserWrapper from './SidebarUserWrapper'
 import SidebarRoutes from './SidebarRoutes'
 import AdminNavbarLinks from '../navbars/AdminNavbarLinks'
 
-class Sidebar extends React.Component {
+class AdminSidebar extends React.Component {
     static propTypes = {
         classes: PropTypes.objectOf(PropTypes.string).isRequired,
         bgColor: PropTypes.oneOf(['white', 'black', 'blue']),
@@ -179,4 +179,4 @@ class Sidebar extends React.Component {
     }
 }
 
-export default withStyles(sidebarStyle)(Sidebar)
+export default withStyles(sidebarStyle)(AdminSidebar)

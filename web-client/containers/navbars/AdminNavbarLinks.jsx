@@ -7,17 +7,10 @@ import { Link } from 'react-router-dom'
 
 // @material-ui/core components
 import withStyles from '@material-ui/core/styles/withStyles'
-import MenuItem from '@material-ui/core/MenuItem'
-import MenuList from '@material-ui/core/MenuList'
-import ClickAwayListener from '@material-ui/core/ClickAwayListener'
-import Paper from '@material-ui/core/Paper'
-import Grow from '@material-ui/core/Grow'
 import Hidden from '@material-ui/core/Hidden'
-import Popper from '@material-ui/core/Popper'
 
 // @material-ui/icons
 import Person from '@material-ui/icons/Person'
-import Notifications from '@material-ui/icons/Notifications'
 import Dashboard from '@material-ui/icons/Dashboard'
 import Search from '@material-ui/icons/Search'
 import Build from '@material-ui/icons/Build'
@@ -32,6 +25,7 @@ import adminNavbarLinksStyle from '@dashboard/assets/jss/material-dashboard-pro-
 import LangControlMenu from '../menus/LangControlMenu'
 import UserControlMenu from '../menus/UserControlMenu'
 import Locale from '../Locale'
+import NotificationControlMenu from '../menus/NotificationControlMenu'
 
 class HeaderLinks extends React.Component {
     static propTypes = {
@@ -39,24 +33,10 @@ class HeaderLinks extends React.Component {
         isAdmin: PropTypes.bool.isRequired,
     }
 
-    state = {
-        open: false,
-    }
-
-    handleClick = () => {
-        this.setState((state) => ({ open: !state.open }))
-    }
-
-    handleClose = () => {
-        this.setState({ open: false })
-    }
-
     render() {
         const { classes, isAdmin } = this.props
-        const { open } = this.state
 
         const searchButton = classNames(classes.top, classes.searchButton)
-        const dropdownItem = classNames(classes.dropdownItem, classes.primaryHover)
 
         return (
             <div>
@@ -84,7 +64,7 @@ class HeaderLinks extends React.Component {
                     />
                 </Button>
                 <LangControlMenu
-                    className={classes.managerClasses}
+                    classes={classes}
                     buttonProps={{
                         color: 'transparent',
                         'aria-label': 'Person',
@@ -92,7 +72,9 @@ class HeaderLinks extends React.Component {
                         className: classes.buttonLink,
                     }}
                 >
-                    <Language className={classNames(classes.headerLinksSvg, classes.links)} />
+                    <Language
+                        className={classNames(classes.headerLinksSvg, classes.links)}
+                    />
                     <Hidden mdUp implementation="css">
                         <span className={classes.linkText}>
                             <Locale>Language</Locale>
@@ -137,87 +119,9 @@ class HeaderLinks extends React.Component {
                         </Hidden>
                     </Button>
                 </div>
-                <div className={classes.managerClasses}>
-                    <Button
-                        color="transparent"
-                        justIcon
-                        aria-label="Notifications"
-                        aria-owns={open ? 'menu-list' : null}
-                        aria-haspopup="true"
-                        onClick={this.handleClick}
-                        className={classes.buttonLink}
-                        buttonRef={(node) => {
-                            this.anchorEl = node
-                        }}
-                    >
-                        <Notifications className={classNames(classes.headerLinksSvg, classes.links)} />
-                        <span className={classes.notifications}>5</span>
-                        <Hidden mdUp implementation="css">
-                            <span className={classes.linkText}>
-                                <Locale>Notifications</Locale>
-                            </span>
-                        </Hidden>
-                    </Button>
-                    <Popper
-                        open={open}
-                        anchorEl={this.anchorEl}
-                        transition
-                        disablePortal
-                        placement="bottom"
-                        className={classNames({
-                            [classes.popperClose]: !open,
-                            [classes.pooperResponsive]: true,
-                            [classes.pooperNav]: true,
-                        })}
-                    >
-                        {({ TransitionProps }) => (
-                            <Grow
-                                {...TransitionProps}
-                                id="menu-list"
-                                style={{ transformOrigin: '0 0 0' }}
-                            >
-                                <Paper className={classes.dropdown}>
-                                    <ClickAwayListener onClickAway={this.handleClose}>
-                                        <MenuList role="menu">
-                                            <MenuItem
-                                                onClick={this.handleClose}
-                                                className={dropdownItem}
-                                            >
-                                                Mike John responded to your email
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={this.handleClose}
-                                                className={dropdownItem}
-                                            >
-                                                You have 5 new tasks
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={this.handleClose}
-                                                className={dropdownItem}
-                                            >
-                                                You&apos;re now friend with Andrew
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={this.handleClose}
-                                                className={dropdownItem}
-                                            >
-                                                Another Notification
-                                            </MenuItem>
-                                            <MenuItem
-                                                onClick={this.handleClose}
-                                                className={dropdownItem}
-                                            >
-                                                Another One
-                                            </MenuItem>
-                                        </MenuList>
-                                    </ClickAwayListener>
-                                </Paper>
-                            </Grow>
-                        )}
-                    </Popper>
-                </div>
+                <NotificationControlMenu classes={classes} />
                 <UserControlMenu
-                    className={classes.managerClasses}
+                    classes={classes}
                     buttonProps={{
                         color: 'transparent',
                         'aria-label': 'Person',
@@ -242,11 +146,30 @@ const mapStateToProps = (state) => ({
     lang: state.lang,
 })
 
-const style = (theme) => ({
-    ...adminNavbarLinksStyle(theme),
-    fixJustify: {
-        justifyContent: 'flex-start',
-    },
-})
+const style = (theme) => {
+    const breakpoint = theme.breakpoints.down('sm')
+    const defaultStyle = {
+        ...adminNavbarLinksStyle(theme),
+        fixJustify: {
+            justifyContent: 'flex-start',
+        },
+        menuItem: {
+            paddingRight: '30px',
+            paddingLeft: '30px',
+            '&:hover': {
+                color: 'inherit',
+            },
+        },
+    }
+
+    // Override material dashboard style, as it uses !important modifiers
+    defaultStyle.popperNav[breakpoint]['& > div'].marginLeft = '1.5rem'
+    defaultStyle.popperNav[breakpoint]['& > div'].marginRight = '1.5rem'
+    defaultStyle.popperNav[breakpoint]['& > div'].marginBottom = '5px !important'
+    defaultStyle.popperNav[breakpoint]['& > div'].backgroundColor = undefined
+    defaultStyle.popperNav[breakpoint]['& > div']['& ul li'] = undefined
+
+    return defaultStyle
+}
 
 export default withStyles(style)(connect(mapStateToProps)(HeaderLinks))

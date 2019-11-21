@@ -86,7 +86,7 @@ export default {
         History: 'Historique',
         Reloads: 'Rechargements',
         Notifications: 'Notifications',
-        'Admin Panel': 'panneau d\'administration',
+        'Admin Panel': 'Panneau d\'administration',
         Profile: 'Profil',
         'User Page': 'Page utilisateur',
         Language: 'Langue',
