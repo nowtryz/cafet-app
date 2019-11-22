@@ -23,7 +23,7 @@ const LangControlMenu = ({
     classes, children, buttonProps, changeLocale, ...rest
 }) => {
     const [open, setOpen] = React.useState(false)
-    const [anchorEl, setAnchorEl] = React.useState(null)
+    const anchorEl = React.useRef(null)
     const handleChangeLocale = (locale) => {
         setOpen(false)
         changeLocale(locale)
@@ -32,7 +32,7 @@ const LangControlMenu = ({
     return (
         <div className={classes.managerClasses} {...rest}>
             <Button
-                buttonRef={setAnchorEl}
+                buttonRef={anchorEl}
                 aria-owns={open ? 'menu-list-grow' : undefined}
                 aria-haspopup="true"
                 onClick={() => setOpen(!open)}
@@ -42,7 +42,7 @@ const LangControlMenu = ({
             </Button>
             <Popper
                 open={open}
-                anchorEl={anchorEl}
+                anchorEl={anchorEl.current}
                 transition
                 disablePortal
                 placement="bottom"

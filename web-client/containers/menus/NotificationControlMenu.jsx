@@ -12,9 +12,17 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Locale from '../Locale'
 import { classesProptype } from '../../app-proptypes'
 
+const notifications = [
+    'Mike John responded to your email',
+    'You have 5 new tasks',
+    'You&apos;re now friend with Andrew',
+    'Another Notification',
+    'Another One',
+]
+
 const NotificationControlMenu = ({ classes }) => {
     const [open, setOpen] = React.useState(false)
-    const [anchorEl, setAnchorEl] = React.useState(null)
+    const anchorEl = React.useRef(null)
     const dropdownItem = classNames(classes.dropdownItem, classes.primaryHover)
 
     return (
@@ -27,10 +35,10 @@ const NotificationControlMenu = ({ classes }) => {
                 aria-haspopup="true"
                 onClick={() => setOpen(!open)}
                 className={classes.buttonLink}
-                buttonRef={setAnchorEl}
+                buttonRef={anchorEl}
             >
                 <Notifications className={classNames(classes.headerLinksSvg, classes.links)} />
-                <span className={classes.notifications}>5</span>
+                <span className={classes.notifications}>{notifications.length}</span>
                 <Hidden mdUp implementation="css">
                     <span className={classes.linkText}>
                         <Locale>Notifications</Locale>
@@ -39,7 +47,7 @@ const NotificationControlMenu = ({ classes }) => {
             </Button>
             <Popper
                 open={open}
-                anchorEl={anchorEl}
+                anchorEl={anchorEl.current}
                 transition
                 disablePortal
                 placement="bottom"
@@ -58,36 +66,15 @@ const NotificationControlMenu = ({ classes }) => {
                         <Paper className={classes.dropdown}>
                             <ClickAwayListener onClickAway={() => setOpen(false)}>
                                 <MenuList role="menu">
-                                    <MenuItem
-                                        onClick={() => setOpen(false)}
-                                        className={dropdownItem}
-                                    >
-                                        Mike John responded to your email
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={() => setOpen(false)}
-                                        className={dropdownItem}
-                                    >
-                                        You have 5 new tasks
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={() => setOpen(false)}
-                                        className={dropdownItem}
-                                    >
-                                        You&apos;re now friend with Andrew
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={() => setOpen(false)}
-                                        className={dropdownItem}
-                                    >
-                                        Another Notification
-                                    </MenuItem>
-                                    <MenuItem
-                                        onClick={() => setOpen(false)}
-                                        className={dropdownItem}
-                                    >
-                                        Another One
-                                    </MenuItem>
+                                    {notifications.map((value) => (
+                                        <MenuItem
+                                            key={value}
+                                            onClick={() => setOpen(false)}
+                                            className={dropdownItem}
+                                        >
+                                            {value}
+                                        </MenuItem>
+                                    ))}
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>
