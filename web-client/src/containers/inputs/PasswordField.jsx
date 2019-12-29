@@ -1,5 +1,7 @@
 import React from 'react'
-import { any, bool, objectOf, string, } from 'prop-types'
+import {
+    any, bool, objectOf, string,
+} from 'prop-types'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import IconButton from '@material-ui/core/IconButton'
@@ -9,15 +11,7 @@ import CustomInput from '@dashboard/components/CustomInput/CustomInput'
 const PasswordField = ({
     id, formControlProps, helperText, error, ...props
 }) => {
-    const [values, setValues] = React.useState({
-        showPassword: false,
-    })
-
-    const switchVisibility = () => {
-        setValues({
-            showPassword: !values.showPassword,
-        })
-    }
+    const [showPassword, setShowPassword] = React.useState(false)
 
     return (
         <CustomInput
@@ -26,16 +20,16 @@ const PasswordField = ({
             helperText={helperText}
             formControlProps={formControlProps}
             inputProps={{
-                type: values.showPassword ? 'text' : 'password',
+                type: showPassword ? 'text' : 'password',
                 autoComplete: 'off',
                 endAdornment: (
                     <InputAdornment position="end">
                         <IconButton
                             aria-label="toggle password visibility"
-                            onClick={switchVisibility}
+                            onClick={() => setShowPassword(!showPassword)}
                             onMouseDown={(e) => e.preventDefault()}
                         >
-                            {values.showPassword ? <Visibility /> : <VisibilityOff />}
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                     </InputAdornment>
                 ),

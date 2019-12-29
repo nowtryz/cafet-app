@@ -81,7 +81,7 @@ const HeaderLinks = ({ classes, isAdmin }) => (
                     component={Link}
                     to="/admin"
                 >
-                    <Build className={classNames(classes.headerLinksSvg, classes.links)}/>
+                    <Build className={classNames(classes.headerLinksSvg, classes.links)} />
                     <Hidden mdUp implementation="css">
                         <span className={classes.linkText}>
                             <Locale>Admin Panel</Locale>
@@ -100,7 +100,7 @@ const HeaderLinks = ({ classes, isAdmin }) => (
                 component={Link}
                 to="/dashboard"
             >
-                <Dashboard className={classNames(classes.headerLinksSvg, classes.links)}/>
+                <Dashboard className={classNames(classes.headerLinksSvg, classes.links)} />
                 <Hidden mdUp implementation="css">
                     <span className={classes.linkText}>
                         <Locale>Dashboard</Locale>
@@ -108,7 +108,7 @@ const HeaderLinks = ({ classes, isAdmin }) => (
                 </Hidden>
             </Button>
         </div>
-        <NotificationControlMenu classes={classes}/>
+        <NotificationControlMenu classes={classes} />
         <UserControlMenu
             classes={classes}
             buttonProps={{
@@ -118,7 +118,7 @@ const HeaderLinks = ({ classes, isAdmin }) => (
                 className: classes.buttonLink,
             }}
         >
-            <Person className={classNames(classes.headerLinksSvg, classes.links)}/>
+            <Person className={classNames(classes.headerLinksSvg, classes.links)} />
             <Hidden mdUp implementation="css">
                 <span className={classes.linkText}>
                     <Locale>Profile</Locale>

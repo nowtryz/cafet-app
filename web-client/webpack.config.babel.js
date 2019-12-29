@@ -3,7 +3,7 @@ import { resolve } from 'path'
 import webpack from 'webpack'
 
 import ManifestPlugin from 'webpack-manifest-plugin'
-import { isProd } from './web-client/config'
+import { isProd } from './src/config'
 
 const WDS_PORT = 7000
 
@@ -15,11 +15,11 @@ export default {
     },
     entry: [
         'react-hot-loader/patch',
-        './web-client',
+        './src',
     ],
     output: {
         filename: isProd ? '[hash].[name].js' : '[name].js',
-        path: resolve(__dirname, 'server/dist'),
+        path: resolve(__dirname, '../server/dist'),
         publicPath: isProd ? '/dist/' : `http://localhost:${WDS_PORT}/dist/`,
         globalObject: 'window',
     },

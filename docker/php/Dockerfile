@@ -76,13 +76,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get clean && rm -rfd /var/lib/apt/lists/*
 
 # copy project descrition and install it
-COPY material-dashboard/ /var/app/material-dashboard/
-COPY ./package.json yarn.lock /var/app/
+COPY web-client/material-dashboard/ /var/app/web-client/material-dashboard/
+COPY web-client/package.json web-client/yarn.lock /var/app/web-client/
 RUN yarn config set cache /var/yarn-cache
-RUN cd /var/app/ && yarn install
+RUN cd /var/app/web-client/ && yarn install
 
 # copy application and compile it
-COPY webpack.config.babel.js babel.config.js /var/app/
+COPY web-client/webpack.config.babel.js web-client/babel.config.js /var/app/web-client/
 COPY server/ /var/app/server/
 COPY web-client/ /var/app/web-client/
 

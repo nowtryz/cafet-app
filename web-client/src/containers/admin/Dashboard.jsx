@@ -79,21 +79,21 @@ class Dashboard extends React.Component {
 
     async loadStats() {
         const response = await axios.get(`${API_URL}/stats/overview`)
-        this.setState({ ...response.data })
+        this.setState(response.data)
     }
 
     renderWeeklyBalanceReloads() {
         const { classes } = this.props
-        const { weekly_balance_reloads } = this.state
-        const variation = (weekly_balance_reloads[6] / weekly_balance_reloads[5] - 1) * 100 | 0
-        const min = Math.min(...weekly_balance_reloads)
+        const { weekly_balance_reloads: weeklyReloads } = this.state
+        const variation = (weeklyReloads[6] / weeklyReloads[5] - 1) * 100 | 0
+        const min = Math.min(...weeklyReloads)
         const data = {
             labels: rotate(_('daysOfWeek').split(''), new Date().getDay()),
-            series: [weekly_balance_reloads],
+            series: [weeklyReloads],
         }
         const options = {
             ...straightLinesChart.options,
-            high: Math.max(...weekly_balance_reloads.map((v) => (v - min) * 4 / 3 + min), 50),
+            high: Math.max(...weeklyReloads.map((v) => (v - min) * (4 / 3) + min), 50),
             low: min,
         }
 
@@ -156,16 +156,16 @@ class Dashboard extends React.Component {
 
     renderLastMonthlySalesCount() {
         const { classes } = this.props
-        const { last_monthly_sales_count } = this.state
-        const variation = (last_monthly_sales_count[11] / last_monthly_sales_count[10] - 1) * 100 | 0
-        const min = Math.min(...last_monthly_sales_count)
+        const { last_monthly_sales_count: monthlySalesCount } = this.state
+        const variation = (monthlySalesCount[11] / monthlySalesCount[10] - 1) * 100 | 0
+        const min = Math.min(...monthlySalesCount)
         const data = {
             labels: rotate(_('monthsOfYear').split(' '), new Date().getMonth() + 1),
-            series: [last_monthly_sales_count],
+            series: [monthlySalesCount],
         }
         const options = {
             ...simpleBarChart.options,
-            high: Math.max(...last_monthly_sales_count.map((v) => (v - min) * 4 / 3 + min), 50),
+            high: Math.max(...monthlySalesCount.map((v) => (v - min) * (4 / 3) + min), 50),
             low: min,
         }
 

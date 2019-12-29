@@ -1,7 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { Link } from 'react-router-dom'
-import ReactRouterPropTypes from 'react-router-prop-types'
+import { history } from 'react-router-prop-types'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -19,28 +18,11 @@ import { formateCalendar } from 'utils'
 
 import { GROUPS } from '../../constants'
 import EnhancedTable from '../tables/EnhancedTable'
-import Locale from '../Locale'
 
-class Users extends React.Component {
+class Stocks extends React.Component {
     static propTypes = {
-        history: ReactRouterPropTypes.history.isRequired,
+        history: history.isRequired,
         langCode: PropTypes.string.isRequired,
-    }
-
-    static group(user) {
-        return (
-            <Locale>
-                {user.group}
-            </Locale>
-        )
-    }
-
-    static userLink(user) {
-        return (
-            <Link to={`/admin/users/${user.id}`} onClick={(e) => e.preventDefault()}>
-                {user.pseudo}
-            </Link>
-        )
     }
 
     columns = [
@@ -48,7 +30,7 @@ class Users extends React.Component {
             id: 'pseudo',
             disablePadding: true,
             label: 'Username',
-            render: Users.userLink,
+            render: Stocks.userLink,
             cellProps: {
                 component: 'th',
                 scope: 'row',
@@ -74,7 +56,7 @@ class Users extends React.Component {
             id: 'email', numeric: false, component: false, disablePadding: true, label: 'E-mail',
         },
         {
-            id: 'group', numeric: false, component: false, disablePadding: true, label: 'Group', render: Users.group,
+            id: 'group', numeric: false, component: false, disablePadding: true, label: 'Group', render: Stocks.group,
         },
     ]
 
@@ -132,4 +114,4 @@ const mapStateToProps = (state) => ({
     langCode: state.lang.lang_code,
 })
 
-export default connect(mapStateToProps)(Users)
+export default connect(mapStateToProps)(Stocks)

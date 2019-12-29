@@ -82,7 +82,7 @@ class DatabaseConnection
             self::$globalConnection = new PDO($dsn, self::$username, self::$password);
             self::$globalConnection->setAttribute(PDO::ATTR_ORACLE_NULLS, PDO::NULL_TO_STRING);
             self::$globalConnection->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
-            
+
             $integrityCheck = new DatabaseIntegrity();
             $integrityCheck->checkTables();
             $integrityCheck->checkTriggers();
@@ -93,16 +93,17 @@ class DatabaseConnection
         }
     }
 
-    
+
 
     protected static final function registerErrorOccurence(PDOStatement $stmt)
     {
         $array = $stmt->errorInfo();
         $array[] = $stmt->queryString;
         self::$lastQueryErrors[] = $array;
+        if (Config::production) Logger::log('The following error occurred during an SQL query, your database may be outdated.');
         Logger::log('SQL error: [' . $array[0] . '] ' . $array[2] . ' (with query:' . $array[3] . ')');
     }
-    
+
     protected final function check_fetch_errors(PDOStatement $stmt)
     {
         if ($stmt->errorCode() != '00000') self::registerErrorOccurence($stmt);
@@ -183,7 +184,7 @@ class DatabaseConnection
         if (! isset(self::$globalConnection))
             self::init();
     }
-    
+
     /**
      * Get singleton object
      * @return DatabaseConnection the singleton of this class

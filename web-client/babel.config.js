@@ -8,7 +8,7 @@ const config = {
         '@babel/plugin-transform-classes',
         'react-hot-loader/babel',
         ['module-resolver', {
-            root: ['./web-client', './material-dashboard'],
+            root: ['./src', './material-dashboard'],
         }],
     ],
 }

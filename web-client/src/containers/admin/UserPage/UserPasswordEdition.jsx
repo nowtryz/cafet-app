@@ -12,7 +12,7 @@ import GridContainer from '@dashboard/components/Grid/GridContainer'
 import GridItem from '@dashboard/components/Grid/GridItem'
 import Button from '@dashboard/components/CustomButtons/Button'
 import userProfileStyle from '@dashboard/assets/jss/material-dashboard-pro-react/views/userProfileStyles'
-import formStyles from '@dashboard/assets/jss/material-dashboard-pro-react/views/regularFormsStyle';
+import formStyles from '@dashboard/assets/jss/material-dashboard-pro-react/views/regularFormsStyle'
 import Locale from '../../Locale'
 import PasswordField from '../../inputs/PasswordField'
 import { classesProptype, userProptype } from '../../../app-proptypes'

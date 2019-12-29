@@ -191,7 +191,11 @@ class DefaultLayout extends React.Component {
                         handleDrawerToggle={this.handleDrawerToggle}
                         {...rest}
                     />
-                    {/* On the /maps/full-screen-maps route we want the map to be on full screen - this is not possible if the content and conatiner classes are present because they have some paddings which would make the map smaller */}
+                    {/*
+                      * On the /maps/full-screen-maps route we want the map to be on full screen - this is not possible
+                      * if the content and conatiner classes are present because they have some paddings which would
+                      * make the map smaller
+                    */}
                     {!fullScreenMaps ? (
                         <div className={classes.content}>
                             <div className={classes.container}>

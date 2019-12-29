@@ -6,13 +6,10 @@ import axios from 'axios'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import cx from 'classnames'
-
 // Material UI
 import { withStyles } from '@material-ui/core/styles'
 import People from '@material-ui/icons/People'
 import CircularProgress from '@material-ui/core/CircularProgress'
-
-
 // Material Dashboard
 import GridContainer from '@dashboard/components/Grid/GridContainer'
 import GridItem from '@dashboard/components/Grid/GridItem'
@@ -29,11 +26,11 @@ import { dangerColor, warningColor } from '@dashboard/assets/jss/material-dashbo
 
 import '@dashboard/assets/scss/material-dashboard-pro-react/plugins/_plugin-react-bootstrap-sweetalert.scss'
 
-import { classes as classesProptype } from 'app-proptypes'
-import { API_URL } from 'config'
-import _ from 'lang'
-import UserInformation from './UserInformation'
+import { classesProptype } from '../../../app-proptypes'
+import { API_URL } from '../../../config'
+import _ from '../../../lang'
 import Locale from '../../Locale'
+import UserInformation from './UserInformation'
 import ClientInformation from './ClientInformation'
 import UserPasswordEdition from './UserPasswordEdition'
 

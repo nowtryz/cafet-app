@@ -4,8 +4,7 @@ build:documentation:
     - .only-master
   stage: build
   script:
-    - yarn install
-    - yarn api:doc
+    - npx redoc-cli bundle openapi.yml -o doc/index.html
     - cp openapi.yml doc/
   artifacts:
     untracked: true
