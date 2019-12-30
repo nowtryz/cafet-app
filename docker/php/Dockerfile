@@ -87,7 +87,7 @@ COPY server/ /var/app/server/
 COPY web-client/ /var/app/web-client/
 
 
-RUN cd /var/app/ && yarn prod:build
+RUN cd /var/app/web-client/ && yarn prod:build
 
 
 ## Final image

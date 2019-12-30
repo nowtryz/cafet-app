@@ -7,6 +7,7 @@ use cafetapi\data\FormulaBought;
 use cafetapi\data\FormulaOrdered;
 use cafetapi\data\ProductBought;
 use cafetapi\data\ProductOrdered;
+use cafetapi\exceptions\CafetAPIException;
 use cafetapi\exceptions\NotEnoughtMoneyException;
 use cafetapi\exceptions\RequestFailureException;
 use PDO;
@@ -17,17 +18,17 @@ use cafetapi\Logger;
 /**
  *
  * @author Damien
- *        
+ *
  */
 class ExpenseManager extends Updater
 {
     const TABLE_NAME = self::EXPENSES;
-    
+
     const FIELD_CUSTOMER_ID = 'customer_id';
     const FIELD_USER_BALANCE = 'user_balance';
     const FIELD_DATE= 'date';
-    
-    
+
+
     const PRODUCT_BOUGHT_FIELD_ID = 'id';
     const PRODUCT_BOUGHT_FIELD_EXPENSE_ID = 'expense_id';
     const PRODUCT_BOUGHT_FIELD_PRODUCT_ID = 'product_id';
@@ -35,7 +36,7 @@ class ExpenseManager extends Updater
     const PRODUCT_BOUGHT_FIELD_CUSTOMER_ID = 'customer_id';
     const PRODUCT_BOUGHT_FIELD_QUANTITY = 'quantity';
     const PRODUCT_BOUGHT_FIELD_DATE = 'date';
-    
+
     const FORMULA_BOUGHT_FIELD_ID = 'id';
     const FORMULA_BOUGHT_FIELD_EXPENSE_ID = 'expense_id';
     const FORMULA_BOUGHT_FIELD_FORMULA_ID = 'formula_id';
@@ -43,15 +44,15 @@ class ExpenseManager extends Updater
     const FORMULA_BOUGHT_FIELD_CUSTOMER_ID = 'customer_id';
     const FORMULA_BOUGHT_FIELD_QUANTITY = 'quantity';
     const FORMULA_BOUGHT_FIELD_DATE = 'date';
-    
+
     const FORMULA_BOUGHT_PRODUCTS_FIELD_ID = 'id';
     const FORMULA_BOUGHT_PRODUCTS_FIELD_TRANSACTION_ID = 'transaction_id';
     const FORMULA_BOUGHT_PRODUCTS_FIELD_PRODUCT_ID = 'product_id';
     const FORMULA_BOUGHT_PRODUCTS_FIELD_PRODUCT_EDIT = 'product_edit';
     const FORMULA_BOUGHT_PRODUCTS_FIELD_DATE = 'date';
-    
+
     private static $instance;
-    
+
     /**
      * Get singleton object
      * @return ExpenseManager the singleton of this class
@@ -61,7 +62,7 @@ class ExpenseManager extends Updater
         if(self::$instance === null) self::$instance = new ExpenseManager();
         return self::$instance;
     }
-    
+
     public final function getClientExpenses(int $client_id): array
     {
         $stmt = $this->connection->prepare('SELECT '
@@ -88,10 +89,10 @@ class ExpenseManager extends Updater
             . 'FROM ' . self::EXPENSES . ' e '
             . 'WHERE e.' . self::FIELD_CUSTOMER_ID . ' = :id '
             . 'ORDER BY e.date DESC');
-        
+
         $id = $hour = $mins = $secs = $day = $month = $year = 0;
         $balance = $ftotal = $ptotal = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
         $stmt->bindColumn('ftotal', $ftotal, PDO::PARAM_STR);
@@ -102,19 +103,19 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute([
             'id' => $client_id
         ]);
         $this->check_fetch_errors($stmt);
-        
+
         $result = array();
-        
+
         while ($stmt->fetch()) $result[] = new Expense($id, $client_id, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($ftotal) + floatval($ptotal), floatval($balance));
-            
+
         return $result;
     }
-    
+
     public final function getClientLastExpenses(int $client_id): array
     {
         $stmt = $this->connection->prepare('SELECT '
@@ -142,10 +143,10 @@ class ExpenseManager extends Updater
             . 'WHERE e.' . self::FIELD_CUSTOMER_ID . ' = :id '
             . 'AND e.date > (SELECT MAX(date) FROM ' . self::RELOADS . ' WHERE ' . ReloadManager::FIELD_CUSTOMER_ID . ' = :id2) '
             . 'ORDER BY e.date DESC');
-        
+
         $id = $hour = $mins = $secs = $day = $month = $year = 0;
         $balance = $ftotal = $ptotal = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
         $stmt->bindColumn('ftotal', $ftotal, PDO::PARAM_STR);
@@ -156,20 +157,20 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute([
             'id' => $client_id,
             'id2' => $client_id
         ]);
         $this->check_fetch_errors($stmt);
-        
+
         $result = [];
-        
+
         while ($stmt->fetch()) $result[] = new Expense($id, $client_id, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($ftotal) + floatval($ptotal), floatval($balance));
-            
+
         return $result;
     }
-    
+
     public final function getExpense(int $expense_id): ?Expense
     {
         $stmt = $this->connection->prepare('SELECT '
@@ -196,10 +197,10 @@ class ExpenseManager extends Updater
             . 'DATE_FORMAT(e.date, "%Y") year '
             . 'FROM ' . self::EXPENSES . ' e '
             . 'WHERE e.id = :id');
-        
+
         $id = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $balance = $ftotal = $ptotal = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
         $stmt->bindColumn('client_id', $client_id, PDO::PARAM_INT);
@@ -211,17 +212,17 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute([
             'id' => $expense_id
         ]);
         $this->check_fetch_errors($stmt);
-        
+
         if ($stmt->fetch()) return new Expense($id, $client_id, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($ftotal) + floatval($ptotal), floatval($balance));
-            
+
         else return null;
     }
-    
+
     public final function getExpenses(): array
     {
         $stmt = $this->connection->prepare('SELECT '
@@ -247,10 +248,10 @@ class ExpenseManager extends Updater
             . 'DATE_FORMAT(e.date, "%c") month, '
             . 'DATE_FORMAT(e.date, "%Y") year '
             . 'FROM ' . self::EXPENSES . ' e');
-        
+
         $id = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $balance = $ftotal = $ptotal = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('balance', $balance, PDO::PARAM_STR);
         $stmt->bindColumn('client_id', $client_id, PDO::PARAM_INT);
@@ -262,21 +263,21 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute();
         $this->check_fetch_errors($stmt);
-        
+
         $expenses = [];
-        
+
         while ($stmt->fetch()) $expenses[] = new Expense($id, $client_id, new Calendar($year, $month, $day, $hour, $mins, $secs), floatval($ftotal) + floatval($ptotal), floatval($balance));
-            
+
         return $expenses;
     }
-    
+
     public final function getExpenseDetails(int $expense_id): array
     {
         $result = [];
-        
+
         $stmt = $this->connection->prepare('SELECT '
             . 'b.id id, '
             . 'e.name name, '
@@ -294,10 +295,10 @@ class ExpenseManager extends Updater
             . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' e '
             . 'ON b.edit_id = e.id '
             . 'WHERE b.expense_id = :id');
-        
+
         $id = $fid = $quantity = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('name', $name, PDO::PARAM_STR);
         $stmt->bindColumn('price', $price, PDO::PARAM_STR);
@@ -310,17 +311,17 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute([
             'id' => $expense_id
         ]);
         $this->check_fetch_errors($stmt);
-        
+
         while ($stmt->fetch()) {
             $date = new Calendar($year, $month, $day, $hour, $mins, $secs);
             $result[] = new FormulaBought($id, $fid, $name, $client_id, floatval($price), $quantity, $date);
         }
-        
+
         $stmt = $this->connection->prepare('SELECT '
             . 'b.id id, '
             . 'e.name name, '
@@ -338,10 +339,10 @@ class ExpenseManager extends Updater
             . 'LEFT JOIN ' . self::PRODUCTS_EDITS . ' e '
             . 'ON b.edit_id = e.id '
             . 'WHERE b.expense_id = :id');
-        
+
         $id = $pid = $quantity = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('name', $name, PDO::PARAM_STR);
         $stmt->bindColumn('price', $price, PDO::PARAM_STR);
@@ -354,20 +355,20 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute([
             'id' => $expense_id
         ]);
         $this->check_fetch_errors($stmt);
-        
+
         while ($stmt->fetch()) {
             $date = new Calendar($year, $month, $day, $hour, $mins, $secs);
             $result[] = new ProductBought($id, $pid, $name, $client_id, floatval($price), $quantity, $date);
         }
-        
+
         return $result;
     }
-    
+
     public final function getProductsBought(): array
     {
         $stmt = $this->connection->prepare('SELECT '
@@ -386,10 +387,10 @@ class ExpenseManager extends Updater
             . 'FROM ' . self::PRODUCTS_BOUGHT . ' b '
             . 'LEFT JOIN ' . self::PRODUCTS_EDITS . ' e '
             . 'ON b.edit_id = e.id ');
-        
+
         $id = $pid = $quantity = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('name', $name, PDO::PARAM_STR);
         $stmt->bindColumn('price', $price, PDO::PARAM_STR);
@@ -402,21 +403,21 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute();
-        
+
         $this->check_fetch_errors($stmt);
-        
+
         $result = [];
-        
+
         while ($stmt->fetch()) {
             $date = new Calendar($year, $month, $day, $hour, $mins, $secs);
             $result[] = new ProductBought($id, $pid, $name, $client_id, floatval($price), $quantity, $date);
         }
-        
+
         return $result;
     }
-    
+
     public final function getProductBought(int $id): ?ProductBought
     {
         $stmt = $this->connection->prepare('SELECT '
@@ -436,10 +437,10 @@ class ExpenseManager extends Updater
             . 'LEFT JOIN ' . self::PRODUCTS_EDITS . ' e '
             . 'ON b.edit_id = e.id '
             . 'WHERE b.id = :id');
-        
+
         $pid = $quantity = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('name', $name, PDO::PARAM_STR);
         $stmt->bindColumn('price', $price, PDO::PARAM_STR);
@@ -452,21 +453,21 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute([
             'id' => $id
         ]);
-        
+
         $this->check_fetch_errors($stmt);
-        
+
         if ($stmt->fetch()) {
             $date = new Calendar($year, $month, $day, $hour, $mins, $secs);
             return new ProductBought($id, $pid, $name, $client_id, floatval($price), $quantity, $date);
         }
-        
+
         return null;
     }
-    
+
     public final function getFormulasBought(): array
     {
         $stmt = $this->connection->prepare('SELECT '
@@ -485,10 +486,10 @@ class ExpenseManager extends Updater
             . 'FROM ' . self::FORMULAS_BOUGHT . ' b '
             . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' e '
             . 'ON b.edit_id = e.id ');
-        
+
         $id = $fid = $quantity = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('name', $name, PDO::PARAM_STR);
         $stmt->bindColumn('price', $price, PDO::PARAM_STR);
@@ -501,20 +502,20 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute();
         $this->check_fetch_errors($stmt);
-        
+
         $result = [];
-        
+
         while ($stmt->fetch()) {
             $date = new Calendar($year, $month, $day, $hour, $mins, $secs);
             $result[] = new FormulaBought($id, $fid, $name, $client_id, floatval($price), $quantity, $date);
         }
-        
+
         return $result;
     }
-    
+
     public final function getFormulaBought(int $id): ?FormulaBought
     {
         $stmt = $this->connection->prepare('SELECT '
@@ -534,10 +535,10 @@ class ExpenseManager extends Updater
             . 'LEFT JOIN ' . self::FORMULAS_EDITS . ' e '
             . 'ON b.edit_id = e.id '
             . 'WHERE b.id = :id');
-        
+
         $fid = $quantity = $client_id = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = $price = '';
-        
+
         $stmt->bindColumn('id', $id, PDO::PARAM_INT);
         $stmt->bindColumn('name', $name, PDO::PARAM_STR);
         $stmt->bindColumn('price', $price, PDO::PARAM_STR);
@@ -550,37 +551,37 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute([
             'id' => $id
         ]);
         $this->check_fetch_errors($stmt);
-        
+
         if ($stmt->fetch()) {
             $date = new Calendar($year, $month, $day, $hour, $mins, $secs);
             return new FormulaBought($id, $fid, $name, $client_id, floatval($price), $quantity, $date);
         }
-        
+
         return null;
     }
-    
+
     public final function getFormulaBoughtProducts(int $formula_bought_id): array
     {
         $stmt = $this->connection->prepare('SELECT '
             . self::FORMULA_BOUGHT_FIELD_CUSTOMER_ID . ' client_id '
             . 'FROM ' . self::FORMULAS_BOUGHT . ' '
             . 'WHERE id = :id');
-        
+
         $client_id = 0;
-        
+
         $stmt->bindColumn('client_id', $client_id, PDO::PARAM_INT);
         $stmt->execute([
             'id' => $formula_bought_id
         ]);
         $this->check_fetch_errors($stmt);
-        
+
         if (! $stmt->fetch()) return [];
-            
+
         $stmt = $this->connection->prepare('SELECT '
             . 'b.product_id product_id, '
             . 'e.name name, '
@@ -594,10 +595,10 @@ class ExpenseManager extends Updater
             . 'LEFT JOIN ' . self::PRODUCTS_EDITS . ' e '
             . 'ON b.product_edit = e.id '
             . 'WHERE b.transaction_id = :fb_id');
-        
+
         $product_id  = $hour = $mins = $secs = $day = $month = $year = 0;
         $name = '';
-        
+
         $stmt->bindColumn('product_id', $product_id, PDO::PARAM_INT);
         $stmt->bindColumn('name', $name, PDO::PARAM_STR);
         $stmt->bindColumn('hour', $hour, PDO::PARAM_INT);
@@ -606,34 +607,37 @@ class ExpenseManager extends Updater
         $stmt->bindColumn('day', $day, PDO::PARAM_INT);
         $stmt->bindColumn('month', $month, PDO::PARAM_INT);
         $stmt->bindColumn('year', $year, PDO::PARAM_INT);
-        
+
         $stmt->execute([
             'fb_id' => $formula_bought_id
         ]);
         $this->check_fetch_errors($stmt);
-        
+
         $result = [];
-        
+
         while ($stmt->fetch()) $result[] = new ProductBought(0, $product_id, $name, $client_id, 0, 1, new Calendar($year, $month, $day, $hour, $mins, $secs));
-            
+
         return $result;
     }
-    
+
     /**
      * Save a purchase in the database
      *
      * @param int $client_id
      * @param array $order array of Ordered
      * @return bool if the query have correctly been completed
+     * @throws NotEnoughtMoneyException
+     * @throws RequestFailureException
+     * @throws CafetAPIException
      * @since API 0.1.0 (2018)
      */
     public final function saveOrder(int $client_id, array $order): bool
     {
         $this->beginTransaction();
-        
+
         $client = ClientManager::getInstance()->getClient($client_id);
         if (!$client) throw new RequestFailureException('Unexisting client');
-        
+
         // Save expense
         $stmt = $this->connection->prepare('INSERT INTO ' . self::EXPENSES . ' (' . self::FIELD_CUSTOMER_ID . ') VALUES (:id)');
         $stmt->execute([
@@ -641,7 +645,7 @@ class ExpenseManager extends Updater
         ]);
         $this->checkUpdate($stmt, 'unable to save order');
         $expense_id = $this->connection->lastInsertId();
-        
+
         // Save expense details
         foreach ($order as $entry) {
             if ($entry instanceof ProductOrdered) {
@@ -652,7 +656,7 @@ class ExpenseManager extends Updater
                 if (! $stmt->fetch())
                     Logger::throwError('03-005', 'product with id ' . $entry->getId() . ' doesn\'t exist');
                     $stmt->closeCursor();
-                    
+
                     $stmt = $this->connection->prepare('INSERT '
                         . 'INTO ' . self::PRODUCTS_BOUGHT . '(expense_id, product_id, ' . self::PRODUCT_BOUGHT_FIELD_CUSTOMER_ID . ', quantity) '
                         . 'VALUES (:expense, :product, :client, :quantity)');
@@ -664,7 +668,7 @@ class ExpenseManager extends Updater
                     ]);
                     $this->checkUpdate($stmt, 'unable to save expense details');
             } elseif ($entry instanceof FormulaOrdered) {
-                
+
                 $stmt = $this->connection->prepare('SELECT 1 FROM ' . self::FORMULAS . ' WHERE id = :id LIMIT 1');
                 $stmt->execute([
                     'id' => $entry->getId()
@@ -672,7 +676,7 @@ class ExpenseManager extends Updater
                 if (! $stmt->fetch())
                     Logger::throwError('03-005', 'formula with id ' . $entry->getId() . ' doesn\'t exist');
                     $stmt->closeCursor();
-                    
+
                     $stmt = $this->connection->prepare('INSERT '
                         . 'INTO ' . self::FORMULAS_BOUGHT . '(expense_id, formula_id, ' . self::FORMULA_BOUGHT_FIELD_CUSTOMER_ID . ', quantity) '
                         . 'VALUES (:expense,:formula,:client,:quantity)');
@@ -683,14 +687,14 @@ class ExpenseManager extends Updater
                         'quantity' => $entry->getAmount()
                     ]);
                     $this->checkUpdate($stmt, 'unable to save expense details');
-                    
+
                     $i = 0;
                     $size = count($entry->getProducts());
                     $fb_id = $this->connection->lastInsertId();
                     $parameters = [
                         'id' => $fb_id
                     ];
-                    
+
                     $sql = 'INSERT INTO ' . self::FORMULAS_BOUGHT_PRODUCTS . '(transaction_id,product_id) VALUES ';
                     foreach ($entry->getProducts() as $product) {
                         $sql .= "(:id,:product$i)";
@@ -703,9 +707,9 @@ class ExpenseManager extends Updater
                     $this->checkUpdate($stmt, 'unable to save expense details');
             }
         }
-        
+
         $expense = ExpenseManager::getInstance()->getExpense($expense_id);
-        
+
         if (($delta = $expense->getBalanceAfterTransaction() - Config::balance_limit) < 0) {
             $this->connection->rollBack();
             $backtrace = debug_backtrace()[1];
@@ -722,7 +726,7 @@ class ExpenseManager extends Updater
                 Logger::log($e);
             }
         }
-        
+
         return true;
     }
 }
