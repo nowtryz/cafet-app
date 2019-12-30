@@ -53,31 +53,31 @@ class RegisterPage extends React.Component {
         isValidating: false,
         emailValidation: undefined,
         familyNameValidation: undefined,
-        firstnameValidation: undefined,
+        firstNameValidation: undefined,
         passwordValidation: undefined,
         email: '',
         familyName: '',
-        firstname: '',
+        firstName: '',
         password: '',
     }
 
     getFields() {
         const {
-            emailValidation, familyNameValidation, firstnameValidation, passwordValidation,
+            emailValidation, familyNameValidation, firstNameValidation, passwordValidation,
         } = this.state
 
         return ([
             {
                 name: _('firstName'),
-                icone: Face,
-                id: 'firstname',
+                icon: Face,
+                id: 'firstName',
                 inputProps: {
-                    error: (firstnameValidation != null),
+                    error: (firstNameValidation != null),
                 },
-                helperText: firstnameValidation,
+                helperText: firstNameValidation,
             }, {
                 name: _('name'),
-                icone: Face,
+                icon: Face,
                 id: 'familyName',
                 inputProps: {
                     error: (familyNameValidation != null),
@@ -85,7 +85,7 @@ class RegisterPage extends React.Component {
                 helperText: familyNameValidation,
             }, {
                 name: _('email'),
-                icone: Email,
+                icon: Email,
                 id: 'email',
                 inputProps: {
                     error: (emailValidation != null),
@@ -93,8 +93,8 @@ class RegisterPage extends React.Component {
                 helperText: emailValidation,
             }, {
                 name: _('password'),
-                icone: Icon,
-                iconeName: 'lock_outline',
+                icon: Icon,
+                iconName: 'lock_outline',
                 id: 'password',
                 inputProps: {
                     type: 'password',
@@ -107,7 +107,7 @@ class RegisterPage extends React.Component {
 
     keyPressed = (e) => {
         // Number 13 is the "Enter" key on the keyboard
-        if (event.keyCode === 13) {
+        if (e.nativeEvent.keyCode === 13) {
             this.validate(e)
         }
     }
@@ -115,7 +115,7 @@ class RegisterPage extends React.Component {
     validate = async () => {
         const { login } = this.props
         const {
-            email, familyName, firstname, password, isValidating,
+            email, familyName, firstName, password, isValidating,
         } = this.state
 
         if (isValidating) return
@@ -123,18 +123,18 @@ class RegisterPage extends React.Component {
 
         const emailValidation = email ? undefined : _('required')
         const familyNameValidation = familyName ? undefined : _('required')
-        const firstnameValidation = firstname ? undefined : _('required')
+        const firstNameValidation = firstName ? undefined : _('required')
         const passwordValidation = password ? undefined : _('required')
         this.setState({
-            emailValidation, familyNameValidation, firstnameValidation, passwordValidation,
+            emailValidation, familyNameValidation, firstNameValidation, passwordValidation,
         })
-        if (emailValidation || familyNameValidation || firstnameValidation || passwordValidation) {
+        if (emailValidation || familyNameValidation || firstNameValidation || passwordValidation) {
             this.setState({ isValidating: false })
             return
         }
 
         try {
-            await registerUser(email, familyName, firstname, password)
+            await registerUser(email, familyName, firstName, password)
             login(email, password)
         } catch (err) {
             if (err.response !== undefined && err.response.data.conflicts !== undefined) {
@@ -197,9 +197,9 @@ class RegisterPage extends React.Component {
                                 position="start"
                                 className={classes.inputAdornment}
                             >
-                                <field.icone className={classes.inputAdornmentIcon}>
-                                    {field.iconeName}
-                                </field.icone>
+                                <field.icon className={classes.inputAdornmentIcon}>
+                                    {field.iconName}
+                                </field.icon>
                             </InputAdornment>
                         ),
                         placeholder: `${field.name}...`,
@@ -302,7 +302,7 @@ class RegisterPage extends React.Component {
                                                     label={(
                                                         <span>
                                                             {_('agreements', 'register_page')}
-                                                            <a href="#pablo">{_('terms', 'register_page')}</a>.
+                                                            <a href="#terms">{_('terms', 'register_page')}</a>.
                                                         </span>
                                                     )}
                                                 />

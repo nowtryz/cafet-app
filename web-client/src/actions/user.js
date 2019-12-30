@@ -5,13 +5,16 @@ import {
     USER_LOGGED,
     USER_LOGGING_FAILED,
     USER_LOGOUT,
-} from 'constants'
+} from '../constants'
 import { API_URL } from '../config'
 import store from '../reducers'
 
 export const grabUserInfo = () => async (dispatch) => {
     const { session_name: sessionName } = store.getState().server
-    const session = document.cookie.replace(new RegExp(`(?:(?:^|.*;\\s*)${sessionName}\\s*=\\s*([^;]*).*$)|^.*$`, 'g'), '$1') || null
+    const session = document.cookie.replace(
+        new RegExp(`(?:(?:^|.*;\\s*)${sessionName}\\s*=\\s*([^;]*).*$)|^.*$`, 'g'),
+        '$1',
+    ) || null
 
     if (!session) return
 

@@ -3,22 +3,36 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { vsprintf } from 'sprintf-js'
 
-import { lang as langPropType } from 'app-proptypes'
-import { getLocalizedText as _ } from 'lang'
+import { langProptype } from '../app-proptypes'
+import _ from '../lang'
 
+/**
+ * An element to translate sentences and words
+ * @param children a string to be translated from language files
+ * @param lang the lang grabbed from app's state
+ * @param ns the namespace to take translations from, or *default* namespace if not provided
+ * @param variables arguments used by [sprintf.js](https://github.com/alexei/sprintf.js/blob/master/README.md)
+ * @param rest
+ * @returns React.ReactElement
+ * @example
+ *  <Local name="fixed value">
+ *      Some text defined in languages files with %(name)s
+ *  </Local>
+ * @example
+ *  <Local variables={['string 1', 'string 2']}>
+ *      Some text defined in languages files with %s and more %s
+ *  </Local>
+ */
 const Locale = ({
     children, lang, ns, variables, ...rest
-}) => {
-    lang // used to subscribe to lang change
-    return (
-        <>
-            {variables ? vsprintf(_(children, ns), variables) : vsprintf(_(children, ns), rest)}
-        </>
-    )
-}
+}) => (
+    <>
+        {variables ? vsprintf(_(children, ns), variables) : vsprintf(_(children, ns), rest)}
+    </>
+)
 
 Locale.propTypes = {
-    lang: langPropType.isRequired,
+    lang: langProptype.isRequired,
     children: PropTypes.string.isRequired,
     ns: PropTypes.string,
     variables: PropTypes.oneOfType([
@@ -43,7 +57,7 @@ Locale.defaultProps = {
 }
 
 const mapStateToProps = (state) => ({
-    lang: state.lang,
+    lang: state.lang, // used to subscribe to lang change
 })
 
 export default connect(mapStateToProps)(Locale)

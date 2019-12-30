@@ -197,7 +197,6 @@ class UserPage extends React.Component {
                 alert: this.dissociationConfirmed,
             })
         } catch (e) {
-            console.error(e)
             // fixme
         }
     }
@@ -224,7 +223,9 @@ class UserPage extends React.Component {
             this.setState({ user })
         } catch (err) {
             if (err.response && err.response.status === 404) this.setState({ alert: this.notFound })
-            else console.error(err)
+            else {
+                // fixme
+            }
         }
     }
 

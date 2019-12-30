@@ -1,5 +1,5 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import PropTypes, { bool, func } from 'prop-types'
 import cx from 'classnames'
 
 // @material-ui/core components
@@ -21,7 +21,7 @@ import adminNavbarLinksStyle from '@dashboard/assets/jss/material-dashboard-pro-
 import AdminNavbarLinks from './AdminNavbarLinks'
 
 const AdminNavbar = ({
-    classes, color, brandText, miniActive, sidebarMinimize, handleDrawerToggle, ...props
+    classes, color, brandText, miniActive, sidebarMinimize, handleDrawerToggle,
 }) => (
     <AppBar className={cx(classes.appBar, { [classes.color]: color })}>
         <Toolbar className={classes.container}>
@@ -76,6 +76,9 @@ AdminNavbar.propTypes = {
     classes: PropTypes.objectOf(PropTypes.string).isRequired,
     color: PropTypes.oneOf(['primary', 'info', 'success', 'warning', 'danger']),
     brandText: PropTypes.string.isRequired,
+    miniActive: bool.isRequired,
+    sidebarMinimize: func.isRequired,
+    handleDrawerToggle: func.isRequired,
 }
 
 AdminNavbar.defaultProps = {

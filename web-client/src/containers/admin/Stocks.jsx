@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { history } from 'react-router-prop-types'
+import { history as historyProptype } from 'react-router-prop-types'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
@@ -21,7 +21,7 @@ import EnhancedTable from '../tables/EnhancedTable'
 
 class Stocks extends React.Component {
     static propTypes = {
-        history: history.isRequired,
+        history: historyProptype.isRequired,
         langCode: PropTypes.string.isRequired,
     }
 

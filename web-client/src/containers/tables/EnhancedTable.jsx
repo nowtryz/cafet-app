@@ -12,7 +12,6 @@ import { classes as classesProptype } from 'app-proptypes'
 
 import EnhancedTableToolbar from './EnhancedTableToolbar'
 import EnhancedTableHead from './EnhancedTableHead'
-import Locale from '../Locale'
 
 
 const desc = (a, b, orderBy) => {

@@ -17,16 +17,16 @@ import image from '@dashboard/assets/img/sidebar-2.jpg'
 import logo from '@dashboard/assets/img/logo-white.svg'
 
 import {
-    classes as classesPropType,
-    children as childrenPropType,
-} from 'app-proptypes'
-import _ from 'lang'
+    childrenProptype,
+    classesProptype,
+} from '../../app-proptypes'
+import _ from '../../lang'
 import Footer from '../Footer'
 
 class DefaultLayout extends React.Component {
     static propTypes = {
-        children: childrenPropType.isRequired,
-        classes: classesPropType.isRequired,
+        children: childrenProptype.isRequired,
+        classes: classesProptype.isRequired,
         fullScreenMaps: PropTypes.bool,
         displayFooter: PropTypes.bool,
         Sidebar: PropTypes.elementType.isRequired,
@@ -35,6 +35,7 @@ class DefaultLayout extends React.Component {
         organisation: PropTypes.string.isRequired,
         match: ReactRouterPropTypes.match.isRequired,
         location: ReactRouterPropTypes.location.isRequired,
+        history: ReactRouterPropTypes.history.isRequired,
     }
 
     static defaultProps = {
@@ -42,14 +43,18 @@ class DefaultLayout extends React.Component {
         displayFooter: true,
     }
 
+    static getDerivedStateFromProps(props, state) {
+        const { mobileOpen } = state
+        if (mobileOpen && props.history.location.pathname !== props.location.pathname) {
+            return { mobileOpen: false }
+        }
+        return null
+    }
+
     state = {
         mobileOpen: false,
         miniActive: false,
-        image,
-        color: 'blue',
-        bgColor: 'black',
         // hasImage: true,
-        fixedClasses: 'dropdown',
     }
 
     mainPanel = React.createRef()
@@ -69,13 +74,8 @@ class DefaultLayout extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
-        const { mobileOpen } = this.state
-
         if (prevProps.history.location.pathname !== prevProps.location.pathname) {
             this.mainPanel.current.scrollTop = 0
-            if (mobileOpen) {
-                this.setState({ mobileOpen: false })
-            }
         }
     }
 
@@ -103,6 +103,8 @@ class DefaultLayout extends React.Component {
                 if (title) return title
             }
         }
+
+        return null
     }
 
     sidebarMinimize = () => {
@@ -113,28 +115,6 @@ class DefaultLayout extends React.Component {
     resizeFunction = () => {
         if (window.innerWidth >= 960) {
             this.setState({ mobileOpen: false })
-        }
-    }
-
-    handleImageClick = (image) => {
-        this.setState({ image })
-    }
-
-    handleColorClick = (color) => {
-        this.setState({ color })
-    }
-
-    handleBgColorClick = (bgColor) => {
-        this.setState({ bgColor })
-    }
-
-    handleFixedClick = () => {
-        const { fixedClasses } = this.state
-
-        if (fixedClasses === 'dropdown') {
-            this.setState({ fixedClasses: 'dropdown show' })
-        } else {
-            this.setState({ fixedClasses: 'dropdown' })
         }
     }
 
@@ -155,9 +135,7 @@ class DefaultLayout extends React.Component {
             routes,
             ...rest
         } = this.props
-        const {
-            miniActive, image, mobileOpen, color, bgColor,
-        } = this.state
+        const { miniActive, mobileOpen } = this.state
 
         const mainPanel = cx(classes.mainPanel, {
             [classes.mainPanelSidebarMini]: miniActive,
@@ -178,8 +156,8 @@ class DefaultLayout extends React.Component {
                     image={image}
                     handleDrawerToggle={this.handleDrawerToggle}
                     open={mobileOpen}
-                    color={color}
-                    bgColor={bgColor}
+                    color="blue"
+                    bgColor="black"
                     miniActive={miniActive}
                     {...rest}
                 />

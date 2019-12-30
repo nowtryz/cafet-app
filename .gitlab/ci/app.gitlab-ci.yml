@@ -5,11 +5,8 @@
 build:js:
   extends: .node
   stage: build
-#  before_script:
-#    - apt-get update -q
-#    - apt-get install -y --no-install-recommends python2.7 build-essential
-#    - apt-get clean
-#    - rm -rfd /var/lib/apt/lists/*
+  before_script:
+    - cd web-client
   script:
     - yarn install
     - yarn prod:build
@@ -22,7 +19,7 @@ build:js:
 ## Deploy
 ## ##
 
-.app: &app
+.app:
   extends: .default-runner
   stage: deploy
   dependencies:

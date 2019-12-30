@@ -1,5 +1,4 @@
 import React from 'react'
-import { func } from 'prop-types'
 import axios from 'axios'
 import Lock from '@material-ui/icons/Lock'
 import { withStyles } from '@material-ui/core/styles'
@@ -54,7 +53,7 @@ class UserPasswordEdition extends React.Component {
             this.pass1.current.value = ''
             this.pass2.current.value = ''
         } catch (e) {
-            console.error(e)
+            // fixme
         }
     }
 

@@ -3,10 +3,11 @@
 import DashboardIcon from '@material-ui/icons/Dashboard'
 import History from '@material-ui/icons/History'
 import Timeline from '@material-ui/icons/Timeline'
+import { CreditCard } from '@material-ui/icons'
 
-import { isProd } from 'config'
+import { isProd } from '../config'
 
-
+// eslint-disable-next-line import/order
 import React from 'react'
 // eslint-disable-next-line react/jsx-filename-extension
 const BlankPage = () => (<p>this is a placeholder page</p>)
@@ -51,7 +52,6 @@ export default [
     {
         path: '/dashboard/history',
         title: 'History',
-        display: 'Historique du compte',
         id: 'history',
         icon: History,
         component: BlankPage,
@@ -60,8 +60,7 @@ export default [
         path: '/dashboard/reloads',
         title: 'Reloads',
         id: 'reloads',
-        // icon: Timer,
-        mini: 'RE',
+        icon: CreditCard,
         hidden: isProd,
         component: BlankPage,
     },

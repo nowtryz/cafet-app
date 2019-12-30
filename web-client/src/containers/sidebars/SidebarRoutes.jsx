@@ -10,7 +10,7 @@ import Icon from '@material-ui/core/Icon'
 import BlurOn from '@material-ui/icons/BlurOn'
 import { NavLink } from 'react-router-dom'
 
-import _ from 'lang'
+import _ from '../../lang'
 
 class SidebarRoutes extends React.Component {
     static propTypes = {
@@ -33,32 +33,50 @@ class SidebarRoutes extends React.Component {
     }
 
     static getDerivedStateFromProps(props, state) {
-        return SidebarRoutes.getCollapseStates(props.routes, state)
+        return {
+            ...state,
+            ...SidebarRoutes.getCollapseStates(props.routes, state),
+        }
     }
 
-    // this creates the intial state of this component based on the collapse routes
+    // this creates the initial state of this component based on the collapse routes
     // that it gets through this.props.routes
     static getCollapseStates = (routes, state) => {
+        let newState = {}
         routes.forEach((route) => {
             if (route.items !== undefined) {
-                state[route.id] = state[route.id] || SidebarRoutes.souldBeOpen(route.items)
-                this.getCollapseStates(route.items, state)
+                newState[route.id] = state[route.id] || SidebarRoutes.shouldBeOpen(route.items)
+                newState = {
+                    ...newState,
+                    ...this.getCollapseStates(route.items, state),
+                }
             }
         })
 
-        return state
+        return newState
     }
 
     // this verifies if any of the collapses should be default opened on a rerender of this component
-    static souldBeOpen(routes) {
+    static shouldBeOpen(routes) {
         for (let i = 0; i < routes.length; i++) {
-            if (routes[i].items !== undefined && SidebarRoutes.souldBeOpen(routes[i].items)) {
+            if (routes[i].items !== undefined && SidebarRoutes.shouldBeOpen(routes[i].items)) {
                 return true
             } if (window.location.href.indexOf(routes[i].path) !== -1) {
                 return true
             }
         }
         return false
+    }
+
+    static renderIcon(route, classes) {
+        if (route.icon !== undefined && typeof route.icon === 'string') {
+            return <Icon className={classes.itemIcon}>{route.icon}</Icon>
+        } if (route.icon !== undefined) {
+            return <route.icon className={classes.itemIcon} />
+        } if (route.mini) {
+            return <span className={classes.collapseItemMini}>{route.mini}</span>
+        }
+        return <BlurOn className={classes.itemIcon} />
     }
 
     state = {}
@@ -72,7 +90,9 @@ class SidebarRoutes extends React.Component {
     collapseAll() {
         this.setState((state) => {
             const newState = {}
-            Object.keys(state).forEach((v) => newState[v] = false)
+            Object.keys(state).forEach((v) => {
+                newState[v] = false
+            })
             return newState
         })
     }
@@ -108,7 +128,7 @@ class SidebarRoutes extends React.Component {
         const { [route.id]: collapseState } = this.state
 
         const navLinkClasses = cx(classes.itemLink, {
-            [classes.collapseActive]: SidebarRoutes.souldBeOpen(route.items),
+            [classes.collapseActive]: SidebarRoutes.shouldBeOpen(route.items),
         })
 
         return (
@@ -124,7 +144,7 @@ class SidebarRoutes extends React.Component {
                         this.openCollapse(route.id)
                     }}
                 >
-                    {this.renderIcon(route, classes)}
+                    {SidebarRoutes.renderIcon(route, classes)}
                     <ListItemText
                         primary={_(route.title)}
                         secondary={<b className={cx(classes.caret, { [classes.caretActive]: collapseState })} />}
@@ -154,7 +174,7 @@ class SidebarRoutes extends React.Component {
                     className={isCollapseItem ? classes.collapseItemLink : classes.itemLink}
                     activeClassName={classes[color]}
                 >
-                    {this.renderIcon(route, classes)}
+                    {SidebarRoutes.renderIcon(route, classes)}
                     <ListItemText
                         primary={_(route.title)}
                         disableTypography
@@ -163,17 +183,6 @@ class SidebarRoutes extends React.Component {
                 </NavLink>
             </ListItem>
         )
-    }
-
-    renderIcon(route, classes) {
-        if (route.icon !== undefined && typeof route.icon === 'string') {
-            return <Icon className={classes.itemIcon}>{route.icon}</Icon>
-        } if (route.icon !== undefined) {
-            return <route.icon className={classes.itemIcon} />
-        } if (route.mini) {
-            return <span className={classes.collapseItemMini}>{route.mini}</span>
-        }
-        return <BlurOn className={classes.itemIcon} />
     }
 
     render() {

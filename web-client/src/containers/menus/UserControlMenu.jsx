@@ -12,7 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import MenuList from '@material-ui/core/MenuList'
 import Divider from '@material-ui/core/Divider'
 
-import { logout as logoutAction } from 'actions'
+import { logout as logoutAction } from '../../actions'
 import Locale from '../Locale'
 import { classesProptype } from '../../app-proptypes'
 

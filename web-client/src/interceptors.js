@@ -5,7 +5,11 @@ import { API_URL } from './config'
 export const responseInterceptor = (response) => response
 
 export const errorInterceptor = (error) => {
-    if (error.response.status === 401 && error.response.config.url != `${API_URL}/user/login` && !store.getState().user.isLogging) {
+    if (
+        error.response.status === 401
+        && error.response.config.url !== `${API_URL}/user/login`
+        && !store.getState().user.isLogging
+    ) {
         store.dispatch(clearUser())
     }
 

@@ -11,6 +11,7 @@
     "rules": {
         "semi": [2, "never"],
         "no-unexpected-multiline": 2,
+        "no-plusplus": 0,
         "indent": [2, 4],
         "quotes": [2, "single"],
         "compat/compat": 2,

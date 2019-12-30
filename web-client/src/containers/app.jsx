@@ -8,7 +8,7 @@ import {
     Router, Route, Switch, Redirect,
 } from 'react-router-dom'
 
-import '@dashboard/assets/scss/material-dashboard-pro-react.scss?v=1.5.0'
+import '@dashboard/assets/scss/material-dashboard-pro-react.scss'
 
 import {
     loadServerConfig as loadServerConfigAction,

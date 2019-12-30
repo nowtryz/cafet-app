@@ -11,6 +11,7 @@ import Hidden from '@material-ui/core/Hidden'
 
 import sidebarStyle from '@dashboard/assets/jss/material-dashboard-pro-react/components/sidebarStyle'
 
+import { Link } from 'react-router-dom'
 import SidebarWrapper from './SidebarWrapper'
 import SidebarUserWrapper from './SidebarUserWrapper'
 import SidebarRoutes from './SidebarRoutes'
@@ -100,17 +101,17 @@ class AdminSidebar extends React.Component {
 
         const brand = (
             <div className={classes.logo}>
-                <a href="#nowtryz" className={classes.logoMini}>
+                <Link to="/" className={classes.logoMini}>
                     <img src={logo} alt="logo" className={classes.img} />
-                </a>
-                <a href="#nowtryz" className={classes.logoNormal}>
+                </Link>
+                <Link to="/" className={classes.logoNormal}>
                     {logoText}
-                </a>
+                </Link>
             </div>
         )
 
         return (
-            <div ref="mainPanel">
+            <div>
                 <Hidden mdUp implementation="css">
                     <Drawer
                         variant="temporary"

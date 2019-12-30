@@ -77,7 +77,6 @@ class ClientInformation extends React.Component {
             await axios.post(`${API_URL}/server/users/${user.id}/create-customer`)
             await onUpdate()
         } catch (err) {
-            console.error(err)
             // fixme
         }
     }
@@ -117,7 +116,6 @@ class ClientInformation extends React.Component {
             })
         } catch (e) {
             // fixme try/catch
-            console.error(e)
             this.setState({
                 membershipUpdate: false,
             })
