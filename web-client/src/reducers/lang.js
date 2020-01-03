@@ -1,6 +1,6 @@
-import { LOCALE_CHANGED } from 'constants'
-import fr from '../lang/fr_FR'
-import en from '../lang/en_US'
+import { LOCALE_CHANGED } from '../constants'
+import fr from '../lang/fr_FR.json'
+import en from '../lang/en_US.json'
 
 const initialState = fr
 

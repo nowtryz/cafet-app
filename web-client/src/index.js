@@ -3,6 +3,7 @@ import 'react-hot-loader'
 
 import ReactDOM from 'react-dom'
 import axios from 'axios'
+import moment from 'moment'
 import { createBrowserHistory } from 'history'
 
 import App from './containers/app'
@@ -17,6 +18,7 @@ import {
 
 axios.interceptors.response.use(responseInterceptor, errorInterceptor)
 axios.defaults.headers.common['Skip-Headers'] = '"WWW-Authenticate"'
+moment.locale(store.getState().lang.html_lang)
 
 const rootEl = document.querySelector('.app')
 const history = createBrowserHistory()

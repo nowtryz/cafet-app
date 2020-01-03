@@ -1,9 +1,6 @@
-import store from 'reducers'
-import { changeLocale } from 'actions'
+import store from '../reducers'
+import { changeLocale } from '../actions'
 import { isProd } from '../config'
-
-export { default as fr } from './fr_FR'
-export { default as en } from './en_US'
 
 export const setLocalization = (lang) => store.dispatch(changeLocale(lang))
 export const getLocalizedText = (text, namespace = 'default') => {

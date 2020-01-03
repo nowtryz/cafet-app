@@ -187,7 +187,7 @@ x-shemas:
           <<: *Choice404Schema
           xml:
             name: "error"
-  error: &error
+  error:
     type: "object"
     properties:
       error_code:
@@ -2416,6 +2416,10 @@ components:
           $ref: "#/components/schemas/Calendar"
         registration:
           $ref: "#/components/schemas/Calendar"
+        customer_id:
+          type: "number"
+          format: "int64"
+          example: 1
         email:
           type: "string"
           example: "somebody@example.com"

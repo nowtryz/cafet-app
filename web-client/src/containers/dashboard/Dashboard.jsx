@@ -1,11 +1,8 @@
 import React from 'react'
-import Component from 'views/Dashboard/Dashboard'
-import DashboardLayout from '../layouts/dashboard'
+import Component from '@dashboard/views/Dashboard/Dashboard'
 
 const Dashboard = (props) => (
-    <DashboardLayout title="test" {...props}>
-        <Component {...props} />
-    </DashboardLayout>
+    <Component {...props} />
 )
 
 export default Dashboard

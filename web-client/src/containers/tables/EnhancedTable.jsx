@@ -8,13 +8,17 @@ import TablePagination from '@material-ui/core/TablePagination'
 import TableRow from '@material-ui/core/TableRow'
 import Checkbox from '@material-ui/core/Checkbox'
 
-import { classes as classesProptype } from 'app-proptypes'
+import { classesProptype } from '../../app-proptypes'
 
 import EnhancedTableToolbar from './EnhancedTableToolbar'
 import EnhancedTableHead from './EnhancedTableHead'
+import Locale from '../Locale'
 
 
 const desc = (a, b, orderBy) => {
+    if (typeof a[orderBy] === 'string') {
+        return a[orderBy].toLocaleLowerCase().localeCompare(b[orderBy].toLocaleLowerCase())
+    }
     if (b[orderBy] < a[orderBy]) {
         return -1
     }
@@ -48,7 +52,6 @@ const styles = () => ({
     },
 })
 
-// eslint-disable-next-line react/no-multi-comp
 class EnhancedTable extends React.Component {
     static propTypes = {
         classes: classesProptype.isRequired,
@@ -84,7 +87,7 @@ class EnhancedTable extends React.Component {
             order = 'desc'
         }
 
-        this.setState({ order, orderBy })
+        this.setState({ order, orderBy, page: 0 })
     }
 
     handleSelectAllClick = (event) => {
@@ -208,6 +211,16 @@ class EnhancedTable extends React.Component {
                     count={data.length}
                     rowsPerPage={rowsPerPage}
                     page={page}
+                    labelRowsPerPage={(
+                        <Locale>
+                            Rows per page:
+                        </Locale>
+                    )}
+                    labelDisplayedRows={({ from, to, count }) => (
+                        <Locale from={from} to={to === -1 ? count : to} count={count}>
+                            %(from)s-%(to)s of %(count)s
+                        </Locale>
+                    )}
                     backIconButtonProps={{
                         'aria-label': 'Previous Page',
                     }}

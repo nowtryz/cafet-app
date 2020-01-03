@@ -1,11 +1,13 @@
 
 // @material-ui/icons
 import DashboardIcon from '@material-ui/icons/Dashboard'
-import History from '@material-ui/icons/History'
+import HistoryIcon from '@material-ui/icons/History'
 import Timeline from '@material-ui/icons/Timeline'
 import { CreditCard } from '@material-ui/icons'
 
 import { isProd } from '../config'
+import Dashboard from '../containers/dashboard/Dashboard'
+import History from '../containers/dashboard/History'
 
 // eslint-disable-next-line import/order
 import React from 'react'
@@ -18,7 +20,7 @@ export default [
         title: 'Dashboard',
         id: 'dashboard',
         icon: DashboardIcon,
-        component: BlankPage,
+        component: Dashboard,
     },
     {
         path: '/dashboard/profile',
@@ -53,8 +55,8 @@ export default [
         path: '/dashboard/history',
         title: 'History',
         id: 'history',
-        icon: History,
-        component: BlankPage,
+        icon: HistoryIcon,
+        component: History,
     },
     {
         path: '/dashboard/reloads',

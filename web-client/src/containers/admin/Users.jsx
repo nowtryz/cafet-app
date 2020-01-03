@@ -2,8 +2,7 @@ import React from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
-import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import moment from 'moment'
 
 // Material UI
 import Group from '@material-ui/icons/Group'
@@ -14,8 +13,8 @@ import CardBody from '@dashboard/components/Card/CardBody'
 import CardHeader from '@dashboard/components/Card/CardHeader'
 import CardIcon from '@dashboard/components/Card/CardIcon'
 
-import { API_URL } from 'config'
-import { formateCalendar } from 'utils'
+import { API_URL } from '../../config'
+import { formatCalendar } from '../../utils'
 
 import { GROUPS } from '../../constants'
 import EnhancedTable from '../tables/EnhancedTable'
@@ -24,7 +23,6 @@ import Locale from '../Locale'
 class Users extends React.Component {
     static propTypes = {
         history: ReactRouterPropTypes.history.isRequired,
-        langCode: PropTypes.string.isRequired,
     }
 
     static group(user) {
@@ -61,14 +59,14 @@ class Users extends React.Component {
         {
             id: 'registration',
             disablePadding: true,
-            label: 'Created on',
-            render: (user) => this.date(user, 'registration'),
+            label: 'Created',
+            render: (user) => moment(formatCalendar(user.registration)).fromNow(),
         },
         {
             id: 'last_signin',
             disablePadding: true,
             label: 'Last activity',
-            render: (user) => this.date(user, 'last_signin'),
+            render: (user) => moment(formatCalendar(user.last_signin)).fromNow(),
         },
         {
             id: 'email', numeric: false, component: false, disablePadding: true, label: 'E-mail',
@@ -89,11 +87,6 @@ class Users extends React.Component {
     onCellClick = (event, id) => {
         const { history } = this.props
         history.push(`/admin/users/${id}`)
-    }
-
-    date(user, field) {
-        const { langCode } = this.props
-        return formateCalendar(user[field]).toLocaleDateString(langCode)
     }
 
     async fetchUsers() {
@@ -128,8 +121,4 @@ class Users extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({
-    langCode: state.lang.lang_code,
-})
-
-export default connect(mapStateToProps)(Users)
+export default Users

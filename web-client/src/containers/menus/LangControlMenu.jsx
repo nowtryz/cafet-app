@@ -14,10 +14,10 @@ import MenuList from '@material-ui/core/MenuList'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
-import { changeLocale as changeLocaleAction } from 'actions'
-
-import USFlagIcon from '@dashboard/assets/img/flags/US.png'
 import FranceFlagIcon from '@dashboard/assets/img/flags/FR.png'
+import USFlagIcon from '@dashboard/assets/img/flags/US.png'
+
+import { changeLocale as changeLocaleAction } from '../../actions'
 
 const LangControlMenu = ({
     classes, children, buttonProps, changeLocale, ...rest

@@ -18,7 +18,7 @@ import Card from '@dashboard/components/Card/Card'
 import style from '@dashboard/assets/jss/material-dashboard-pro-react/views/userProfileStyles'
 
 import _ from '../../../lang'
-import { formateCalendar } from '../../../utils'
+import { formatCalendar } from '../../../utils'
 import { classes as classesProptype, user as userProptype } from '../../../app-proptypes'
 import EditableUserField from './EditableUserField'
 import GroupSelect from './GroupSelect'
@@ -56,11 +56,11 @@ const viewOnlyFields = (user, langCode) => ([
     },
     {
         label: _('Member since', 'admin_user_page'),
-        value: formateCalendar(user.registration).toLocaleString(langCode),
+        value: formatCalendar(user.registration).toLocaleString(langCode),
     },
     {
         label: _('Last sign-in at', 'admin_user_page'),
-        value: formateCalendar(user.last_signin).toLocaleString(langCode),
+        value: formatCalendar(user.last_signin).toLocaleString(langCode),
     },
     {
         label: _('Sign-in count', 'admin_user_page'),
