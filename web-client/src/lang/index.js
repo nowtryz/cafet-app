@@ -14,6 +14,4 @@ export const getLocalizedText = (text, namespace = 'default') => {
     return text
 }
 
-const _ = getLocalizedText
-
-export default _
+export default getLocalizedText

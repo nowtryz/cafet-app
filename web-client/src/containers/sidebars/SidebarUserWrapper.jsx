@@ -3,15 +3,15 @@ import PropTypes from 'prop-types'
 import classNames from 'classnames'
 import { connect } from 'react-redux'
 import { NavLink } from 'react-router-dom'
+import md5 from 'md5'
 
 // @material-ui/core components
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-import Person from '@material-ui/icons/Person'
 
-import _ from 'lang'
+import _ from '../../lang'
 
 class SidebarUserWrapper extends React.Component {
     static propTypes = {
@@ -26,6 +26,7 @@ class SidebarUserWrapper extends React.Component {
             'purple',
             'rose',
         ]).isRequired,
+        gravatar: PropTypes.string.isRequired,
     }
 
     state = {
@@ -37,7 +38,9 @@ class SidebarUserWrapper extends React.Component {
     }
 
     render() {
-        const { classes, userDisplay, color } = this.props
+        const {
+            classes, userDisplay, color, gravatar,
+        } = this.props
         const { openAvatar } = this.state
 
         return (
@@ -50,7 +53,14 @@ class SidebarUserWrapper extends React.Component {
                         justifyContent: 'center',
                     }}
                 >
-                    <Person />
+                    <img
+                        style={{
+                            height: '100%',
+                            width: '100%',
+                        }}
+                        src={gravatar}
+                        alt="avatar"
+                    />
                 </div>
                 <List className={classes.list}>
                     <ListItem className={classNames(classes.item, classes.userItem)}>
@@ -132,6 +142,7 @@ class SidebarUserWrapper extends React.Component {
 
 const mapStateToProps = (state) => ({
     userDisplay: `${state.user.user.firstName} ${state.user.user.familyName}`,
+    gravatar: `https://www.gravatar.com/avatar/${md5(state.user.user.email.trim())}?s=50&d=retro`,
 })
 
 export default connect(mapStateToProps)(SidebarUserWrapper)
