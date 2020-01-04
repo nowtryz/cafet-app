@@ -1,40 +1,12 @@
-import { useEffect, useReducer } from 'react'
+import { useEffect } from 'react'
 import axios from 'axios'
 import { API_URL } from '../config'
 import { momentFromCalendar } from '../utils'
+import useFetchReducer from './useFetchReducer'
 
-const dataFetchReducer = (state, action) => {
-    switch (action.type) {
-    case 'FETCH_INIT':
-        return {
-            ...state,
-            isLoading: true,
-            isError: false,
-        }
-    case 'FETCH_SUCCESS':
-        return {
-            ...state,
-            isLoading: false,
-            isError: false,
-            data: action.payload,
-        }
-    case 'FETCH_FAILURE':
-        return {
-            ...state,
-            isLoading: false,
-            isError: true,
-        }
-    default:
-        throw new Error()
-    }
-}
 
 const useHistory = (id) => {
-    const [state, dispatch] = useReducer(dataFetchReducer, {
-        isLoading: false,
-        isError: false,
-        data: [],
-    })
+    const [state, dispatch] = useFetchReducer()
 
     const url = `${API_URL}/cafet/clients/${id}`
 
@@ -44,13 +16,19 @@ const useHistory = (id) => {
 
             if (id) {
                 try {
-                    const expensesResult = await axios.get(`${url}/expenses`)
-                    const reloadsResult = await axios.get(`${url}/reloads`)
+                    const [expensesResult, reloadsResult] = await axios.all([
+                        axios.get(`${url}/expenses`),
+                        axios.get(`${url}/reloads`),
+                    ])
                     const data = [
-                        ...expensesResult.data,
+                        ...expensesResult.data.map((item) => ({
+                            ...item,
+                            key: `e${item.id}`,
+                        })),
                         ...reloadsResult.data.map((item) => ({
                             ...item,
                             total: item.amount,
+                            key: `r${item.id}`,
                         })),
                     ]
                     data.sort(
@@ -58,7 +36,7 @@ const useHistory = (id) => {
                     )
                     dispatch({ type: 'FETCH_SUCCESS', payload: data })
                 } catch (error) {
-                    dispatch({ type: 'FETCH_FAILURE' })
+                    dispatch({ type: 'FETCH_FAILURE', payload: error })
                 }
             } else {
                 dispatch({ type: 'FETCH_FAILURE' })

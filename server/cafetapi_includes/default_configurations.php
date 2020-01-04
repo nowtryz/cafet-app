@@ -7,9 +7,9 @@ class Database
     const driver = 'mysql';
     const host = 'db';
     const port = '3306';
-    const database = 'mecatronesql';
-    const username = 'mecatro';
-    const password = 'mecatro';
+    const database = 'localhost';
+    const username = 'root';
+    const password = '';
 }
 
 class Config
@@ -39,4 +39,6 @@ class Config
         'reload_request' => true,
     ];
     const logout_message = 'see you later ;)';
+    const currency = '€';
+    const currency_code = 'EUR';
 }

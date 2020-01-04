@@ -77,5 +77,4 @@ Demo user is `Nowtryz <damien.djmb@gmail.com>` with password `admin`. Easy to ke
 ## Future updates
 
 - Work with composer
-- Create docker images
-- Implementation of gettext
+- use [MiniCssExtractPlugin](https://webpack.js.org/plugins/mini-css-extract-plugin/)

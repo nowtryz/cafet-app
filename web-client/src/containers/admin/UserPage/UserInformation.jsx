@@ -150,7 +150,9 @@ class UserInformation extends React.Component {
                         color="info"
                         round
                     >
-                        Save
+                        <Locale>
+                            Save
+                        </Locale>
                     </Button>
                 </CardBody>
             </Card>

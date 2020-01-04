@@ -5,8 +5,11 @@ const initialState = {
     production: true,
     organisation: 'Cafet',
     lang: 'fr_FR',
-    currency: '€',
     session_name: '_cafetapp_session',
+    currency: {
+        code: 'EUR',
+        symbol: '€',
+    },
 }
 
 const serverReducer = (state = initialState, { type, payload = null }) => {

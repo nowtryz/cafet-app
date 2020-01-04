@@ -64,9 +64,14 @@ export default {
             'Access-Control-Allow-Origin': '*',
         },
         disableHostCheck: true,
+        progress: true,
     },
     resolve: {
-        extensions: ['.js', '.jsx'],
+        extensions: [
+            isProd ? '.prod.jsx' : '.dev.jsx',
+            isProd ? '.prod.js' : '.dev.js',
+            '.jsx', '.js',
+        ],
     },
     plugins: [
         new webpack.optimize.OccurrenceOrderPlugin(),

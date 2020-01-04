@@ -10,6 +10,15 @@
         "terms": "terms and conditions"
     },
 
+    "expense_page": {
+        "Details of your order": "Details of your order",
+        "Designation": "Designation",
+        "Price": "Price",
+        "Quantity": "Quantity",
+        "Item count": "Item count",
+        "Total order": "Total order"
+    },
+
     "admin_user_page": {
         "%(name)s's information": "%(name)s's information",
         "Are you sure?": "Are you sure?",
@@ -44,6 +53,9 @@
         "Payment notice": "Payment notice",
         "Reload notice": "Reload notice",
         "Reload requests": "Low sold warning",
+        "Edit password": "Edit password",
+        "New password": "New password",
+        "Rewrite password": "Rewrite password",
         "Balance": "Balance",
         "Member": "Member",
         "msg_delete": "Deleting a user is an irreversible action. The user and consumer accounts will be unlinked to keep the statistics associated with that consumer.",
@@ -134,6 +146,9 @@
         "Rows per page:": "Rows per page :",
         "%(from)s-%(to)s of %(count)s": "%(from)s-%(to)s of %(count)s",
         "Date": "Date",
-        "Amount": "Amount"
+        "Amount": "Amount",
+        "Submit": "Submit",
+        "Save": "Save",
+        "Loading": "Loading"
     }
 }

@@ -11,6 +11,7 @@ import History from '../containers/dashboard/History'
 
 // eslint-disable-next-line import/order
 import React from 'react'
+import Expense from '../containers/dashboard/Expense'
 // eslint-disable-next-line react/jsx-filename-extension
 const BlankPage = () => (<p>this is a placeholder page</p>)
 
@@ -57,6 +58,13 @@ export default [
         id: 'history',
         icon: HistoryIcon,
         component: History,
+    },
+    {
+        path: '/dashboard/expense/:id',
+        title: 'History',
+        id: 'expense',
+        hidden: true,
+        component: Expense,
     },
     {
         path: '/dashboard/reloads',

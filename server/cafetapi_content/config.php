@@ -1,7 +1,7 @@
 <?php
 /**
  * API config file
- * 
+ *
  * @package configurations
  * @since API 0.1.0 (2018)
  */
@@ -13,7 +13,7 @@ namespace cafetapi\config;
  * CHANGE.
  *
  * @author Damien
- *        
+ *
  * @since API 0.1.0 (2018)
  */
 class Database
@@ -72,15 +72,15 @@ class Database
  * Configurations du serveur et de l'API.
  *
  * @author Damien
- *        
+ *
  * @since API 0.1.0 (2018)
  */
 class Config
 {
-    
+
     /**
      * Si le serveur serveur doit se comporter en mode debug.
-     * 
+     *
      * Cela signifie afficher les erreurs, autoriser l'accès aux
      * pages de debug et aux phpinfo pour les environements docker
      * @var boolean
@@ -185,7 +185,7 @@ class Config
      * @since API 0.1.0 (2018)
      */
     const email_sender = 'cafet@exemple.com';
-    
+
     /**
      * Adresse e-mail utilisée pour le pour le champ reply-to
      *
@@ -217,18 +217,18 @@ class Config
      * @since API 0.1.0 (2018)
      */
     // const email_default_subject = '';
-    
+
     /**
      * Nom des cookies de session
-     * 
+     *
      * @var string
      * @since API 0.1.0 (2018)
      */
     const session_name = '_cafetapp_' . self::organisation . '_session';
-    
+
     /**
      * Préférences de reception de mail par défaut pour les utilisateurs
-     * 
+     *
      * @var string
      * @since API 0.3.0 (2019)
      */
@@ -248,4 +248,18 @@ class Config
      * @since API 0.1.0 (2018)
      */
     const logout_message = 'see you later ;)';
+
+    /**
+     * The symbole de la devise utilisée par l'application
+     * @var string
+     * @since API 0.3.0
+     */
+    const currency = '€';
+
+    /**
+     * Le code de la devise (ISO 4217), ce code est utilisé pour afficher les devises avec le bon format
+     * @var string
+     * @since API 0.3.0
+     */
+    const currency_code = 'EUR';
 }

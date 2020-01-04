@@ -10,6 +10,15 @@
         "terms": "termes et conditions d'utilisation"
     },
 
+    "expense_page": {
+        "Details of your order": "Détails de votre commande",
+        "Designation": "Désignation",
+        "Price": "Prix unitaire",
+        "Quantity": "Quantité",
+        "Item count": "Nombre d'articles",
+        "Total order": "Total de la commande"
+    },
+
     "admin_user_page": {
         "%(name)s's information": "Informations sur %(name)s",
         "Are you sure?": "Vous êtes sûr ?",
@@ -44,6 +53,9 @@
         "Payment notice": "Reçu des dépenses",
         "Reload notice": "Notification de rechargement",
         "Reload requests": "Avertissements solde faible",
+        "Edit password": "Modifier le mot de passe",
+        "New password": "Nouveau mot de passe",
+        "Rewrite password": "Confirmez le mot de passe",
         "Balance": "Solde",
         "Member": "Adhérent",
         "msg_delete": "La suppression d'un utilisateur est une action irréversible. Les comptes utilisateur et consommateur seronts dissocier pour conserver les statistiques associés avec ce consommateur.",
@@ -134,6 +146,9 @@
         "Rows per page:": "Lignes par page :",
         "%(from)s-%(to)s of %(count)s": "%(from)s-%(to)s sur %(count)s",
         "Date": "Date",
-        "Amount": "Montant"
+        "Amount": "Montant",
+        "Submit": "Soumettre",
+        "Save": "Sauvegarder",
+        "Loading": "Chargement"
     }
 }

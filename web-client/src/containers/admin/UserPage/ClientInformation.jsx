@@ -206,7 +206,7 @@ class ClientInformation extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-    currency: state.server.currency,
+    currency: state.server.currency.symbol,
 })
 
 

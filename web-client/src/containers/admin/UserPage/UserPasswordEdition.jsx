@@ -78,8 +78,8 @@ class UserPasswordEdition extends React.Component {
                         <GridContainer>
                             <GridItem xs={12} sm={12} md={3}>
                                 <FormLabel className={classes.labelHorizontal}>
-                                    <Locale>
-                                        Email
+                                    <Locale ns="admin_user_page">
+                                        New password
                                     </Locale>
                                 </FormLabel>
                             </GridItem>
@@ -93,8 +93,8 @@ class UserPasswordEdition extends React.Component {
                         <GridContainer>
                             <GridItem xs={12} sm={12} md={3}>
                                 <FormLabel className={classes.labelHorizontal}>
-                                    <Locale>
-                                        Password
+                                    <Locale ns="admin_user_page">
+                                        Rewrite password
                                     </Locale>
                                 </FormLabel>
                             </GridItem>

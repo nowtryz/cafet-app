@@ -38,4 +38,6 @@ class Config
         'reload_request' => true,
     ];
     const logout_message = 'see you later ;)';
+    const currency = '€';
+    const currency_code = 'EUR';
 }

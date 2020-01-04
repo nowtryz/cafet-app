@@ -4,6 +4,7 @@ import { isProd } from '../config'
 
 export const setLocalization = (lang) => store.dispatch(changeLocale(lang))
 export const getLocalizedText = (text, namespace = 'default') => {
+    if (!text) return text
     const lang = store.getState().lang || {}
     const ns = lang[namespace] || {}
     if (isProd) return ns[text] || text
