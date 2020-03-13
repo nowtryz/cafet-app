@@ -28,6 +28,16 @@ x-shemas:
     error_message:
       type: "string"
       example: "Bad Request"
+  401: &401
+    error_code:
+      type: "string"
+      example: "02-401"
+    error_type:
+      type: "string"
+      example: "user exception"
+    error_message:
+      type: "string"
+      example: "Authentification needed"
   409: &409
     error_code:
       type: "string"
@@ -47,6 +57,15 @@ x-shemas:
       application/xml:
         schema:
           $ref: "#/components/schemas/400Error"
+  401Error: &401Error
+    description: "An authentication is required. The request must be resent with authorization to signin the application."
+    content:
+      application/json:
+        schema:
+          $ref: "#/components/schemas/401Error"
+      application/xml:
+        schema:
+          $ref: "#/components/schemas/401Error"
   409Error: &409Error
     description: "Existing conflicts, there is a mismatch with the resource id, its type or with linked resources"
     content:
@@ -1671,10 +1690,16 @@ paths:
               properties:
                 add:
                   type: "array"
+                  items:
+                    type: "number"
+                    format: "int64"
                   description: "Ids of products to add to the current choice."
                   example: [4, 5, 6]
                 remove:
                   type: "array"
+                  items:
+                    type: "number"
+                    format: "int64"
                   description: "Ids of products that must be removed from the current choice."
                   example: [1, 2, 3]
                 name:
@@ -1815,10 +1840,18 @@ paths:
               properties:
                 add:
                   type: "array"
+                  items:
+                    type: "integer"
+                    format: "int64"
+                    example: 2
                   description: "Ids of products to add to the current choice."
                   example: [4, 5, 6]
                 remove:
                   type: "array"
+                  items:
+                    type: "integer"
+                    format: "int64"
+                    example: 2
                   description: "Ids of products that must be removed from the current choice."
                   example: [1, 2, 3]
                 name:
@@ -1839,6 +1872,176 @@ paths:
         "204":
           description: "The update has been made successfully."
         "404": *Choice404
+  #logged user
+  "/cafet/user/login":
+    parameters:
+      - in: "header"
+        name: "Authorization"
+        description: "'Basic' followed by 'Usernam:Password' encoded in base64 as defined for basic http authentications"
+        required: true
+        schema:
+          type: "string"
+          example: "Basic dsfZEzerg"
+    post:
+      tags:
+        - "User"
+      summary: "Login to the application."
+      description: "no permissions are needed."
+      responses:
+        "200":
+          description: "The user is now logged in."
+          content:
+            application/json:
+              schema: &login
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+                    example: "Logged as Nowtryz"
+                  session:
+                    type: "string"
+                    description: "sessions identifier"
+                    example: "5r8ujff9g5qktj5jibl82m08s3"
+                  user:
+                    $ref: "#/components/schemas/User"
+                  expiration:
+                    type: "number"
+                    format: "int64"
+                    description: "number of seconds before expiration if there is no neww request"
+                    example: 1440
+            application/xml:
+              schema:
+                xml:
+                  name: "data"
+                <<: *login
+  "/cafet/user/logout":
+    get:
+      tags:
+        - "User"
+      summary: "Logout from the application."
+      description: "No permissions are needed."
+      responses:
+        "200":
+          description: "Now logged out."
+          content:
+            application/json:
+              schema: &logout
+                type: "object"
+                properties:
+                  session_destroyed:
+                    type: "string"
+                    description: "identifier of the session destroyed"
+                    example: "5r8ujff9g5qktj5jibl82m08s3"
+                  message:
+                    type: "string"
+                    example: "see you later ;)"
+            application/xml:
+              schema:
+                xml:
+                  name: "data"
+                <<: *logout
+  "/cafet/user/current":
+    get:
+      parameters:
+        - <<: *noimage
+      tags:
+        - "User"
+      summary: "Get information about the currently logged user"
+      description: "Permissions: CAFET_ADMIN_GET_FORMULAS."
+      responses:
+        "200":
+          description: "The currently logged user."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401": *401Error
+    patch:
+      tags:
+        - "User"
+      summary: "Edit the currently logged user"
+      description: "Permissions: CAFET_ADMIN_MANAGE_FORMULAS."
+      requestBody:
+        description: "properties to change"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                pseudo:
+                  type: "string"
+                  description: "New pseudo of the user."
+                  example: "Nowtryz"
+                email:
+                  type: "string"
+                  description: "New mail address of the user."
+                  example: "somebody@example.com"
+                firstname:
+                  type: "string"
+                  description: "New firstname of the user."
+                  example: "Nowtryz"
+                name:
+                  type: "string"
+                  description: "New name of the user."
+                  example: "Nowtryz"
+                phone:
+                  type: "string"
+                  description: "New phone of the user."
+                  example: "Nowtryz"
+                password:
+                  type: "string"
+                  description: "New password of the user."
+                  example: "Nowtryz"
+      responses:
+        "204":
+          description: "The update has been made successfully."
+        "409": *409Error
+  "/cafet/user/register":
+    post:
+      tags:
+        - "User"
+      summary: "Register a new user."
+      description: "No permissions are needed."
+      requestBody:
+        description: "The user to add"
+        required: true
+        content:
+          application/json:
+            schema:
+              type: "object"
+              required:
+                - "email"
+                - "familyName"
+                - "firstname"
+                - "password"
+              properties:
+                email:
+                  type: "string"
+                  example: "somebody@example.com"
+                familyName:
+                  type: "string"
+                  example: "Cena"
+                firstname:
+                  type: "string"
+                  example: "John"
+                password:
+                  type: "string"
+                  example: "whatASuperPWD"
+      responses:
+        "201":
+          description: "The user has been successfully added."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+            application/xml:
+              schema:
+                $ref: "#/components/schemas/User"
+        "409": *409Error
 
 components:
   securitySchemes:
@@ -2156,6 +2359,54 @@ components:
           type: "array"
           items:
             $ref: "#/components/schemas/Product"
+    User:
+      type: "object"
+      xml:
+        name: "user"
+      properties:
+        type:
+          type: "string"
+          enum:
+            - "User"
+        id:
+          type: "integer"
+          format: "int64"
+          example: 1
+        pseudo:
+          type: "string"
+          example: "Nowtryz"
+        phone:
+          type: "string"
+          example: "0611223344"
+        permissions:
+          type: "object"
+          example:
+            a: true
+            b_a: false
+            b_b: false
+        signin_count:
+          type: "number"
+          format: "int64"
+          example: 42
+        last_signin:
+          $ref: "#/components/schemas/Calendar"
+        registration:
+          $ref: "#/components/schemas/Calendar"
+        email:
+          type: "string"
+          example: "somebody@example.com"
+        familyName:
+          type: "string"
+          example: "Cena"
+        firstname:
+          type: "string"
+          example: "John"
+        mail_preferences:
+          type: "object"
+          example:
+            payment_notice: false
+            reload_notice: false
+            reload_request: true
     image:
       type: "string"
       format: "byte"
@@ -2190,6 +2441,12 @@ components:
         additional_message:
           type: "string"
           example: "Wrong types"
+    401Error:
+      type: "object"
+      xml:
+        name: "error"
+      properties:
+        <<: *401
     409Error:
       type: "object"
       xml:
