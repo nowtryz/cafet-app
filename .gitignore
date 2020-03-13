@@ -1,5 +1,6 @@
 #app
 doc/
+*.iml
 
 # Eclypse
 .settings/
